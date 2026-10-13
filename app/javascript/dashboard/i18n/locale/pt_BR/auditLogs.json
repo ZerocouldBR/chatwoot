@@ -6,7 +6,7 @@
     "DESCRIPTION": "Logs de Auditoria mantêm um registro de atividades em sua conta, permitindo que você acompanhe e auditore sua conta, time ou serviços.",
     "LEARN_MORE": "Saiba mais sobre os logs de auditoria",
     "SEARCH_404": "Não existem itens correspondentes a esta consulta",
-    "SIDEBAR_TXT": "<p><b>Logs de Auditoria</b> </p><p> Os Logs de Auditoria são rastros para eventos e ações em um Sistema Chatwoot. </p>",
+    "SIDEBAR_TXT": "<p><b>Logs de Auditoria</b> </p><p> Os Logs de Auditoria são rastros para eventos e ações em um Sistema ServiceDesk. </p>",
     "COUNT": "{n} evento | {n} eventos",
     "FILTERS": {
       "SEARCH_PLACEHOLDER": "Pesquisar por nome ou e-mail",
@@ -17,7 +17,7 @@
         "ACCESS": "Acesso",
         "AGENTS_TEAMS": "Agentes e times",
         "CONFIGURATION": "Configuração",
-        "CONVERSATIONS": "Conversas"
+        "CONVERSATIONS": "Tickets"
       },
       "EVENT_TYPES": {
         "SIGN_IN_OUT": "Entrar / sair",
@@ -30,7 +30,7 @@
         "WEBHOOKS": "Webhooks",
         "AUTOMATION_RULES": "Regras de automação",
         "MACROS": "Macros",
-        "CONVERSATION_DELETIONS": "Exclusões de conversas",
+        "CONVERSATION_DELETIONS": "Exclusões de tickets",
         "MESSAGE_DELETIONS": "Exclusões de mensagens"
       },
       "SORT": {
@@ -41,7 +41,7 @@
     "LIST": {
       "404": "Não há Logs de Auditoria disponíveis nesta conta.",
       "TITLE": "Gerenciar Logs de Auditoria",
-      "DESC": "Logs de auditoria são rastros para eventos e ações em um Sistema de Chatwoot.",
+      "DESC": "Logs de auditoria são rastros para eventos e ações em um Sistema de ServiceDesk.",
       "TABLE_HEADER": {
         "ACTIVITY": "Usuário",
         "TIME": "Ação",
@@ -102,10 +102,10 @@
       "EDIT": "O {agentName} atualizou a configuração da conta (#{id})"
     },
     "CONVERSATION": {
-      "DELETE": "{agentName} excluiu a conversa #{id}"
+      "DELETE": "{agentName} excluiu o ticket #{id}"
     },
     "MESSAGE": {
-      "DELETE": "{agentName} excluiu uma mensagem na conversa #{conversationId}"
+      "DELETE": "{agentName} excluiu uma mensagem no ticket #{conversationId}"
     }
   }
 }

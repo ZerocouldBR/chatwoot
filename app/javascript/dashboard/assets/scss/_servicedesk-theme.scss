@@ -1,0 +1,240 @@
+// scss-lint:disable PropertySortOrder
+// =============================================================================
+// ServiceDesk — tema inspirado no Zendesk Garden (Apache-2.0, garden.zendesk.com)
+// -----------------------------------------------------------------------------
+// Este arquivo é importado DEPOIS de `next-colors` e sobrescreve as variáveis
+// CSS do design system (n-*) com a paleta Garden: azul primário #1F73B7,
+// cinzas neutros frios, cores semânticas de status, tipografia system-ui,
+// sombras e densidade mais compacta.
+//
+// Regras:
+// - Toda variável sobrescrita em `:root` (claro) também é definida em `.dark`
+//   (a classe `dark` fica no <body>), para o modo escuro continuar correto.
+// - Tokens novos do ServiceDesk usam o prefixo `--sd-*`.
+// - Os tokens de status também existem em JS: dashboard/servicedesk/statusTokens.js
+// =============================================================================
+
+:root {
+  // ---- Azul primário (Garden blue 100–800 interpolado na escala 1–12) ----
+  --blue-1: 250 252 255;
+  --blue-2: 237 247 255; // garden blue-100 #EDF7FF
+  --blue-3: 226 240 252;
+  --blue-4: 206 226 242; // garden blue-200 #CEE2F2
+  --blue-5: 190 214 236;
+  --blue-6: 173 204 228; // garden blue-300 #ADCCE4
+  --blue-7: 130 176 214;
+  --blue-8: 82 147 199; // garden blue-400 #5293C7
+  --blue-9: 31 115 183; // garden blue-600 #1F73B7 (primário)
+  --blue-10: 26 100 160; // hover
+  --blue-11: 20 74 117; // garden blue-700 #144A75 (texto/link)
+  --blue-12: 15 53 84; // garden blue-800 #0F3554
+
+  // ---- Cinzas neutros (Garden grey 100–800) ----
+  --slate-1: 252 253 253;
+  --slate-2: 248 249 249; // garden grey-100 #F8F9F9
+  --slate-3: 240 242 243;
+  --slate-4: 233 235 237; // garden grey-200 #E9EBED
+  --slate-5: 225 229 231;
+  --slate-6: 216 220 222; // garden grey-300 #D8DCDE
+  --slate-7: 194 200 204; // garden grey-400 #C2C8CC
+  --slate-8: 167 175 182;
+  --slate-9: 135 146 157; // garden grey-500 #87929D
+  --slate-10: 120 131 141;
+  --slate-11: 104 115 125; // garden grey-600 #68737D (texto secundário)
+  --slate-12: 47 57 65; // garden grey-800 #2F3941 (texto principal)
+
+  // ---- Vermelho / âmbar / verde semânticos (Garden red/yellow/green) ----
+  --ruby-9: 204 51 64; // garden red-600 #CC3340
+  --ruby-10: 179 41 53;
+  --ruby-11: 140 35 44; // garden red-700 #8C232C
+  --amber-9: 255 176 87; // garden yellow-400 #FFB057
+  --amber-10: 247 154 62; // garden yellow-500 #F79A3E
+  --amber-11: 173 89 24; // garden yellow-700 #AD5918
+  --teal-9: 3 129 83; // garden green-600 #038153
+  --teal-10: 24 97 70; // garden green-700 #186146
+  --teal-11: 24 97 70;
+
+  // ---- Superfícies e bordas (Agent Workspace: fundo cinza claro, cartões brancos) ----
+  --background-color: 248 249 249;
+  --surface-1: 255 255 255;
+  --surface-2: 255 255 255;
+  --border-container: 233 235 237;
+  --border-strong: 216 220 222;
+  --border-weak: 233 235 237;
+  --border-blue: 31, 115, 183, 0.5;
+  --border-blue-strong: 20 74 117;
+  --solid-blue: 237 247 255;
+  --text-blue: 15 53 84;
+  --label-background: 248 249 249;
+
+  // ---- Tokens ServiceDesk ----
+  --sd-brand: 31 115 183;
+  --sd-nav-bg: 3 54 61; // garden kale-800 #03363D (barra de navegação)
+  --sd-nav-fg: 255 255 255;
+  --sd-nav-active: 23 73 77; // garden kale-700 #17494D
+  --sd-focus-ring: 31, 115, 183, 0.35;
+
+  // Tipografia (Garden: pilha system-ui, 14px/20px)
+  // prettier-ignore
+  --sd-font-sans: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell, 'Helvetica Neue', Arial, sans-serif;
+  // prettier-ignore
+  --sd-font-mono: SFMono-Regular, Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+  --sd-font-size-base: 14px;
+  --sd-line-height-base: 20px;
+
+  // Densidade (Garden md = 40px; compacto = 32px)
+  --sd-row-height: 40px;
+  --sd-row-height-compact: 32px;
+  --sd-control-height: 32px;
+
+  // Raios (Garden: sm 2px, md 4px)
+  --sd-radius-sm: 2px;
+  --sd-radius-md: 4px;
+  --sd-radius-lg: 6px;
+
+  // Sombras (Garden: cor kale-600 a 15%)
+  --sd-shadow-sm: 0 4px 8px 0 rgba(4, 68, 77, 0.08);
+  --sd-shadow-md: 0 8px 16px 0 rgba(4, 68, 77, 0.12);
+  --sd-shadow-lg: 0 16px 28px 0 rgba(4, 68, 77, 0.15);
+
+  // ---- Status de ticket (estilo Agent Workspace) ----
+  // <cat>      = fundo sólido do selo, <cat>-fg = texto sobre o sólido
+  // <cat>-soft = fundo suave,         <cat>-soft-fg = texto sobre o suave
+  --sd-status-new: 255 176 87; // Novo: amarelo #FFB057
+  --sd-status-new-fg: 47 57 65;
+  --sd-status-new-soft: 255 247 237;
+  --sd-status-new-soft-fg: 173 89 24;
+  --sd-status-open: 204 51 64; // Aberto: vermelho #CC3340
+  --sd-status-open-fg: 255 255 255;
+  --sd-status-open-soft: 255 240 241;
+  --sd-status-open-soft-fg: 140 35 44;
+  --sd-status-pending: 31 115 183; // Pendente: azul #1F73B7
+  --sd-status-pending-fg: 255 255 255;
+  --sd-status-pending-soft: 237 247 255;
+  --sd-status-pending-soft-fg: 20 74 117;
+  --sd-status-hold: 47 57 65; // Em espera: grafite #2F3941
+  --sd-status-hold-fg: 255 255 255;
+  --sd-status-hold-soft: 233 235 237;
+  --sd-status-hold-soft-fg: 47 57 65;
+  --sd-status-solved: 104 115 125; // Resolvido: cinza #68737D
+  --sd-status-solved-fg: 255 255 255;
+  --sd-status-solved-soft: 248 249 249;
+  --sd-status-solved-soft-fg: 73 84 92;
+  --sd-status-closed: 216 220 222; // Fechado: cinza claro #D8DCDE
+  --sd-status-closed-fg: 47 57 65;
+  --sd-status-closed-soft: 248 249 249;
+  --sd-status-closed-soft-fg: 104 115 125;
+}
+
+.dark {
+  // Azul primário no escuro: mesmo sólido (#1F73B7, contraste 5:1 com branco)
+  // e textos mais claros para leitura sobre fundo escuro.
+  --blue-1: 11 18 26;
+  --blue-2: 14 25 38;
+  --blue-3: 15 37 60;
+  --blue-4: 15 50 82;
+  --blue-5: 19 62 100;
+  --blue-6: 26 76 120;
+  --blue-7: 33 92 143;
+  --blue-8: 41 108 168;
+  --blue-9: 31 115 183;
+  --blue-10: 51 127 189; // garden blue-500 #337FBD
+  --blue-11: 135 186 230;
+  --blue-12: 206 226 242;
+
+  // Cinzas escuros: mantém a escala original do Chatwoot (já fria/neutra)
+  --slate-1: 17 17 19;
+  --slate-2: 24 25 27;
+  --slate-3: 33 34 37;
+  --slate-4: 39 42 45;
+  --slate-5: 46 49 53;
+  --slate-6: 54 58 63;
+  --slate-7: 67 72 78;
+  --slate-8: 90 97 105;
+  --slate-9: 105 110 119;
+  --slate-10: 119 123 132;
+  --slate-11: 176 180 186;
+  --slate-12: 237 238 240;
+
+  --ruby-9: 204 51 64;
+  --ruby-10: 227 91 102; // garden red-400 #E35B66
+  --ruby-11: 245 181 186; // garden red-300 #F5B5BA
+  --amber-9: 255 176 87;
+  --amber-10: 255 197 61;
+  --amber-11: 254 214 168; // garden yellow-300 #FED6A8
+  --teal-9: 3 129 83;
+  --teal-10: 34 143 103;
+  --teal-11: 174 207 194; // garden green-300 #AECFC2
+
+  --background-color: 28 29 32;
+  --surface-1: 20 21 23;
+  --surface-2: 22 23 26;
+  --border-container: 255, 255, 255, 0;
+  --border-strong: 46 45 50;
+  --border-weak: 31 31 37;
+  --border-blue: 51, 127, 189, 0.5;
+  --border-blue-strong: 206 226 242;
+  --solid-blue: 15 50 82;
+  --text-blue: 206 226 242;
+  --label-background: 36 38 45;
+
+  --sd-brand: 51 127 189;
+  --sd-nav-bg: 15 21 24;
+  --sd-nav-fg: 237 238 240;
+  --sd-nav-active: 33 42 47;
+  --sd-focus-ring: 51, 127, 189, 0.5;
+
+  --sd-shadow-sm: 0 4px 8px 0 rgba(0, 0, 0, 0.3);
+  --sd-shadow-md: 0 8px 16px 0 rgba(0, 0, 0, 0.35);
+  --sd-shadow-lg: 0 16px 28px 0 rgba(0, 0, 0, 0.45);
+
+  --sd-status-new: 255 176 87;
+  --sd-status-new-fg: 47 57 65;
+  --sd-status-new-soft: 77 48 0;
+  --sd-status-new-soft-fg: 254 214 168;
+  --sd-status-open: 204 51 64;
+  --sd-status-open-fg: 255 255 255;
+  --sd-status-open-soft: 78 19 37;
+  --sd-status-open-soft-fg: 245 181 186;
+  --sd-status-pending: 31 115 183;
+  --sd-status-pending-fg: 255 255 255;
+  --sd-status-pending-soft: 15 50 82;
+  --sd-status-pending-soft-fg: 173 204 228;
+  --sd-status-hold: 194 200 204;
+  --sd-status-hold-fg: 17 17 19;
+  --sd-status-hold-soft: 46 49 53;
+  --sd-status-hold-soft-fg: 216 220 222;
+  --sd-status-solved: 135 146 157;
+  --sd-status-solved-fg: 17 17 19;
+  --sd-status-solved-soft: 39 42 45;
+  --sd-status-solved-soft-fg: 176 180 186;
+  --sd-status-closed: 67 72 78;
+  --sd-status-closed-fg: 237 238 240;
+  --sd-status-closed-soft: 33 34 37;
+  --sd-status-closed-soft-fg: 135 146 157;
+}
+
+// ---- Tipografia base (Garden: system-ui 14/20) ----
+// Sobrescreve a pilha 'Inter' definida em _woot.scss (mesmo seletor, carregado depois).
+html,
+body {
+  font-family: var(--sd-font-sans) !important;
+}
+
+// Texto compacto (14px) só no <body>: o <html> continua em 16px, então `rem`
+// (Tailwind, espaçamentos e ícones) mantém a escala original do Chatwoot.
+body {
+  font-size: var(--sd-font-size-base);
+}
+
+// Densidade mais compacta no texto corrido (Chatwoot usa 1.65)
+p {
+  line-height: 1.5;
+}
+
+// Anel de foco no estilo Garden: use a classe utilitária abaixo nos componentes
+// novos (não aplicamos globalmente para não brigar com os `ring-*` existentes).
+.sd-focus-ring:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(var(--sd-focus-ring));
+}

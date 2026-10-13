@@ -8,14 +8,17 @@ const {
   getIconCollections,
 } = require('@egoist/tailwindcss-icons');
 
+// ServiceDesk: pilha system-ui (Garden)
 const defaultSansFonts = [
-  '-apple-system',
   'system-ui',
+  '-apple-system',
   'BlinkMacSystemFont',
   '"Segoe UI"',
   'Roboto',
+  'Oxygen-Sans',
+  'Ubuntu',
+  'Cantarell',
   '"Helvetica Neue"',
-  'Tahoma',
   'Arial',
   'sans-serif !important',
 ];
@@ -35,14 +38,48 @@ const tailwindConfig = {
     './app/javascript/dashboard/composables/**/*.js',
     './app/javascript/dashboard/components-next/**/*.js',
     './app/javascript/dashboard/routes/dashboard/**/**/*.js',
+    './app/javascript/dashboard/servicedesk/**/*.js',
     './app/views/**/*.erb',
   ],
   theme: {
     extend: {
       fontFamily: {
         sans: defaultSansFonts,
-        inter: ['Inter', ...defaultSansFonts],
-        interDisplay: ['InterDisplay', ...defaultSansFonts],
+        // ServiceDesk: `font-inter` passa a usar a pilha system-ui (Garden)
+        inter: defaultSansFonts,
+        interDisplay: defaultSansFonts,
+        mono: [
+          'SFMono-Regular',
+          'Consolas',
+          '"Liberation Mono"',
+          'Menlo',
+          'Courier',
+          'monospace',
+        ],
+      },
+      // ServiceDesk: raios mais retos (Garden sm 2px / md 4px)
+      borderRadius: {
+        sm: '2px',
+        DEFAULT: '4px',
+        md: '4px',
+        lg: '6px',
+        xl: '8px',
+        '2xl': '10px',
+        '3xl': '12px',
+      },
+      // ServiceDesk: sombras Garden (tom kale)
+      boxShadow: {
+        sm: '0 1px 2px 0 rgba(4, 68, 77, 0.08)',
+        DEFAULT: '0 4px 8px 0 rgba(4, 68, 77, 0.08)',
+        md: '0 8px 16px 0 rgba(4, 68, 77, 0.12)',
+        lg: '0 16px 28px 0 rgba(4, 68, 77, 0.15)',
+        xl: '0 20px 32px 0 rgba(4, 68, 77, 0.18)',
+      },
+      // ServiceDesk: densidade (linhas de lista/controles)
+      spacing: {
+        'sd-row': 'var(--sd-row-height)',
+        'sd-row-compact': 'var(--sd-row-height-compact)',
+        'sd-control': 'var(--sd-control-height)',
       },
       fontWeight: {
         420: '420',

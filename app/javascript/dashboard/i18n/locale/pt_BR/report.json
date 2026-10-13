@@ -1,14 +1,14 @@
 {
   "REPORT": {
-    "HEADER": "Conversas",
+    "HEADER": "Tickets",
     "LOADING_CHART": "Carregando dados do gráfico...",
     "NO_ENOUGH_DATA": "Não existem dados suficientes para gerar o relatório. Tente novamente mais tarde.",
-    "DOWNLOAD_CONVERSATION_REPORTS": "Baixar relatórios de conversas",
+    "DOWNLOAD_CONVERSATION_REPORTS": "Baixar relatórios de tickets",
     "DATA_FETCHING_FAILED": "Falha ao buscar dados, tente novamente mais tarde.",
     "SUMMARY_FETCHING_FAILED": "Não foi possível obter o resumo. Tente novamente mais tarde.",
     "METRICS": {
       "CONVERSATIONS": {
-        "NAME": "Conversas",
+        "NAME": "Tickets",
         "DESC": "( Total )"
       },
       "INCOMING_MESSAGES": {
@@ -22,16 +22,16 @@
       "FIRST_RESPONSE_TIME": {
         "NAME": "Tempo de Primeira Resposta",
         "DESC": "(Média)",
-        "INFO_TEXT": "Número total de conversas utilizadas para computação:",
-        "TOOLTIP_DESCRIPTION": "Com base em {count} conversa | Com base em {count} conversas",
-        "TOOLTIP_TEXT": "O Tempo de Primeira Resposta é de {metricValue} (com base em {conversationCount} conversas)"
+        "INFO_TEXT": "Número total de tickets utilizados para computação:",
+        "TOOLTIP_DESCRIPTION": "Com base em {count} ticket | Com base em {count} tickets",
+        "TOOLTIP_TEXT": "O Tempo de Primeira Resposta é de {metricValue} (com base em {conversationCount} tickets)"
       },
       "RESOLUTION_TIME": {
         "NAME": "Tempo de Resolução",
         "DESC": "(Média)",
-        "INFO_TEXT": "Número total de conversas utilizadas para computação:",
-        "TOOLTIP_DESCRIPTION": "Com base em {count} conversa | Com base em {count} conversas",
-        "TOOLTIP_TEXT": "O Tempo de Resolução é de {metricValue} (com base em {conversationCount} conversas)"
+        "INFO_TEXT": "Número total de tickets utilizados para computação:",
+        "TOOLTIP_DESCRIPTION": "Com base em {count} ticket | Com base em {count} tickets",
+        "TOOLTIP_TEXT": "O Tempo de Resolução é de {metricValue} (com base em {conversationCount} tickets)"
       },
       "RESOLUTION_COUNT": {
         "NAME": "Contagem de Resolução",
@@ -127,7 +127,7 @@
     },
     "DRILLDOWN": {
       "TITLE": "Detalhes de {metric}",
-      "RESULT_COUNT_CONVERSATION": "{count} conversa | {count} conversas",
+      "RESULT_COUNT_CONVERSATION": "{count} ticket | {count} tickets",
       "RESULT_COUNT_MESSAGE": "{count} mensagem | {count} mensagens",
       "EMPTY": "Nenhum registro encontrado para esta barra.",
       "ERROR": "Não foi possível carregar os registros. Por favor, tente novamente.",
@@ -151,7 +151,7 @@
   },
   "AGENT_REPORTS": {
     "HEADER": "Visão Geral de Agentes",
-    "DESCRIPTION": "Acompanhe facilmente o desempenho dos agentes com métricas-chave, como conversas, tempos de resposta, tempos de resolução e casos resolvidos. Clique no nome de um agente para saber mais.",
+    "DESCRIPTION": "Acompanhe facilmente o desempenho dos agentes com métricas-chave, como tickets, tempos de resposta, tempos de resolução e casos resolvidos. Clique no nome de um agente para saber mais.",
     "LOADING_CHART": "Carregando dados do gráfico...",
     "NO_ENOUGH_DATA": "Não existem dados suficientes para gerar o relatório. Tente novamente mais tarde.",
     "DOWNLOAD_AGENT_REPORTS": "Baixar relatórios de agentes",
@@ -163,7 +163,7 @@
     },
     "METRICS": {
       "CONVERSATIONS": {
-        "NAME": "Conversas",
+        "NAME": "Tickets",
         "DESC": "( Total )"
       },
       "INCOMING_MESSAGES": {
@@ -177,14 +177,14 @@
       "FIRST_RESPONSE_TIME": {
         "NAME": "Tempo da Primeira Resposta",
         "DESC": "(Média)",
-        "INFO_TEXT": "Número total de conversas utilizadas para computação:",
-        "TOOLTIP_TEXT": "O Tempo de Primeira Resposta é de {metricValue} (com base em {conversationCount} conversas)"
+        "INFO_TEXT": "Número total de tickets utilizados para computação:",
+        "TOOLTIP_TEXT": "O Tempo de Primeira Resposta é de {metricValue} (com base em {conversationCount} tickets)"
       },
       "RESOLUTION_TIME": {
         "NAME": "Tempo de Resolução",
         "DESC": "(Média)",
-        "INFO_TEXT": "Número total de conversas utilizadas para computação:",
-        "TOOLTIP_TEXT": "O Tempo de Resolução é de {metricValue} (com base em {conversationCount} conversas)"
+        "INFO_TEXT": "Número total de tickets utilizados para computação:",
+        "TOOLTIP_TEXT": "O Tempo de Resolução é de {metricValue} (com base em {conversationCount} tickets)"
       },
       "RESOLUTION_COUNT": {
         "NAME": "Contagem de Resolução",
@@ -224,7 +224,7 @@
   },
   "LABEL_REPORTS": {
     "HEADER": "Visão Geral das Etiquetas",
-    "DESCRIPTION": "Acompanhe o desempenho da sua etiqueta com métricas-chave incluindo conversas, tempo de resposta, tempos de resolução e casos resolvidos. Clique no nome da etiqueta para obter detalhes.",
+    "DESCRIPTION": "Acompanhe o desempenho da sua etiqueta com métricas-chave incluindo tickets, tempo de resposta, tempos de resolução e casos resolvidos. Clique no nome da etiqueta para obter detalhes.",
     "LOADING_CHART": "Carregando dados do gráfico...",
     "NO_ENOUGH_DATA": "Não existem dados suficientes para gerar o relatório. Tente novamente mais tarde.",
     "DOWNLOAD_LABEL_REPORTS": "Baixar relatórios de etiquetas",
@@ -236,7 +236,7 @@
     },
     "METRICS": {
       "CONVERSATIONS": {
-        "NAME": "Conversas",
+        "NAME": "Tickets",
         "DESC": "( Total )"
       },
       "INCOMING_MESSAGES": {
@@ -250,14 +250,14 @@
       "FIRST_RESPONSE_TIME": {
         "NAME": "Tempo de Primeira Resposta",
         "DESC": "(Média)",
-        "INFO_TEXT": "Número total de conversas utilizadas para computação:",
-        "TOOLTIP_TEXT": "O Tempo de Primeira Resposta é de {metricValue} (com base em {conversationCount} conversas)"
+        "INFO_TEXT": "Número total de tickets utilizados para computação:",
+        "TOOLTIP_TEXT": "O Tempo de Primeira Resposta é de {metricValue} (com base em {conversationCount} tickets)"
       },
       "RESOLUTION_TIME": {
         "NAME": "Tempo de Resolução",
         "DESC": "(Média)",
-        "INFO_TEXT": "Número total de conversas utilizadas para computação:",
-        "TOOLTIP_TEXT": "O Tempo de Resolução é de {metricValue} (com base em {conversationCount} conversas)"
+        "INFO_TEXT": "Número total de tickets utilizados para computação:",
+        "TOOLTIP_TEXT": "O Tempo de Resolução é de {metricValue} (com base em {conversationCount} tickets)"
       },
       "RESOLUTION_COUNT": {
         "NAME": "Contagem de Resolução",
@@ -297,7 +297,7 @@
   },
   "INBOX_REPORTS": {
     "HEADER": "Visualizar Caixa de Entrada",
-    "DESCRIPTION": "Veja rapidamente o desempenho da caixa de entrada com métricas-chave como conversas, tempos de resposta, tempos de resolução, e casos resolvidos — tudo em um só lugar. Clique na caixa de entrada para mais detalhes",
+    "DESCRIPTION": "Veja rapidamente o desempenho da caixa de entrada com métricas-chave como tickets, tempos de resposta, tempos de resolução, e casos resolvidos — tudo em um só lugar. Clique na caixa de entrada para mais detalhes",
     "LOADING_CHART": "Carregando dados do gráfico...",
     "NO_ENOUGH_DATA": "Não existem dados suficientes para gerar o relatório. Tente novamente mais tarde.",
     "DOWNLOAD_INBOX_REPORTS": "Baixar relatórios de entrada",
@@ -311,7 +311,7 @@
     },
     "METRICS": {
       "CONVERSATIONS": {
-        "NAME": "Conversas",
+        "NAME": "Tickets",
         "DESC": "( Total )"
       },
       "INCOMING_MESSAGES": {
@@ -325,14 +325,14 @@
       "FIRST_RESPONSE_TIME": {
         "NAME": "Tempo da Primeira Resposta",
         "DESC": "(Média)",
-        "INFO_TEXT": "Número total de conversas utilizadas para computação:",
-        "TOOLTIP_TEXT": "O Tempo de Primeira Resposta é de {metricValue} (com base em {conversationCount} conversas)"
+        "INFO_TEXT": "Número total de tickets utilizados para computação:",
+        "TOOLTIP_TEXT": "O Tempo de Primeira Resposta é de {metricValue} (com base em {conversationCount} tickets)"
       },
       "RESOLUTION_TIME": {
         "NAME": "Tempo de resolução",
         "DESC": "(Média)",
-        "INFO_TEXT": "Número total de conversas utilizadas para computação:",
-        "TOOLTIP_TEXT": "O Tempo de Resolução é de {metricValue} (com base em {conversationCount} conversas)"
+        "INFO_TEXT": "Número total de tickets utilizados para computação:",
+        "TOOLTIP_TEXT": "O Tempo de Resolução é de {metricValue} (com base em {conversationCount} tickets)"
       },
       "RESOLUTION_COUNT": {
         "NAME": "Contagem de Resolução",
@@ -372,7 +372,7 @@
   },
   "TEAM_REPORTS": {
     "HEADER": "Resumo do Time",
-    "DESCRIPTION": "Tenha uma visão geral do desempenho dos seus times com métricas essenciais, incluindo conversas, tempos de resposta, tempos de resolução e casos resolvidos. Clique no nome do time para ver mais detalhes.",
+    "DESCRIPTION": "Tenha uma visão geral do desempenho dos seus times com métricas essenciais, incluindo tickets, tempos de resposta, tempos de resolução e casos resolvidos. Clique no nome do time para ver mais detalhes.",
     "LOADING_CHART": "Carregando dados do gráfico...",
     "NO_ENOUGH_DATA": "Não existem dados suficientes para gerar o relatório. Tente novamente mais tarde.",
     "DOWNLOAD_TEAM_REPORTS": "Baixar relatórios de time",
@@ -387,7 +387,7 @@
     },
     "METRICS": {
       "CONVERSATIONS": {
-        "NAME": "Conversas",
+        "NAME": "Tickets",
         "DESC": "( Total )"
       },
       "INCOMING_MESSAGES": {
@@ -401,14 +401,14 @@
       "FIRST_RESPONSE_TIME": {
         "NAME": "Tempo da Primeira Resposta",
         "DESC": "(Média)",
-        "INFO_TEXT": "Número total de conversas utilizadas para computação:",
-        "TOOLTIP_TEXT": "O Tempo de Primeira Resposta é de {metricValue} (com base em {conversationCount} conversas)"
+        "INFO_TEXT": "Número total de tickets utilizados para computação:",
+        "TOOLTIP_TEXT": "O Tempo de Primeira Resposta é de {metricValue} (com base em {conversationCount} tickets)"
       },
       "RESOLUTION_TIME": {
         "NAME": "Tempo de Resolução",
         "DESC": "(Média)",
-        "INFO_TEXT": "Número total de conversas utilizadas para computação:",
-        "TOOLTIP_TEXT": "O Tempo de Resolução é de {metricValue} (com base em {conversationCount} conversas)"
+        "INFO_TEXT": "Número total de tickets utilizados para computação:",
+        "TOOLTIP_TEXT": "O Tempo de Resolução é de {metricValue} (com base em {conversationCount} tickets)"
       },
       "RESOLUTION_COUNT": {
         "NAME": "Contagem de Resolução",
@@ -481,7 +481,7 @@
         "AGENT_NAME": "Agente",
         "RATING": "Classificação",
         "FEEDBACK_TEXT": "Comentário do feedback",
-        "CONVERSATION": "Conversas",
+        "CONVERSATION": "Tickets",
         "CUSTOMER": "Cliente",
         "RESPONSE": "Resposta",
         "HANDLED_BY": "Atendido por"
@@ -528,8 +528,8 @@
     "HEADER": "Relatórios do Bot",
     "METRIC": {
       "TOTAL_CONVERSATIONS": {
-        "LABEL": "Nº de Conversas",
-        "TOOLTIP": "Número total de conversas tratadas pelo bot"
+        "LABEL": "Nº de Tickets",
+        "TOOLTIP": "Número total de tickets tratados pelo bot"
       },
       "TOTAL_RESPONSES": {
         "LABEL": "Total de respostas",
@@ -537,11 +537,11 @@
       },
       "RESOLUTION_RATE": {
         "LABEL": "Taxa de resolução",
-        "TOOLTIP": "Número total de conversas resolvidas pelo bot / número total de conversas manipuladas pelo bot * 100"
+        "TOOLTIP": "Número total de tickets resolvidos pelo bot / número total de tickets manipulados pelo bot * 100"
       },
       "HANDOFF_RATE": {
         "LABEL": "Taxa de entrega",
-        "TOOLTIP": "Número total de conversas entregues a agentes / número total de conversas mantidas pelo bot * 100"
+        "TOOLTIP": "Número total de tickets entregues a agentes / número total de tickets mantidos pelo bot * 100"
       }
     }
   },
@@ -550,31 +550,31 @@
     "LIVE": "Em tempo real",
     "HEATMAP_ARIA_LABEL": "{metric} por dia e hora",
     "ACCOUNT_CONVERSATIONS": {
-      "HEADER": "Conversas Abertas",
-      "LOADING_MESSAGE": "Carregando métricas de conversa...",
+      "HEADER": "Tickets Abertos",
+      "LOADING_MESSAGE": "Carregando métricas de tickets...",
       "OPEN": "Abertas",
       "UNATTENDED": "Não atendidas",
       "UNASSIGNED": "Não atribuídas",
       "PENDING": "Pendentes"
     },
     "CONVERSATION_HEATMAP": {
-      "HEADER": "Tráfego de conversa",
-      "NO_CONVERSATIONS": "Não há conversas",
-      "CONVERSATION": "{count} conversa",
-      "CONVERSATIONS": "{count} conversas",
+      "HEADER": "Tráfego de tickets",
+      "NO_CONVERSATIONS": "Não há tickets",
+      "CONVERSATION": "{count} ticket",
+      "CONVERSATIONS": "{count} tickets",
       "DOWNLOAD_REPORT": "Baixar relatório"
     },
     "RESOLUTION_HEATMAP": {
       "HEADER": "Resoluções",
-      "NO_CONVERSATIONS": "Não há conversas",
-      "CONVERSATION": "{count} conversa",
-      "CONVERSATIONS": "{count} conversas",
+      "NO_CONVERSATIONS": "Não há tickets",
+      "CONVERSATION": "{count} ticket",
+      "CONVERSATIONS": "{count} tickets",
       "DOWNLOAD_REPORT": "Baixar relatório"
     },
     "AGENT_CONVERSATIONS": {
-      "HEADER": "Conversas por agentes",
+      "HEADER": "Tickets por agentes",
       "LOADING_MESSAGE": "Carregando métricas de agente...",
-      "NO_AGENTS": "Não há conversas por agentes",
+      "NO_AGENTS": "Não há tickets por agentes",
       "TABLE_HEADER": {
         "AGENT": "Agente",
         "OPEN": "Abertas",
@@ -584,7 +584,7 @@
     },
     "TEAM_CONVERSATIONS": {
       "ALL_TEAMS": "Todos os Times",
-      "HEADER": "Conversas por times",
+      "HEADER": "Tickets por times",
       "LOADING_MESSAGE": "Carregando métricas de times...",
       "NO_TEAMS": "Não há dados disponíveis",
       "TABLE_HEADER": {
@@ -612,7 +612,7 @@
   },
   "SLA_REPORTS": {
     "HEADER": "Relatórios SLA",
-    "NO_RECORDS": "Conversas com SLA aplicadas não estão disponíveis.",
+    "NO_RECORDS": "Tickets com SLA aplicado não estão disponíveis.",
     "LOADING": "Carregando dados de SLA...",
     "DOWNLOAD_SLA_REPORTS": "Baixar relatórios de SLA",
     "DOWNLOAD_FAILED": "Falha ao baixar os relatórios de SLA",
@@ -647,14 +647,14 @@
         "TOOLTIP": "Total de SLA perdidos em um determinado período"
       },
       "NO_OF_CONVERSATIONS": {
-        "LABEL": "Nº de Conversas",
-        "TOOLTIP": "Número total de conversas com SLA"
+        "LABEL": "Nº de Tickets",
+        "TOOLTIP": "Número total de tickets com SLA"
       }
     },
     "TABLE": {
       "HEADER": {
         "POLICY": "Política",
-        "CONVERSATION": "Conversas",
+        "CONVERSATION": "Tickets",
         "AGENT": "Agente"
       },
       "VIEW_DETAILS": "Ver detalhes"
@@ -669,6 +669,6 @@
     "AVG_FIRST_RESPONSE_TIME": "Tempo Médio de Primeira Resposta",
     "AVG_REPLY_TIME": "Tempo Médio de Espera do Cliente",
     "RESOLUTION_COUNT": "Contagem de Resolução",
-    "CONVERSATIONS": "Nº de Conversas"
+    "CONVERSATIONS": "Nº de Tickets"
   }
 }

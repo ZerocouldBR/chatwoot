@@ -15,7 +15,7 @@
     },
     "BOT_CONFIGURATION": {
       "TITLE": "Selecione um robô de agente",
-      "DESC": "Atribua um Agente Robô à sua caixa de entrada. Eles podem lidar com as conversas iniciais e transferi-las para um agente humano quando necessário.",
+      "DESC": "Atribua um Agente Robô à sua caixa de entrada. Eles podem lidar com os tickets iniciais e transferi-los para um agente humano quando necessário.",
       "SUBMIT": "Atualizar",
       "DISCONNECT": "Desconectar Robô",
       "SUCCESS_MESSAGE": "Agente de bot atualizado com sucesso.",
@@ -108,7 +108,7 @@
       "UPDATE": "Atualizar o Robô"
     },
     "WEBHOOK": {
-      "DESCRIPTION": "Configure um robô de Webhook para integrar com seus serviços personalizados. O robô receberá e processará eventos de conversas e pode respondê-los."
+      "DESCRIPTION": "Configure um robô de Webhook para integrar com seus serviços personalizados. O robô receberá e processará eventos de tickets e pode respondê-los."
     },
     "TYPES": {
       "WEBHOOK": "Webhook robô"

@@ -1,6 +1,4 @@
 const {
-  blue,
-  blueDark,
   green,
   greenDark,
   yellow,
@@ -14,19 +12,20 @@ const {
 } = require('@radix-ui/colors');
 
 export const colors = {
+  // ServiceDesk: escala legada `woot` trocada pelo azul Garden
   woot: {
-    25: blue.blue2,
-    50: blue.blue3,
-    75: blue.blue4,
-    100: blue.blue5,
-    200: blue.blue7,
-    300: blue.blue8,
-    400: blueDark.blue11,
-    500: blueDark.blue10,
-    600: blueDark.blue9,
-    700: blueDark.blue8,
-    800: blueDark.blue6,
-    900: blueDark.blue2,
+    25: '#F5FAFF',
+    50: '#EDF7FF',
+    75: '#E0EEFA',
+    100: '#CEE2F2',
+    200: '#ADCCE4',
+    300: '#5293C7',
+    400: '#337FBD',
+    500: '#1F73B7',
+    600: '#1A64A0',
+    700: '#144A75',
+    800: '#0F3554',
+    900: '#0A2338',
   },
   green: {
     50: greenDark.green12,
@@ -101,6 +100,82 @@ export const colors = {
     700: violetDark.violet7,
     800: violetDark.violet6,
     900: violet.violet12,
+  },
+
+  // ServiceDesk: paleta Zendesk Garden (Apache-2.0) para uso direto
+  garden: {
+    blue: {
+      100: '#EDF7FF',
+      200: '#CEE2F2',
+      300: '#ADCCE4',
+      400: '#5293C7',
+      500: '#337FBD',
+      600: '#1F73B7',
+      700: '#144A75',
+      800: '#0F3554',
+    },
+    grey: {
+      100: '#F8F9F9',
+      200: '#E9EBED',
+      300: '#D8DCDE',
+      400: '#C2C8CC',
+      500: '#87929D',
+      600: '#68737D',
+      700: '#49545C',
+      800: '#2F3941',
+    },
+    red: { 100: '#FFF0F1', 400: '#E35B66', 600: '#CC3340', 700: '#8C232C' },
+    yellow: { 100: '#FFF7ED', 400: '#FFB057', 600: '#ED8F1C', 700: '#AD5918' },
+    green: { 100: '#EDF8F4', 400: '#5EAE91', 600: '#038153', 700: '#186146' },
+    kale: { 100: '#F5FCFC', 600: '#04444D', 700: '#17494D', 800: '#03363D' },
+  },
+
+  // ServiceDesk: tokens semânticos (variáveis em _servicedesk-theme.scss)
+  sd: {
+    brand: 'rgb(var(--sd-brand) / <alpha-value>)',
+    nav: {
+      DEFAULT: 'rgb(var(--sd-nav-bg) / <alpha-value>)',
+      fg: 'rgb(var(--sd-nav-fg) / <alpha-value>)',
+      active: 'rgb(var(--sd-nav-active) / <alpha-value>)',
+    },
+    status: {
+      new: {
+        DEFAULT: 'rgb(var(--sd-status-new) / <alpha-value>)',
+        fg: 'rgb(var(--sd-status-new-fg) / <alpha-value>)',
+        soft: 'rgb(var(--sd-status-new-soft) / <alpha-value>)',
+        'soft-fg': 'rgb(var(--sd-status-new-soft-fg) / <alpha-value>)',
+      },
+      open: {
+        DEFAULT: 'rgb(var(--sd-status-open) / <alpha-value>)',
+        fg: 'rgb(var(--sd-status-open-fg) / <alpha-value>)',
+        soft: 'rgb(var(--sd-status-open-soft) / <alpha-value>)',
+        'soft-fg': 'rgb(var(--sd-status-open-soft-fg) / <alpha-value>)',
+      },
+      pending: {
+        DEFAULT: 'rgb(var(--sd-status-pending) / <alpha-value>)',
+        fg: 'rgb(var(--sd-status-pending-fg) / <alpha-value>)',
+        soft: 'rgb(var(--sd-status-pending-soft) / <alpha-value>)',
+        'soft-fg': 'rgb(var(--sd-status-pending-soft-fg) / <alpha-value>)',
+      },
+      hold: {
+        DEFAULT: 'rgb(var(--sd-status-hold) / <alpha-value>)',
+        fg: 'rgb(var(--sd-status-hold-fg) / <alpha-value>)',
+        soft: 'rgb(var(--sd-status-hold-soft) / <alpha-value>)',
+        'soft-fg': 'rgb(var(--sd-status-hold-soft-fg) / <alpha-value>)',
+      },
+      solved: {
+        DEFAULT: 'rgb(var(--sd-status-solved) / <alpha-value>)',
+        fg: 'rgb(var(--sd-status-solved-fg) / <alpha-value>)',
+        soft: 'rgb(var(--sd-status-solved-soft) / <alpha-value>)',
+        'soft-fg': 'rgb(var(--sd-status-solved-soft-fg) / <alpha-value>)',
+      },
+      closed: {
+        DEFAULT: 'rgb(var(--sd-status-closed) / <alpha-value>)',
+        fg: 'rgb(var(--sd-status-closed-fg) / <alpha-value>)',
+        soft: 'rgb(var(--sd-status-closed-soft) / <alpha-value>)',
+        'soft-fg': 'rgb(var(--sd-status-closed-soft-fg) / <alpha-value>)',
+      },
+    },
   },
 
   // next design system color
@@ -226,7 +301,7 @@ export const colors = {
     },
 
     black: '#000000',
-    brand: '#2781F6',
+    brand: '#1F73B7', // ServiceDesk: azul Garden
     portal: 'var(--dynamic-portal-color)',
     'portal-soft': 'var(--dynamic-portal-color-soft)',
     'portal-faint': 'var(--dynamic-portal-color-faint)',

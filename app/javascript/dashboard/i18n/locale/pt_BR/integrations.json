@@ -17,7 +17,7 @@
       "ERROR": "Ocorreu um erro ao tentar conectar com o Shopify. Por favor, tente novamente ou entre em contato com o suporte se o problema persistir."
     },
     "HEADER": "Integrações",
-    "DESCRIPTION": "Chatwoot se integra com várias ferramentas e serviços para melhorar a eficiência de seu time. Explore a lista abaixo para configurar seus aplicativos favoritos.",
+    "DESCRIPTION": "ServiceDesk se integra com várias ferramentas e serviços para melhorar a eficiência de seu time. Explore a lista abaixo para configurar seus aplicativos favoritos.",
     "LEARN_MORE": "Aprenda mais sobre integrações",
     "LOADING": "Obtendo integrações",
     "SEARCH_PLACEHOLDER": "Pesquisar integrações...",
@@ -33,7 +33,7 @@
       "LEARN_MORE": "Saiba mais sobre webhooks",
       "PAYWALL": {
         "TITLE": "Webhooks estão disponíveis nos planos pagos",
-        "AVAILABLE_ON": "Use webhooks para receber eventos em tempo real de sua conta Chatwoot.",
+        "AVAILABLE_ON": "Use webhooks para receber eventos em tempo real de sua conta ServiceDesk.",
         "UPGRADE_PROMPT": "Atualize para o plano Startups, Business ou Enterprise para usar webhooks.",
         "UPGRADE_NOW": "Atualizar agora",
         "CANCEL_ANYTIME": "Altere ou cancele seu plano a qualquer momento."
@@ -51,13 +51,13 @@
       "NO_RESULTS": "Nenhum webhook encontrado correspondente à sua busca",
       "FORM": {
         "CANCEL": "Cancelar",
-        "DESC": "Webhook Os eventos fornecem informações em tempo real sobre o que está acontecendo na sua conta do Chatwoot. Digite um URL válido para configurar um retorno de chamada.",
+        "DESC": "Webhook Os eventos fornecem informações em tempo real sobre o que está acontecendo na sua conta do ServiceDesk. Digite um URL válido para configurar um retorno de chamada.",
         "SUBSCRIPTIONS": {
           "LABEL": "Eventos",
           "EVENTS": {
-            "CONVERSATION_CREATED": "Conversa Criada",
-            "CONVERSATION_STATUS_CHANGED": "Status de conversa alterado",
-            "CONVERSATION_UPDATED": "Conversa Atualizada",
+            "CONVERSATION_CREATED": "Ticket Criado",
+            "CONVERSATION_STATUS_CHANGED": "Status do ticket alterado",
+            "CONVERSATION_UPDATED": "Ticket Atualizado",
             "MESSAGE_CREATED": "Mensagem criada",
             "MESSAGE_UPDATED": "Mensagem atualizada",
             "WEBWIDGET_TRIGGERED": "Widget de chat aberto pelo usuário",
@@ -86,7 +86,7 @@
       "HEADER_BTN_TXT": "Adicionar novo Webhook",
       "LOADING": "Buscando Webhooks anexados",
       "SEARCH_404": "Não existem itens correspondentes a esta consulta",
-      "SIDEBAR_TXT": "<p><b>Webhooks</b> </p> <p>Webhooks são retornos de chamada HTTP que podem ser definidos para todas as contas. Eles são acionados por eventos como a criação de mensagens no Chatwoot. Você pode criar mais de um webhook para esta conta. <br /> <br /> Para criar um <b> webhook </b>, clique no botão <b> Adicionar novo webhook </b>. Você também pode remover qualquer webhook existente clicando no botão Excluir.</p>",
+      "SIDEBAR_TXT": "<p><b>Webhooks</b> </p> <p>Webhooks são retornos de chamada HTTP que podem ser definidos para todas as contas. Eles são acionados por eventos como a criação de mensagens no ServiceDesk. Você pode criar mais de um webhook para esta conta. <br /> <br /> Para criar um <b> webhook </b>, clique no botão <b> Adicionar novo webhook </b>. Você também pode remover qualquer webhook existente clicando no botão Excluir.</p>",
       "LIST": {
         "404": "Não há webhooks configurados para esta conta.",
         "TITLE": "Gerenciar webhooks",
@@ -130,12 +130,12 @@
       "DELETE": "Excluir",
       "DELETE_CONFIRMATION": {
         "TITLE": "Excluir integração",
-        "MESSAGE": "Tem certeza que deseja excluir a integração? Isso resultará na perda de acesso a conversas no seu espaço de trabalho Slack."
+        "MESSAGE": "Tem certeza que deseja excluir a integração? Isso resultará na perda de acesso a tickets no seu espaço de trabalho Slack."
       },
       "HELP_TEXT": {
         "TITLE": "Usando a integração com Slack",
-        "BODY": "Com essa integração, todas as suas conversas recebidas serão sincronizadas com o canal ***{selectedChannelName}*** em seu espaço de trabalho Slack. Você pode gerenciar todas as suas conversas com clientes diretamente no canal e nunca perder uma mensagem.\n\nAqui estão os principais recursos da integração:\n\n**Responda a conversas de dentro do Slack:** Para responder a uma conversa no canal ***{selectedChannelName}*** Slack, simplesmente digite a sua mensagem e envie-a como um tópico. Isso criará uma resposta ao cliente por meio do Chatwoot. Simples assim!\n\n **Crie notas privadas:** Se você quiser criar notas privadas em vez de respostas, inicie sua mensagem com ***`nota:`***. Isso garante que sua mensagem seja privada e não seja visível para o cliente.\n\n**Associar um perfil de agente:** Se a pessoa que respondeu no Slack tem um perfil de agente no Chatwoot sob o mesmo e-mail, as respostas serão associadas automaticamente com esse perfil de agente. Isso significa que você pode facilmente controlar quem disse o quê e quando. Por outro lado, quando o respondente não tiver um perfil de agente associado, as respostas aparecerão do perfil do bot para o cliente.",
-        "BODY_ALERT": "Com esta integração, todas as suas conversas recebidas serão sincronizadas com o canal ***{selectedChannelName}*** no seu workspace do Slack, para que seu time possa atendê-las assim que chegarem.\n\nEsta integração está configurada como **Somente alertas**, o que significa que a thread do Slack é um espaço seguro para discussões internas. Tudo o que seu time publicar nela permanecerá no Slack e nunca será enviado ao cliente.\n\n**Responda ao cliente pelo Chatwoot:** Abra a conversa pelo link compartilhado na thread e responda pelo painel do Chatwoot. As respostas e notas privadas adicionadas no Chatwoot continuarão aparecendo na thread do Slack, mantendo todos informados.",
+        "BODY": "Com essa integração, todos os seus tickets recebidos serão sincronizados com o canal ***{selectedChannelName}*** em seu espaço de trabalho Slack. Você pode gerenciar todos os seus tickets com clientes diretamente no canal e nunca perder uma mensagem.\n\nAqui estão os principais recursos da integração:\n\n**Responda a tickets de dentro do Slack:** Para responder a um ticket no canal ***{selectedChannelName}*** Slack, simplesmente digite a sua mensagem e envie-a como um tópico. Isso criará uma resposta ao cliente por meio do ServiceDesk. Simples assim!\n\n **Crie notas privadas:** Se você quiser criar notas privadas em vez de respostas, inicie sua mensagem com ***`nota:`***. Isso garante que sua mensagem seja privada e não seja visível para o cliente.\n\n**Associar um perfil de agente:** Se a pessoa que respondeu no Slack tem um perfil de agente no ServiceDesk sob o mesmo e-mail, as respostas serão associadas automaticamente com esse perfil de agente. Isso significa que você pode facilmente controlar quem disse o quê e quando. Por outro lado, quando o respondente não tiver um perfil de agente associado, as respostas aparecerão do perfil do bot para o cliente.",
+        "BODY_ALERT": "Com esta integração, todos os seus tickets recebidos serão sincronizados com o canal ***{selectedChannelName}*** no seu workspace do Slack, para que seu time possa atendê-los assim que chegarem.\n\nEsta integração está configurada como **Somente alertas**, o que significa que a thread do Slack é um espaço seguro para discussões internas. Tudo o que seu time publicar nela permanecerá no Slack e nunca será enviado ao cliente.\n\n**Responda ao cliente pelo ServiceDesk:** Abra o ticket pelo link compartilhado na thread e responda pelo painel do ServiceDesk. As respostas e notas privadas adicionadas no ServiceDesk continuarão aparecendo na thread do Slack, mantendo todos informados.",
         "SELECTED": "selecionar"
       },
       "MESSAGE_MODE": {
@@ -148,7 +148,7 @@
           },
           "ALERT": {
             "LABEL": "Somente alertas",
-            "DESCRIPTION": "As conversas são publicadas no Slack apenas para discussão interna. Nada na thread é enviado ao cliente."
+            "DESCRIPTION": "Os tickets são publicados no Slack apenas para discussão interna. Nada na thread é enviado ao cliente."
           }
         },
         "UPDATE_SUCCESS": "O comportamento da thread do Slack foi atualizado com sucesso"
@@ -157,7 +157,7 @@
         "OPTION_LABEL": "Selecione um canal",
         "UPDATE": "Atualizar",
         "BUTTON_TEXT": "Conectar canal",
-        "DESCRIPTION": "Seu espaço de trabalho Slack agora está ligado com o Chatwoot. No entanto, a integração está inativa no momento. Para ativar a integração e conectar um canal ao Chatwoot, por favor, clique no botão abaixo.\n\n**Nota:** Se você está tentando conectar-se a um canal privado, adicione o aplicativo Chatwoot no canal do Slack antes de prosseguir com esta etapa.",
+        "DESCRIPTION": "Seu espaço de trabalho Slack agora está ligado com o ServiceDesk. No entanto, a integração está inativa no momento. Para ativar a integração e conectar um canal ao ServiceDesk, por favor, clique no botão abaixo.\n\n**Nota:** Se você está tentando conectar-se a um canal privado, adicione o aplicativo ServiceDesk no canal do Slack antes de prosseguir com esta etapa.",
         "ATTENTION_REQUIRED": "Atenção necessária",
         "EXPIRED": "Sua integração com o Slack expirou. Para continuar recebendo mensagens no Slack, exclua a integração e conecte seu espaço de trabalho novamente."
       },
@@ -205,7 +205,7 @@
         },
         "GRAMMAR": "Corrigir gramática e ortografia",
         "SUGGESTION": "Sugerir uma resposta",
-        "SUMMARIZE": "Resumir a conversa",
+        "SUMMARIZE": "Resumir o ticket",
         "ASK_COPILOT": "Perguntar ao Copiloto"
       },
       "ASSISTANCE_MODAL": {
@@ -259,7 +259,7 @@
     "DASHBOARD_APPS": {
       "TITLE": "Painel de Aplicativos",
       "HEADER_BTN_TXT": "Adicionar um novo aplicativo",
-      "SIDEBAR_TXT": "<p><b>Painel de Aplicativos</b></p><p>O Painel de Aplicativos permite que as organizações incorporem um aplicativo dentro do Painel de Aplicativos do Chatwoot para fornecer o contexto para agentes de suporte ao cliente. Este recurso permite-lhe criar uma aplicação independente e incorporá-la dentro da dashboard para fornecer informações do usuário, seus pedidos ou seu histórico de pagamentos anteriores.</p><p>Quando você incorpora seu aplicativo usando o Painel de Aplicativos do Chatwoot, sua aplicação irá obter o contexto da conversa e entrar em contato como um evento de janela. Implementar um ouvinte para o evento de mensagem em sua página receber o contexto.</p><p>Para adicionar um novo aplicativo no Painel de Aplicativos, clique no botão 'Adicionar um novo aplicativo'.</p>",
+      "SIDEBAR_TXT": "<p><b>Painel de Aplicativos</b></p><p>O Painel de Aplicativos permite que as organizações incorporem um aplicativo dentro do Painel de Aplicativos do ServiceDesk para fornecer o contexto para agentes de suporte ao cliente. Este recurso permite-lhe criar uma aplicação independente e incorporá-la dentro da dashboard para fornecer informações do usuário, seus pedidos ou seu histórico de pagamentos anteriores.</p><p>Quando você incorpora seu aplicativo usando o Painel de Aplicativos do ServiceDesk, sua aplicação irá obter o contexto do ticket e entrar em contato como um evento de janela. Implementar um ouvinte para o evento de mensagem em sua página receber o contexto.</p><p>Para adicionar um novo aplicativo no Painel de Aplicativos, clique no botão 'Adicionar um novo aplicativo'.</p>",
       "DESCRIPTION": "O Painel de Aplicativos permite que organizações incorporem um aplicativo dentro do painel para fornecer o contexto para agentes de suporte ao cliente. Este recurso permite que você crie uma aplicação independente e incorpore para fornecer informações de usuário, seus pedidos ou seu histórico de pagamentos anteriores.",
       "LEARN_MORE": "Saiba mais sobre o Painel de Aplicativos",
       "COUNT": "{n} painel de aplicativo | {n} painéis de aplicativos",
@@ -322,11 +322,11 @@
         "ERROR": "Houve um erro ao buscar as questões lineares, por favor, tente novamente",
         "LINK_SUCCESS": "Questão vinculada com sucesso",
         "LINK_ERROR": "Houve um erro ao vincular a questão, tente novamente mais tarde",
-        "LINK_TITLE": "Conversa (#{conversationId}) com {name}"
+        "LINK_TITLE": "Ticket (#{conversationId}) com {name}"
       },
       "ADD_OR_LINK": {
         "TITLE": "Criar/ligar questão linear",
-        "DESCRIPTION": "Crie issues no Linear a partir de conversas, ou vincule às existentes para um rastreamento integrado.",
+        "DESCRIPTION": "Crie issues no Linear a partir de tickets, ou vincule às existentes para um rastreamento integrado.",
         "FORM": {
           "TITLE": {
             "LABEL": "Título",
@@ -422,7 +422,7 @@
         "LOADING": "Gerando resumo…"
       },
       "INBOX_BANNER": {
-        "TEXT": "Este assistente ainda não está conectado a nenhuma caixa de entrada, por isso ele não responderá a conversas.",
+        "TEXT": "Este assistente ainda não está conectado a nenhuma caixa de entrada, por isso ele não responderá a tickets.",
         "ACTION": "Conectar caixa de entrada",
         "DISMISS": "Recusar"
       },
@@ -438,16 +438,16 @@
       },
       "METRICS": {
         "HANDLED": {
-          "LABEL": "Conversas atendidas",
-          "HINT": "Conversas em que o Captain respondeu ao cliente ou transferiu a conversa para o seu time."
+          "LABEL": "Tickets atendidos",
+          "HINT": "Tickets em que o Captain respondeu ao cliente ou transferiu o ticket para o seu time."
         },
         "AUTO_RESOLUTION": {
           "LABEL": "Taxa de resolução automática",
-          "HINT": "A proporção de conversas atendidas que o Captain resolveu sem a ajuda do seu time. Quanto maior, mais conversas o Captain resolveu sozinho."
+          "HINT": "A proporção de tickets atendidos que o Captain resolveu sem a ajuda do seu time. Quanto maior, mais tickets o Captain resolveu sozinho."
         },
         "HANDOFF": {
           "LABEL": "Taxa de transferência para atendente",
-          "HINT": "A proporção de conversas atendidas que o Captain transferiu para o seu time. Quanto menor, menos conversas precisaram de um agente."
+          "HINT": "A proporção de tickets atendidos que o Captain transferiu para o seu time. Quanto menor, menos tickets precisaram de um agente."
         },
         "HOURS_SAVED": {
           "LABEL": "Tempo economizado",
@@ -456,12 +456,12 @@
         },
         "REOPEN": {
           "LABEL": "Taxa de reabertura",
-          "HINT": "A proporção de conversas resolvidas pelo Captain que os clientes retomaram posteriormente.",
-          "NOTE": "Quanto menor, mais conversas permaneceram resolvidas."
+          "HINT": "A proporção de tickets resolvidos pelo Captain que os clientes retomaram posteriormente.",
+          "NOTE": "Quanto menor, mais tickets permaneceram resolvidos."
         },
         "DEPTH": {
-          "LABEL": "Mensagens por conversa",
-          "HINT": "O número médio de respostas que o Captain enviou em cada conversa atendida.",
+          "LABEL": "Mensagens por ticket",
+          "HINT": "O número médio de respostas que o Captain enviou em cada ticket atendido.",
           "NOTE": "Um número menor pode indicar respostas mais rápidas, mas perguntas complexas podem exigir mais respostas."
         }
       },
@@ -469,7 +469,7 @@
         "EMPTY": "Não foram encontrados registros para essa métrica.",
         "ERROR": "Não foi possível carregar os registros. Por favor, tente novamente.",
         "LOAD_MORE": "Carregar mais",
-        "RESULT_COUNT_CONVERSATION": "{count} conversa | {count} conversas"
+        "RESULT_COUNT_CONVERSATION": "{count} ticket | {count} tickets"
       },
       "KNOWLEDGE": {
         "TITLE": "Cobertura da base de conhecimento",
@@ -512,21 +512,21 @@
           },
           "DURABLE": {
             "LABEL": "Resoluções do Captain permaneceram encerradas",
-            "HINT": "A proporção de conversas resolvidas pelo Captain que permaneceram encerradas após sete dias.",
+            "HINT": "A proporção de tickets resolvidos pelo Captain que permaneceram encerrados após sete dias.",
             "NOTE": "Apenas resoluções com tempo suficiente para serem observadas por sete dias são incluídas."
           },
           "MEDIAN_RESOLUTION": {
             "LABEL": "Tempo mediano de resolução",
-            "HINT": "O tempo típico desde o momento em que uma conversa chegou ao Captain até ser resolvida.",
+            "HINT": "O tempo típico desde o momento em que um ticket chegou ao Captain até ser resolvido.",
             "NOTE": "Menor valor significa que, geralmente, os clientes foram resolvidos mais rapidamente."
           },
           "DEPTH": {
-            "LABEL": "Mensagens por conversa"
+            "LABEL": "Mensagens por ticket"
           },
           "OF_TOTAL": "de {total}"
         },
         "RESOLUTION_FLOW": {
-          "ARIA_LABEL": "Fluxo de conversas atendidas pelo Captain e resultados do time",
+          "ARIA_LABEL": "Fluxo de tickets atendidos pelo Captain e resultados do time",
           "NODES": {
             "HANDLED": "Atendidas",
             "RESOLVED_BY_CAPTAIN": "Resolvidas pelo Captain",
@@ -551,21 +551,21 @@
         },
         "RESOLUTION_TREND": {
           "TITLE": "Tendência de resolução",
-          "CONVERSATION_COUNT": "Quantidade de conversas",
+          "CONVERSATION_COUNT": "Quantidade de tickets",
           "RESOLUTION_RATE": "Taxa de resolução",
           "CURRENT_PERIOD": "Período atual",
           "PREVIOUS_PERIOD": "Período anterior",
           "HANDLED": "Atendidas",
           "RESOLVED": "Resolvidas pelo Captain",
-          "ARIA_LABEL": "Conversas atendidas e resolvidas pelo Captain por período do relatório",
+          "ARIA_LABEL": "Tickets atendidos e resolvidos pelo Captain por período do relatório",
           "RATE_ARIA_LABEL": "Taxas de resolução do Captain no período atual e anterior"
         },
         "CSAT": {
           "TITLE": "CSAT do Captain",
-          "AUTONOMOUS": "Conversas resolvidas pelo Captain",
-          "AUTONOMOUS_HINT": "A avaliação média dos clientes nas conversas que o Captain resolveu sem a ajuda do seu time.",
-          "ASSISTED": "Conversas assistidas pelo Captain",
-          "ASSISTED_HINT": "A avaliação média dos clientes quando o Captain ajudou antes de sua equipe resolver a conversa.",
+          "AUTONOMOUS": "Tickets resolvidos pelo Captain",
+          "AUTONOMOUS_HINT": "A avaliação média dos clientes nos tickets que o Captain resolveu sem a ajuda do seu time.",
+          "ASSISTED": "Tickets assistidos pelo Captain",
+          "ASSISTED_HINT": "A avaliação média dos clientes quando o Captain ajudou antes de sua equipe resolver o ticket.",
           "VS_HUMANS": "{value} vs humanos"
         },
         "USAGE": {
@@ -592,7 +592,7 @@
       "TITLE": "Copiloto",
       "TRY_THESE_PROMPTS": "Experimente estes comandos",
       "PANEL_TITLE": "Comece a usar o Copiloto",
-      "KICK_OFF_MESSAGE": "Precisa de um resumo rápido, quer verificar conversas passadas ou redigir uma resposta melhor? O Copiloto está aqui para acelerar as coisas.",
+      "KICK_OFF_MESSAGE": "Precisa de um resumo rápido, quer verificar tickets passados ou redigir uma resposta melhor? O Copiloto está aqui para acelerar as coisas.",
       "SEND_MESSAGE": "Enviar mensagem...",
       "EMPTY_MESSAGE": "Houve um erro ao gerar a resposta. Por favor, tente novamente.",
       "LOADER": "Capitão está pensando",
@@ -603,7 +603,7 @@
       "SELECT_ASSISTANT": "Selecione o Assistente",
       "PROMPTS": {
         "SUMMARIZE": {
-          "LABEL": "Resumir esta conversa",
+          "LABEL": "Resumir este ticket",
           "CONTENT": "Resuma os pontos-chave discutidos entre o cliente e o agente de suporte, incluindo as preocupações do cliente, as questões e as soluções ou respostas dadas pelo agente de suporte"
         },
         "SUGGEST": {
@@ -611,12 +611,12 @@
           "CONTENT": "Analise a pergunta do cliente e elabore uma resposta que responda efetivamente às suas preocupações ou perguntas. Certifique-se de que a resposta seja clara, concisa e forneça informações úteis."
         },
         "RATE": {
-          "LABEL": "Avaliar esta conversa",
-          "CONTENT": "Revise a conversa para ver o quanto ela atende às necessidades do cliente. Compartilhe uma classificação de 0 a 5 com base em tom, clareza e eficácia."
+          "LABEL": "Avaliar este ticket",
+          "CONTENT": "Revise o ticket para ver o quanto ele atende às necessidades do cliente. Compartilhe uma classificação de 0 a 5 com base em tom, clareza e eficácia."
         },
         "HIGH_PRIORITY": {
-          "LABEL": "Conversas de alta prioridade",
-          "CONTENT": "Dê um resumo de todas as conversas abertas com prioridade alta. Incluir o ID da conversa, nome do cliente (se disponível), o conteúdo da última mensagem e o agente atribuído. O grupo por status, se relevante."
+          "LABEL": "Tickets de alta prioridade",
+          "CONTENT": "Dê um resumo de todos os tickets abertos com prioridade alta. Incluir o ID do ticket, nome do cliente (se disponível), o conteúdo da última mensagem e o agente atribuído. O grupo por status, se relevante."
         },
         "LIST_CONTACTS": {
           "LABEL": "Listar contatos",
@@ -708,28 +708,28 @@
         },
         "INACTIVITY_RESOLUTION": {
           "TITLE": "Quando os clientes param de responder",
-          "DESCRIPTION": "Escolha como o Captain lida com a conversa.",
+          "DESCRIPTION": "Escolha como o Captain lida com o ticket.",
           "MODE_LABEL": "Ação quando o cliente para de responder",
           "REVIEW_AFTER": "Revisar após",
           "RESOLVE_AFTER": "Resolver após",
-          "ALWAYS_WARNING": "O Captain resolverá todas as conversas após o tempo selecionado, sem revisá-las. Algumas conversas que ainda precisam de atendimento podem ser encerradas.",
-          "PENDING_INFO": "A conversa permanece pendente até que o cliente responda.",
+          "ALWAYS_WARNING": "O Captain resolverá todos os tickets após o tempo selecionado, sem revisá-los. Alguns tickets que ainda precisam de atendimento podem ser encerrados.",
+          "PENDING_INFO": "O ticket permanece pendente até que o cliente responda.",
           "RESOLUTION_MESSAGE": {
             "TITLE": "Enviar uma mensagem ao resolver",
-            "DESCRIPTION": "O Captain envia esta mensagem de encerramento antes de resolver a conversa."
+            "DESCRIPTION": "O Captain envia esta mensagem de encerramento antes de resolver o ticket."
           },
           "MODES": {
             "DISABLED": {
               "LABEL": "Aguardar o cliente",
-              "DESCRIPTION": "O Captain não resolve a conversa. Ele ainda pode transferi-la para a equipe se o cliente solicitar."
+              "DESCRIPTION": "O Captain não resolve o ticket. Ele ainda pode transferi-lo para a equipe se o cliente solicitar."
             },
             "LEGACY": {
               "LABEL": "Sempre resolver",
-              "DESCRIPTION": "O Captain resolve todas as conversas após o tempo selecionado."
+              "DESCRIPTION": "O Captain resolve todos os tickets após o tempo selecionado."
             },
             "EVALUATED": {
-              "LABEL": "Permitir que o Captain revise a conversa (recomendado)",
-              "DESCRIPTION": "O Captain decide se deve resolver a conversa ou transferi-la para a equipe."
+              "LABEL": "Permitir que o Captain revise o ticket (recomendado)",
+              "DESCRIPTION": "O Captain decide se deve resolver o ticket ou transferi-lo para a equipe."
             }
           },
           "DURATION_HOURS_ARIA_LABEL": "Horas antes da ação",
@@ -743,7 +743,7 @@
         },
         "FEATURES": {
           "TITLE": "Funcionalidades",
-          "ALLOW_CONVERSATION_FAQS": "Gerar perguntas frequentes a partir de conversas resolvidas",
+          "ALLOW_CONVERSATION_FAQS": "Gerar perguntas frequentes a partir de tickets resolvidos",
           "ALLOW_MEMORIES": "Capture os principais detalhes como memórias de interações do cliente.",
           "ALLOW_CITATIONS": "Incluir fonte de citações nas respostas",
           "ALLOW_CONTACT_ATTRIBUTES": "Permitir acesso às informações do contato"
@@ -751,7 +751,7 @@
         "AUDIENCE": {
           "EVERYONE": {
             "LABEL": "Todos",
-            "DESC": "O Captain responde a todas as conversas nas caixas de entrada conectadas."
+            "DESC": "O Captain responde a todos os tickets nas caixas de entrada conectadas."
           },
           "SPECIFIC": {
             "LABEL": "Público específico",
@@ -767,7 +767,7 @@
           "MATCH_ALL": "todas",
           "MATCH_ANY": "qualquer",
           "GROUP_CONTACT": "Atributos do contato",
-          "GROUP_CONVERSATION": "Conversas",
+          "GROUP_CONVERSATION": "Tickets",
           "GROUP_CUSTOM": "Atributos personalizados",
           "BROWSER_LANGUAGE": "Idioma do navegador",
           "CONVERSATION_LANGUAGE": "Idioma da primeira mensagem",
@@ -778,7 +778,7 @@
         "SCHEDULE": {
           "ALWAYS": {
             "LABEL": "A qualquer momento",
-            "DESC": "O Captain responde a todas as conversas, independentemente do horário."
+            "DESC": "O Captain responde a todos os tickets, independentemente do horário."
           },
           "BUSINESS_HOURS": {
             "LABEL": "Durante o horário de atendimento",
@@ -801,11 +801,11 @@
         "HEADER": "Configurações",
         "BASIC_SETTINGS": {
           "TITLE": "Configurações básicas",
-          "DESCRIPTION": "Personalize o que o assistente diz quando termina uma conversa ou transfere para um humano."
+          "DESCRIPTION": "Personalize o que o assistente diz quando termina um ticket ou transfere para um humano."
         },
         "SYSTEM_SETTINGS": {
           "TITLE": "Configurações do sistema",
-          "DESCRIPTION": "Personalize o que o assistente diz quando termina uma conversa ou transfere para um humano.",
+          "DESCRIPTION": "Personalize o que o assistente diz quando termina um ticket ou transfere para um humano.",
           "DESCRIPTION_V2": "Gerencie o que o Captain faz quando os clientes param de responder e defina a mensagem de transferência."
         },
         "AUDIENCE": {
@@ -814,7 +814,7 @@
         },
         "SCHEDULE": {
           "TITLE": "Horário de atendimento",
-          "DESCRIPTION": "Escolha quando o Captain responde. Fora desse horário, as conversas são encaminhadas para sua equipe."
+          "DESCRIPTION": "Escolha quando o Captain responde. Fora desse horário, os tickets são encaminhados para sua equipe."
         },
         "CONTROL_ITEMS": {
           "TITLE": "As Coisas Divertidas",
@@ -843,10 +843,10 @@
       },
       "EMPTY_STATE": {
         "TITLE": "Não há assistentes disponíveis",
-        "SUBTITLE": "Crie um assistente para fornecer respostas rápidas e precisas aos seus usuários. Ele pode aprender com seus artigos de ajuda e conversas passadas.",
+        "SUBTITLE": "Crie um assistente para fornecer respostas rápidas e precisas aos seus usuários. Ele pode aprender com seus artigos de ajuda e tickets passados.",
         "FEATURE_SPOTLIGHT": {
           "TITLE": "Assistente Capitão",
-          "NOTE": "O Assistente Capitão interage diretamente com os clientes, aprende com seus documentos de ajuda e conversas anteriores e fornece respostas instantâneas e precisas. Ele lida com as solicitações iniciais, oferecendo resoluções rápidas antes de transferir para um agente quando necessário."
+          "NOTE": "O Assistente Capitão interage diretamente com os clientes, aprende com seus documentos de ajuda e tickets anteriores e fornece respostas instantâneas e precisas. Ele lida com as solicitações iniciais, oferecendo resoluções rápidas antes de transferir para um agente quando necessário."
         }
       },
       "GUARDRAILS": {
@@ -1018,8 +1018,8 @@
       "HEADER": "Documentos",
       "ADD_NEW": "Criar um novo documento",
       "FAQ_COUNT": "{n} FAQ | {n} FAQs",
-      "USED_IN_CONVERSATIONS": "Usado em {n} conversa | Usado em {n} conversas",
-      "NO_USED_CONVERSATIONS": "Não foi encontrada nenhuma conversa para este documento.",
+      "USED_IN_CONVERSATIONS": "Usado em {n} ticket | Usado em {n} tickets",
+      "NO_USED_CONVERSATIONS": "Não foi encontrado nenhum ticket para este documento.",
       "SELECTED": "{count} selecionado",
       "SELECT_ALL": "Selecionar todos ({count})",
       "UNSELECT_ALL": "Desmarcar todos ({count})",
@@ -1058,7 +1058,7 @@
         "SORT": {
           "RECENTLY_UPDATED": "Atualizado recentemente",
           "RECENTLY_CREATED": "Criado recentemente",
-          "MOST_USED": "Mais utilizados em conversas"
+          "MOST_USED": "Mais utilizados em tickets"
         },
         "SEARCH_PLACEHOLDER": "Pesquisar..."
       },
@@ -1086,7 +1086,7 @@
         "DESCRIPTION": "Revise o conteúdo coletado e as FAQs geradas a partir desta fonte.",
         "SOURCE": "Fonte",
         "GENERATED_FAQS": "FAQs Geradas",
-        "USED_IN_CONVERSATIONS": "Utilizado em conversas",
+        "USED_IN_CONVERSATIONS": "Utilizado em tickets",
         "LAST_UPDATED": "Última atualização",
         "NOT_AVAILABLE": "Indisponível",
         "CONTENT_TAB": "Conteúdo coletado",
@@ -1305,9 +1305,9 @@
     "RESPONSES": {
       "HEADER": "FAQs",
       "ADD_NEW": "Criar nova FAQ",
-      "NO_USED_CONVERSATIONS": "Não foi encontrada nenhuma conversa para este FAQ.",
+      "NO_USED_CONVERSATIONS": "Não foi encontrado nenhum ticket para este FAQ.",
       "DOCUMENTABLE": {
-        "CONVERSATION": "Conversação #{id}"
+        "CONVERSATION": "Ticket #{id}"
       },
       "SELECTED": "{count} selecionado",
       "SELECT_ALL": "Selecionar todos ({count})",
@@ -1379,7 +1379,7 @@
       "SEARCH_PLACEHOLDER": "Pesquisar sugestões...",
       "QUEUE_COUNT": "{count} sugestão para revisar | {count} sugestões para revisar",
       "QUEUE_HINT": "Classificadas por demanda dos clientes",
-      "SOURCE_COUNT": "{count} conversa | {count} conversas",
+      "SOURCE_COUNT": "{count} ticket | {count} tickets",
       "REVIEW": "Revisar fontes",
       "APPROVE": "Aprovar",
       "APPROVE_FAQ": "Aprovar FAQ",
@@ -1387,10 +1387,10 @@
       "SAVE": "Salvar Alterações",
       "DETAILS": {
         "TITLE": "Revisar sugestão de FAQ",
-        "DESCRIPTION": "O Captain agrupou {count} conversa nesta sugestão. Revise as evidências e refine a FAQ antes de aprová-la. | O Captain agrupou {count} conversas nesta sugestão. Revise as evidências e refine a FAQ antes de aprová-la.",
-        "SOURCES": "Conversas de origem",
+        "DESCRIPTION": "O Captain agrupou {count} ticket nesta sugestão. Revise as evidências e refine a FAQ antes de aprová-la. | O Captain agrupou {count} tickets nesta sugestão. Revise as evidências e refine a FAQ antes de aprová-la.",
+        "SOURCES": "Tickets de origem",
         "SOURCE_PROGRESS": "{visible} de {total}",
-        "NO_SOURCES": "Nenhuma conversa de origem acessível foi encontrada.",
+        "NO_SOURCES": "Nenhum ticket de origem acessível foi encontrado.",
         "RETRY": "Tentar novamente"
       },
       "EMPTY_STATE": {
@@ -1405,7 +1405,7 @@
       },
       "ERRORS": {
         "LOAD": "Ocorreu um erro ao carregar as sugestões de FAQ. Por favor, tente novamente.",
-        "LOAD_DETAILS": "Ocorreu um erro ao carregar as conversas de origem.",
+        "LOAD_DETAILS": "Ocorreu um erro ao carregar os tickets de origem.",
         "APPROVE": "Ocorreu um erro ao aprovar a FAQ. Por favor, tente novamente.",
         "DISMISS": "Ocorreu um erro ao descartar a sugestão. Por favor, tente novamente.",
         "SAVE": "Ocorreu um erro ao salvar a sugestão. Por favor, tente novamente."

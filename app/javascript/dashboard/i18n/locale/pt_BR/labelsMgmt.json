@@ -3,7 +3,7 @@
     "HEADER": "Etiquetas",
     "HEADER_BTN_TXT": "Adicionar etiqueta",
     "LOADING": "Buscando etiquetas",
-    "DESCRIPTION": "As etiquetas ajudam você a categorizar e priorizar conversas e leads. Você pode atribuir uma etiqueta a uma conversa ou contato usando o painel lateral.",
+    "DESCRIPTION": "As etiquetas ajudam você a categorizar e priorizar tickets e leads. Você pode atribuir uma etiqueta a um ticket ou contato usando o painel lateral.",
     "LEARN_MORE": "Aprenda mais sobre etiquetas",
     "COUNT": "{n} etiqueta | {n} etiquetas",
     "SEARCH_PLACEHOLDER": "Pesquisar etiquetas...",
@@ -12,7 +12,7 @@
     "LIST": {
       "404": "Não há etiquetas disponíveis nesta conta.",
       "TITLE": "Gerenciar etiquetas",
-      "DESC": "Etiquetas permitem agrupar as conversas.",
+      "DESC": "Etiquetas permitem agrupar os tickets.",
       "TABLE_HEADER": {
         "NAME": "Nome",
         "DESCRIPTION": "Descrição",
@@ -45,12 +45,12 @@
     },
     "SUGGESTIONS": {
       "TOOLTIP": {
-        "SINGLE_SUGGESTION": "Adicionar etiqueta à conversa",
+        "SINGLE_SUGGESTION": "Adicionar etiqueta ao ticket",
         "MULTIPLE_SUGGESTION": "Selecione esta etiqueta",
         "DESELECT": "Desmarcar etiqueta",
         "DISMISS": "Descartar sugestão"
       },
-      "POWERED_BY": "Chatwoot AI",
+      "POWERED_BY": "ServiceDesk AI",
       "DISMISS": "Recusar",
       "ADD_SELECTED_LABELS": "Adicionar etiquetas selecionadas",
       "ADD_SELECTED_LABEL": "Adicionar etiqueta selecionada",
@@ -59,7 +59,7 @@
     },
     "ADD": {
       "TITLE": "Adicionar etiqueta",
-      "DESC": "Etiquetas permitem agrupar as conversas.",
+      "DESC": "Etiquetas permitem agrupar os tickets.",
       "API": {
         "SUCCESS_MESSAGE": "Etiqueta adicionada com sucesso",
         "ERROR_MESSAGE": "Ocorreu um erro, por favor tente novamente"
