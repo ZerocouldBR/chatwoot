@@ -38,6 +38,12 @@
       "HIDE_CONDITIONAL": "Ocultar campos condicionais"
     },
     "OTHER_FIELDS": "Outros campos preenchidos ({count})",
-    "META_FIELDS": "Dados importados"
+    "META_FIELDS": "Dados importados",
+    "WORKSPACE": {
+      "PROPERTIES": "Propriedades",
+      "CONTEXT": "Contexto",
+      "COLLAPSE": "Recolher propriedades",
+      "EXPAND": "Mostrar propriedades"
+    }
   }
 }

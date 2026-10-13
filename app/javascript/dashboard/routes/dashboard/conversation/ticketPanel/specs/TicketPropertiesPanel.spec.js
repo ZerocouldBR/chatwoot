@@ -100,9 +100,9 @@ const stubs = {
   RouterLink: { template: '<a><slot /></a>' },
 };
 
-const mountPanel = () =>
+const mountPanel = (props = {}) =>
   mount(TicketPropertiesPanel, {
-    props: { conversationId: 10 },
+    props: { conversationId: 10, ...props },
     global: { stubs, mocks: { $t: key => key } },
   });
 
@@ -170,5 +170,29 @@ describe('TicketPropertiesPanel', () => {
       conversationId: 10,
       status: 'resolved',
     });
+  });
+
+  it('selo de status longo não é truncado e fica junto do número', () => {
+    chat.value.status = 'snoozed';
+    chat.value.custom_attributes = {
+      zd_ticket_id: 990008,
+      zd_status: 'Desenvolvimento Concluído',
+    };
+    const wrapper = mountPanel();
+    const badge = wrapper.find('[data-testid="ticket-status-badge"]');
+    expect(badge.text()).toBe('Desenvolvimento Concluído');
+    expect(badge.classes()).not.toContain('truncate');
+    expect(badge.classes()).toContain('whitespace-normal');
+    expect(badge.attributes('data-category')).toBe('hold');
+    expect(wrapper.find('[data-testid="ticket-number"]').classes()).toContain(
+      'whitespace-nowrap'
+    );
+  });
+
+  it('variante coluna (Agent Workspace) não tem a borda do painel embutido', () => {
+    expect(mountPanel().find('section').classes()).toContain('border-b');
+    expect(
+      mountPanel({ variant: 'column' }).find('section').classes()
+    ).not.toContain('border-b');
   });
 });
