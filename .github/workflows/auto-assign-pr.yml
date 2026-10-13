@@ -3,6 +3,8 @@ name: Auto-assign PR to Author
 on:
   pull_request:
     types: [opened]
+    branches-ignore:
+      - 'servicedesk/**'
 
 jobs:
   auto-assign:
