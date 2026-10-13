@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2026_10_08_090132) do
+ActiveRecord::Schema[7.1].define(version: 2026_10_13_210000) do
   # These extensions should be enabled to support this database
   enable_extension "pg_stat_statements"
   enable_extension "pg_trgm"
@@ -1625,8 +1625,8 @@ ActiveRecord::Schema[7.1].define(version: 2026_10_08_090132) do
     t.datetime "updated_at", null: false
     t.string "icon", default: ""
     t.string "icon_color", default: ""
+    t.index "account_id, lower((name)::text)", name: "index_teams_on_account_id_and_lower_name", unique: true
     t.index ["account_id"], name: "index_teams_on_account_id"
-    t.index ["name", "account_id"], name: "index_teams_on_name_and_account_id", unique: true
   end
 
   create_table "user_sessions", force: :cascade do |t|
