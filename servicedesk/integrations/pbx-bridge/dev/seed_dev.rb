@@ -11,7 +11,7 @@ agents = [
 ]
 agents.each do |name, email, team_name|
   team = acc.teams.where('lower(name) = lower(?)', team_name).first || acc.teams.create!(name: team_name)
-  u = User.find_by(email: email)
+  u = User.from_email(email)
   unless u
     pwd = "#{SecureRandom.base64(18)}aA1!"
     u = User.new(name: name, email: email, password: pwd, password_confirmation: pwd)
