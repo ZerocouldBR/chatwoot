@@ -1,0 +1,43 @@
+{
+  "SERVICEDESK_TICKET_PANEL": {
+    "TICKET_NUMBER": "Nº {number}",
+    "TITLE": "Propriedades do ticket",
+    "REQUESTER": "Solicitante",
+    "ORGANIZATION": "Organização",
+    "CC": "CC",
+    "FOLLOWERS": "Seguidores",
+    "TYPE": "Tipo",
+    "STATUS": "Status",
+    "GROUP": "Grupo",
+    "ASSIGNEE": "Responsável",
+    "TAGS": "Tags",
+    "SELECT": "Selecione",
+    "EMPTY": "-",
+    "NONE": "(vazio)",
+    "SEARCH": "Pesquisar",
+    "NO_RESULTS": "Nenhum resultado",
+    "YES": "Sim",
+    "NO": "Não",
+    "FORM": {
+      "LABEL": "Formulário",
+      "DEFAULT": "Formulário padrão (ticket sem formulário salvo)",
+      "CHANGED": "Formulário alterado para {form}"
+    },
+    "NATIVE_STATUS": {
+      "LABEL": "Situação do ticket",
+      "OPEN": "Aberto",
+      "PENDING": "Com o bot",
+      "RESOLVED": "Resolvido",
+      "SNOOZED": "Pendente"
+    },
+    "FIELDS": {
+      "TITLE": "Campos do ticket",
+      "TITLE_WITH_FORM": "Campos · {form}",
+      "EMPTY": "Nenhum campo para este formulário.",
+      "SHOW_CONDITIONAL": "Mostrar campos condicionais ({count})",
+      "HIDE_CONDITIONAL": "Ocultar campos condicionais"
+    },
+    "OTHER_FIELDS": "Outros campos preenchidos ({count})",
+    "META_FIELDS": "Dados importados"
+  }
+}

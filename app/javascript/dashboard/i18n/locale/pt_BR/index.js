@@ -47,6 +47,7 @@ import whatsappTemplates from './whatsappTemplates.json';
 import whatsappTemplateMgmt from './whatsappTemplateMgmt.json';
 import yearInReview from './yearInReview.json';
 import sdTicketTable from './sdTicketTable.json';
+import servicedeskTicketPanel from './servicedeskTicketPanel.json';
 
 export default {
   ...advancedFilters,
@@ -98,4 +99,5 @@ export default {
   ...whatsappTemplateMgmt,
   ...yearInReview,
   ...sdTicketTable,
+  ...servicedeskTicketPanel,
 };

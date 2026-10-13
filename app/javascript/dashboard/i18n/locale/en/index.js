@@ -46,6 +46,7 @@ import onboarding from './onboarding.json';
 import sessionLimit from './sessionLimit.json';
 import yearInReview from './yearInReview.json';
 import sdTicketTable from './sdTicketTable.json';
+import servicedeskTicketPanel from './servicedeskTicketPanel.json';
 
 export default {
   ...advancedFilters,
@@ -96,4 +97,5 @@ export default {
   ...sessionLimit,
   ...yearInReview,
   ...sdTicketTable,
+  ...servicedeskTicketPanel,
 };
