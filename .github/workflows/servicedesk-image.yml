@@ -1,0 +1,113 @@
+# ServiceDesk: imagem Docker de produção do fork, sempre sem enterprise/ (edição CE).
+#
+# Publica em ghcr.io/<dono>/servicedesk com as tags:
+#   :<sha curto>         em todo build publicado
+#   :servicedesk-main    só quando o build é da branch servicedesk/main
+#
+# Remove enterprise/ como o upstream faz para as imagens -ce (publish_foss_docker.yml):
+# rm -rf enterprise spec/enterprise e ENV CW_EDITION="ce" no Dockerfile.
+# A verificação (docker/servicedesk/verify-ce-image.sh) falha o job se /app/enterprise
+# existir na imagem ou se ChatwootApp.enterprise? for verdadeiro. Nesse caso nada é publicado.
+# Detalhes em docs/CI-IMAGEM.md (repositório de documentação do projeto).
+
+name: ServiceDesk image
+
+on:
+  push:
+    branches:
+      - servicedesk/main
+    paths-ignore:
+      - '**/*.md'
+      - 'docs/**'
+  workflow_dispatch:
+    inputs:
+      push:
+        description: 'Publicar a imagem no GHCR (desmarque para só construir e verificar)'
+        type: boolean
+        default: true
+
+permissions:
+  contents: read
+  packages: write
+
+concurrency:
+  group: servicedesk-image-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: servicedesk
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Strip enterprise code (edição CE)
+        run: |
+          rm -rf enterprise spec/enterprise
+          echo -en '\nENV CW_EDITION="ce"' >> docker/Dockerfile
+          test ! -e enterprise
+
+      - name: Image name
+        run: |
+          owner="${GITHUB_REPOSITORY_OWNER,,}"
+          echo "IMAGE=${REGISTRY}/${owner}/${IMAGE_NAME}" >> "$GITHUB_ENV"
+          echo "SHORT_SHA=${GITHUB_SHA::7}" >> "$GITHUB_ENV"
+
+      - name: Docker metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.IMAGE }}
+          tags: |
+            type=sha,prefix=,format=short
+            type=raw,value=servicedesk-main,enable=${{ github.ref == 'refs/heads/servicedesk/main' }}
+          labels: |
+            org.opencontainers.image.title=ServiceDesk
+            org.opencontainers.image.description=ServiceDesk (fork do Chatwoot CE, sem enterprise)
+            org.opencontainers.image.licenses=MIT
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      # Constrói e carrega no docker local para verificar ANTES de publicar.
+      - name: Build
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: docker/Dockerfile
+          platforms: linux/amd64
+          load: true
+          push: false
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha,scope=servicedesk-amd64
+          cache-to: type=gha,mode=max,scope=servicedesk-amd64
+
+      - name: Verify CE image (sem enterprise)
+        run: bash docker/servicedesk/verify-ce-image.sh "${IMAGE}:${SHORT_SHA}"
+
+      - name: Login to GHCR
+        if: github.event_name == 'push' || inputs.push
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Push
+        if: github.event_name == 'push' || inputs.push
+        env:
+          TAGS: ${{ steps.meta.outputs.tags }}
+        run: |
+          for t in $TAGS; do docker push "$t"; done
+          {
+            echo "### Imagem publicada"
+            for t in $TAGS; do echo "- \`$t\`"; done
+            echo
+            echo "Digest: \`$(docker image inspect --format '{{index .RepoDigests 0}}' "${IMAGE}:${SHORT_SHA}")\`"
+          } >> "$GITHUB_STEP_SUMMARY"
