@@ -135,7 +135,6 @@ Rails.application.routes.draw do
               post :follow_up
             end
           end
-          resource :saml_settings, only: [:show, :create, :update, :destroy]
           resources :agent_bots, only: [:index, :create, :show, :update, :destroy] do
             delete :avatar, on: :member
             post :reset_access_token, on: :member
@@ -147,7 +146,6 @@ Rails.application.routes.draw do
             end
           end
           resources :assignable_agents, only: [:index]
-          resource :audit_logs, only: [:show]
           resources :callbacks, only: [] do
             collection do
               post :register_facebook_page
@@ -162,14 +160,6 @@ Rails.application.routes.draw do
           end
           resources :macros, only: [:index, :create, :show, :update, :destroy] do
             post :execute, on: :member
-          end
-          resources :sla_policies, only: [:index, :create, :show, :update, :destroy]
-          resources :custom_roles, only: [:index, :create, :show, :update, :destroy]
-          resources :agent_capacity_policies, only: [:index, :create, :show, :update, :destroy] do
-            scope module: :agent_capacity_policies do
-              resources :users, only: [:index, :create, :destroy]
-              resources :inbox_limits, only: [:create, :update, :destroy]
-            end
           end
           resources :campaigns, only: [:index, :create, :show, :update, :destroy] do
             if ChatwootApp.enterprise?
@@ -297,12 +287,6 @@ Rails.application.routes.draw do
             end
             member do
               patch :update if ChatwootApp.enterprise?
-            end
-          end
-          resources :applied_slas, only: [:index] do
-            collection do
-              get :metrics
-              get :download
             end
           end
           resources :reporting_events, only: [:index] if ChatwootApp.enterprise?
@@ -505,9 +489,6 @@ Rails.application.routes.draw do
       namespace :integrations do
         resources :webhooks, only: [:create]
       end
-
-      # Frontend API endpoint to trigger SAML authentication flow
-      post 'auth/saml_login', to: 'auth#saml_login'
 
       resource :profile, only: [:show, :update] do
         delete :avatar, on: :collection

@@ -6,6 +6,7 @@ dotenv.config({ path: path.resolve(__dirname, '.env') });
 
 export default defineConfig({
   testDir: './tests',
+  globalSetup: require.resolve('./global-setup'),
   timeout: 60 * 1000,
   expect: {
     timeout: 30 * 1000,
@@ -20,7 +21,7 @@ export default defineConfig({
     navigationTimeout: 30 * 1000,
     baseURL: process.env.BASE_URL || 'http://localhost:3000',
     trace: 'retain-on-failure',
-    headless: false,
+    headless: !process.env.HEADED,
     viewport: {
       width: 1440,
       height: 1080,
@@ -30,7 +31,13 @@ export default defineConfig({
   projects: [
     {
       name: 'chromium',
+      testIgnore: /e2e\/tickets\//,
       use: { ...devices['Desktop Chrome'] },
+    },
+    {
+      name: 'tickets',
+      testMatch: /e2e\/tickets\/.*\.spec\.ts/,
+      use: { ...devices['Desktop Chrome'], storageState: '.auth/admin.json' },
     },
   ],
 });
