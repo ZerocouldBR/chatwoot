@@ -140,3 +140,12 @@ def test_eventos_servicedesk_assinatura(env):
     r = c.post(url, content=body, headers={"x-chatwoot-timestamp": ts, "x-chatwoot-signature": sig})
     assert r.status_code == 200
     assert not verify_chatwoot_signature("segredo-da-inbox", body, str(int(time.time()) - 900), sig)
+
+
+def test_retencao_apaga_payload_antigo(env):
+    c, br = make(env)
+    c.post(URL, json=report02_row())
+    br.work_once()
+    assert br.store.purge(30) == 0
+    br.store.db.execute("update events set received_at = received_at - 31*86400")
+    assert br.store.purge(30) == 1 and br.store.counts().get("events_done") is None

@@ -124,9 +124,15 @@ class Bridge:
 
     # ------------------------------------------------------------ threads
     def _worker_loop(self) -> None:
+        last_purge = 0.0
         while not self.stop.is_set():
             try:
                 self.work_once()
+                if time.time() - last_purge > 3600:
+                    n = self.store.purge(self.s.retention_days)
+                    last_purge = time.time()
+                    if n:
+                        log.info("retenção: %d evento(s) antigo(s) apagado(s)", n)
             except Exception:  # noqa: BLE001
                 log.exception("worker: erro inesperado")
             self.wake.wait(5)

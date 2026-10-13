@@ -125,6 +125,7 @@ class Settings:
     open_status_label: str = "Aberto"
     onboarding_value: str = "Ligação"
     max_event_attempts: int = 10
+    retention_days: int = 30
     http_timeout: float = 60.0
     pbx_http_timeout: float = 180.0
     log_level: str = "INFO"
@@ -175,6 +176,7 @@ class Settings:
             open_status_label=_env("OPEN_STATUS_LABEL", "Aberto"),
             onboarding_value=_env("ONBOARDING_VALUE", "Ligação"),
             max_event_attempts=_int("MAX_EVENT_ATTEMPTS", 10),
+            retention_days=_int("RETENTION_DAYS", 30),
             http_timeout=float(_env("HTTP_TIMEOUT", "60")),
             pbx_http_timeout=float(_env("PBX_HTTP_TIMEOUT", "180")),
             log_level=_env("LOG_LEVEL", "INFO"),

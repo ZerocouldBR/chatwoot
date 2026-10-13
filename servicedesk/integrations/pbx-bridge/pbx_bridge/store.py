@@ -104,6 +104,15 @@ class Store:
                 out["audio_" + r[0]] = r[1]
             return out
 
+    def purge(self, days: int) -> int:
+        """LGPD: apaga eventos já tratados (payload bruto) mais antigos que N dias."""
+        if days <= 0:
+            return 0
+        with self.lock:
+            cur = self.db.execute("DELETE FROM events WHERE status IN ('done','ignored','unparsed','error') AND received_at < ?",
+                                  (time.time() - days * 86400,))
+            return cur.rowcount
+
     # ---------------------------------------------------------- calls
     def get_call(self, call_id: str) -> Optional[Dict[str, Any]]:
         with self.lock:
