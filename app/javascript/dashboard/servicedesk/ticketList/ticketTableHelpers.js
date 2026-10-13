@@ -1,11 +1,10 @@
 import { getLastMessage } from 'dashboard/helper/conversationHelper';
 import wootConstants from 'dashboard/constants/globals';
 import {
-  STATUS_CATEGORY,
-  STATUS_CATEGORY_ORDER,
-  ZD_STATUS_CATEGORY_BY_LABEL,
-  NATIVE_STATUS_CATEGORY,
-} from './statusTokensFallback';
+  STATUS_CATEGORIES,
+  NATIVE_STATUS_TO_CATEGORY,
+  categoryForCustomStatus,
+} from 'dashboard/servicedesk/statusTokens';
 
 const { SORT_BY_TYPE } = wootConstants;
 
@@ -114,8 +113,7 @@ export const getTicketOrganization = (chat, contact) => {
   return found ? String(found).trim() : '';
 };
 
-export const getZendeskStatusCategory = label =>
-  ZD_STATUS_CATEGORY_BY_LABEL[normalizeText(label)] || null;
+export const getCustomStatusCategory = label => categoryForCustomStatus(label);
 
 /**
  * Status exibido: rotulo zd_status (status personalizado) quando existir, com a
@@ -124,23 +122,22 @@ export const getZendeskStatusCategory = label =>
  */
 export const getTicketStatus = chat => {
   const nativeStatus = chat?.status || 'open';
-  const nativeCategory =
-    NATIVE_STATUS_CATEGORY[nativeStatus] || STATUS_CATEGORY.OPEN;
+  const nativeCategory = NATIVE_STATUS_TO_CATEGORY[nativeStatus] || 'open';
   const zdStatus = chat?.custom_attributes?.zd_status;
   if (zdStatus && String(zdStatus).trim()) {
     return {
       source: 'custom',
       label: String(zdStatus).trim(),
       nativeStatus,
-      category: getZendeskStatusCategory(zdStatus) || nativeCategory,
+      category: getCustomStatusCategory(zdStatus) || nativeCategory,
     };
   }
   return { source: 'native', nativeStatus, category: nativeCategory };
 };
 
 export const statusCategoryRank = category => {
-  const index = STATUS_CATEGORY_ORDER.indexOf(category);
-  return index === -1 ? STATUS_CATEGORY_ORDER.length : index;
+  const index = STATUS_CATEGORIES.indexOf(category);
+  return index === -1 ? STATUS_CATEGORIES.length : index;
 };
 
 const PRIORITY_RANK = { urgent: 4, high: 3, medium: 2, low: 1 };

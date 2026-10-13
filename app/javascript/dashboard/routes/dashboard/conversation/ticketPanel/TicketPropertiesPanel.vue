@@ -15,6 +15,7 @@ import { frontendURL } from 'dashboard/helper/URLHelper';
 import { CONVERSATION_PRIORITY } from 'shared/constants/messages';
 import wootConstants from 'dashboard/constants/globals';
 import CompanyAPI from 'dashboard/api/companies';
+import { resolveTicketStatus } from 'dashboard/servicedesk/statusTokens';
 import {
   FORM_ATTRIBUTE_KEY,
   STATUS_ATTRIBUTE_KEY,
@@ -315,20 +316,22 @@ const nativeStatusOptions = computed(() => {
   return options.map(id => ({ id, name: nativeStatusLabels.value[id] }));
 });
 const nativeStatus = computed(() => currentChat.value?.status);
-const nativeStatusLabel = computed(
-  () =>
-    nativeStatusLabels.value[nativeStatus.value] ||
-    nativeStatusLabels.value[STATUS.OPEN]
+// Status exibido (canônico): rótulo zd_status com a cor da sua categoria.
+const ticketStatus = computed(() =>
+  resolveTicketStatus({
+    status: nativeStatus.value,
+    zdStatus: customAttributes.value[STATUS_ATTRIBUTE_KEY],
+  })
 );
-const statusBadgeClass = computed(
-  () =>
-    ({
-      open: 'bg-n-ruby-3 text-n-ruby-11 outline-n-ruby-6',
-      pending: 'bg-n-blue-3 text-n-blue-11 outline-n-blue-6',
-      snoozed: 'bg-n-amber-3 text-n-amber-11 outline-n-amber-6',
-      resolved: 'bg-n-slate-3 text-n-slate-11 outline-n-slate-6',
-    })[nativeStatus.value] || 'bg-n-slate-3 text-n-slate-11 outline-n-slate-6'
+const statusBadgeLabel = computed(
+  () => ticketStatus.value.label || t(ticketStatus.value.token.labelKey)
 );
+const statusBadgeClass = computed(() => ticketStatus.value.token.classes.badge);
+// No seletor, snoozed mostra "Pendente" ou "Em espera" conforme a categoria.
+const nativeOptionLabel = option =>
+  option.id === STATUS.SNOOZED && nativeStatus.value === STATUS.SNOOZED
+    ? t(ticketStatus.value.token.labelKey)
+    : option.name;
 
 const changeNativeStatus = async status => {
   if (!status || status === nativeStatus.value) return;
@@ -482,10 +485,11 @@ const formatMetaValue = field => {
         </span>
       </h3>
       <span
-        class="px-2 py-0.5 text-xs font-semibold uppercase rounded outline outline-1 -outline-offset-1"
+        class="max-w-[50%] truncate px-2 py-0.5 text-xs font-semibold rounded-full ring-1 ring-inset ring-black/5 dark:ring-white/10"
         :class="statusBadgeClass"
+        :data-category="ticketStatus.category"
       >
-        {{ nativeStatusLabel }}
+        {{ statusBadgeLabel }}
       </span>
     </header>
 
@@ -654,7 +658,7 @@ const formatMetaValue = field => {
             "
             @click="onSelectNativeStatus(option.id)"
           >
-            {{ option.name }}
+            {{ nativeOptionLabel(option) }}
           </button>
         </div>
       </TicketPropertyField>
