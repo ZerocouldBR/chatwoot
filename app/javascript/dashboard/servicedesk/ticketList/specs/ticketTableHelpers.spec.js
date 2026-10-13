@@ -70,13 +70,13 @@ describe('ticketTableHelpers', () => {
     it('uses zd_status and maps its category', () => {
       expect(
         getTicketStatus({
-          status: 'open',
+          status: 'snoozed',
           custom_attributes: { zd_status: 'Desenvolvimento Concluído' },
         })
       ).toEqual({
-        source: 'zendesk',
+        source: 'custom',
         label: 'Desenvolvimento Concluído',
-        nativeStatus: 'open',
+        nativeStatus: 'snoozed',
         category: 'hold',
       });
     });
@@ -90,12 +90,19 @@ describe('ticketTableHelpers', () => {
       ).toBe('solved');
     });
 
-    it('uses the native status when zd_status is missing', () => {
+    it('uses the canonical native mapping when zd_status is missing', () => {
       expect(getTicketStatus({ status: 'snoozed' })).toEqual({
         source: 'native',
         nativeStatus: 'snoozed',
-        category: 'hold',
+        category: 'pending',
       });
+      expect(getTicketStatus({ status: 'pending' }).category).toBe('open');
+      expect(
+        getTicketStatus({
+          status: 'snoozed',
+          custom_attributes: { zd_status: 'Pendente' },
+        }).category
+      ).toBe('pending');
     });
   });
 

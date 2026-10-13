@@ -328,7 +328,11 @@ const intersectionObserverOptions = computed(() => ({
     >
       <colgroup>
         <col class="w-10" />
-        <col v-for="column in COLUMNS" :key="column.key" :class="column.width" />
+        <col
+          v-for="column in COLUMNS"
+          :key="column.key"
+          :class="column.width"
+        />
       </colgroup>
       <thead>
         <tr>

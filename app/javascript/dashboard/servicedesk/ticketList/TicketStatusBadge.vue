@@ -1,10 +1,7 @@
 <script setup>
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
-import {
-  STATUS_BADGE_COLORS,
-  STATUS_CATEGORY,
-} from './statusTokensFallback';
+import { STATUS_BADGE_COLORS, STATUS_CATEGORY } from './statusTokensFallback';
 
 const props = defineProps({
   // Resultado de getTicketStatus(chat)
@@ -20,11 +17,11 @@ const categoryLabel = computed(() =>
 );
 
 const label = computed(() =>
-  props.status.source === 'zendesk' ? props.status.label : categoryLabel.value
+  props.status.source === 'custom' ? props.status.label : categoryLabel.value
 );
 
 const tooltip = computed(() =>
-  props.status.source === 'zendesk'
+  props.status.source === 'custom'
     ? t('SD_TICKET_TABLE.STATUS_TOOLTIP', {
         label: props.status.label,
         category: categoryLabel.value,

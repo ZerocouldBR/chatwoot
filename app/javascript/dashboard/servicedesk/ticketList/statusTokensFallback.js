@@ -29,11 +29,11 @@ export const STATUS_CATEGORY_ORDER = Object.freeze([
 ]);
 
 export const STATUS_BADGE_COLORS = Object.freeze({
-  [STATUS_CATEGORY.NEW]: { background: '#FFB648', color: '#2F3941' },
-  [STATUS_CATEGORY.OPEN]: { background: '#E34F32', color: '#FFFFFF' },
-  [STATUS_CATEGORY.PENDING]: { background: '#3091EC', color: '#FFFFFF' },
+  [STATUS_CATEGORY.NEW]: { background: '#FFB057', color: '#2F3941' },
+  [STATUS_CATEGORY.OPEN]: { background: '#CC3340', color: '#FFFFFF' },
+  [STATUS_CATEGORY.PENDING]: { background: '#1F73B7', color: '#FFFFFF' },
   [STATUS_CATEGORY.HOLD]: { background: '#2F3941', color: '#FFFFFF' },
-  [STATUS_CATEGORY.SOLVED]: { background: '#87929D', color: '#FFFFFF' },
+  [STATUS_CATEGORY.SOLVED]: { background: '#68737D', color: '#FFFFFF' },
   [STATUS_CATEGORY.CLOSED]: { background: '#D8DCDE', color: '#2F3941' },
 });
 
@@ -60,10 +60,12 @@ export const ZD_STATUS_CATEGORY_BY_LABEL = Object.freeze({
   fechado: STATUS_CATEGORY.CLOSED,
 });
 
-// Status nativo do Chatwoot -> categoria Zendesk equivalente.
+// Status nativo do Chatwoot -> categoria (STATUS CANONICO do projeto:
+// pending/hold -> snoozed; o rotulo zd_status distingue Pendente de Em espera).
+// snoozed sem rotulo = Pendente; pending nativo (fila do bot/IA) = Aberto.
 export const NATIVE_STATUS_CATEGORY = Object.freeze({
   open: STATUS_CATEGORY.OPEN,
-  pending: STATUS_CATEGORY.PENDING,
-  snoozed: STATUS_CATEGORY.HOLD,
+  snoozed: STATUS_CATEGORY.PENDING,
   resolved: STATUS_CATEGORY.SOLVED,
+  pending: STATUS_CATEGORY.OPEN,
 });

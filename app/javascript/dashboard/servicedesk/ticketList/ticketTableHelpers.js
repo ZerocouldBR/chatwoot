@@ -99,8 +99,9 @@ export const getTicketRequester = (chat, storeContact) => {
 };
 
 /**
- * Organizacao: company_name do contato; se nao houver, os campos importados do
- * Zendesk na conversa (zd_nome_da_organizacao / zd_nome_da_empresa).
+ * Organizacao: contact.additional_attributes.company_name (decisao 7: a
+ * importacao grava o nome da organizacao ali) e, so na falta dele, os campos
+ * importados na conversa (zd_nome_da_organizacao / zd_nome_da_empresa).
  */
 export const getTicketOrganization = (chat, contact) => {
   const candidates = [
@@ -117,9 +118,9 @@ export const getZendeskStatusCategory = label =>
   ZD_STATUS_CATEGORY_BY_LABEL[normalizeText(label)] || null;
 
 /**
- * Status exibido: custom attribute zd_status (status personalizado do Zendesk)
- * quando existir; senao, o status nativo.
- * Retorna { source: 'zendesk'|'native', label?, nativeStatus, category }.
+ * Status exibido: rotulo zd_status (status personalizado) quando existir, com a
+ * cor da sua categoria; senao, a categoria do status nativo (canonico).
+ * Retorna { source: 'custom'|'native', label?, nativeStatus, category }.
  */
 export const getTicketStatus = chat => {
   const nativeStatus = chat?.status || 'open';
@@ -128,7 +129,7 @@ export const getTicketStatus = chat => {
   const zdStatus = chat?.custom_attributes?.zd_status;
   if (zdStatus && String(zdStatus).trim()) {
     return {
-      source: 'zendesk',
+      source: 'custom',
       label: String(zdStatus).trim(),
       nativeStatus,
       category: getZendeskStatusCategory(zdStatus) || nativeCategory,
