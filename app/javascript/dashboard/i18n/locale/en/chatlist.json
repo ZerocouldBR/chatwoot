@@ -1,14 +1,14 @@
 {
   "CHAT_LIST": {
-    "LOADING": "Fetching conversations",
-    "LOAD_MORE_CONVERSATIONS": "Load more conversations",
-    "EOF": "All conversations loaded 🎉",
+    "LOADING": "Fetching tickets",
+    "LOAD_MORE_CONVERSATIONS": "Load more tickets",
+    "EOF": "All tickets loaded 🎉",
     "LIST": {
-      "404": "There are no active conversations in this group."
+      "404": "There are no active tickets in this group."
     },
     "FAILED_TO_SEND": "Failed to send",
-    "FETCH_ERROR": "Couldn't load conversations. Please try again.",
-    "TAB_HEADING": "Conversations",
+    "FETCH_ERROR": "Couldn't load tickets. Please try again.",
+    "TAB_HEADING": "Tickets",
     "MENTION_HEADING": "Mentions",
     "UNATTENDED_HEADING": "Unattended",
     "SEARCH": {
@@ -38,7 +38,7 @@
       }
     },
     "VIEW_FILTER": "View",
-    "SORT_TOOLTIP_LABEL": "Sort conversations",
+    "SORT_TOOLTIP_LABEL": "Sort tickets",
     "CHAT_SORT": {
       "STATUS": "Status",
       "ORDER_BY": "Order by"
@@ -113,7 +113,7 @@
       }
     },
     "CHAT_SORT_BY_FILTER": {
-      "TITLE": "Sort conversation",
+      "TITLE": "Sort ticket",
       "DROPDOWN_TITLE": "Sort by",
       "ITEMS": {
         "LATEST": {

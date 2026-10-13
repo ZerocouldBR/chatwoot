@@ -36,7 +36,7 @@ describe Integrations::Slack::LinkUnfurlFormatter do
                 'elements' => [
                   {
                     'type' => 'button',
-                    'text' => { 'type' => 'plain_text', 'text' => 'Open conversation', 'emoji' => true },
+                    'text' => { 'type' => 'plain_text', 'text' => 'Open ticket', 'emoji' => true },
                     'url' => url,
                     'action_id' => 'button-action'
                   }

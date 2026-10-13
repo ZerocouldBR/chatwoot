@@ -3,13 +3,13 @@
     "TABS": {
       "ALL": "All results",
       "CONTACTS": "Contacts",
-      "CONVERSATIONS": "Conversations",
+      "CONVERSATIONS": "Tickets",
       "MESSAGES": "Messages",
       "ARTICLES": "Articles"
     },
     "SECTION": {
       "CONTACTS": "Contacts",
-      "CONVERSATIONS": "Conversations",
+      "CONVERSATIONS": "Tickets",
       "MESSAGES": "Messages",
       "ARTICLES": "Articles"
     },
@@ -24,7 +24,7 @@
     "RECENT_SEARCHES": "Recent searches",
     "CLEAR_ALL": "Clear all",
     "MOST_RECENT": "Most recent",
-    "EMPTY_STATE_DEFAULT": "Search by conversation id, email, phone number, messages for better search results. ",
+    "EMPTY_STATE_DEFAULT": "Search by ticket id, email, phone number, messages for better search results. ",
     "BOT_LABEL": "Bot",
     "READ_MORE": "Read more",
     "READ_LESS": "Read less",

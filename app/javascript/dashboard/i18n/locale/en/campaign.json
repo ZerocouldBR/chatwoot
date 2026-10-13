@@ -119,7 +119,7 @@
           },
           "AUDIENCE": {
             "LABEL": "Audience",
-            "PLACEHOLDER": "Select the customer labels",
+            "PLACEHOLDER": "Select the customer tags",
             "ERROR": "Audience is required"
           },
           "SCHEDULED_AT": {
@@ -183,12 +183,12 @@
           "TIER_UNKNOWN": "Select an inbox to see the messaging limit of your WhatsApp account.",
           "LEARN_MORE": "Learn more",
           "LABELS": {
-            "LABEL": "Labels",
-            "PLACEHOLDER": "Select the customer labels"
+            "LABEL": "Tags",
+            "PLACEHOLDER": "Select the customer tags"
           },
           "SELECTED_COUNT": "{count} contacts selected",
           "VIEW": "View",
-          "EMPTY_STATE": "Select at least one label to build the audience.",
+          "EMPTY_STATE": "Select at least one tag to build the audience.",
           "CONTACTS": {
             "TITLE": "Contacts",
             "TAGGED_WITH": "tagged with",

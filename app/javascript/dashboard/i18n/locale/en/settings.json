@@ -110,31 +110,31 @@
       },
       "AUDIO_NOTIFICATIONS_SECTION": {
         "TITLE": "Audio Alerts",
-        "NOTE": "Enable audio alerts in dashboard for new messages and conversations.",
+        "NOTE": "Enable audio alerts in dashboard for new messages and tickets.",
         "PLAY": "Play sound",
         "ALERT_TYPES": {
           "NONE": "None",
           "MINE": "Assigned",
           "ALL": "All",
-          "ASSIGNED": "My assigned conversations",
-          "UNASSIGNED": "Unassigned conversations",
-          "NOTME": "Open conversations assigned to others"
+          "ASSIGNED": "My assigned tickets",
+          "UNASSIGNED": "Unassigned tickets",
+          "NOTME": "Open tickets assigned to others"
         },
         "ALERT_COMBINATIONS": {
           "NONE": "You haven't selected any options, you won't receive any audio alerts.",
-          "ASSIGNED": "You'll receive alerts for conversations assigned to you.",
-          "UNASSIGNED": "You'll receive alerts for any unassigned conversations.",
-          "NOTME": "You'll receive alerts for conversations assigned to others.",
-          "ASSIGNED+UNASSIGNED": "You'll receive alerts for your assigned conversations and any unattended ones.",
-          "ASSIGNED+NOTME": "You'll receive alerts for conversations assigned to you and to others, but not for unassigned ones.",
-          "NOTME+UNASSIGNED": "You'll receive alerts for unattended conversations and those assigned to others.",
-          "ASSIGNED+NOTME+UNASSIGNED": "You'll receive alerts for all conversations."
+          "ASSIGNED": "You'll receive alerts for tickets assigned to you.",
+          "UNASSIGNED": "You'll receive alerts for any unassigned tickets.",
+          "NOTME": "You'll receive alerts for tickets assigned to others.",
+          "ASSIGNED+UNASSIGNED": "You'll receive alerts for your assigned tickets and any unattended ones.",
+          "ASSIGNED+NOTME": "You'll receive alerts for tickets assigned to you and to others, but not for unassigned ones.",
+          "NOTME+UNASSIGNED": "You'll receive alerts for unattended tickets and those assigned to others.",
+          "ASSIGNED+NOTME+UNASSIGNED": "You'll receive alerts for all tickets."
         },
         "ALERT_TYPE": {
-          "TITLE": "Alert events for conversations",
+          "TITLE": "Alert events for tickets",
           "NONE": "None",
-          "ASSIGNED": "Assigned Conversations",
-          "ALL_CONVERSATIONS": "All Conversations"
+          "ASSIGNED": "Assigned Tickets",
+          "ALL_CONVERSATIONS": "All Tickets"
         },
         "DEFAULT_TONE": {
           "TITLE": "Alert tone:"
@@ -142,7 +142,7 @@
         "CONDITIONS": {
           "TITLE": "Alert conditions:",
           "CONDITION_ONE": "Send audio alerts only if the browser window is not active",
-          "CONDITION_TWO": "Send alerts every 30s until all the assigned conversations are read"
+          "CONDITION_TWO": "Send alerts every 30s until all the assigned tickets are read"
         },
         "SOUND_PERMISSION_ERROR": "Autoplay is disabled in your browser. To hear alerts automatically, enable sound permission in your browser settings or interact with the page.",
         "READ_MORE": "Read more"
@@ -150,14 +150,14 @@
       "EMAIL_NOTIFICATIONS_SECTION": {
         "TITLE": "Email Notifications",
         "NOTE": "Update your email notification preferences here",
-        "CONVERSATION_ASSIGNMENT": "Send email notifications when a conversation is assigned to me",
-        "CONVERSATION_CREATION": "Send email notifications when a new conversation is created",
-        "CONVERSATION_MENTION": "Send email notifications when you are mentioned in a conversation",
-        "ASSIGNED_CONVERSATION_NEW_MESSAGE": "Send email notifications when a new message is created in an assigned conversation",
-        "PARTICIPATING_CONVERSATION_NEW_MESSAGE": "Send email notifications when a new message is created in a participating conversation",
-        "SLA_MISSED_FIRST_RESPONSE": "Send email notifications when a conversation misses first response SLA",
-        "SLA_MISSED_NEXT_RESPONSE": "Send email notifications when a conversation misses next response SLA",
-        "SLA_MISSED_RESOLUTION": "Send email notifications when a conversation misses resolution SLA"
+        "CONVERSATION_ASSIGNMENT": "Send email notifications when a ticket is assigned to me",
+        "CONVERSATION_CREATION": "Send email notifications when a new ticket is created",
+        "CONVERSATION_MENTION": "Send email notifications when you are mentioned in a ticket",
+        "ASSIGNED_CONVERSATION_NEW_MESSAGE": "Send email notifications when a new message is created in an assigned ticket",
+        "PARTICIPATING_CONVERSATION_NEW_MESSAGE": "Send email notifications when a new message is created in a participating ticket",
+        "SLA_MISSED_FIRST_RESPONSE": "Send email notifications when a ticket misses first response SLA",
+        "SLA_MISSED_NEXT_RESPONSE": "Send email notifications when a ticket misses next response SLA",
+        "SLA_MISSED_RESOLUTION": "Send email notifications when a ticket misses resolution SLA"
       },
       "NOTIFICATIONS": {
         "TITLE": "Notification preferences",
@@ -165,14 +165,14 @@
         "EMAIL": "Email",
         "PUSH": "Push notification",
         "TYPES": {
-          "CONVERSATION_CREATED": "A new conversation is created",
-          "CONVERSATION_ASSIGNED": "A conversation is assigned to you",
-          "CONVERSATION_MENTION": "You are mentioned in a conversation",
-          "ASSIGNED_CONVERSATION_NEW_MESSAGE": "A new message is created in an assigned conversation",
-          "PARTICIPATING_CONVERSATION_NEW_MESSAGE": "A new message is created in a participating conversation",
-          "SLA_MISSED_FIRST_RESPONSE": "A conversation misses first response SLA",
-          "SLA_MISSED_NEXT_RESPONSE": "A conversation misses next response SLA",
-          "SLA_MISSED_RESOLUTION": "A conversation misses resolution SLA"
+          "CONVERSATION_CREATED": "A new ticket is created",
+          "CONVERSATION_ASSIGNED": "A ticket is assigned to you",
+          "CONVERSATION_MENTION": "You are mentioned in a ticket",
+          "ASSIGNED_CONVERSATION_NEW_MESSAGE": "A new message is created in an assigned ticket",
+          "PARTICIPATING_CONVERSATION_NEW_MESSAGE": "A new message is created in a participating ticket",
+          "SLA_MISSED_FIRST_RESPONSE": "A ticket misses first response SLA",
+          "SLA_MISSED_NEXT_RESPONSE": "A ticket misses next response SLA",
+          "SLA_MISSED_RESOLUTION": "A ticket misses resolution SLA"
         },
         "BROWSER_PERMISSION": "Enable push notifications for your browser so you’re able to receive them"
       },
@@ -183,16 +183,16 @@
       "PUSH_NOTIFICATIONS_SECTION": {
         "TITLE": "Push Notifications",
         "NOTE": "Update your push notification preferences here",
-        "CONVERSATION_ASSIGNMENT": "Send push notifications when a conversation is assigned to me",
-        "CONVERSATION_CREATION": "Send push notifications when a new conversation is created",
-        "CONVERSATION_MENTION": "Send push notifications when you are mentioned in a conversation",
-        "ASSIGNED_CONVERSATION_NEW_MESSAGE": "Send push notifications when a new message is created in an assigned conversation",
-        "PARTICIPATING_CONVERSATION_NEW_MESSAGE": "Send push notifications when a new message is created in a participating conversation",
+        "CONVERSATION_ASSIGNMENT": "Send push notifications when a ticket is assigned to me",
+        "CONVERSATION_CREATION": "Send push notifications when a new ticket is created",
+        "CONVERSATION_MENTION": "Send push notifications when you are mentioned in a ticket",
+        "ASSIGNED_CONVERSATION_NEW_MESSAGE": "Send push notifications when a new message is created in an assigned ticket",
+        "PARTICIPATING_CONVERSATION_NEW_MESSAGE": "Send push notifications when a new message is created in a participating ticket",
         "HAS_ENABLED_PUSH": "You have enabled push for this browser.",
         "REQUEST_PUSH": "Enable push notifications",
-        "SLA_MISSED_FIRST_RESPONSE": "Send push notifications when a conversation misses first response SLA",
-        "SLA_MISSED_NEXT_RESPONSE": "Send push notifications when a conversation misses next response SLA",
-        "SLA_MISSED_RESOLUTION": "Send push notifications when a conversation misses resolution SLA"
+        "SLA_MISSED_FIRST_RESPONSE": "Send push notifications when a ticket misses first response SLA",
+        "SLA_MISSED_NEXT_RESPONSE": "Send push notifications when a ticket misses next response SLA",
+        "SLA_MISSED_RESOLUTION": "Send push notifications when a ticket misses resolution SLA"
       },
       "PROFILE_IMAGE": {
         "LABEL": "Profile Image"
@@ -205,7 +205,7 @@
       "DISPLAY_NAME": {
         "LABEL": "Display name",
         "ERROR": "Please enter a valid display name",
-        "PLACEHOLDER": "Please enter a display name, this would be displayed in conversations"
+        "PLACEHOLDER": "Please enter a display name, this would be displayed in tickets"
       },
       "AVAILABILITY": {
         "LABEL": "Availability",
@@ -221,7 +221,7 @@
       "EMAIL": {
         "LABEL": "Your email address",
         "ERROR": "Please enter a valid email address",
-        "PLACEHOLDER": "Please enter your email address, this would be displayed in conversations"
+        "PLACEHOLDER": "Please enter your email address, this would be displayed in tickets"
       },
       "CURRENT_PASSWORD": {
         "LABEL": "Current password",
@@ -268,12 +268,12 @@
     },
     "ACCOUNT_SUSPENDED": {
       "TITLE": "Account Suspended",
-      "MESSAGE": "Your account has been suspended due to activity that may violate our policies. If you believe this is a mistake, please contact our support team.",
+      "MESSAGE": "Your account has been suspended due to activity that may violate our policies. If you believe this is a mistake, please contact our support group.",
       "MANAGE_BILLING": "Manage billing"
     },
     "NO_ACCOUNTS": {
       "TITLE": "No account found",
-      "MESSAGE_CLOUD": "You are not part of any accounts right now. If you think this is a mistake, please reach out to our support team.",
+      "MESSAGE_CLOUD": "You are not part of any accounts right now. If you think this is a mistake, please reach out to our support group.",
       "MESSAGE_SELF_HOSTED": "You are not part of any accounts right now. Please reach out to your administrator.",
       "LOGOUT": "Log out"
     }
@@ -317,9 +317,9 @@
     "CURRENTLY_VIEWING_ACCOUNT": "Currently viewing:",
     "SWITCH": "Switch",
     "INBOX_VIEW": "Inbox View",
-    "CONVERSATIONS": "Conversations",
+    "CONVERSATIONS": "Tickets",
     "INBOX": "My Inbox",
-    "ALL_CONVERSATIONS": "All Conversations",
+    "ALL_CONVERSATIONS": "All Tickets",
     "MENTIONED_CONVERSATIONS": "Mentions",
     "PARTICIPATING_CONVERSATIONS": "Participating",
     "UNATTENDED_CONVERSATIONS": "Unattended",
@@ -353,20 +353,20 @@
     "PROFILE_SETTINGS": "Profile Settings",
     "ACCOUNT_SETTINGS": "Account Settings",
     "APPLICATIONS": "Applications",
-    "LABELS": "Labels",
+    "LABELS": "Tags",
     "CUSTOM_ATTRIBUTES": "Custom Attributes",
     "AUTOMATION": "Automation",
     "MACROS": "Macros",
-    "TEAMS": "Teams",
+    "TEAMS": "Groups",
     "BILLING": "Billing",
     "CUSTOM_VIEWS_FOLDER": "Folders",
     "CUSTOM_VIEWS_SEGMENTS": "Segments",
     "ALL_CONTACTS": "All Contacts",
     "TAGGED_WITH": "Tagged with",
-    "NEW_LABEL": "New label",
-    "NEW_TEAM": "New team",
+    "NEW_LABEL": "New tag",
+    "NEW_TEAM": "New group",
     "NEW_INBOX": "New inbox",
-    "REPORTS_CONVERSATION": "Conversations",
+    "REPORTS_CONVERSATION": "Tickets",
     "CSAT": "CSAT",
     "LIVE_CHAT": "Live Chat",
     "SMS": "SMS",
@@ -377,9 +377,9 @@
     "REPORTS_SLA": "SLA",
     "REPORTS_BOT": "Bot",
     "REPORTS_AGENT": "Agents",
-    "REPORTS_LABEL": "Labels",
+    "REPORTS_LABEL": "Tags",
     "REPORTS_INBOX": "Inbox",
-    "REPORTS_TEAM": "Team",
+    "REPORTS_TEAM": "Group",
     "AGENT_ASSIGNMENT": "Agent Assignment",
     "SET_AVAILABILITY_TITLE": "Set yourself as",
     "SET_YOUR_AVAILABILITY": "Set your availability",
@@ -419,11 +419,11 @@
     "DOCS": "Read docs",
     "SECURITY": "Security",
     "CAPTAIN_AI": "Captain",
-    "CONVERSATION_WORKFLOW": "Conversation Workflow"
+    "CONVERSATION_WORKFLOW": "Ticket Workflow"
   },
   "DATA_IMPORTS": {
     "HEADER": "Data",
-    "DESCRIPTION": "Bring your existing contacts and past conversations into this account from another support tool. Each import runs in the background, so you can keep working while it finishes, track its progress, and review anything that was skipped along the way.",
+    "DESCRIPTION": "Bring your existing contacts and past tickets into this account from another support tool. Each import runs in the background, so you can keep working while it finishes, track its progress, and review anything that was skipped along the way.",
     "LOADING": "Fetching imports",
     "DEFAULT_IMPORT_NAME": "Intercom import",
     "DEFAULT_IMPORT_NAMES": {
@@ -436,7 +436,7 @@
     },
     "TYPES": {
       "CONTACTS": "Contacts",
-      "CONVERSATIONS": "Conversations",
+      "CONVERSATIONS": "Tickets",
       "MESSAGES": "Messages"
     },
     "DRAWER": {
@@ -462,7 +462,7 @@
     },
     "EXPORT": {
       "TITLE": "Exports are on the way",
-      "DESCRIPTION": "Export your contacts and conversations out of this account. This workflow is coming soon.",
+      "DESCRIPTION": "Export your contacts and tickets out of this account. This workflow is coming soon.",
       "COMING_SOON": "Coming soon"
     },
     "TABLE": {
@@ -516,7 +516,7 @@
         "unknown": "Waiting for update",
         "queued": "Queued",
         "contacts": "Importing contacts",
-        "conversations": "Importing conversations",
+        "conversations": "Importing tickets",
         "finalizing": "Finalizing import",
         "completed": "Completed",
         "completed_with_errors": "Completed with errors",
@@ -550,11 +550,11 @@
       },
       "ASSISTANT": {
         "TITLE": "Assistant",
-        "DESCRIPTION": "Handles automated responses, conversation summaries, and intelligent reply suggestions for customer interactions."
+        "DESCRIPTION": "Handles automated responses, ticket summaries, and intelligent reply suggestions for customer interactions."
       },
       "COPILOT": {
         "TITLE": "Co-pilot",
-        "DESCRIPTION": "Provides real-time contextual suggestions, knowledge base recommendations, and proactive insights during conversations."
+        "DESCRIPTION": "Provides real-time contextual suggestions, knowledge base recommendations, and proactive insights during tickets."
       }
     },
     "FEATURES": {
@@ -582,7 +582,7 @@
       "ACTION": "Resolve payment"
     },
     "TITLE": "Billing",
-    "DESCRIPTION": "Manage your subscription here, upgrade your plan and get more for your team.",
+    "DESCRIPTION": "Manage your subscription here, upgrade your plan and get more for your group.",
     "CURRENT_PLAN": {
       "TITLE": "Current Plan",
       "PLAN_NOTE": "You are currently subscribed to the **{plan}** plan with **{quantity}** licenses",
@@ -755,13 +755,13 @@
   "CONVERSATION_WORKFLOW": {
     "INDEX": {
       "HEADER": {
-        "TITLE": "Conversation Workflows",
-        "DESCRIPTION": "Configure rules and required fields for conversation resolution."
+        "TITLE": "Ticket Workflows",
+        "DESCRIPTION": "Configure rules and required fields for ticket resolution."
       }
     },
     "REQUIRED_ATTRIBUTES": {
       "TITLE": "Attributes required on resolution",
-      "DESCRIPTION": "When resolving a conversation, agents will be prompted to fill these attributes if they haven't yet.",
+      "DESCRIPTION": "When resolving a ticket, agents will be prompted to fill these attributes if they haven't yet.",
       "NO_ATTRIBUTES": "No attributes added yet",
       "ADD": {
         "TITLE": "Add Attributes",
@@ -772,10 +772,10 @@
         "ERROR": "Could not update required attributes, please try again"
       },
       "MODAL": {
-        "TITLE": "Resolve conversation",
-        "DESCRIPTION": "Please fill in the following custom attributes before resolving this conversation",
+        "TITLE": "Resolve ticket",
+        "DESCRIPTION": "Please fill in the following custom attributes before resolving this ticket",
         "ACTIONS": {
-          "RESOLVE": "Resolve conversation",
+          "RESOLVE": "Resolve ticket",
           "CANCEL": "Cancel"
         },
         "PLACEHOLDERS": {
@@ -792,14 +792,14 @@
       },
       "PAYWALL": {
         "TITLE": "Upgrade to use required attributes",
-        "AVAILABLE_ON": "The required conversation attributes feature is available on the Business and Enterprise plans.",
-        "UPGRADE_PROMPT": "Upgrade your plan to prompt agents to fill required attributes before conversation resolution.",
+        "AVAILABLE_ON": "The required ticket attributes feature is available on the Business and Enterprise plans.",
+        "UPGRADE_PROMPT": "Upgrade your plan to prompt agents to fill required attributes before ticket resolution.",
         "UPGRADE_NOW": "Upgrade now",
         "CANCEL_ANYTIME": "You can change or cancel your plan anytime"
       },
       "ENTERPRISE_PAYWALL": {
-        "AVAILABLE_ON": "The required conversation attributes feature is available on the paid plans.",
-        "UPGRADE_PROMPT": "Upgrade to a paid plan to enforce required attributes before conversation resolution.",
+        "AVAILABLE_ON": "The required ticket attributes feature is available on the paid plans.",
+        "UPGRADE_PROMPT": "Upgrade to a paid plan to enforce required attributes before ticket resolution.",
         "ASK_ADMIN": "Please reach out to your administrator for the upgrade."
       }
     }
@@ -825,16 +825,16 @@
   "KEYBOARD_SHORTCUTS": {
     "TOGGLE_MODAL": "View all shortcuts",
     "TITLE": {
-      "OPEN_CONVERSATION": "Open conversation",
+      "OPEN_CONVERSATION": "Open ticket",
       "RESOLVE_AND_NEXT": "Resolve and move to next",
       "NAVIGATE_DROPDOWN": "Navigate dropdown items",
-      "RESOLVE_CONVERSATION": "Resolve Conversation",
-      "GO_TO_CONVERSATION_DASHBOARD": "Go to Conversation Dashboard",
+      "RESOLVE_CONVERSATION": "Resolve Ticket",
+      "GO_TO_CONVERSATION_DASHBOARD": "Go to Ticket Dashboard",
       "ADD_ATTACHMENT": "Add Attachment",
       "GO_TO_CONTACTS_DASHBOARD": "Go to Contacts Dashboard",
       "TOGGLE_SIDEBAR": "Toggle Sidebar",
       "GO_TO_REPORTS_SIDEBAR": "Go to Reports sidebar",
-      "MOVE_TO_NEXT_TAB": "Move to next tab in conversation list",
+      "MOVE_TO_NEXT_TAB": "Move to next tab in ticket list",
       "GO_TO_SETTINGS": "Go to Settings",
       "SWITCH_TO_PRIVATE_NOTE": "Switch to Private Note",
       "SWITCH_TO_REPLY": "Switch to Reply",
@@ -845,13 +845,13 @@
     "INDEX": {
       "HEADER": {
         "TITLE": "Agent assignment",
-        "DESCRIPTION": "Define policies to effectively manage workload and route conversations based on the needs of inboxes and agents. Learn more here"
+        "DESCRIPTION": "Define policies to effectively manage workload and route tickets based on the needs of inboxes and agents. Learn more here"
       },
       "ASSIGNMENT_POLICY": {
         "TITLE": "Assignment policy",
-        "DESCRIPTION": "Manage how conversations get assigned in inboxes.",
+        "DESCRIPTION": "Manage how tickets get assigned in inboxes.",
         "FEATURES": [
-          "Assign by conversations evenly or by available capacity",
+          "Assign by tickets evenly or by available capacity",
           "Add fair distribution rules to avoid overloading any agent",
           "Add inboxes to a policy - one policy per inbox"
         ]
@@ -860,8 +860,8 @@
         "TITLE": "Agent capacity policy",
         "DESCRIPTION": "Manage workload for agents.",
         "FEATURES": [
-          "Define maximum conversations per inbox",
-          "Create exceptions based on labels and time",
+          "Define maximum tickets per inbox",
+          "Create exceptions based on tags and time",
           "Add agents to a policy - one policy per agent"
         ]
       }
@@ -944,11 +944,11 @@
           "LABEL": "Assignment order",
           "ROUND_ROBIN": {
             "LABEL": "Round robin",
-            "DESCRIPTION": "Assign conversations evenly among agents."
+            "DESCRIPTION": "Assign tickets evenly among agents."
           },
           "BALANCED": {
             "LABEL": "Balanced",
-            "DESCRIPTION": "Assign conversations based on available capacity.",
+            "DESCRIPTION": "Assign tickets based on available capacity.",
             "PREMIUM_MESSAGE": "Upgrade to access balanced assignment and agent capacity management.",
             "PREMIUM_BADGE": "Premium"
           }
@@ -957,22 +957,22 @@
           "LABEL": "Assignment priority",
           "EARLIEST_CREATED": {
             "LABEL": "Earliest created",
-            "DESCRIPTION": "The conversation that was created first gets assigned first."
+            "DESCRIPTION": "The ticket that was created first gets assigned first."
           },
           "LONGEST_WAITING": {
             "LABEL": "Longest waiting",
-            "DESCRIPTION": "The conversation waiting the longest gets assigned first."
+            "DESCRIPTION": "The ticket waiting the longest gets assigned first."
           }
         },
         "FAIR_DISTRIBUTION": {
           "LABEL": "Fair distribution policy",
-          "DESCRIPTION": "Cap conversations per agent within a time window to avoid overload. Defaults to 100 per hour.",
+          "DESCRIPTION": "Cap tickets per agent within a time window to avoid overload. Defaults to 100 per hour.",
           "INPUT_MAX": "Assign max",
-          "DURATION": "Conversations per agent in every"
+          "DURATION": "Tickets per agent in every"
         },
         "EXCLUDE_OLDER_THAN": {
-          "LABEL": "Skip stale conversations",
-          "DESCRIPTION": "Skip unassigned conversations older than this. Defaults to 7 days; clear to disable."
+          "LABEL": "Skip stale tickets",
+          "DESCRIPTION": "Skip unassigned tickets older than this. Defaults to 7 days; clear to disable."
         },
         "INBOXES": {
           "LABEL": "Added inboxes",
@@ -1070,16 +1070,16 @@
           "ADD_BUTTON": "Add inbox",
           "FIELD": {
             "SELECT_INBOX": "Select inbox",
-            "MAX_CONVERSATIONS": "Max conversations",
+            "MAX_CONVERSATIONS": "Max tickets",
             "SET_LIMIT": "Set limit"
           },
           "EMPTY_STATE": "No inbox limit set"
         },
         "EXCLUSION_RULES": {
           "LABEL": "Exclusion rules",
-          "DESCRIPTION": "Conversations that satisfy the following conditions would not count towards agent capacity",
+          "DESCRIPTION": "Tickets that satisfy the following conditions would not count towards agent capacity",
           "TAGS": {
-            "LABEL": "Exclude conversations tagged with specific labels",
+            "LABEL": "Exclude tickets tagged with specific tags",
             "ADD_TAG": "add tag",
             "DROPDOWN": {
               "SEARCH_PLACEHOLDER": "Search and select tags to add"
@@ -1087,7 +1087,7 @@
             "EMPTY_STATE": "No tags added to this policy."
           },
           "DURATION": {
-            "LABEL": "Exclude conversations older than a specified duration",
+            "LABEL": "Exclude tickets older than a specified duration",
             "PLACEHOLDER": "Set time"
           }
         },

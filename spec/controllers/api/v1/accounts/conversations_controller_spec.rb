@@ -189,7 +189,7 @@ RSpec.describe 'Conversations API', type: :request do
             as: :json
 
         expect(response).to have_http_status(:forbidden)
-        expect(response.parsed_body['error']).to eq('Conversation unread counts feature not enabled for this account')
+        expect(response.parsed_body['error']).to eq('Ticket unread counts feature not enabled for this account')
       end
     end
   end

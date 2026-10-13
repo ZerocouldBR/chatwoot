@@ -3,7 +3,7 @@
     "HEADER": "Agents",
     "HEADER_BTN_TXT": "Add Agent",
     "LOADING": "Fetching Agent List",
-    "DESCRIPTION": "An agent is a member of your customer support team who can view and respond to user messages. The list below shows all the agents in your account.",
+    "DESCRIPTION": "An agent is a member of your customer support group who can view and respond to user messages. The list below shows all the agents in your account.",
     "LEARN_MORE": "Learn about user roles",
     "AGENT_TYPES": {
       "ADMINISTRATOR": "Administrator",
@@ -12,8 +12,8 @@
     "COUNT": "{n} agent | {n} agents",
     "LIST": {
       "404": "There are no agents associated to this account",
-      "TITLE": "Manage agents in your team",
-      "DESC": "You can add/remove agents to/in your team.",
+      "TITLE": "Manage agents in your group",
+      "DESC": "You can add/remove agents to/in your group.",
       "NAME": "Name",
       "EMAIL": "EMAIL",
       "STATUS": "Status",
@@ -23,7 +23,7 @@
       "AVAILABLE_CUSTOM_ROLE": "Available custom role permissions"
     },
     "ADD": {
-      "TITLE": "Add agent to your team",
+      "TITLE": "Add agent to your group",
       "DESC": "You can add people who will be able to handle support for your inboxes.",
       "CANCEL_BUTTON_TEXT": "Cancel",
       "FORM": {
@@ -106,7 +106,7 @@
       "PLACEHOLDER": "None",
       "TITLE": {
         "AGENT": "Select agent",
-        "TEAM": "Select team"
+        "TEAM": "Select group"
       },
       "LIST": {
         "NONE": "None"
@@ -114,11 +114,11 @@
       "SEARCH": {
         "NO_RESULTS": {
           "AGENT": "No agents found",
-          "TEAM": "No teams found"
+          "TEAM": "No groups found"
         },
         "PLACEHOLDER": {
           "AGENT": "Search agents",
-          "TEAM": "Search teams",
+          "TEAM": "Search groups",
           "INPUT": "Search for agents"
         }
       }

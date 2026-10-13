@@ -17,7 +17,7 @@ RSpec.describe AgentNotifications::ConversationNotificationsMailer do
     let(:mail) { described_class.with(account: account).conversation_creation(conversation, agent, nil).deliver_now }
 
     it 'renders the subject' do
-      expect(mail.subject).to eq("#{agent.available_name}, A new conversation [ID - #{conversation
+      expect(mail.subject).to eq("#{agent.available_name}, A new ticket [ID - #{conversation
         .display_id}] has been created in #{conversation.inbox&.sanitized_name}.")
     end
 
@@ -35,7 +35,7 @@ RSpec.describe AgentNotifications::ConversationNotificationsMailer do
     let(:mail) { described_class.with(account: account).conversation_assignment(conversation, agent, nil).deliver_now }
 
     it 'renders the subject' do
-      expect(mail.subject).to eq("#{agent.available_name}, A new conversation [ID - #{conversation.display_id}] has been assigned to you.")
+      expect(mail.subject).to eq("#{agent.available_name}, A new ticket [ID - #{conversation.display_id}] has been assigned to you.")
     end
 
     it 'renders the receiver email' do
@@ -57,7 +57,7 @@ RSpec.describe AgentNotifications::ConversationNotificationsMailer do
     end
 
     it 'renders the subject' do
-      expect(mail.subject).to eq("#{agent.available_name}, You have been mentioned in conversation [ID - #{conversation.display_id}]")
+      expect(mail.subject).to eq("#{agent.available_name}, You have been mentioned in ticket [ID - #{conversation.display_id}]")
     end
 
     it 'renders the receiver email' do
@@ -65,7 +65,7 @@ RSpec.describe AgentNotifications::ConversationNotificationsMailer do
     end
 
     it 'renders the senders name' do
-      expect(mail.body.encoded).to match("You've been mentioned in a conversation. <b>#{another_agent.display_name}</b> wrote:")
+      expect(mail.body.encoded).to match("You've been mentioned in a ticket. <b>#{another_agent.display_name}</b> wrote:")
     end
 
     it 'renders Customer if contacts name not available in the conversation' do
@@ -80,7 +80,7 @@ RSpec.describe AgentNotifications::ConversationNotificationsMailer do
     let(:mail) { described_class.with(account: account).assigned_conversation_new_message(conversation, agent, message).deliver_now }
 
     it 'renders the subject' do
-      expect(mail.subject).to eq("#{agent.available_name}, New message in your assigned conversation [ID - #{message.conversation.display_id}].")
+      expect(mail.subject).to eq("#{agent.available_name}, New message in your assigned ticket [ID - #{message.conversation.display_id}].")
     end
 
     it 'renders the receiver email' do
@@ -98,7 +98,7 @@ RSpec.describe AgentNotifications::ConversationNotificationsMailer do
     let(:mail) { described_class.with(account: account).participating_conversation_new_message(conversation, agent, message).deliver_now }
 
     it 'renders the subject' do
-      expect(mail.subject).to eq("#{agent.available_name}, New message in your participating conversation [ID - #{message.conversation.display_id}].")
+      expect(mail.subject).to eq("#{agent.available_name}, New message in your participating ticket [ID - #{message.conversation.display_id}].")
     end
 
     it 'renders the receiver email' do

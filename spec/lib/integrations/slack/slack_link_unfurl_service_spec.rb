@@ -100,7 +100,7 @@ describe Integrations::Slack::SlackLinkUnfurlService do
                        "{\"type\":\"mrkdwn\",\"text\":\"*Inbox Type:*\\n#{channel_email.inbox.channel.name}\"}]}," \
                        '{"type":"actions","elements":[{' \
                        '"type":"button",' \
-                       '"text":{"type":"plain_text","text":"Open conversation","emoji":true},' \
+                       '"text":{"type":"plain_text","text":"Open ticket","emoji":true},' \
                        '"url":"https://qa.chatwoot.com/app/accounts/1/conversations/1",' \
                        '"action_id":"button-action"}]}]}}'
         }
@@ -149,7 +149,7 @@ describe Integrations::Slack::SlackLinkUnfurlService do
                        "{\"type\":\"mrkdwn\",\"text\":\"*Inbox Type:*\\n#{channel_email.inbox.channel.name}\"}]}," \
                        '{"type":"actions","elements":[{' \
                        '"type":"button",' \
-                       '"text":{"type":"plain_text","text":"Open conversation","emoji":true},' \
+                       '"text":{"type":"plain_text","text":"Open ticket","emoji":true},' \
                        '"url":"https://qa.chatwoot.com/app/accounts/1/conversations/1",' \
                        '"action_id":"button-action"}]}]}}'
         }

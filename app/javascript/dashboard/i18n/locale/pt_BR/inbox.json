@@ -4,7 +4,7 @@
       "TITLE": "Caixa de Entrada",
       "DISPLAY_DROPDOWN": "Exibir",
       "LOADING": "Carregando notificações",
-      "404": "Não há conversas ativas neste grupo.",
+      "404": "Não há tickets ativos neste grupo.",
       "NO_NOTIFICATIONS": "Nenhuma notificação",
       "NOTE": "Notificações de todas as caixas inscritas",
       "NO_MESSAGES_AVAILABLE": "Ops! Não é possível obter mensagens",
@@ -18,19 +18,19 @@
       "BACK": "Anterior"
     },
     "TYPES": {
-      "CONVERSATION_MENTION": "Você foi mencionado em uma conversa",
-      "CONVERSATION_CREATION": "Nova conversa criada",
-      "CONVERSATION_ASSIGNMENT": "Uma conversa foi atribuída a você",
-      "ASSIGNED_CONVERSATION_NEW_MESSAGE": "Nova mensagem em uma conversa atribuída",
-      "PARTICIPATING_CONVERSATION_NEW_MESSAGE": "Nova mensagem em uma conversa na qual você participa",
-      "SLA_MISSED_FIRST_RESPONSE": "Primeira resposta da meta de SLA perdida na conversa",
-      "SLA_MISSED_NEXT_RESPONSE": "Próxima resposta da meta de SLA perdida na conversa",
-      "SLA_MISSED_RESOLUTION": "A resolução da meta de SLA foi perdida na conversa"
+      "CONVERSATION_MENTION": "Você foi mencionado em um ticket",
+      "CONVERSATION_CREATION": "Novo ticket criado",
+      "CONVERSATION_ASSIGNMENT": "Um ticket foi atribuído a você",
+      "ASSIGNED_CONVERSATION_NEW_MESSAGE": "Nova mensagem em um ticket atribuído",
+      "PARTICIPATING_CONVERSATION_NEW_MESSAGE": "Nova mensagem em um ticket na qual você participa",
+      "SLA_MISSED_FIRST_RESPONSE": "Primeira resposta da meta de SLA perdida no ticket",
+      "SLA_MISSED_NEXT_RESPONSE": "Próxima resposta da meta de SLA perdida no ticket",
+      "SLA_MISSED_RESOLUTION": "A resolução da meta de SLA foi perdida no ticket"
     },
     "TYPES_NEXT": {
       "CONVERSATION_MENTION": "Mencionado",
       "CONVERSATION_ASSIGNMENT": "Atribuídas a você",
-      "CONVERSATION_CREATION": "Nova conversa",
+      "CONVERSATION_CREATION": "Novo ticket",
       "SLA_MISSED_FIRST_RESPONSE": "Quebra SLA",
       "SLA_MISSED_NEXT_RESPONSE": "Quebra SLA",
       "SLA_MISSED_RESOLUTION": "Quebra SLA",
@@ -60,8 +60,8 @@
       "DISPLAY_OPTIONS": {
         "SNOOZED": "Adiadas",
         "READ": "Lida",
-        "LABELS": "Etiquetas",
-        "CONVERSATION_ID": "ID da conversa"
+        "LABELS": "Tags",
+        "CONVERSATION_ID": "ID do ticket"
       }
     },
     "ALERTS": {

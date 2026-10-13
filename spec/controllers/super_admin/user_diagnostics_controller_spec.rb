@@ -153,7 +153,7 @@ RSpec.describe 'Super Admin User diagnostics', type: :request do
 
       expect(response.body).to include('No push types are enabled for Acme')
       expect(response.body).to include('Review push notification settings')
-      expect(response.body).not_to include('A conversation is assigned to the user')
+      expect(response.body).not_to include('A ticket is assigned to the user')
     end
   end
 
@@ -253,7 +253,7 @@ RSpec.describe 'Super Admin User diagnostics', type: :request do
       get '/super_admin/user_diagnostics', params: { user_query: user.email, tab: 'push' }
 
       expect(response.body).to include('Acme')
-      expect(response.body).to include('A conversation is assigned to the user')
+      expect(response.body).to include('A ticket is assigned to the user')
       expect(response.body).to include('No push types are enabled for Acme')
     end
 
@@ -264,7 +264,7 @@ RSpec.describe 'Super Admin User diagnostics', type: :request do
 
       get '/super_admin/user_diagnostics', params: { user_query: user.email, tab: 'push' }
 
-      expect(response.body).not_to include('A conversation misses first response SLA')
+      expect(response.body).not_to include('A ticket misses first response SLA')
     end
 
     it 'lists SLA push types for an account with the SLA feature' do
@@ -278,7 +278,7 @@ RSpec.describe 'Super Admin User diagnostics', type: :request do
 
       get '/super_admin/user_diagnostics', params: { user_query: user.email, tab: 'push' }
 
-      expect(response.body).to include('A conversation misses first response SLA')
+      expect(response.body).to include('A ticket misses first response SLA')
     end
 
     it 'orders the notification types as the agent preferences screen does' do
@@ -287,10 +287,10 @@ RSpec.describe 'Super Admin User diagnostics', type: :request do
 
       get '/super_admin/user_diagnostics', params: { user_query: user.email, tab: 'push' }
 
-      labels = ['A new conversation is created', 'A conversation is assigned to the user',
-                'The user is mentioned in a conversation',
-                'A new message is created in an assigned conversation',
-                'A new message is created in a participating conversation']
+      labels = ['A new ticket is created', 'A ticket is assigned to the user',
+                'The user is mentioned in a ticket',
+                'A new message is created in an assigned ticket',
+                'A new message is created in a participating ticket']
       expect(response.body.index(labels[0])).to be < response.body.index(labels[1])
       expect(response.body.index(labels[1])).to be < response.body.index(labels[2])
       expect(response.body.index(labels[2])).to be < response.body.index(labels[3])

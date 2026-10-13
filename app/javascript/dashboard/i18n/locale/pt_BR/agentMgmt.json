@@ -3,7 +3,7 @@
     "HEADER": "Agentes",
     "HEADER_BTN_TXT": "Adicionar Agente",
     "LOADING": "Buscando lista de agente",
-    "DESCRIPTION": "Um agente é um membro de seu time de atendimento ao cliente que pode visualizar e responder às mensagens de usuários. A lista abaixo mostra todos os agentes de sua conta.",
+    "DESCRIPTION": "Um agente é um membro de seu grupo de atendimento ao cliente que pode visualizar e responder às mensagens de usuários. A lista abaixo mostra todos os agentes de sua conta.",
     "LEARN_MORE": "Saiba mais sobre as funções do usuário",
     "AGENT_TYPES": {
       "ADMINISTRATOR": "Administrador",
@@ -12,8 +12,8 @@
     "COUNT": "{n} agente | {n} agentes",
     "LIST": {
       "404": "Não existem agentes associados a esta conta",
-      "TITLE": "Gerenciar agentes de seu time",
-      "DESC": "Você pode adicionar e/ou remover agentes de um time.",
+      "TITLE": "Gerenciar agentes de seu grupo",
+      "DESC": "Você pode adicionar e/ou remover agentes de um grupo.",
       "NAME": "Nome",
       "EMAIL": "E-mail",
       "STATUS": "Status",
@@ -23,7 +23,7 @@
       "AVAILABLE_CUSTOM_ROLE": "Permissões de função personalizada disponíveis"
     },
     "ADD": {
-      "TITLE": "Adicionar agente a seu time",
+      "TITLE": "Adicionar agente a seu grupo",
       "DESC": "Você pode adicionar pessoas que poderão acompanhar o suporte de suas caixas de entrada.",
       "CANCEL_BUTTON_TEXT": "Cancelar",
       "FORM": {
@@ -106,7 +106,7 @@
       "PLACEHOLDER": "Nenhum",
       "TITLE": {
         "AGENT": "Selecionar agente",
-        "TEAM": "Selecionar time"
+        "TEAM": "Selecionar grupo"
       },
       "LIST": {
         "NONE": "Nenhum"
@@ -114,11 +114,11 @@
       "SEARCH": {
         "NO_RESULTS": {
           "AGENT": "Nenhum agente encontrado",
-          "TEAM": "Nenhum time encontrado"
+          "TEAM": "Nenhum grupo encontrado"
         },
         "PLACEHOLDER": {
           "AGENT": "Pesquisar agentes",
-          "TEAM": "Pesquisar times",
+          "TEAM": "Pesquisar grupos",
           "INPUT": "Pesquisar por agentes"
         }
       }

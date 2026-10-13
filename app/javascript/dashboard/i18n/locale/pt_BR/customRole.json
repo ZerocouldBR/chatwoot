@@ -12,7 +12,7 @@
     "PAYWALL": {
       "TITLE": "Atualize para criar funções personalizadas",
       "AVAILABLE_ON": "O recurso de função personalizada está disponível apenas nos planos \"Business\" e \"Enterprise\".",
-      "UPGRADE_PROMPT": "Atualize seu plano para obter acesso a recursos avançados como gerenciamento de time, automações, atributos personalizados e muito mais.",
+      "UPGRADE_PROMPT": "Atualize seu plano para obter acesso a recursos avançados como gerenciamento de grupo, automações, atributos personalizados e muito mais.",
       "UPGRADE_NOW": "Atualizar agora",
       "CANCEL_ANYTIME": "Você pode alterar ou cancelar seu plano a qualquer momento"
     },
@@ -33,9 +33,9 @@
       }
     },
     "PERMISSIONS": {
-      "CONVERSATION_MANAGE": "Gerenciar todas conversas",
-      "CONVERSATION_UNASSIGNED_MANAGE": "Gerenciar conversas não atribuídas e aquelas atribuídas a elas",
-      "CONVERSATION_PARTICIPATING_MANAGE": "Gerenciar conversas que participa e aquelas atribuídas a elas",
+      "CONVERSATION_MANAGE": "Gerenciar todos tickets",
+      "CONVERSATION_UNASSIGNED_MANAGE": "Gerenciar tickets não atribuídos e aqueles atribuídos a ele",
+      "CONVERSATION_PARTICIPATING_MANAGE": "Gerenciar tickets que participa e aqueles atribuídos a ele",
       "CONTACT_MANAGE": "Gerenciar contatos",
       "REPORT_MANAGE": "Gerenciar relatórios",
       "KNOWLEDGE_BASE_MANAGE": "Gerenciar base de conhecimento"

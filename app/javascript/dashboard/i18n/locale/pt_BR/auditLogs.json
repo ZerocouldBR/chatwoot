@@ -3,7 +3,7 @@
     "HEADER": "Auditoria",
     "HEADER_BTN_TXT": "Adicionar Logs de Auditoria",
     "LOADING": "Buscando Logs de Auditoria",
-    "DESCRIPTION": "Logs de Auditoria mantêm um registro de atividades em sua conta, permitindo que você acompanhe e auditore sua conta, time ou serviços.",
+    "DESCRIPTION": "Logs de Auditoria mantêm um registro de atividades em sua conta, permitindo que você acompanhe e auditore sua conta, grupo ou serviços.",
     "LEARN_MORE": "Saiba mais sobre os logs de auditoria",
     "SEARCH_404": "Não existem itens correspondentes a esta consulta",
     "SIDEBAR_TXT": "<p><b>Logs de Auditoria</b> </p><p> Os Logs de Auditoria são rastros para eventos e ações em um Sistema Chatwoot. </p>",
@@ -15,22 +15,22 @@
       "CLEAR_ALL": "Limpar filtros",
       "EVENT_TYPE_GROUPS": {
         "ACCESS": "Acesso",
-        "AGENTS_TEAMS": "Agentes e times",
+        "AGENTS_TEAMS": "Agentes e grupos",
         "CONFIGURATION": "Configuração",
-        "CONVERSATIONS": "Conversas"
+        "CONVERSATIONS": "Tickets"
       },
       "EVENT_TYPES": {
         "SIGN_IN_OUT": "Entrar / sair",
         "AGENTS": "Agentes",
-        "TEAMS": "Times",
-        "TEAM_MEMBERS": "Membros do time",
+        "TEAMS": "Grupos",
+        "TEAM_MEMBERS": "Membros do grupo",
         "INBOX_MEMBERS": "Colaboradores da caixa de entrada",
         "ACCOUNT": "Conta",
         "INBOXES": "Caixas de Entrada",
         "WEBHOOKS": "Webhooks",
         "AUTOMATION_RULES": "Regras de automação",
         "MACROS": "Macros",
-        "CONVERSATION_DELETIONS": "Exclusões de conversas",
+        "CONVERSATION_DELETIONS": "Exclusões de tickets",
         "MESSAGE_DELETIONS": "Exclusões de mensagens"
       },
       "SORT": {
@@ -81,9 +81,9 @@
       "SIGN_OUT": "{agentName} Se desconectou"
     },
     "TEAM": {
-      "ADD": "{agentName} criou um time (#{id})",
-      "EDIT": "{agentName} atualizou um time (#{id})",
-      "DELETE": "{agentName} excluiu um time (#{id})"
+      "ADD": "{agentName} criou um grupo (#{id})",
+      "EDIT": "{agentName} atualizou um grupo (#{id})",
+      "DELETE": "{agentName} excluiu um grupo (#{id})"
     },
     "MACRO": {
       "ADD": "{agentName} criou uma nova macro (#{id})",
@@ -95,17 +95,17 @@
       "REMOVE": "{agentName} removeu {user} da caixa de entrada (#{inbox_id})"
     },
     "TEAM_MEMBER": {
-      "ADD": "{agentName} adicionou {user} ao time (#{team_id})",
-      "REMOVE": "{agentName} removeu {user} do time (#{team_id})"
+      "ADD": "{agentName} adicionou {user} ao grupo (#{team_id})",
+      "REMOVE": "{agentName} removeu {user} do grupo (#{team_id})"
     },
     "ACCOUNT": {
       "EDIT": "O {agentName} atualizou a configuração da conta (#{id})"
     },
     "CONVERSATION": {
-      "DELETE": "{agentName} excluiu a conversa #{id}"
+      "DELETE": "{agentName} excluiu o ticket #{id}"
     },
     "MESSAGE": {
-      "DELETE": "{agentName} excluiu uma mensagem na conversa #{conversationId}"
+      "DELETE": "{agentName} excluiu uma mensagem no ticket #{conversationId}"
     }
   }
 }

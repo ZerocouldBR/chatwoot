@@ -68,7 +68,7 @@
         "DIALOG_TITLE": "Add people to {name}"
       },
       "TABS": {
-        "CONVERSATIONS": "Conversations",
+        "CONVERSATIONS": "Tickets",
         "NOTES": "Notes",
         "PEOPLE": "People"
       },
@@ -76,12 +76,12 @@
         "TODAY": "Today",
         "YESTERDAY": "Yesterday",
         "SYSTEM_AUTHOR": "System",
-        "EMPTY_CONVERSATIONS": "No conversations yet. They'll show up here when this company's people get in touch.",
+        "EMPTY_CONVERSATIONS": "No tickets yet. They'll show up here when this company's people get in touch.",
         "EMPTY_NOTES": "No notes yet. Notes added to this company's people show up here.",
         "LOAD_MORE": "Load more",
         "SEARCH_NOTES": "Search notes",
         "NO_MATCHING_NOTES": "No notes match your search.",
-        "NO_MATCHING_CONVERSATIONS": "No conversations match these filters."
+        "NO_MATCHING_CONVERSATIONS": "No tickets match these filters."
       },
       "EDIT": {
         "TITLE": "Edit company",
@@ -205,7 +205,7 @@
     "PAYWALL": {
       "TITLE": "Upgrade to use Companies",
       "AVAILABLE_ON": "Companies is not available on the free plan.",
-      "UPGRADE_PROMPT": "Upgrade your plan to group contacts by company, see every conversation with an account and keep company details in one place.",
+      "UPGRADE_PROMPT": "Upgrade your plan to group contacts by company, see every ticket with an account and keep company details in one place.",
       "UPGRADE_NOW": "Upgrade now",
       "CANCEL_ANYTIME": "You can change or cancel your plan anytime"
     }

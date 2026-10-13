@@ -51,18 +51,18 @@ en:
   data_imports:
     intercom:
       activities:
-        assignment: '%{actor} assigned the conversation'
-        assignment_with_target: '%{actor} assigned the conversation to %{target}'
-        assign_and_reopen: '%{actor} assigned and reopened the conversation'
-        assign_and_reopen_with_target: '%{actor} assigned the conversation to %{target} and reopened it'
-        open: '%{actor} opened the conversation'
-        close: '%{actor} closed the conversation'
-        snoozed: '%{actor} snoozed the conversation'
+        assignment: '%{actor} assigned the ticket'
+        assignment_with_target: '%{actor} assigned the ticket to %{target}'
+        assign_and_reopen: '%{actor} assigned and reopened the ticket'
+        assign_and_reopen_with_target: '%{actor} assigned the ticket to %{target} and reopened it'
+        open: '%{actor} opened the ticket'
+        close: '%{actor} closed the ticket'
+        snoozed: '%{actor} snoozed the ticket'
         participant_added: '%{actor} added a participant'
         participant_added_with_target: '%{actor} added %{target} as a participant'
         participant_removed: '%{actor} removed a participant'
         participant_removed_with_target: '%{actor} removed %{target} as a participant'
-        conversation_attribute_updated: '%{actor} updated conversation attributes'
+        conversation_attribute_updated: '%{actor} updated ticket attributes'
         ticket_attribute_updated: '%{actor} updated ticket attributes'
         ticket_state_updated: '%{actor} updated the ticket state'
         custom_action_started: '%{actor} started a custom action'
@@ -114,9 +114,9 @@ en:
       sso_not_enabled: SAML SSO is not enabled for this installation
       multi_account_invitation_not_allowed: Users associated with another account cannot be added while SAML is enabled
     conversations:
-      resolved: Conversation is resolved and does not accept new messages
+      resolved: Ticket is resolved and does not accept new messages
       unread_counts:
-        feature_not_enabled: Conversation unread counts feature not enabled for this account
+        feature_not_enabled: Ticket unread counts feature not enabled for this account
     data_import:
       data_type:
         invalid: Invalid data type
@@ -259,7 +259,7 @@ en:
     utc_warning: The report generated is in UTC timezone
     agent_csv:
       agent_name: Agent name
-      conversations_count: Assigned conversations
+      conversations_count: Assigned tickets
       avg_first_response_time: Avg first response time
       avg_resolution_time: Avg resolution time
       resolution_count: Resolution Count
@@ -267,25 +267,25 @@ en:
     inbox_csv:
       inbox_name: Inbox name
       inbox_type: Inbox type
-      conversations_count: No. of conversations
+      conversations_count: No. of tickets
       avg_first_response_time: Avg first response time
       avg_resolution_time: Avg resolution time
     label_csv:
-      label_title: Label
-      conversations_count: No. of conversations
+      label_title: Tag
+      conversations_count: No. of tickets
       avg_first_response_time: Avg first response time
       avg_resolution_time: Avg resolution time
       avg_reply_time: Avg reply time
       resolution_count: Resolution Count
     team_csv:
-      team_name: Team name
-      conversations_count: Conversations count
+      team_name: Group name
+      conversations_count: Tickets count
       avg_first_response_time: Avg first response time
       avg_resolution_time: Avg resolution time
       resolution_count: Resolution Count
       avg_customer_waiting_time: Avg customer waiting time
     conversation_csv:
-      conversations_count: Conversations
+      conversations_count: Tickets
       incoming_messages_count: Messages received
       outgoing_messages_count: Messages sent
       avg_first_response_time: Avg first response time
@@ -295,13 +295,13 @@ en:
     conversation_traffic_csv:
       timezone: Timezone
     sla_csv:
-      conversation_id: Conversation ID
+      conversation_id: Ticket ID
       sla_policy_breached: SLA Policy
       assignee: Assignee
-      team: Team
+      team: Group
       inbox: Inbox
-      labels: Labels
-      conversation_link: Link to the Conversation
+      labels: Tags
+      conversation_link: Link to the Ticket
       breached_events: Breached Events
     default_group_by: day
     csat:
@@ -309,7 +309,7 @@ en:
         contact_name: Contact Name
         contact_email_address: Contact Email Address
         contact_phone_number: Contact Phone Number
-        link_to_the_conversation: Link to the conversation
+        link_to_the_conversation: Link to the ticket
         agent_name: Agent Name
         rating: Rating
         feedback: Feedback Comment
@@ -317,13 +317,13 @@ en:
         review_notes: Review Notes
   notifications:
     notification_title:
-      conversation_creation: 'A conversation (#%{display_id}) has been created in %{inbox_name}'
-      conversation_assignment: 'A conversation (#%{display_id}) has been assigned to you'
-      assigned_conversation_new_message: 'A new message is created in conversation (#%{display_id})'
-      conversation_mention: 'You have been mentioned in conversation (#%{display_id})'
-      sla_missed_first_response: 'SLA target first response missed for conversation (#%{display_id})'
-      sla_missed_next_response: 'SLA target next response missed for conversation (#%{display_id})'
-      sla_missed_resolution: 'SLA target resolution missed for conversation (#%{display_id})'
+      conversation_creation: 'A ticket (#%{display_id}) has been created in %{inbox_name}'
+      conversation_assignment: 'A ticket (#%{display_id}) has been assigned to you'
+      assigned_conversation_new_message: 'A new message is created in ticket (#%{display_id})'
+      conversation_mention: 'You have been mentioned in ticket (#%{display_id})'
+      sla_missed_first_response: 'SLA target first response missed for ticket (#%{display_id})'
+      sla_missed_next_response: 'SLA target next response missed for ticket (#%{display_id})'
+      sla_missed_resolution: 'SLA target resolution missed for ticket (#%{display_id})'
     attachment: 'Attachment'
     no_content: 'No content'
   conversations:
@@ -337,7 +337,7 @@ en:
       deleted: This message was deleted
       whatsapp:
         list_button_label: 'Choose an item'
-        call_permission_request_body: 'We would like to call you regarding your conversation.'
+        call_permission_request_body: 'We would like to call you regarding your ticket.'
         flow_response: 'Submitted a flow response'
         request_contact_info: 'Would you like to share your phone number with us?'
         unsupported_message: 'This message is unavailable.'
@@ -348,32 +348,32 @@ en:
         error_code: 'Error code: %{error_code}'
     activity:
       captain:
-        resolved: 'Conversation was marked resolved by %{user_name} due to inactivity'
-        resolved_with_reason: 'Conversation was marked resolved by %{user_name} (%{reason})'
-        resolved_by_tool: 'Conversation was marked resolved by %{user_name}: %{reason}'
-        open: 'Conversation was marked open by %{user_name}'
-        open_with_reason: 'Conversation was marked open by %{user_name} (%{reason})'
-        auto_opened_after_agent_reply: 'Conversation was marked open automatically after an agent reply'
+        resolved: 'Ticket was marked resolved by %{user_name} due to inactivity'
+        resolved_with_reason: 'Ticket was marked resolved by %{user_name} (%{reason})'
+        resolved_by_tool: 'Ticket was marked resolved by %{user_name}: %{reason}'
+        open: 'Ticket was marked open by %{user_name}'
+        open_with_reason: 'Ticket was marked open by %{user_name} (%{reason})'
+        auto_opened_after_agent_reply: 'Ticket was marked open automatically after an agent reply'
       agent_bot:
-        error_moved_to_open: 'Conversation was marked open by system due to an error with the agent bot.'
+        error_moved_to_open: 'Ticket was marked open by system due to an error with the agent bot.'
       status:
-        resolved: 'Conversation was marked resolved by %{user_name}'
-        contact_resolved: 'Conversation was resolved by %{contact_name}'
-        open: 'Conversation was reopened by %{user_name}'
-        pending: 'Conversation was marked as pending by %{user_name}'
-        snoozed: 'Conversation was snoozed by %{user_name}'
-        auto_resolved_days: 'Conversation was marked resolved by system due to %{count} days of inactivity'
-        auto_resolved_hours: 'Conversation was marked resolved by system due to %{count} hours of inactivity'
-        auto_resolved_minutes: 'Conversation was marked resolved by system due to %{count} minutes of inactivity'
-        system_auto_open: System reopened the conversation due to a new incoming message.
+        resolved: 'Ticket was marked resolved by %{user_name}'
+        contact_resolved: 'Ticket was resolved by %{contact_name}'
+        open: 'Ticket was reopened by %{user_name}'
+        pending: 'Ticket was marked as pending by %{user_name}'
+        snoozed: 'Ticket was snoozed by %{user_name}'
+        auto_resolved_days: 'Ticket was marked resolved by system due to %{count} days of inactivity'
+        auto_resolved_hours: 'Ticket was marked resolved by system due to %{count} hours of inactivity'
+        auto_resolved_minutes: 'Ticket was marked resolved by system due to %{count} minutes of inactivity'
+        system_auto_open: System reopened the ticket due to a new incoming message.
       priority:
         added: '%{user_name} set the priority to %{new_priority}'
         updated: '%{user_name} changed the priority from %{old_priority} to %{new_priority}'
         removed: '%{user_name} removed the priority'
       assignee:
-        self_assigned: '%{user_name} self-assigned this conversation'
+        self_assigned: '%{user_name} self-assigned this ticket'
         assigned: 'Assigned to %{assignee_name} by %{user_name}'
-        removed: 'Conversation unassigned by %{user_name}'
+        removed: 'Ticket unassigned by %{user_name}'
       team:
         assigned: 'Assigned to %{team_name} by %{user_name}'
         assigned_with_assignee: 'Assigned to %{assignee_name} via %{team_name} by %{user_name}'
@@ -395,14 +395,14 @@ en:
         not_sent_due_to_messaging_window: 'CSAT survey not sent due to outgoing message restrictions'
       auto_resolve:
         not_sent_due_to_messaging_window: 'Auto-resolve message not sent due to outgoing message restrictions'
-      muted: '%{user_name} has muted the conversation'
-      unmuted: '%{user_name} has unmuted the conversation'
-      auto_resolution_message: 'Resolving the conversation as it has been inactive for a while. Please start a new conversation if you need further assistance.'
+      muted: '%{user_name} has muted the ticket'
+      unmuted: '%{user_name} has unmuted the ticket'
+      auto_resolution_message: 'Resolving the ticket as it has been inactive for a while. Please start a new ticket if you need further assistance.'
     templates:
       greeting_message_body: '%{account_name} typically replies in a few hours.'
-      ways_to_reach_you_message_body: 'Give the team a way to reach you.'
+      ways_to_reach_you_message_body: 'Give the group a way to reach you.'
       email_input_box_message_body: 'Get notified by email'
-      csat_input_message_body: 'Please rate the conversation'
+      csat_input_message_body: 'Please rate the ticket'
     reply:
       email:
         header:
@@ -414,25 +414,25 @@ en:
         header:
           reply_with_name: '%{assignee_name} from %{inbox_name} <%{from_email}>'
           reply_with_inbox_name: '%{inbox_name} <%{from_email}>'
-      email_subject: 'New messages on this conversation'
-      transcript_subject: 'Conversation Transcript'
+      email_subject: 'New messages on this ticket'
+      transcript_subject: 'Ticket Transcript'
       greeting: 'Hi %{name},'
-      new_messages: 'You have new messages on your conversation.'
+      new_messages: 'You have new messages on your ticket.'
       contact_label: 'You'
       bot_label: 'Bot'
       attachments: 'Attachments:'
-      rate_conversation_html: 'Click %{link} to rate the conversation.'
+      rate_conversation_html: 'Click %{link} to rate the ticket.'
       rate_conversation_link: 'here'
     survey:
-      response: 'Please rate this conversation, %{link}'
+      response: 'Please rate this ticket, %{link}'
   contacts:
     online:
       delete: '%{contact_name} is Online, please try again later'
   integration_apps:
     stripe:
       name: 'Stripe'
-      short_description: 'View customer billing details in conversations.'
-      description: 'View customer details, subscriptions, and recent invoices from Stripe alongside your conversations.'
+      short_description: 'View customer billing details in tickets.'
+      description: 'View customer details, subscriptions, and recent invoices from Stripe alongside your tickets.'
     # Note: webhooks and dashboard_apps don't need short_description as they use different modal components
     dashboard_apps:
       name: 'Dashboard Apps'
@@ -444,8 +444,8 @@ en:
       meeting_name: '%{agent_name} has started a meeting'
     slack:
       name: 'Slack'
-      short_description: 'Receive notifications and respond to conversations directly in Slack.'
-      description: "Integrate Chatwoot with Slack to keep your team in sync. This integration allows you to receive notifications for new conversations and respond to them directly within Slack's interface."
+      short_description: 'Receive notifications and respond to tickets directly in Slack.'
+      description: "Integrate Chatwoot with Slack to keep your group in sync. This integration allows you to receive notifications for new tickets and respond to them directly within Slack's interface."
     webhooks:
       name: 'Webhooks'
       description: 'Webhook events provide real-time updates about activities in your Chatwoot account. You can subscribe to your preferred events, and Chatwoot will send you HTTP callbacks with the updates.'
@@ -463,9 +463,9 @@ en:
       description: 'Leverage the power of large language models from OpenAI with the features such as reply suggestions, summarization, message rephrasing, and spell-checking.'
     linear:
       name: 'Linear'
-      short_description: 'Create and link Linear issues directly from conversations.'
-      description: 'Create issues in Linear directly from your conversation window. Alternatively, link existing Linear issues for a more streamlined and efficient issue tracking process.'
-      attachment_link_title: 'Conversation (#%{conversation_id}) with %{name}'
+      short_description: 'Create and link Linear issues directly from tickets.'
+      description: 'Create issues in Linear directly from your ticket window. Alternatively, link existing Linear issues for a more streamlined and efficient issue tracking process.'
+      attachment_link_title: 'Ticket (#%{conversation_id}) with %{name}'
     notion:
       name: 'Notion'
       short_description: 'Integrate databases, documents and pages directly with Captain.'
@@ -473,11 +473,11 @@ en:
     shopify:
       name: 'Shopify'
       short_description: 'Access order details and customer data from your Shopify store.'
-      description: 'Connect your Shopify store to access order details, customer information, and product data directly within your conversations and helps your support team provide faster, more contextual assistance to your customers.'
+      description: 'Connect your Shopify store to access order details, customer information, and product data directly within your tickets and helps your support group provide faster, more contextual assistance to your customers.'
     leadsquared:
       name: 'LeadSquared'
-      short_description: 'Sync your contacts and conversations with LeadSquared CRM.'
-      description: 'Sync your contacts and conversations with LeadSquared CRM. This integration automatically creates leads in LeadSquared when new contacts are added, and logs conversation activity to provide your sales team with complete context.'
+      short_description: 'Sync your contacts and tickets with LeadSquared CRM.'
+      description: 'Sync your contacts and tickets with LeadSquared CRM. This integration automatically creates leads in LeadSquared when new contacts are added, and logs ticket activity to provide your sales group with complete context.'
   captain:
     copilot_message_required: Message is required
     copilot_error: 'Please connect an assistant to this inbox to use Copilot'
@@ -490,7 +490,7 @@ en:
       completed_tool_call: 'Completed %{function_name} tool call'
       invalid_tool_call: 'Invalid tool call'
       tool_not_available: 'Tool not available'
-      reply_suggestion_discarded: 'The conversation changed while Copilot was drafting, so the suggestion was discarded.'
+      reply_suggestion_discarded: 'The ticket changed while Copilot was drafting, so the suggestion was discarded.'
       reply_suggestion_failed: "Copilot couldn't generate a reply. Please try again."
     documents:
       limit_exceeded: 'Document limit exceeded'
@@ -618,7 +618,7 @@ en:
       company_name: Company
       inbox_name: Inbox
       inbox_type: Inbox Type
-    button: Open conversation
+    button: Open ticket
   time_units:
     days:
       one: '%{count} day'
@@ -710,7 +710,7 @@ en:
         empty: 'No suspension history recorded.'
     accounts:
       users: 'Users'
-      conversations: 'Conversations'
+      conversations: 'Tickets'
       maintenance: 'Maintenance'
       general: 'General'
       limits: 'Limits'
@@ -750,13 +750,13 @@ en:
         installation_override: 'Installation setting'
         default: 'Default'
       features:
-        conversation_completion: 'Inactive conversation completion evaluator'
+        conversation_completion: 'Inactive ticket completion evaluator'
         editor: 'Editor'
         assistant: 'Assistant'
         copilot: 'Copilot'
         document_faq_generation: 'Document FAQ generation'
-        conversation_faq_generation: 'Conversation FAQ generation'
-        conversation_faq_matching: 'Conversation FAQ matching'
+        conversation_faq_generation: 'Ticket FAQ generation'
+        conversation_faq_matching: 'Ticket FAQ matching'
         help_center_article_generation: 'Help center article generation'
         onboarding_content_generation: 'Onboarding content generation'
         help_center_query_translation: 'Help center query translation'
@@ -778,7 +778,7 @@ en:
       navigate: 'Navigate'
       select: 'Select'
     dashboard:
-      description: 'Accounts, users and conversation volume across this installation.'
+      description: 'Accounts, users and ticket volume across this installation.'
       new_user: 'New user'
       new_account: 'New account'
       installation: 'Installation'
@@ -920,14 +920,14 @@ en:
           one: 'No push types are enabled for %{names}. This user receives no push notification from that account.'
           other: 'No push types are enabled for %{names}. This user receives no push notification from those accounts.'
       push_types:
-        conversation_creation: 'A new conversation is created'
-        conversation_assignment: 'A conversation is assigned to the user'
-        conversation_mention: 'The user is mentioned in a conversation'
-        assigned_conversation_new_message: 'A new message is created in an assigned conversation'
-        participating_conversation_new_message: 'A new message is created in a participating conversation'
-        sla_missed_first_response: 'A conversation misses first response SLA'
-        sla_missed_next_response: 'A conversation misses next response SLA'
-        sla_missed_resolution: 'A conversation misses resolution SLA'
+        conversation_creation: 'A new ticket is created'
+        conversation_assignment: 'A ticket is assigned to the user'
+        conversation_mention: 'The user is mentioned in a ticket'
+        assigned_conversation_new_message: 'A new message is created in an assigned ticket'
+        participating_conversation_new_message: 'A new message is created in a participating ticket'
+        sla_missed_first_response: 'A ticket misses first response SLA'
+        sla_missed_next_response: 'A ticket misses next response SLA'
+        sla_missed_resolution: 'A ticket misses resolution SLA'
       push:
         real_push_warning: 'This sends a real push to every selected device. Use only when diagnosing a reported issue.'
         title_label: 'Title'

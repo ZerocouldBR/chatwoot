@@ -7,9 +7,9 @@
       "WELCOME_MESSAGE_LABEL": "Pre-filled message: ",
       "REPLIED_BELOW": "Customer replied below"
     },
-    "SELECT_A_CONVERSATION": "Please select a conversation from left pane",
-    "CSAT_REPLY_MESSAGE": "Please rate the conversation",
-    "404": "Sorry, we cannot find the conversation. Please try again",
+    "SELECT_A_CONVERSATION": "Please select a ticket from left pane",
+    "CSAT_REPLY_MESSAGE": "Please rate the ticket",
+    "404": "Sorry, we cannot find the ticket. Please try again",
     "SWITCH_VIEW_LAYOUT": "Switch the layout",
     "DASHBOARD_APP_TAB_MESSAGES": "Messages",
     "UNVERIFIED_SESSION": "The identity of this user is not verified",
@@ -18,7 +18,7 @@
     "NO_INBOX_1": "Hola! Looks like you haven't added any inboxes yet.",
     "NO_INBOX_2": " to get started",
     "NO_INBOX_AGENT": "Uh Oh! Looks like you are not part of any inbox. Please contact your administrator",
-    "SEARCH_MESSAGES": "Search for messages in conversations",
+    "SEARCH_MESSAGES": "Search for messages in tickets",
     "VIEW_ORIGINAL": "View original",
     "VIEW_TRANSLATED": "View translated",
     "EMPTY_STATE": {
@@ -35,32 +35,32 @@
     "UNREAD_MESSAGES": "Unread Messages",
     "UNREAD_MESSAGE": "Unread Message",
     "CONTACT_HISTORY": {
-      "OLDER": "Previous conversation",
-      "NEWER": "Next conversation",
-      "OLDER_WITH": "Previous conversation with {name} · {time}",
-      "NEWER_WITH": "Next conversation with {name} · {time}",
+      "OLDER": "Previous ticket",
+      "NEWER": "Next ticket",
+      "OLDER_WITH": "Previous ticket with {name} · {time}",
+      "NEWER_WITH": "Next ticket with {name} · {time}",
       "CUSTOMER": "this customer",
-      "REPLY_TO_OLDER": "Reply to this older conversation",
-      "GO_TO_LATEST": "Go to latest conversation"
+      "REPLY_TO_OLDER": "Reply to this older ticket",
+      "GO_TO_LATEST": "Go to latest ticket"
     },
     "CLICK_HERE": "Click here",
     "LOADING_INBOXES": "Loading inboxes",
-    "LOADING_CONVERSATIONS": "Loading Conversations",
+    "LOADING_CONVERSATIONS": "Loading Tickets",
     "CANNOT_REPLY": "You cannot reply due to",
     "24_HOURS_WINDOW": "24 hour message window restriction",
     "48_HOURS_WINDOW": "48 hour message window restriction",
-    "API_HOURS_WINDOW": "You can only reply to this conversation within {hours} hours",
-    "NOT_ASSIGNED_TO_YOU": "This conversation is not assigned to you. Would you like to assign this conversation to yourself?",
+    "API_HOURS_WINDOW": "You can only reply to this ticket within {hours} hours",
+    "NOT_ASSIGNED_TO_YOU": "This ticket is not assigned to you. Would you like to assign this ticket to yourself?",
     "ASSIGN_TO_ME": "Assign to me",
-    "BOT_HANDOFF_MESSAGE": "This conversation is currently handled by {assigneeName}.",
+    "BOT_HANDOFF_MESSAGE": "This ticket is currently handled by {assigneeName}.",
     "BOT_HANDOFF_FALLBACK_ASSIGNEE": "an AI agent",
     "BOT_HANDOFF_ACTION": "Take over",
-    "BOT_HANDOFF_REOPEN_ACTION": "Mark conversation open",
-    "BOT_HANDOFF_SUCCESS": "Conversation has been handed over to you",
-    "BOT_HANDOFF_ERROR": "Failed to take over the conversation. Please try again.",
-    "TWILIO_WHATSAPP_CAN_REPLY": "You can only reply to this conversation using a template message due to",
+    "BOT_HANDOFF_REOPEN_ACTION": "Mark ticket open",
+    "BOT_HANDOFF_SUCCESS": "Ticket has been handed over to you",
+    "BOT_HANDOFF_ERROR": "Failed to take over the ticket. Please try again.",
+    "TWILIO_WHATSAPP_CAN_REPLY": "You can only reply to this ticket using a template message due to",
     "TWILIO_WHATSAPP_24_HOURS_WINDOW": "24 hour message window restriction",
-    "OLD_INSTAGRAM_INBOX_REPLY_BANNER": "This Instagram account was migrated to the new Instagram channel inbox. All new messages will show up there. You won’t be able to send messages from this conversation anymore.",
+    "OLD_INSTAGRAM_INBOX_REPLY_BANNER": "This Instagram account was migrated to the new Instagram channel inbox. All new messages will show up there. You won’t be able to send messages from this ticket anymore.",
     "INSTAGRAM_RESTRICTION_BANNER": "Instagram messaging is currently affected by an API-level issue on Meta’s side, not a problem with Chatwoot. Some messages or actions may be delayed or unavailable. We’re working closely with Meta to resolve it as quickly as possible.",
     "INSTAGRAM_RESTRICTION_STATUS_LINK": "View status updates",
     "REPLYING_TO": "You are replying to:",
@@ -117,9 +117,9 @@
       "CREDITS": "Credits: {credits}"
     },
     "CARD": {
-      "SHOW_LABELS": "Show labels",
-      "HIDE_LABELS": "Hide labels",
-      "LABELS_COUNT": "{count} labels"
+      "SHOW_LABELS": "Show tags",
+      "HIDE_LABELS": "Hide tags",
+      "LABELS_COUNT": "{count} tags"
     },
     "VOICE_CALL": {
       "INCOMING_CALL": "Incoming call",
@@ -151,7 +151,7 @@
       "OPEN": "More",
       "CLOSE": "Close",
       "DETAILS": "details",
-      "COPY_ID_SUCCESS": "Conversation ID copied to clipboard",
+      "COPY_ID_SUCCESS": "Ticket ID copied to clipboard",
       "SNOOZED_UNTIL": "Snoozed until",
       "SNOOZED_UNTIL_TOMORROW": "Snoozed until tomorrow",
       "SNOOZED_UNTIL_NEXT_WEEK": "Snoozed until next week",
@@ -182,14 +182,14 @@
     },
     "MENTION": {
       "AGENTS": "Agents",
-      "TEAMS": "Teams"
+      "TEAMS": "Groups"
     },
     "PICKER": {
       "VARIABLE": {
         "SEARCH_PLACEHOLDER": "Search variables",
         "DESCRIPTION": "Description",
         "VALUE": "Value",
-        "NO_VALUE": "No value for this conversation"
+        "NO_VALUE": "No value for this ticket"
       },
       "EMOJI": {
         "SEARCH_PLACEHOLDER": "Search emojis",
@@ -200,7 +200,7 @@
         "ACTION_COUNT": "1 action | {count} actions"
       },
       "MENTION": {
-        "SEARCH_PLACEHOLDER": "Search agents and teams",
+        "SEARCH_PLACEHOLDER": "Search agents and groups",
         "FILTER": {
           "ALL": "All"
         },
@@ -209,7 +209,7 @@
         "AUTO_ASSIGN": "Auto assign",
         "ENABLED": "Enabled",
         "DISABLED": "Disabled",
-        "YOU_ARE_A_MEMBER": "You are a member of this team"
+        "YOU_ARE_A_MEMBER": "You are a member of this group"
       }
     },
     "CUSTOM_SNOOZE": {
@@ -225,7 +225,7 @@
       "REJECT": "Dismiss",
       "ACCEPT_ALL": "Accept all",
       "ERROR": "Could not load suggestions. Please try again.",
-      "APPLY_ERROR": "Could not apply the suggested labels. Please try again."
+      "APPLY_ERROR": "Could not apply the suggested tags. Please try again."
     },
     "PRIORITY": {
       "TITLE": "Priority",
@@ -240,13 +240,13 @@
         "SELECT_PLACEHOLDER": "None",
         "INPUT_PLACEHOLDER": "Select priority",
         "NO_RESULTS": "No results found",
-        "SUCCESSFUL": "Changed priority of conversation id {conversationId} to {priority}",
+        "SUCCESSFUL": "Changed priority of ticket id {conversationId} to {priority}",
         "FAILED": "Couldn't change priority. Please try again."
       }
     },
     "DELETE_CONVERSATION": {
-      "TITLE": "Delete conversation #{conversationId}",
-      "DESCRIPTION": "Are you sure you want to delete this conversation?",
+      "TITLE": "Delete ticket #{conversationId}",
+      "DESCRIPTION": "Are you sure you want to delete this ticket?",
       "CONFIRM": "Delete"
     },
     "CARD_CONTEXT_MENU": {
@@ -254,7 +254,7 @@
       "RESOLVED": "Mark as resolved",
       "MARK_AS_UNREAD": "Mark as unread",
       "MARK_AS_READ": "Mark as read",
-      "REOPEN": "Reopen conversation",
+      "REOPEN": "Reopen ticket",
       "SNOOZE": {
         "TITLE": "Snooze",
         "NEXT_REPLY": "Until next reply",
@@ -262,31 +262,31 @@
         "NEXT_WEEK": "Until next week"
       },
       "ASSIGN_AGENT": "Assign agent",
-      "ASSIGN_LABEL": "Assign label",
-      "SEARCH_LABELS": "Search labels",
-      "NO_LABELS_FOUND": "No labels found",
+      "ASSIGN_LABEL": "Assign tag",
+      "SEARCH_LABELS": "Search tags",
+      "NO_LABELS_FOUND": "No tags found",
       "AGENTS_LOADING": "Loading agents...",
-      "ASSIGN_TEAM": "Assign team",
-      "DELETE": "Delete conversation",
+      "ASSIGN_TEAM": "Assign group",
+      "DELETE": "Delete ticket",
       "OPEN_IN_NEW_TAB": "Open in new tab",
-      "COPY_LINK": "Copy conversation link",
-      "COPY_LINK_SUCCESS": "Conversation link copied to clipboard",
+      "COPY_LINK": "Copy ticket link",
+      "COPY_LINK_SUCCESS": "Ticket link copied to clipboard",
       "API": {
         "AGENT_ASSIGNMENT": {
-          "SUCCESFUL": "Conversation id {conversationId} assigned to \"{agentName}\"",
+          "SUCCESFUL": "Ticket id {conversationId} assigned to \"{agentName}\"",
           "FAILED": "Couldn't assign agent. Please try again."
         },
         "LABEL_ASSIGNMENT": {
-          "SUCCESFUL": "Assigned label #{labelName} to conversation id {conversationId}",
-          "FAILED": "Couldn't assign label. Please try again."
+          "SUCCESFUL": "Assigned tag #{labelName} to ticket id {conversationId}",
+          "FAILED": "Couldn't assign tag. Please try again."
         },
         "LABEL_REMOVAL": {
-          "SUCCESFUL": "Removed label #{labelName} from conversation id {conversationId}",
-          "FAILED": "Couldn't remove label. Please try again."
+          "SUCCESFUL": "Removed tag #{labelName} from ticket id {conversationId}",
+          "FAILED": "Couldn't remove tag. Please try again."
         },
         "TEAM_ASSIGNMENT": {
-          "SUCCESFUL": "Assigned team \"{team}\" to conversation id {conversationId}",
-          "FAILED": "Couldn't assign team. Please try again."
+          "SUCCESFUL": "Assigned group \"{team}\" to ticket id {conversationId}",
+          "FAILED": "Couldn't assign group. Please try again."
         }
       }
     },
@@ -296,7 +296,7 @@
       "DISABLE_SIGN_TOOLTIP": "Disable signature",
       "MSG_INPUT": "Shift + enter for new line. Start with '/' to select a Canned Response.",
       "PRIVATE_MSG_INPUT": "Shift + enter for new line. This will be visible only to Agents",
-      "MESSAGING_RESTRICTED": "You cannot reply to this conversation",
+      "MESSAGING_RESTRICTED": "You cannot reply to this ticket",
       "MESSAGING_RESTRICTED_WHATSAPP": "You can only reply using a template message due to 24-hour message window restriction",
       "MESSAGING_RESTRICTED_API": "You can only reply using a template message due to message window restriction",
       "MESSAGE_SIGNATURE_NOT_CONFIGURED": "Message signature is not configured, please configure it in profile settings.",
@@ -354,18 +354,18 @@
         "REMOVE": "Remove quoted text"
       }
     },
-    "VISIBLE_TO_AGENTS": "Private Note: Only visible to you and your team",
-    "CHANGE_STATUS": "Conversation status changed",
-    "CHANGE_STATUS_FAILED": "Conversation status change failed",
-    "CHANGE_AGENT": "Conversation Assignee changed",
+    "VISIBLE_TO_AGENTS": "Private Note: Only visible to you and your group",
+    "CHANGE_STATUS": "Ticket status changed",
+    "CHANGE_STATUS_FAILED": "Ticket status change failed",
+    "CHANGE_AGENT": "Ticket Assignee changed",
     "CHANGE_AGENT_FAILED": "Assignee change failed",
-    "ASSIGN_LABEL_SUCCESFUL": "Label assigned successfully",
-    "ASSIGN_LABEL_FAILED": "Label assignment failed",
-    "CHANGE_TEAM": "Conversation team changed",
-    "SUCCESS_DELETE_CONVERSATION": "Conversation deleted successfully",
-    "FAIL_DELETE_CONVERSATION": "Couldn't delete conversation! Try again",
+    "ASSIGN_LABEL_SUCCESFUL": "Tag assigned successfully",
+    "ASSIGN_LABEL_FAILED": "Tag assignment failed",
+    "CHANGE_TEAM": "Ticket group changed",
+    "SUCCESS_DELETE_CONVERSATION": "Ticket deleted successfully",
+    "FAIL_DELETE_CONVERSATION": "Couldn't delete ticket! Try again",
     "FILE_SIZE_LIMIT": "File exceeds the {MAXIMUM_SUPPORTED_FILE_UPLOAD_SIZE} MB attachment limit",
-    "FILE_TYPE_NOT_SUPPORTED": "This {fileName} file type is not supported in this conversation",
+    "FILE_TYPE_NOT_SUPPORTED": "This {fileName} file type is not supported in this ticket",
     "MESSAGE_ERROR": "Unable to send this message, please try again later",
     "SENT_BY": "Sent by:",
     "BOT": "Bot",
@@ -396,13 +396,13 @@
       "REPORT_MESSAGE": {
         "LABEL": "Report message",
         "TITLE": "Report Captain message",
-        "DESCRIPTION": "Found an issue with this AI response? Let us know what went wrong and our team will review it to help improve Captain's accuracy.",
+        "DESCRIPTION": "Found an issue with this AI response? Let us know what went wrong and our group will review it to help improve Captain's accuracy.",
         "PROBLEM_TYPE": "Problem type",
         "PROBLEM_TYPE_PLACEHOLDER": "Select a problem type",
         "DESCRIPTION_LABEL": "Description",
         "DESCRIPTION_PLACEHOLDER": "Describe the problem in detail",
         "SUBMIT": "Report",
-        "SUCCESS": "Thanks for reporting. Our team will take a look.",
+        "SUCCESS": "Thanks for reporting. Our group will take a look.",
         "ERROR": "Could not report this message. Please try again.",
         "REASONS": {
           "incorrect_information": "Incorrect information",
@@ -430,12 +430,12 @@
       "MUTE": "Mute mic",
       "UNMUTE": "Unmute mic",
       "VIEW_CHAT_HISTORY": "View chat history",
-      "GO_TO_CONVERSATION": "Go to conversation thread"
+      "GO_TO_CONVERSATION": "Go to ticket thread"
     }
   },
   "EMAIL_TRANSCRIPT": {
-    "TITLE": "Send conversation transcript",
-    "DESC": "Send a copy of the conversation transcript to the specified email address",
+    "TITLE": "Send ticket transcript",
+    "DESC": "Send a copy of the ticket transcript to the specified email address",
     "SUBMIT": "Submit",
     "CANCEL": "Cancel",
     "SEND_EMAIL_SUCCESS": "The chat transcript was sent successfully",
@@ -459,41 +459,41 @@
     "GREETING_EVENING": "👋 Good evening, {name}. Welcome to {installationName}.",
     "READ_LATEST_UPDATES": "Read our latest updates",
     "ALL_CONVERSATION": {
-      "TITLE": "All your conversations in one place",
-      "DESCRIPTION": "View all the conversations from your customers in one single dashboard. You can filter the conversations by the incoming channel, label and status.",
+      "TITLE": "All your tickets in one place",
+      "DESCRIPTION": "View all the tickets from your customers in one single dashboard. You can filter the tickets by the incoming channel, tag and status.",
       "NEW_LINK": "Click here to create an inbox"
     },
     "TEAM_MEMBERS": {
-      "TITLE": "Invite your team members",
+      "TITLE": "Invite your group members",
       "DESCRIPTION": "Since you are getting ready to talk to your customer, bring in your teammates to assist you. You can invite your teammates by adding their email addresses to the agent list.",
-      "NEW_LINK": "Click here to invite a team member"
+      "NEW_LINK": "Click here to invite a group member"
     },
     "LABELS": {
-      "TITLE": "Organize conversations with labels",
-      "DESCRIPTION": "Labels provide an easier way to categorize your conversation. Create some labels like #support-enquiry, #billing-question etc., so that you can use them in a conversation later.",
+      "TITLE": "Organize tickets with tags",
+      "DESCRIPTION": "Tags provide an easier way to categorize your ticket. Create some tags like #support-enquiry, #billing-question etc., so that you can use them in a ticket later.",
       "NEW_LINK": "Click here to create tags"
     },
     "CANNED_RESPONSES": {
       "TITLE": "Create canned responses",
-      "DESCRIPTION": "Pre-written quick reply templates help you quickly respond to a conversation. Agents can type the '/' character followed by the shortcode to insert a response.",
+      "DESCRIPTION": "Pre-written quick reply templates help you quickly respond to a ticket. Agents can type the '/' character followed by the shortcode to insert a response.",
       "NEW_LINK": "Click here to create a canned response"
     }
   },
   "CONVERSATION_SIDEBAR": {
     "ASSIGNEE_LABEL": "Assigned Agent",
     "SELF_ASSIGN": "Assign to me",
-    "TEAM_LABEL": "Assigned Team",
+    "TEAM_LABEL": "Assigned Group",
     "SELECT": {
       "PLACEHOLDER": "None"
     },
     "ACCORDION": {
       "CONTACT_DETAILS": "Contact Details",
-      "CONVERSATION_ACTIONS": "Conversation Actions",
-      "CONVERSATION_LABELS": "Conversation Labels",
-      "CONVERSATION_INFO": "Conversation Information",
+      "CONVERSATION_ACTIONS": "Ticket Actions",
+      "CONVERSATION_LABELS": "Ticket Tags",
+      "CONVERSATION_INFO": "Ticket Information",
       "CONTACT_NOTES": "Contact Notes",
       "CONTACT_ATTRIBUTES": "Contact Attributes",
-      "PREVIOUS_CONVERSATION": "Previous Conversations",
+      "PREVIOUS_CONVERSATION": "Previous Tickets",
       "MACROS": "Macros",
       "LINEAR_ISSUES": "Linked Linear Issues",
       "SHOPIFY_ORDERS": "Shopify Orders",
@@ -572,7 +572,7 @@
   },
   "CONVERSATION_PARTICIPANTS": {
     "SIDEBAR_MENU_TITLE": "Participating",
-    "SIDEBAR_TITLE": "Conversation participants",
+    "SIDEBAR_TITLE": "Ticket participants",
     "NO_RECORDS_FOUND": "No results found",
     "ADD_PARTICIPANTS": "Select participants",
     "REMANING_PARTICIPANTS_TEXT": "+{count} others",
@@ -580,7 +580,7 @@
     "TOTAL_PARTICIPANTS_TEXT": "{count} people are participating.",
     "TOTAL_PARTICIPANT_TEXT": "{count} person is participating.",
     "NO_PARTICIPANTS_TEXT": "No one is participating!",
-    "WATCH_CONVERSATION": "Join conversation",
+    "WATCH_CONVERSATION": "Join ticket",
     "YOU_ARE_WATCHING": "You are participating",
     "API": {
       "ERROR_MESSAGE": "Could not update, try again!",

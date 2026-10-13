@@ -7,9 +7,9 @@
       "WELCOME_MESSAGE_LABEL": "Mensagem pré-preenchida: ",
       "REPLIED_BELOW": "O cliente respondeu abaixo"
     },
-    "SELECT_A_CONVERSATION": "Por favor, selecione uma conversa no painel da esquerda",
-    "CSAT_REPLY_MESSAGE": "Por favor, classifique a conversa",
-    "404": "Desculpe, não conseguimos encontrar a conversa. Por favor, tente novamente",
+    "SELECT_A_CONVERSATION": "Por favor, selecione um ticket no painel da esquerda",
+    "CSAT_REPLY_MESSAGE": "Por favor, classifique o ticket",
+    "404": "Desculpe, não conseguimos encontrar o ticket. Por favor, tente novamente",
     "SWITCH_VIEW_LAYOUT": "Alternar o layout",
     "DASHBOARD_APP_TAB_MESSAGES": "Mensagens",
     "UNVERIFIED_SESSION": "A identidade deste usuário não foi verificada",
@@ -18,7 +18,7 @@
     "NO_INBOX_1": "Hola! Parece que você não adicionou nenhuma caixa de entrada ainda.",
     "NO_INBOX_2": " para começar",
     "NO_INBOX_AGENT": "Uh Oh! Parece que você não faz parte de nenhuma caixa de entrada. Por favor, contate seu administrador",
-    "SEARCH_MESSAGES": "Pesquisar por mensagens nas conversas",
+    "SEARCH_MESSAGES": "Pesquisar por mensagens nos tickets",
     "VIEW_ORIGINAL": "Ver original",
     "VIEW_TRANSLATED": "Ver traduzido",
     "EMPTY_STATE": {
@@ -36,22 +36,22 @@
     "UNREAD_MESSAGE": "Mensagem não lida",
     "CLICK_HERE": "Clique aqui",
     "LOADING_INBOXES": "Carregando caixas de entrada",
-    "LOADING_CONVERSATIONS": "Carregando conversas",
+    "LOADING_CONVERSATIONS": "Carregando tickets",
     "CANNOT_REPLY": "Você não pode responder porque",
     "24_HOURS_WINDOW": "Restrições de janela de mensagem de 24 horas",
     "48_HOURS_WINDOW": "Restrição da janela de mensagens de 48 horas",
-    "API_HOURS_WINDOW": "Você só pode responder a esta conversa em {hours} horas",
-    "NOT_ASSIGNED_TO_YOU": "Esta conversa não está atribuída a você. Gostaria de atribuir esta conversa a você mesmo?",
+    "API_HOURS_WINDOW": "Você só pode responder o este ticket em {hours} horas",
+    "NOT_ASSIGNED_TO_YOU": "Este ticket não está atribuído a você. Gostaria de atribuir este ticket a você mesmo?",
     "ASSIGN_TO_ME": "Atribuir a mim",
-    "BOT_HANDOFF_MESSAGE": "Esta conversa está sendo atendida por {assigneeName}.",
+    "BOT_HANDOFF_MESSAGE": "Este ticket está sendo atendido por {assigneeName}.",
     "BOT_HANDOFF_FALLBACK_ASSIGNEE": "um bot",
     "BOT_HANDOFF_ACTION": "Assumir atendimento",
-    "BOT_HANDOFF_REOPEN_ACTION": "Marcar conversa como aberta",
-    "BOT_HANDOFF_SUCCESS": "Uma conversa foi atribuída a você",
-    "BOT_HANDOFF_ERROR": "Falha ao resolver conversas. Por favor, tente novamente.",
-    "TWILIO_WHATSAPP_CAN_REPLY": "Você só pode responder a esta conversa usando um modelo de mensagem devido a",
+    "BOT_HANDOFF_REOPEN_ACTION": "Marcar ticket como aberto",
+    "BOT_HANDOFF_SUCCESS": "Um ticket foi atribuído a você",
+    "BOT_HANDOFF_ERROR": "Falha ao resolver tickets. Por favor, tente novamente.",
+    "TWILIO_WHATSAPP_CAN_REPLY": "Você só pode responder o este ticket usando um modelo de mensagem devido a",
     "TWILIO_WHATSAPP_24_HOURS_WINDOW": "Restrições de janela de mensagem de 24 horas",
-    "OLD_INSTAGRAM_INBOX_REPLY_BANNER": "Esta conta do Instagram foi migrada para a nova caixa de entrada do canal do Instagram. Todas as novas mensagens serão mostradas lá. Você não poderá mais enviar mensagens desta conversa.",
+    "OLD_INSTAGRAM_INBOX_REPLY_BANNER": "Esta conta do Instagram foi migrada para a nova caixa de entrada do canal do Instagram. Todas as novas mensagens serão mostradas lá. Você não poderá mais enviar mensagens deste ticket.",
     "INSTAGRAM_RESTRICTION_BANNER": "As mensagens do Instagram estão sendo afetadas por um problema na API da Meta, e não por uma falha no Chatwoot. Algumas mensagens ou ações podem sofrer atrasos ou ficar temporariamente indisponíveis. Estamos trabalhando em conjunto com a Meta para resolver a situação o mais rápido possível.",
     "INSTAGRAM_RESTRICTION_STATUS_LINK": "Ver atualizações de status",
     "REPLYING_TO": "Você está respondendo a:",
@@ -99,9 +99,9 @@
       "CREDITS": "Créditos: {credits}"
     },
     "CARD": {
-      "SHOW_LABELS": "Mostrar etiquetas",
-      "HIDE_LABELS": "Ocultar as etiquetas",
-      "LABELS_COUNT": "{count} etiquetas"
+      "SHOW_LABELS": "Mostrar tags",
+      "HIDE_LABELS": "Ocultar as tags",
+      "LABELS_COUNT": "{count} tags"
     },
     "VOICE_CALL": {
       "INCOMING_CALL": "Chamada recebida",
@@ -133,7 +133,7 @@
       "OPEN": "Mais",
       "CLOSE": "Fechar",
       "DETAILS": "detalhes",
-      "COPY_ID_SUCCESS": "ID da conversa copiado para área de transferência",
+      "COPY_ID_SUCCESS": "ID do ticket copiado para área de transferência",
       "SNOOZED_UNTIL": "Adiar até",
       "SNOOZED_UNTIL_TOMORROW": "Adiado até amanhã",
       "SNOOZED_UNTIL_NEXT_WEEK": "Adiada até a próxima semana",
@@ -164,14 +164,14 @@
     },
     "MENTION": {
       "AGENTS": "Agentes",
-      "TEAMS": "Times"
+      "TEAMS": "Grupos"
     },
     "PICKER": {
       "VARIABLE": {
         "SEARCH_PLACEHOLDER": "Pesquisar variáveis",
         "DESCRIPTION": "Descrição",
         "VALUE": "Valor",
-        "NO_VALUE": "Nenhum valor para esta conversa"
+        "NO_VALUE": "Nenhum valor para este ticket"
       },
       "EMOJI": {
         "SEARCH_PLACEHOLDER": "Pesquisar emojis",
@@ -182,7 +182,7 @@
         "ACTION_COUNT": "1 ação | {count} ações"
       },
       "MENTION": {
-        "SEARCH_PLACEHOLDER": "Pesquisar agentes e times",
+        "SEARCH_PLACEHOLDER": "Pesquisar agentes e grupos",
         "FILTER": {
           "ALL": "Todos"
         },
@@ -191,7 +191,7 @@
         "AUTO_ASSIGN": "Atribuição automática",
         "ENABLED": "Ativado",
         "DISABLED": "Desativado",
-        "YOU_ARE_A_MEMBER": "Você faz parte deste time"
+        "YOU_ARE_A_MEMBER": "Você faz parte deste grupo"
       }
     },
     "CUSTOM_SNOOZE": {
@@ -212,13 +212,13 @@
         "SELECT_PLACEHOLDER": "Nenhuma",
         "INPUT_PLACEHOLDER": "Selecionar prioridade",
         "NO_RESULTS": "Nenhum resultado encontrado",
-        "SUCCESSFUL": "Alterada a prioridade do ID da conversa {conversationId} para {priority}",
+        "SUCCESSFUL": "Alterada a prioridade do ID do ticket {conversationId} para {priority}",
         "FAILED": "Não foi possível alterar a prioridade. Por favor, tente novamente."
       }
     },
     "DELETE_CONVERSATION": {
-      "TITLE": "Excluir conversa #{conversationId}",
-      "DESCRIPTION": "Tem certeza que deseja excluir esta conversa?",
+      "TITLE": "Excluir ticket #{conversationId}",
+      "DESCRIPTION": "Tem certeza que deseja excluir este ticket?",
       "CONFIRM": "Excluir"
     },
     "CARD_CONTEXT_MENU": {
@@ -226,7 +226,7 @@
       "RESOLVED": "Marcar como resolvida",
       "MARK_AS_UNREAD": "Marcar como não lida",
       "MARK_AS_READ": "Marcar como lida",
-      "REOPEN": "Reabrir conversa",
+      "REOPEN": "Reabrir ticket",
       "SNOOZE": {
         "TITLE": "Adiar",
         "NEXT_REPLY": "Até a próxima resposta",
@@ -234,31 +234,31 @@
         "NEXT_WEEK": "Até a próxima semana"
       },
       "ASSIGN_AGENT": "Atribuir Agente",
-      "ASSIGN_LABEL": "Atribuir etiqueta",
-      "SEARCH_LABELS": "Pesquisar etiquetas",
-      "NO_LABELS_FOUND": "Nenhuma etiqueta encontrada",
+      "ASSIGN_LABEL": "Atribuir tag",
+      "SEARCH_LABELS": "Pesquisar tags",
+      "NO_LABELS_FOUND": "Nenhuma tag encontrada",
       "AGENTS_LOADING": "Carregando agentes...",
-      "ASSIGN_TEAM": "Atribuir time",
-      "DELETE": "Excluir conversa",
+      "ASSIGN_TEAM": "Atribuir grupo",
+      "DELETE": "Excluir ticket",
       "OPEN_IN_NEW_TAB": "Abrir em nova aba",
-      "COPY_LINK": "Copiar link da conversa",
-      "COPY_LINK_SUCCESS": "Link da conversa copiado",
+      "COPY_LINK": "Copiar link do ticket",
+      "COPY_LINK_SUCCESS": "Link do ticket copiado",
       "API": {
         "AGENT_ASSIGNMENT": {
-          "SUCCESFUL": "ID da conversa {conversationId} atribuído para \"{agentName}\"",
+          "SUCCESFUL": "ID do ticket {conversationId} atribuído para \"{agentName}\"",
           "FAILED": "Não foi possível atribuir agente. Por favor, tente novamente."
         },
         "LABEL_ASSIGNMENT": {
-          "SUCCESFUL": "Etiqueta #{labelName} atribuída para a conversa {conversationId}",
-          "FAILED": "Não foi possível atribuir etiqueta. Por favor, tente novamente."
+          "SUCCESFUL": "Tag #{labelName} atribuída para o ticket {conversationId}",
+          "FAILED": "Não foi possível atribuir tag. Por favor, tente novamente."
         },
         "LABEL_REMOVAL": {
-          "SUCCESFUL": "Etiqueta #{labelName} removida da conversa com id {conversationId}",
-          "FAILED": "Não foi possível remover a etiqueta. Por favor, tente novamente."
+          "SUCCESFUL": "Tag #{labelName} removida do ticket com id {conversationId}",
+          "FAILED": "Não foi possível remover a tag. Por favor, tente novamente."
         },
         "TEAM_ASSIGNMENT": {
-          "SUCCESFUL": "Time {team} atribuído para o id de conversa {conversationId}",
-          "FAILED": "Não foi possível atribuir time. Por favor, tente novamente."
+          "SUCCESFUL": "Grupo {team} atribuído para o id de ticket {conversationId}",
+          "FAILED": "Não foi possível atribuir grupo. Por favor, tente novamente."
         }
       }
     },
@@ -268,7 +268,7 @@
       "DISABLE_SIGN_TOOLTIP": "Desativar assinatura",
       "MSG_INPUT": "Shift + enter para nova linha. Digite '/' para selecionar uma Resposta Pronta.",
       "PRIVATE_MSG_INPUT": "A mensagem será visível apenas para agentes",
-      "MESSAGING_RESTRICTED": "Você não pode responder esta conversa",
+      "MESSAGING_RESTRICTED": "Você não pode responder este ticket",
       "MESSAGING_RESTRICTED_WHATSAPP": "Você só pode responder usando uma mensagem de modelo devido à restrição da janela de 24 horas",
       "MESSAGING_RESTRICTED_API": "Você só pode responder usando uma mensagem de template devido à restrição da janela de mensagens",
       "MESSAGE_SIGNATURE_NOT_CONFIGURED": "A assinatura da mensagem não está configurada. Por favor, configure-a nas configurações do perfil.",
@@ -325,18 +325,18 @@
         "EXPAND": "Expandir a prévia"
       }
     },
-    "VISIBLE_TO_AGENTS": "Mensagem Privada: Apenas visível para você e seu time",
-    "CHANGE_STATUS": "Estado da conversa mudou",
-    "CHANGE_STATUS_FAILED": "Mudança de status da conversa falhou",
+    "VISIBLE_TO_AGENTS": "Mensagem Privada: Apenas visível para você e seu grupo",
+    "CHANGE_STATUS": "Estado do ticket mudou",
+    "CHANGE_STATUS_FAILED": "Mudança de status do ticket falhou",
     "CHANGE_AGENT": "Novo agente atribuído",
     "CHANGE_AGENT_FAILED": "Falha ao atribuir outro agente",
-    "ASSIGN_LABEL_SUCCESFUL": "Etiqueta atribuída com sucesso",
-    "ASSIGN_LABEL_FAILED": "Falha ao atribuir etiqueta",
-    "CHANGE_TEAM": "Status da conversa mudou",
-    "SUCCESS_DELETE_CONVERSATION": "Conversa excluída com sucesso",
-    "FAIL_DELETE_CONVERSATION": "Não foi possível excluir a conversa! Tente novamente",
+    "ASSIGN_LABEL_SUCCESFUL": "Tag atribuída com sucesso",
+    "ASSIGN_LABEL_FAILED": "Falha ao atribuir tag",
+    "CHANGE_TEAM": "Status do ticket mudou",
+    "SUCCESS_DELETE_CONVERSATION": "Ticket excluído com sucesso",
+    "FAIL_DELETE_CONVERSATION": "Não foi possível excluir o ticket! Tente novamente",
     "FILE_SIZE_LIMIT": "O arquivo excede os {MAXIMUM_SUPPORTED_FILE_UPLOAD_SIZE} MB do limite para anexos",
-    "FILE_TYPE_NOT_SUPPORTED": "O tipo de arquivo {fileName} não é suportado nesta conversa",
+    "FILE_TYPE_NOT_SUPPORTED": "O tipo de arquivo {fileName} não é suportado neste ticket",
     "MESSAGE_ERROR": "Não foi possível enviar esta mensagem, por favor, tente novamente mais tarde",
     "SENT_BY": "Enviado por:",
     "BOT": "Robôs",
@@ -399,13 +399,13 @@
       "END_CALL": "Encerrar chamada",
       "MUTE": "Silenciar microfone",
       "UNMUTE": "Desilenciar microfone",
-      "VIEW_CHAT_HISTORY": "Ver histórico da conversa",
-      "GO_TO_CONVERSATION": "Ir para a conversa"
+      "VIEW_CHAT_HISTORY": "Ver histórico do ticket",
+      "GO_TO_CONVERSATION": "Ir para o ticket"
     }
   },
   "EMAIL_TRANSCRIPT": {
-    "TITLE": "Enviar transcrição de conversa",
-    "DESC": "Enviar uma cópia da transcrição da conversa para o endereço de e-mail especificado",
+    "TITLE": "Enviar transcrição de ticket",
+    "DESC": "Enviar uma cópia da transcrição do ticket para o endereço de e-mail especificado",
     "SUBMIT": "Enviar",
     "CANCEL": "Cancelar",
     "SEND_EMAIL_SUCCESS": "A transcrição do chat foi enviada com sucesso",
@@ -429,41 +429,41 @@
     "GREETING_EVENING": "👋 Boa noite, {name}. Bem-vindo a {installationName}.",
     "READ_LATEST_UPDATES": "Leia as últimas atualizações",
     "ALL_CONVERSATION": {
-      "TITLE": "Todas as suas conversas em um só lugar",
-      "DESCRIPTION": "Veja todas as conversas dos seus clientes em um único painel. Você pode filtrar as conversas pelo canal de entrada, rótulo e status.",
+      "TITLE": "Todos os seus tickets em um só lugar",
+      "DESCRIPTION": "Veja todos os tickets dos seus clientes em um único painel. Você pode filtrar os tickets pelo canal de entrada, tag e status.",
       "NEW_LINK": "Clique aqui para criar uma caixa de entrada"
     },
     "TEAM_MEMBERS": {
-      "TITLE": "Convidar membros de seu time",
+      "TITLE": "Convidar membros de seu grupo",
       "DESCRIPTION": "Já que você está se preparando para conversar com seu cliente, traga seus colegas para ajudá-lo. Você pode convidar seus colegas adicionando os endereços de e-mail deles na lista de agentes.",
-      "NEW_LINK": "Clique aqui para convidar um membro do time"
+      "NEW_LINK": "Clique aqui para convidar um membro do grupo"
     },
     "LABELS": {
-      "TITLE": "Organizar conversas com etiquetas",
-      "DESCRIPTION": "Etiquetas fornecem uma forma mais fácil de organizar a sua conversa. Criar algumas etiquetas como #solicitação-suporte, #fatura-assunto etc., assim você poderá futuramente utiliza-las em uma conversa posteriormente.",
-      "NEW_LINK": "Clique aqui para criar etiquetas"
+      "TITLE": "Organizar tickets com tags",
+      "DESCRIPTION": "Tags fornecem uma forma mais fácil de organizar o seu ticket. Criar algumas tags como #solicitação-suporte, #fatura-assunto etc., assim você poderá futuramente utiliza-las em um ticket posteriormente.",
+      "NEW_LINK": "Clique aqui para criar tags"
     },
     "CANNED_RESPONSES": {
       "TITLE": "Criar respostas prontas",
-      "DESCRIPTION": "Os modelos de respostas prontas ajudam você a responder rapidamente a uma conversa. Os agentes podem digitar o caractere '/' seguido pelo atalho para inserir uma resposta.",
+      "DESCRIPTION": "Os modelos de respostas prontas ajudam você a responder rapidamente o um ticket. Os agentes podem digitar o caractere '/' seguido pelo atalho para inserir uma resposta.",
       "NEW_LINK": "Clique aqui para criar uma resposta pronta"
     }
   },
   "CONVERSATION_SIDEBAR": {
     "ASSIGNEE_LABEL": "Agente atribuído",
     "SELF_ASSIGN": "Atribuir a mim",
-    "TEAM_LABEL": "Time atribuído",
+    "TEAM_LABEL": "Grupo atribuído",
     "SELECT": {
       "PLACEHOLDER": "Nenhuma"
     },
     "ACCORDION": {
       "CONTACT_DETAILS": "Detalhes do contato",
-      "CONVERSATION_ACTIONS": "Ações da conversa",
-      "CONVERSATION_LABELS": "Etiquetas da conversa",
-      "CONVERSATION_INFO": "Informação da conversa",
+      "CONVERSATION_ACTIONS": "Ações do ticket",
+      "CONVERSATION_LABELS": "Tags do ticket",
+      "CONVERSATION_INFO": "Informação do ticket",
       "CONTACT_NOTES": "Notas do contato",
       "CONTACT_ATTRIBUTES": "Atributos do contato",
-      "PREVIOUS_CONVERSATION": "Conversas anteriores",
+      "PREVIOUS_CONVERSATION": "Tickets anteriores",
       "MACROS": "Macros",
       "LINEAR_ISSUES": "Problemas do Linear vinculados",
       "SHOPIFY_ORDERS": "Pedidos do Shopify",
@@ -533,7 +533,7 @@
   },
   "CONVERSATION_PARTICIPANTS": {
     "SIDEBAR_MENU_TITLE": "Participantes",
-    "SIDEBAR_TITLE": "Participantes da conversa",
+    "SIDEBAR_TITLE": "Participantes do ticket",
     "NO_RECORDS_FOUND": "Nenhum resultado encontrado",
     "ADD_PARTICIPANTS": "Selecionar participantes",
     "REMANING_PARTICIPANTS_TEXT": "+{count} participantes",
@@ -541,7 +541,7 @@
     "TOTAL_PARTICIPANTS_TEXT": "{count} pessoas estão participando.",
     "TOTAL_PARTICIPANT_TEXT": "{count} pessoa está participando.",
     "NO_PARTICIPANTS_TEXT": "Ninguém está participando!",
-    "WATCH_CONVERSATION": "Participar da conversa",
+    "WATCH_CONVERSATION": "Participar do ticket",
     "YOU_ARE_WATCHING": "Você está participando",
     "API": {
       "ERROR_MESSAGE": "Não foi possível atualizar, tente novamente!",

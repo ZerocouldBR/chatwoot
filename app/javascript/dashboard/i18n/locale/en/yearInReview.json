@@ -6,11 +6,11 @@
     "CLOSE": "Close",
     "CONVERSATIONS": {
       "TITLE": "You have handled",
-      "SUBTITLE": "conversations",
+      "SUBTITLE": "tickets",
       "FALLBACK": "This year wasn't about the numbers. It was about showing up.",
       "COMPARISON": {
         "0_50": "You showed up, and that's how every good inbox begins.",
-        "50_100": "You kept the replies flowing and the conversations alive.",
+        "50_100": "You kept the replies flowing and the tickets alive.",
         "100_500": "You handled serious volume and kept everything on track.",
         "500_2000": "You kept things moving while the volume kept climbing.",
         "2000_10000": "You ran high traffic through your inbox without breaking a sweat.",
@@ -19,7 +19,7 @@
     },
     "BUSIEST_DAY": {
       "TITLE": "Your busiest day was",
-      "MESSAGE": "{count} conversations that day.",
+      "MESSAGE": "{count} tickets that day.",
       "COMPARISON": {
         "0_5": "A warm-up lap that barely woke the inbox.",
         "5_10": "Enough action to justify a second cup of coffee.",

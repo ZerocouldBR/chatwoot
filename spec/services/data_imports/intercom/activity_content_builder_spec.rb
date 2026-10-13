@@ -1,16 +1,16 @@
 require 'rails_helper'
 
 event_content = {
-  'assignment' => 'Avery assigned the conversation to Support',
-  'assign_and_reopen' => 'Avery assigned the conversation to Support and reopened it',
-  'open' => 'Avery opened the conversation',
-  'close' => 'Avery closed the conversation',
-  'snoozed' => 'Avery snoozed the conversation',
+  'assignment' => 'Avery assigned the ticket to Support',
+  'assign_and_reopen' => 'Avery assigned the ticket to Support and reopened it',
+  'open' => 'Avery opened the ticket',
+  'close' => 'Avery closed the ticket',
+  'snoozed' => 'Avery snoozed the ticket',
   'participant_added' => 'Avery added Support as a participant',
   'participant_removed' => 'Avery removed Support as a participant',
-  'conversation_attribute_updated_by_admin' => 'Avery updated conversation attributes',
-  'conversation_attribute_updated_by_user' => 'Avery updated conversation attributes',
-  'conversation_attribute_updated_by_workflow' => 'Avery updated conversation attributes',
+  'conversation_attribute_updated_by_admin' => 'Avery updated ticket attributes',
+  'conversation_attribute_updated_by_user' => 'Avery updated ticket attributes',
+  'conversation_attribute_updated_by_workflow' => 'Avery updated ticket attributes',
   'ticket_attribute_updated_by_admin' => 'Avery updated ticket attributes',
   'ticket_state_updated_by_admin' => 'Avery updated the ticket state',
   'custom_action_started' => 'Avery started a custom action',
@@ -45,7 +45,7 @@ RSpec.describe DataImports::Intercom::ActivityContentBuilder do
     }
 
     expect(described_class.new(part).perform).to eq(
-      'Intercom teammate closed the conversation: Customer confirmed resolution'
+      'Intercom teammate closed the ticket: Customer confirmed resolution'
     )
   end
 end

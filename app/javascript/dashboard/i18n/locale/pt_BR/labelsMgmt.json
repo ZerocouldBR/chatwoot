@@ -1,18 +1,18 @@
 {
   "LABEL_MGMT": {
-    "HEADER": "Etiquetas",
-    "HEADER_BTN_TXT": "Adicionar etiqueta",
-    "LOADING": "Buscando etiquetas",
-    "DESCRIPTION": "As etiquetas ajudam você a categorizar e priorizar conversas e leads. Você pode atribuir uma etiqueta a uma conversa ou contato usando o painel lateral.",
-    "LEARN_MORE": "Aprenda mais sobre etiquetas",
-    "COUNT": "{n} etiqueta | {n} etiquetas",
-    "SEARCH_PLACEHOLDER": "Pesquisar etiquetas...",
-    "NO_RESULTS": "Nenhuma etiqueta encontrada correspondente à sua busca",
+    "HEADER": "Tags",
+    "HEADER_BTN_TXT": "Adicionar tag",
+    "LOADING": "Buscando tags",
+    "DESCRIPTION": "As tags ajudam você a categorizar e priorizar tickets e leads. Você pode atribuir uma tag o um ticket ou contato usando o painel lateral.",
+    "LEARN_MORE": "Aprenda mais sobre tags",
+    "COUNT": "{n} tag | {n} tags",
+    "SEARCH_PLACEHOLDER": "Pesquisar tags...",
+    "NO_RESULTS": "Nenhuma tag encontrada correspondente à sua busca",
     "SEARCH_404": "Não existem itens correspondentes a esta consulta",
     "LIST": {
-      "404": "Não há etiquetas disponíveis nesta conta.",
-      "TITLE": "Gerenciar etiquetas",
-      "DESC": "Etiquetas permitem agrupar as conversas.",
+      "404": "Não há tags disponíveis nesta conta.",
+      "TITLE": "Gerenciar tags",
+      "DESC": "Tags permitem agrupar os tickets.",
       "TABLE_HEADER": {
         "NAME": "Nome",
         "DESCRIPTION": "Descrição",
@@ -22,21 +22,21 @@
     },
     "FORM": {
       "NAME": {
-        "LABEL": "Nome da Etiqueta",
-        "PLACEHOLDER": "Nome da etiqueta",
-        "REQUIRED_ERROR": "O nome da etiqueta é obrigatório",
+        "LABEL": "Nome da Tag",
+        "PLACEHOLDER": "Nome da tag",
+        "REQUIRED_ERROR": "O nome da tag é obrigatório",
         "MINIMUM_LENGTH_ERROR": "Tamanho mínimo 2 é necessário",
         "VALID_ERROR": "Somente Letras, Números, Hífen e Sublinhado são permitidos"
       },
       "DESCRIPTION": {
         "LABEL": "Descrição",
-        "PLACEHOLDER": "Descrição da etiqueta"
+        "PLACEHOLDER": "Descrição da tag"
       },
       "COLOR": {
         "LABEL": "Cor"
       },
       "SHOW_ON_SIDEBAR": {
-        "LABEL": "Exibir etiqueta na barra lateral"
+        "LABEL": "Exibir tag na barra lateral"
       },
       "EDIT": "Alterar",
       "CREATE": "Criar",
@@ -45,37 +45,37 @@
     },
     "SUGGESTIONS": {
       "TOOLTIP": {
-        "SINGLE_SUGGESTION": "Adicionar etiqueta à conversa",
-        "MULTIPLE_SUGGESTION": "Selecione esta etiqueta",
-        "DESELECT": "Desmarcar etiqueta",
+        "SINGLE_SUGGESTION": "Adicionar tag ao ticket",
+        "MULTIPLE_SUGGESTION": "Selecione esta tag",
+        "DESELECT": "Desmarcar tag",
         "DISMISS": "Descartar sugestão"
       },
       "POWERED_BY": "Chatwoot AI",
       "DISMISS": "Recusar",
-      "ADD_SELECTED_LABELS": "Adicionar etiquetas selecionadas",
-      "ADD_SELECTED_LABEL": "Adicionar etiqueta selecionada",
-      "ADD_ALL_LABELS": "Adicionar todas as etiquetas",
-      "SUGGESTED_LABELS": "Etiquetas sugeridos"
+      "ADD_SELECTED_LABELS": "Adicionar tags selecionadas",
+      "ADD_SELECTED_LABEL": "Adicionar tag selecionada",
+      "ADD_ALL_LABELS": "Adicionar todas as tags",
+      "SUGGESTED_LABELS": "Tags sugeridos"
     },
     "ADD": {
-      "TITLE": "Adicionar etiqueta",
-      "DESC": "Etiquetas permitem agrupar as conversas.",
+      "TITLE": "Adicionar tag",
+      "DESC": "Tags permitem agrupar os tickets.",
       "API": {
-        "SUCCESS_MESSAGE": "Etiqueta adicionada com sucesso",
+        "SUCCESS_MESSAGE": "Tag adicionada com sucesso",
         "ERROR_MESSAGE": "Ocorreu um erro, por favor tente novamente"
       }
     },
     "EDIT": {
-      "TITLE": "Alterar etiqueta",
+      "TITLE": "Alterar tag",
       "API": {
-        "SUCCESS_MESSAGE": "Etiqueta atualizada com sucesso",
+        "SUCCESS_MESSAGE": "Tag atualizada com sucesso",
         "ERROR_MESSAGE": "Ocorreu um erro, por favor tente novamente"
       }
     },
     "DELETE": {
       "BUTTON_TEXT": "Excluir",
       "API": {
-        "SUCCESS_MESSAGE": "Etiqueta excluída com sucesso",
+        "SUCCESS_MESSAGE": "Tag excluída com sucesso",
         "ERROR_MESSAGE": "Ocorreu um erro, por favor tente novamente"
       },
       "CONFIRM": {

@@ -1,35 +1,35 @@
 {
   "TEAMS_SETTINGS": {
-    "NEW_TEAM": "Create new team",
-    "HEADER": "Teams",
-    "LOADING": "Fetching teams",
-    "DESCRIPTION": "Teams allow you to organize agents into groups based on their responsibilities. An agent can belong to multiple teams. When working collaboratively, you can assign conversations to specific teams.",
-    "LEARN_MORE": "Learn more about teams",
-    "COUNT": "{n} team | {n} teams",
-    "SEARCH_PLACEHOLDER": "Search teams...",
-    "NO_RESULTS": "No teams found matching your search",
+    "NEW_TEAM": "Create new group",
+    "HEADER": "Groups",
+    "LOADING": "Fetching groups",
+    "DESCRIPTION": "Groups allow you to organize agents into groups based on their responsibilities. An agent can belong to multiple groups. When working collaboratively, you can assign tickets to specific groups.",
+    "LEARN_MORE": "Learn more about groups",
+    "COUNT": "{n} group | {n} groups",
+    "SEARCH_PLACEHOLDER": "Search groups...",
+    "NO_RESULTS": "No groups found matching your search",
     "LIST": {
-      "404": "There are no teams created on this account.",
-      "EDIT_TEAM": "Edit team",
+      "404": "There are no groups created on this account.",
+      "EDIT_TEAM": "Edit group",
       "NONE": "None"
     },
     "CREATE_FLOW": {
       "CREATE": {
-        "TITLE": "Create a new team",
-        "DESC": "Add a title and description to your new team."
+        "TITLE": "Create a new group",
+        "DESC": "Add a title and description to your new group."
       },
       "AGENTS": {
-        "BUTTON_TEXT": "Add agents to team",
-        "TITLE": "Add agents to team - {teamName}",
-        "DESC": "Add Agents to your newly created team. This lets you collaborate as a team on conversations, get notified on new events in the same conversation."
+        "BUTTON_TEXT": "Add agents to group",
+        "TITLE": "Add agents to group - {teamName}",
+        "DESC": "Add Agents to your newly created group. This lets you collaborate as a group on tickets, get notified on new events in the same ticket."
       },
       "WIZARD_CREATE": {
         "TITLE": "Create",
-        "BODY": "Create a new team of agents."
+        "BODY": "Create a new group of agents."
       },
       "WIZARD_ADD_AGENTS": {
         "TITLE": "Add Agents",
-        "BODY": "Add agents to the team."
+        "BODY": "Add agents to the group."
       },
       "WIZARD_FINISH": {
         "TITLE": "Finish",
@@ -38,24 +38,24 @@
     },
     "EDIT_FLOW": {
       "CREATE": {
-        "TITLE": "Edit your team details",
-        "DESC": "Edit title and description to your team.",
-        "BUTTON_TEXT": "Update team"
+        "TITLE": "Edit your group details",
+        "DESC": "Edit title and description to your group.",
+        "BUTTON_TEXT": "Update group"
       },
       "AGENTS": {
-        "BUTTON_TEXT": "Update agents in team",
-        "TITLE": "Add agents to team - {teamName}",
-        "DESC": "Add Agents to your newly created team. All the added agents will be notified when a conversation is assigned to this team."
+        "BUTTON_TEXT": "Update agents in group",
+        "TITLE": "Add agents to group - {teamName}",
+        "DESC": "Add Agents to your newly created group. All the added agents will be notified when a ticket is assigned to this group."
       },
       "EDIT_WIZARD_DETAILS": {
-        "TITLE": "Team details",
+        "TITLE": "Group details",
         "ROUTE": "settings_teams_edit",
         "BODY": "Change name, description and other details."
       },
       "EDIT_WIZARD_AGENTS": {
         "TITLE": "Edit Agents",
         "ROUTE": "settings_teams_edit_members",
-        "BODY": "Edit agents in your team."
+        "BODY": "Edit agents in your group."
       },
       "EDIT_WIZARD_FINISH": {
         "TITLE": "Finish",
@@ -64,20 +64,20 @@
       }
     },
     "TEAM_FORM": {
-      "ERROR_MESSAGE": "Couldn't save the team details. Try again."
+      "ERROR_MESSAGE": "Couldn't save the group details. Try again."
     },
     "AGENTS": {
       "AGENT": "Agent",
       "EMAIL": "Email",
       "BUTTON_TEXT": "Add agents",
-      "ADD_AGENTS": "Adding Agents to your Team...",
+      "ADD_AGENTS": "Adding Agents to your Group...",
       "SELECT": "select",
       "SELECT_ALL": "select all agents",
       "SELECTED_COUNT": "{selected} out of {total} agents selected."
     },
     "ADD": {
-      "TITLE": "Add agents to team - {teamName}",
-      "DESC": "Add Agents to your newly created team. This lets you collaborate as a team on conversations, get notified on new events in the same conversation.",
+      "TITLE": "Add agents to group - {teamName}",
+      "DESC": "Add Agents to your newly created group. This lets you collaborate as a group on tickets, get notified on new events in the same ticket.",
       "SELECT": "select",
       "SELECT_ALL": "select all agents",
       "SELECTED_COUNT": "{selected} out of {total} agents selected.",
@@ -85,40 +85,40 @@
       "AGENT_VALIDATION_ERROR": "Select at least one agent."
     },
     "FINISH": {
-      "TITLE": "Your team is ready!",
-      "MESSAGE": "You can now collaborate as a team on conversations. Happy supporting ",
+      "TITLE": "Your group is ready!",
+      "MESSAGE": "You can now collaborate as a group on tickets. Happy supporting ",
       "BUTTON_TEXT": "Finish"
     },
     "DELETE": {
       "BUTTON_TEXT": "Delete",
       "API": {
-        "SUCCESS_MESSAGE": "Team deleted successfully.",
-        "ERROR_MESSAGE": "Couldn't delete the team. Try again."
+        "SUCCESS_MESSAGE": "Group deleted successfully.",
+        "ERROR_MESSAGE": "Couldn't delete the group. Try again."
       },
       "CONFIRM": {
-        "TITLE": "Are you sure you want to delete the team?",
+        "TITLE": "Are you sure you want to delete the group?",
         "PLACE_HOLDER": "Please type {teamName} to confirm",
-        "MESSAGE": "Deleting the team will remove the team assignment from the conversations assigned to this team.",
+        "MESSAGE": "Deleting the group will remove the group assignment from the tickets assigned to this group.",
         "YES": "Delete ",
         "NO": "Cancel"
       }
     },
     "SETTINGS": "Settings",
     "FORM": {
-      "UPDATE": "Update team",
-      "CREATE": "Create team",
+      "UPDATE": "Update group",
+      "CREATE": "Create group",
       "NAME": {
-        "LABEL": "Team name",
+        "LABEL": "Group name",
         "PLACEHOLDER": "Example: Sales, Customer Support"
       },
       "DESCRIPTION": {
-        "LABEL": "Team Description",
-        "PLACEHOLDER": "Short description about this team."
+        "LABEL": "Group Description",
+        "PLACEHOLDER": "Short description about this group."
       },
       "AUTO_ASSIGN": {
-        "LABEL": "Allow auto assign for this team."
+        "LABEL": "Allow auto assign for this group."
       },
-      "SUBMIT_CREATE": "Create team"
+      "SUBMIT_CREATE": "Create group"
     }
   }
 }

@@ -1,7 +1,7 @@
 {
   "FILTER": {
-    "TITLE": "Filtrar conversas",
-    "SUBTITLE": "Adicione seus filtros abaixo e clique em 'Aplicar filtros' para reduzir a desordem na conversa.",
+    "TITLE": "Filtrar tickets",
+    "SUBTITLE": "Adicione seus filtros abaixo e clique em 'Aplicar filtros' para reduzir a desordem no ticket.",
     "EDIT_CUSTOM_FILTER": "Editar Pasta",
     "CUSTOM_VIEWS_SUBTITLE": "Adicione ou remova filtros e atualize sua pasta.",
     "ADD_NEW_FILTER": "Adicionar filtro",
@@ -13,7 +13,7 @@
     "FOLDER_LABEL": "Nome da pasta",
     "FOLDER_QUERY_LABEL": "Consulta de Pasta",
     "EMPTY_VALUE_ERROR": "Valor obrigatório.",
-    "TOOLTIP_LABEL": "Filtrar conversas",
+    "TOOLTIP_LABEL": "Filtrar tickets",
     "QUERY_DROPDOWN_LABELS": {
       "AND": "E",
       "OR": "OU"
@@ -52,11 +52,11 @@
       "STATUS": "Status",
       "ASSIGNEE_NAME": "Agente atribuído",
       "INBOX_NAME": "Caixa de Entrada",
-      "TEAM_NAME": "Nome do Time",
+      "TEAM_NAME": "Nome do Grupo",
       "CONTACT": "Contato",
-      "CONVERSATION_IDENTIFIER": "Identificador da conversa",
+      "CONVERSATION_IDENTIFIER": "Identificador do ticket",
       "CAMPAIGN_NAME": "Nome da campanha",
-      "LABELS": "Etiquetas",
+      "LABELS": "Tags",
       "BROWSER_LANGUAGE": "Idioma do navegador",
       "PRIORITY": "Prioridade",
       "COUNTRY_NAME": "Nome do País",

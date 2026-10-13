@@ -235,7 +235,7 @@ RSpec.describe '/api/v1/widget/messages', type: :request do
             account_id: conversation.account_id,
             inbox_id: conversation.inbox_id,
             message_type: :activity,
-            content: "Conversation was resolved by #{contact.name}",
+            content: "Ticket was resolved by #{contact.name}",
             content_attributes: { activity: { type: 'conversation_status_changed', status: 'resolved' } }
           }
         )

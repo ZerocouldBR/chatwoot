@@ -1,46 +1,46 @@
 {
   "BULK_ACTION": {
-    "CONVERSATIONS_SELECTED": "{conversationCount} conversas selecionadas",
+    "CONVERSATIONS_SELECTED": "{conversationCount} tickets selecionados",
     "NONE": "Nenhuma",
     "CLEAR_SELECTION": "Limpar",
-    "ASSIGN_AGENT_CONFIRMATION_LABEL": "Tem certeza de que deseja atribuir {n} conversa para {agentName}? | Tem certeza de que deseja atribuir {n} conversas para {agentName}?",
-    "UNASSIGN_AGENT_CONFIRMATION_LABEL": "Tem certeza de que deseja remover a atribuição de {n} conversa? | Tem certeza de que deseja remover a atribuição de {n} conversas?",
+    "ASSIGN_AGENT_CONFIRMATION_LABEL": "Tem certeza de que deseja atribuir {n} ticket para {agentName}? | Tem certeza de que deseja atribuir {n} tickets para {agentName}?",
+    "UNASSIGN_AGENT_CONFIRMATION_LABEL": "Tem certeza de que deseja remover a atribuição de {n} ticket? | Tem certeza de que deseja remover a atribuição de {n} tickets?",
     "YES": "Sim",
     "CANCEL": "Cancelar",
     "SEARCH_INPUT_PLACEHOLDER": "Pesquisar",
     "ASSIGN_AGENT_TOOLTIP": "Atribuir Agente",
-    "ASSIGN_TEAM_TOOLTIP": "Atribuir time",
-    "ASSIGN_SUCCESFUL": "Conversas atribuídas com sucesso.",
-    "ASSIGN_FAILED": "Falha ao atribuir conversas. Por favor, tente novamente.",
-    "RESOLVE_SUCCESFUL": "Conversas resolvidas com sucesso.",
-    "RESOLVE_FAILED": "Falha ao resolver conversas. Por favor, tente novamente.",
-    "ALL_CONVERSATIONS_SELECTED_ALERT": "Conversas visíveis nesta página só estão selecionadas.",
+    "ASSIGN_TEAM_TOOLTIP": "Atribuir grupo",
+    "ASSIGN_SUCCESFUL": "Tickets atribuídos com sucesso.",
+    "ASSIGN_FAILED": "Falha ao atribuir tickets. Por favor, tente novamente.",
+    "RESOLVE_SUCCESFUL": "Tickets resolvidos com sucesso.",
+    "RESOLVE_FAILED": "Falha ao resolver tickets. Por favor, tente novamente.",
+    "ALL_CONVERSATIONS_SELECTED_ALERT": "Tickets visíveis nesta página só estão selecionados.",
     "UPDATE": {
       "CHANGE_STATUS": "Alterar status",
       "SNOOZE_UNTIL": "Adiar",
-      "UPDATE_SUCCESFUL": "Status da conversa atualizado com sucesso.",
-      "UPDATE_FAILED": "Falha ao atualizar conversas. Por favor, tente novamente."
+      "UPDATE_SUCCESFUL": "Status do ticket atualizado com sucesso.",
+      "UPDATE_FAILED": "Falha ao atualizar tickets. Por favor, tente novamente."
     },
     "RESOLVE": {
-      "ALL_MISSING_ATTRIBUTES": "Não é possível resolver a conversa devido à ausência de atributos obrigatórios",
-      "PARTIAL_SUCCESS": "Algumas conversas exigem atributos obrigatórios antes da resolução e foram ignoradas"
+      "ALL_MISSING_ATTRIBUTES": "Não é possível resolver o ticket devido à ausência de atributos obrigatórios",
+      "PARTIAL_SUCCESS": "Alguns tickets exigem atributos obrigatórios antes da resolução e foram ignorados"
     },
     "LABELS": {
       "ASSIGN_LABELS": "Atribuir rótulo",
-      "REMOVE_LABELS": "Remover etiquetas",
-      "ASSIGN_SELECTED_LABELS": "Atribuir etiquetas selecionadas",
-      "REMOVE_SELECTED_LABELS": "Remover etiquetas selecionadas",
+      "REMOVE_LABELS": "Remover tags",
+      "ASSIGN_SELECTED_LABELS": "Atribuir tags selecionadas",
+      "REMOVE_SELECTED_LABELS": "Remover tags selecionadas",
       "ASSIGN_SUCCESFUL": "Rótulos atribuídos com sucesso.",
-      "ASSIGN_FAILED": "Falha ao atribuir etiquetas. Por favor, tente novamente.",
-      "REMOVE_SUCCESFUL": "Etiquetas removidas com sucesso.",
-      "REMOVE_FAILED": "Falha ao remover etiquetas. Por favor, tente novamente."
+      "ASSIGN_FAILED": "Falha ao atribuir tags. Por favor, tente novamente.",
+      "REMOVE_SUCCESFUL": "Tags removidas com sucesso.",
+      "REMOVE_FAILED": "Falha ao remover tags. Por favor, tente novamente."
     },
     "TEAMS": {
       "NONE": "Nenhum",
-      "ASSIGN_TEAM_CONFIRMATION_LABEL": "Tem certeza de que deseja atribuir {n} conversa ao time {teamName}? | Tem certeza de que deseja atribuir {n} conversas ao time {teamName}?",
-      "UNASSIGN_TEAM_CONFIRMATION_LABEL": "Tem certeza de que deseja remover a atribuição de {n} conversa? | Tem certeza de que deseja remover a atribuição de {n} conversas?",
-      "ASSIGN_SUCCESFUL": "Times atribuídos com sucesso.",
-      "ASSIGN_FAILED": "Falha ao atribuir time. Por favor, tente novamente."
+      "ASSIGN_TEAM_CONFIRMATION_LABEL": "Tem certeza de que deseja atribuir {n} ticket ao grupo {teamName}? | Tem certeza de que deseja atribuir {n} tickets ao grupo {teamName}?",
+      "UNASSIGN_TEAM_CONFIRMATION_LABEL": "Tem certeza de que deseja remover a atribuição de {n} ticket? | Tem certeza de que deseja remover a atribuição de {n} tickets?",
+      "ASSIGN_SUCCESFUL": "Grupos atribuídos com sucesso.",
+      "ASSIGN_FAILED": "Falha ao atribuir grupo. Por favor, tente novamente."
     }
   }
 }

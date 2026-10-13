@@ -1569,7 +1569,7 @@ RSpec.describe DataImports::Intercom::Importer do
         source_object_id: 'conversation:conversation_1:part:blank_part'
       )
       expect(activity).to be_activity
-      expect(activity.content).to eq('Intercom teammate assigned the conversation to Support')
+      expect(activity.content).to eq('Intercom teammate assigned the ticket to Support')
       expect(mapping.chatwoot_record).to eq(activity)
       expect(data_import.import_errors.skip_logs).to include(previous_skip_log)
       expect(next_data_import.import_errors.skip_logs.where(source_object_id: mapping.source_object_id)).to be_empty
@@ -1605,7 +1605,7 @@ RSpec.describe DataImports::Intercom::Importer do
       activity = account.messages.find_by!(source_id: 'intercom:conversation:conversation_1:part:assignment_part')
       expect(activity).to have_attributes(
         message_type: 'activity',
-        content: 'Avery assigned the conversation to Support',
+        content: 'Avery assigned the ticket to Support',
         private: false,
         sender: nil,
         created_at: Time.zone.at(1_700_000_175)
