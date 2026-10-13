@@ -9,7 +9,7 @@
     "COMPANY": "Empresa",
     "LOCATION": "Localização",
     "BROWSER_LANGUAGE": "Idioma do navegador",
-    "CONVERSATION_TITLE": "Detalhes da conversa",
+    "CONVERSATION_TITLE": "Detalhes do ticket",
     "VIEW_PROFILE": "Visualizar Perfil",
     "BROWSER": "Navegador",
     "OS": "Sistema Operacional",
@@ -28,8 +28,8 @@
       "TITLE": "Escolha uma caixa de entrada de voz"
     },
     "CONVERSATIONS": {
-      "NO_RECORDS_FOUND": "Não há conversas anteriores associadas a este contato.",
-      "TITLE": "Conversas anteriores"
+      "NO_RECORDS_FOUND": "Não há tickets anteriores associados a este contato.",
+      "TITLE": "Tickets anteriores"
     },
     "LABELS": {
       "CONTACT": {
@@ -37,7 +37,7 @@
         "ERROR": "Falha ao atualizar etiquetas"
       },
       "CONVERSATION": {
-        "TITLE": "Etiquetas da conversa",
+        "TITLE": "Etiquetas do ticket",
         "ADD_BUTTON": "Adicionar etiquetas"
       },
       "LABEL_SELECT": {
@@ -51,14 +51,14 @@
     "CONTACT_ACTIONS": "Ações de contatos",
     "MUTE_CONTACT": "Bloquear Contato",
     "UNMUTE_CONTACT": "Desbloquear Contato",
-    "MUTED_SUCCESS": "Este contato foi bloqueado com sucesso. Você não será notificado por nenhuma conversação futura.",
+    "MUTED_SUCCESS": "Este contato foi bloqueado com sucesso. Você não será notificado por nenhum ticket futuro.",
     "UNMUTED_SUCCESS": "Este contato foi desbloqueado com sucesso.",
     "SEND_TRANSCRIPT": "Enviar Transcrição",
     "EDIT_LABEL": "Alterar",
     "SIDEBAR_SECTIONS": {
       "CUSTOM_ATTRIBUTES": "Atributos Personalizados",
       "CONTACT_LABELS": "Etiquetas de contato",
-      "PREVIOUS_CONVERSATIONS": "Conversas anteriores",
+      "PREVIOUS_CONVERSATIONS": "Tickets anteriores",
       "NO_RECORDS_FOUND": "Nenhum atributo encontrado"
     }
   },
@@ -159,10 +159,10 @@
     "ERROR_MESSAGE": "Ocorreu um erro, por favor tente novamente"
   },
   "NEW_CONVERSATION": {
-    "BUTTON_LABEL": "Iniciar conversa",
-    "TITLE": "Nova conversa",
-    "DESC": "Iniciar uma nova conversa enviando uma nova mensagem.",
-    "NO_INBOX": "Não foi possível encontrar uma caixa de entrada para iniciar uma nova conversa com este contato.",
+    "BUTTON_LABEL": "Iniciar ticket",
+    "TITLE": "Novo ticket",
+    "DESC": "Iniciar um novo ticket enviando uma nova mensagem.",
+    "NO_INBOX": "Não foi possível encontrar uma caixa de entrada para iniciar um novo ticket com este contato.",
     "FORM": {
       "TO": {
         "LABEL": "Para"
@@ -260,7 +260,7 @@
   },
   "MERGE_CONTACTS": {
     "TITLE": "Mesclar contatos",
-    "DESCRIPTION": "Mescle contatos para combinar dois perfis em um, incluindo todos os atributos e conversas. Em caso de conflito, os atributos do contato principal terão prioridade.",
+    "DESCRIPTION": "Mescle contatos para combinar dois perfis em um, incluindo todos os atributos e tickets. Em caso de conflito, os atributos do contato principal terão prioridade.",
     "PRIMARY": {
       "TITLE": "Contato principal",
       "HELP_LABEL": "Para ser excluído"
@@ -518,7 +518,7 @@
         "MERGE": "Mesclar"
       },
       "HISTORY": {
-        "EMPTY_STATE": "Não há conversas anteriores associadas a este contato"
+        "EMPTY_STATE": "Não há tickets anteriores associados a este contato"
       },
       "ATTRIBUTES": {
         "SEARCH_PLACEHOLDER": "Pesquisar atributos",
@@ -547,7 +547,7 @@
       },
       "MERGE": {
         "TITLE": "Mesclar contatos",
-        "DESCRIPTION": "Mescle contatos para combinar dois perfis em um, incluindo todos os atributos e conversas. Em caso de conflito, os atributos do contato principal terão prioridade.",
+        "DESCRIPTION": "Mescle contatos para combinar dois perfis em um, incluindo todos os atributos e tickets. Em caso de conflito, os atributos do contato principal terão prioridade.",
         "PRIMARY": "Contato principal",
         "PRIMARY_HELP_LABEL": "A ser salvo",
         "PRIMARY_REQUIRED_ERROR": "Por favor, selecione um contato para mesclar com este antes de prosseguir",
@@ -622,8 +622,8 @@
     "FORM": {
       "GO_TO_CONVERSATION": "Visualizar",
       "SUCCESS_MESSAGE": "Mensagem enviada com sucesso!",
-      "ERROR_MESSAGE": "Ocorreu um erro ao criar a conversa. Tente novamente mais tarde.",
-      "NO_INBOX_ALERT": "Não há caixas de entrada disponíveis para iniciar uma conversa com este contato.",
+      "ERROR_MESSAGE": "Ocorreu um erro ao criar o ticket. Tente novamente mais tarde.",
+      "NO_INBOX_ALERT": "Não há caixas de entrada disponíveis para iniciar um ticket com este contato.",
       "CONTACT_SELECTOR": {
         "LABEL": "Para:",
         "TAG_INPUT_PLACEHOLDER": "Digite pelo menos 2 caracteres para pesquisar por nome, e-mail ou número de telefone",

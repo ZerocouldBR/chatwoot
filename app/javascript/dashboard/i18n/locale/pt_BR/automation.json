@@ -1,7 +1,7 @@
 {
   "AUTOMATION": {
     "HEADER": "Automação",
-    "DESCRIPTION": "A automação pode substituir e simplificar processos existentes que requerem esforço manual, como a adição de etiquetas e a atribuição de conversas ao agente mais adequado. Isso permite que o time se concentre em seus pontos fortes e reduza o tempo gasto em tarefas rotineiras.",
+    "DESCRIPTION": "A automação pode substituir e simplificar processos existentes que requerem esforço manual, como a adição de etiquetas e a atribuição de tickets ao agente mais adequado. Isso permite que o time se concentre em seus pontos fortes e reduza o tempo gasto em tarefas rotineiras.",
     "LEARN_MORE": "Aprenda mais sobre automação",
     "COUNT": "{n} automação | {n} automações",
     "HEADER_BTN_TXT": "Criar Automação",
@@ -49,7 +49,7 @@
           "INBOX_LABEL": "Caixa de Entrada",
           "ERROR": "O período de espera deve ser entre 10 minutos e 30 dias",
           "OPTIONS": {
-            "CONVERSATION_STATUS": "A conversa permanece em um status",
+            "CONVERSATION_STATUS": "O ticket permanece em um status",
             "CUSTOMER_UNRESPONSIVE": "O cliente não respondeu",
             "AGENT_UNRESPONSIVE": "Nenhum atendente respondeu"
           },
@@ -59,11 +59,11 @@
             "DAYS": "{count} dia | {count} dias"
           },
           "EXPLANATION": {
-            "CONVERSATION_STATUS": "A contagem começa quando a conversa entra nesse status. Se ela ainda estiver nele após {duration}, as ações abaixo serão executadas. Se o status mudar antes disso, nada acontecerá.",
+            "CONVERSATION_STATUS": "A contagem começa quando o ticket entra nesse status. Se ele ainda estiver nele após {duration}, as ações abaixo serão executadas. Se o status mudar antes disso, nada acontecerá.",
             "CUSTOMER_UNRESPONSIVE": "A contagem começa quando um atendente responde. Se o cliente não responder em até {duration}, as ações abaixo serão executadas. Se ele responder antes, nada acontecerá, e a próxima resposta do atendente iniciará a contagem novamente.",
             "AGENT_UNRESPONSIVE": "A contagem começa quando um cliente envia uma mensagem. Se nenhum atendente responder em até {duration}, as ações abaixo serão executadas. Se alguém responder antes disso, nada acontecerá."
           },
-          "FOOTNOTE": "Apenas novas atividades iniciam uma contagem. Conversas que já estiverem nesse estado só serão consideradas na próxima vez que houver alguma atividade nelas."
+          "FOOTNOTE": "Apenas novas atividades iniciam uma contagem. Tickets que já estiverem nesse estado só serão considerados na próxima vez que houver alguma atividade neles."
         },
         "CONDITIONS": {
           "LABEL": "Condições"
@@ -136,7 +136,7 @@
     "CONDITION": {
       "DELETE_MESSAGE": "Você precisa ter pelo menos uma condição para salvar",
       "CONTACT_CUSTOM_ATTR_LABEL": "Atributos personalizados do contato",
-      "CONVERSATION_CUSTOM_ATTR_LABEL": "Atributos personalizados da conversa"
+      "CONVERSATION_CUSTOM_ATTR_LABEL": "Atributos personalizados do ticket"
     },
     "ACTION": {
       "DELETE_MESSAGE": "Você precisa ter pelo menos uma ação para salvar",
@@ -177,11 +177,11 @@
     "NONE_OPTION": "Nenhuma",
     "LAST_RESPONDING_AGENT": "Último Agente que Respondeu",
     "EVENTS": {
-      "CONVERSATION_CREATED": "Conversa Criada",
-      "CONVERSATION_UPDATED": "Conversa Atualizada",
+      "CONVERSATION_CREATED": "Ticket Criado",
+      "CONVERSATION_UPDATED": "Ticket Atualizado",
       "MESSAGE_CREATED": "Mensagem Criada",
-      "CONVERSATION_RESOLVED": "Conversa Resolvida",
-      "CONVERSATION_OPENED": "Conversa Aberta"
+      "CONVERSATION_RESOLVED": "Ticket Resolvido",
+      "CONVERSATION_OPENED": "Ticket Aberto"
     },
     "ACTIONS": {
       "ASSIGN_AGENT": "Atribuir ao Agente",
@@ -192,17 +192,17 @@
       "REMOVE_LABEL": "Remover uma Etiqueta",
       "SEND_EMAIL_TO_TEAM": "Enviar um e-mail para o Time",
       "SEND_EMAIL_TRANSCRIPT": "Enviar uma transcrição por e-mail",
-      "MUTE_CONVERSATION": "Silenciar Conversa",
-      "SNOOZE_CONVERSATION": "Adiar Conversa",
-      "RESOLVE_CONVERSATION": "Resolver Conversa",
+      "MUTE_CONVERSATION": "Silenciar Ticket",
+      "SNOOZE_CONVERSATION": "Adiar Ticket",
+      "RESOLVE_CONVERSATION": "Resolver Ticket",
       "SEND_WEBHOOK_EVENT": "Enviar evento de Webhook",
       "SEND_ATTACHMENT": "Enviar Anexo",
       "SEND_MESSAGE": "Enviar Mensagem",
       "ADD_PRIVATE_NOTE": "Adicionar uma Nota Privada",
       "CHANGE_PRIORITY": "Alterar Prioridade",
       "ADD_SLA": "Adicionar SLA",
-      "OPEN_CONVERSATION": "Abrir conversa",
-      "PENDING_CONVERSATION": "Marcar conversa como pendente"
+      "OPEN_CONVERSATION": "Abrir ticket",
+      "PENDING_CONVERSATION": "Marcar ticket como pendente"
     },
     "MESSAGE_TYPES": {
       "INCOMING": "Mensagem Recebida",
@@ -221,7 +221,7 @@
       "MESSAGE_CONTAINS": "Conteúdo da mensagem",
       "EMAIL": "E-mail",
       "INBOX": "Caixa de Entrada",
-      "CONVERSATION_LANGUAGE": "Idioma da conversa",
+      "CONVERSATION_LANGUAGE": "Idioma do ticket",
       "PHONE_NUMBER": "Número de Telefone",
       "STATUS": "Status",
       "BROWSER_LANGUAGE": "Idioma do navegador",

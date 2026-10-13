@@ -3,13 +3,13 @@
     "HEADER": "Atributos Personalizados",
     "HEADER_BTN_TXT": "Criar atributo personalizado",
     "LOADING": "Buscando atributos personalizados",
-    "DESCRIPTION": "Um atributo personalizado controla detalhes adicionais sobre seus contatos ou conversas — como o plano de assinatura ou a data de sua primeira compra. Você pode adicionar diferentes tipos de atributos personalizados, como texto, listas ou números, para capturar as informações específicas que você precisa.",
+    "DESCRIPTION": "Um atributo personalizado controla detalhes adicionais sobre seus contatos ou tickets — como o plano de assinatura ou a data de sua primeira compra. Você pode adicionar diferentes tipos de atributos personalizados, como texto, listas ou números, para capturar as informações específicas que você precisa.",
     "LEARN_MORE": "Saiba mais sobre atributos personalizados",
     "COUNT": "{n} atributo | {n} atributos",
     "SEARCH_PLACEHOLDER": "Pesquisar atributos...",
     "NO_RESULTS": "Nenhum atributo encontrado correspondente à sua busca",
     "ATTRIBUTE_MODELS": {
-      "CONVERSATION": "Conversas",
+      "CONVERSATION": "Tickets",
       "CONTACT": "Contato",
       "COMPANY": "Empresa"
     },
@@ -108,7 +108,7 @@
     },
     "TABS": {
       "HEADER": "Atributos Personalizados",
-      "CONVERSATION": "Conversas",
+      "CONVERSATION": "Tickets",
       "CONTACT": "Contato",
       "COMPANY": "Empresa"
     },
