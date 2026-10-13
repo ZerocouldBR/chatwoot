@@ -53,8 +53,25 @@ export const resolveFormName = (
   return getDefaultFormName(meta);
 };
 
+// Sufixo atual "(inativo)"; "(inativo no Zendesk)" é o nome antigo.
 const isFieldInactive = attribute =>
-  /\(inativo no zendesk\)/i.test(attribute?.attribute_display_name || '');
+  /\(inativo( no zendesk)?\)/i.test(attribute?.attribute_display_name || '');
+
+// Rede de segurança: a UI não mostra "Zendesk" mesmo que alguma definição de
+// atributo ainda esteja com o nome antigo (a renomeação oficial é no banco).
+const LABEL_RENAMES = [
+  [/^status \(zendesk\)$/i, 'Status do ticket'],
+  [/^n[ºo°]? ?ticket zendesk$/i, 'Nº do ticket (histórico)'],
+  [/\s*\(inativo no zendesk\)/i, ' (inativo)'],
+  [/\s*\(exclu[ií]do no zendesk\)/i, ' (excluído)'],
+  [/\s*\(zendesk\)/i, ' (histórico)'],
+  [/\s*zendesk\b/i, ''],
+];
+export const displayNameFor = attribute => {
+  const name = String(attribute?.attribute_display_name || '');
+  const rule = LABEL_RENAMES.find(([regex]) => regex.test(name));
+  return rule ? name.replace(rule[0], rule[1]).trim() : name;
+};
 
 /**
  * Monta os grupos de campos personalizados do formulário.
@@ -128,6 +145,7 @@ export const buildFormFieldGroups = ({
     }
     formFields.push({
       ...attribute,
+      attribute_display_name: displayNameFor(attribute),
       key: attribute.attribute_key,
       value: hasValue(value) ? value : '',
       zendeskFieldId: fieldId,
@@ -145,6 +163,7 @@ export const buildFormFieldGroups = ({
     if (!hasValue(value)) return;
     const field = {
       ...attribute,
+      attribute_display_name: displayNameFor(attribute),
       key: attribute.attribute_key,
       value,
       zendeskFieldId: getZendeskFieldId(attribute),
@@ -165,7 +184,7 @@ export const getStatusMeta = (label, meta = ticketFormsMeta) =>
 export const nativeStatusFor = (label, meta = ticketFormsMeta) =>
   getStatusMeta(label, meta)?.native || null;
 
-/** Status personalizado padrão de um status nativo (open/pending/resolved). */
+/** Status personalizado padrão de um status nativo (open/snoozed/resolved). */
 export const defaultCustomStatusFor = (nativeStatus, meta = ticketFormsMeta) =>
   (meta.native_status_default || {})[nativeStatus] || null;
 

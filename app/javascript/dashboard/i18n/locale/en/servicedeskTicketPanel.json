@@ -24,11 +24,11 @@
       "CHANGED": "Form changed to {form}"
     },
     "NATIVE_STATUS": {
-      "LABEL": "Conversation state",
+      "LABEL": "Ticket state",
       "OPEN": "Open",
-      "PENDING": "Pending",
+      "PENDING": "With bot",
       "RESOLVED": "Resolved",
-      "SNOOZED": "Snoozed"
+      "SNOOZED": "Pending"
     },
     "FIELDS": {
       "TITLE": "Ticket fields",

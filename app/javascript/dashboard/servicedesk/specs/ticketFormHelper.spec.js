@@ -3,6 +3,7 @@ import {
   defaultCustomStatusFor,
   getZendeskFieldId,
   nativeStatusFor,
+  displayNameFor,
   resolveFormName,
   ticketForms,
   ticketFormsMeta,
@@ -27,12 +28,13 @@ const meta = {
   required_field_ids: [10],
   statuses: {
     Novo: { category: 'new', native: 'open' },
-    Pendente: { category: 'pending', native: 'pending' },
+    Pendente: { category: 'pending', native: 'snoozed' },
+    Desenvolvimento: { category: 'hold', native: 'snoozed' },
     Resolvido: { category: 'solved', native: 'resolved' },
   },
   native_status_default: {
     open: 'Aberto',
-    pending: 'Pendente',
+    snoozed: 'Pendente',
     resolved: 'Resolvido',
   },
 };
@@ -112,7 +114,45 @@ describe('ticketFormHelper', () => {
     expect(nativeStatusFor('Novo', meta)).toBe('open');
     expect(nativeStatusFor('Resolvido', meta)).toBe('resolved');
     expect(nativeStatusFor('?', meta)).toBe(null);
-    expect(defaultCustomStatusFor('pending', meta)).toBe('Pendente');
+    expect(nativeStatusFor('Desenvolvimento', meta)).toBe('snoozed');
+    expect(defaultCustomStatusFor('snoozed', meta)).toBe('Pendente');
+    expect(defaultCustomStatusFor('pending', meta)).toBe(null);
+  });
+
+  it('o JSON versionado segue o status canônico', () => {
+    const canon = {
+      new: 'open',
+      open: 'open',
+      pending: 'snoozed',
+      hold: 'snoozed',
+      solved: 'resolved',
+    };
+    Object.values(ticketFormsMeta.statuses).forEach(status => {
+      expect(status.native).toBe(canon[status.category]);
+    });
+    expect(ticketFormsMeta.native_status_default).toEqual({
+      open: 'Aberto',
+      snoozed: 'Pendente',
+      resolved: 'Resolvido',
+    });
+  });
+
+  it('não mostra "Zendesk" nos rótulos', () => {
+    expect(displayNameFor({ attribute_display_name: 'Status (Zendesk)' })).toBe(
+      'Status do ticket'
+    );
+    expect(
+      displayNameFor({ attribute_display_name: 'Nº ticket Zendesk' })
+    ).toBe('Nº do ticket (histórico)');
+    expect(
+      displayNameFor({
+        attribute_display_name: 'Checkout (inativo no Zendesk)',
+      })
+    ).toBe('Checkout (inativo)');
+    expect(displayNameFor({ attribute_display_name: 'Canal (Zendesk)' })).toBe(
+      'Canal (histórico)'
+    );
+    expect(displayNameFor({ attribute_display_name: 'Tipo' })).toBe('Tipo');
   });
 
   it('o JSON versionado tem os formulários do Zendesk', () => {

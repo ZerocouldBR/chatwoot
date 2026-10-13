@@ -24,11 +24,11 @@
       "CHANGED": "Formulário alterado para {form}"
     },
     "NATIVE_STATUS": {
-      "LABEL": "Situação da conversa",
+      "LABEL": "Situação do ticket",
       "OPEN": "Aberto",
-      "PENDING": "Pendente",
+      "PENDING": "Com o bot",
       "RESOLVED": "Resolvido",
-      "SNOOZED": "Adiado"
+      "SNOOZED": "Pendente"
     },
     "FIELDS": {
       "TITLE": "Campos do ticket",

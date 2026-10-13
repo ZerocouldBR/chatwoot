@@ -104,19 +104,26 @@ const contactLink = computed(() =>
     : ''
 );
 
+// Organização (decisão 7): o nome vem de contact.additional_attributes.
+// company_name; a empresa (company_id) só complementa com o link e, se o nome
+// não estiver no contato, com o nome da empresa.
 const companyName = ref('');
 const companyLink = ref('');
 const loadCompany = async () => {
   const companyId = contact.value?.company_id;
-  const fallbackName = contact.value?.additional_attributes?.company_name || '';
-  companyName.value = fallbackName;
+  const savedName = (
+    contact.value?.additional_attributes?.company_name ||
+    requester.value?.additional_attributes?.company_name ||
+    ''
+  ).trim();
+  companyName.value = savedName;
   companyLink.value = '';
   if (!companyId) return;
   try {
     const { data } = await CompanyAPI.show(companyId);
     const company = data?.payload || data || {};
     if (contact.value?.company_id !== companyId) return;
-    companyName.value = company.name || fallbackName;
+    companyName.value = savedName || company.name || '';
     companyLink.value = frontendURL(
       `accounts/${route.params.accountId}/companies/${companyId}`
     );
@@ -298,10 +305,13 @@ const nativeStatusLabels = computed(() => ({
   [STATUS.RESOLVED]: t('SERVICEDESK_TICKET_PANEL.NATIVE_STATUS.RESOLVED'),
   [STATUS.SNOOZED]: t('SERVICEDESK_TICKET_PANEL.NATIVE_STATUS.SNOOZED'),
 }));
+// Status canônico: Aberto (open) · Pendente/Em espera (snoozed) · Resolvido.
+// O status nativo "pending" é reservado a bot/IA e só aparece se o ticket
+// já estiver nele.
 const nativeStatusOptions = computed(() => {
-  const options = [STATUS.OPEN, STATUS.PENDING, STATUS.RESOLVED];
-  if (currentChat.value?.status === STATUS.SNOOZED)
-    options.push(STATUS.SNOOZED);
+  const options = [STATUS.OPEN, STATUS.SNOOZED, STATUS.RESOLVED];
+  if (currentChat.value?.status === STATUS.PENDING)
+    options.push(STATUS.PENDING);
   return options.map(id => ({ id, name: nativeStatusLabels.value[id] }));
 });
 const nativeStatus = computed(() => currentChat.value?.status);
@@ -330,8 +340,8 @@ const changeNativeStatus = async status => {
 };
 
 // Status personalizado (zd_status): ao escolher, o status nativo acompanha a
-// categoria (novo/aberto -> aberto, pendente/em espera -> pendente,
-// resolvido -> resolvido), como no Zendesk.
+// categoria pelo status canônico (novo/aberto -> open, pendente/em espera ->
+// snoozed, resolvido -> resolved).
 const onSelectCustomStatus = async option => {
   if (!option || option.id === -1) return;
   if (customAttributes.value[STATUS_ATTRIBUTE_KEY] !== option.name) {

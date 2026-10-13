@@ -85,9 +85,12 @@ def main():
         if f.get('required') and f.get('active') and f.get('type') not in ('assignee',)
     )
 
+    # STATUS CANONICO do projeto (zendesk_field_map.json custom_statuses[].chatwoot_status):
+    # pending e hold -> snoozed (o rotulo zd_status distingue); o status nativo
+    # "pending" do Chatwoot fica reservado a bot/IA e nunca e usado aqui.
     category_to_native = {
-        'new': 'open', 'open': 'open', 'pending': 'pending',
-        'hold': 'pending', 'solved': 'resolved',
+        'new': 'open', 'open': 'open', 'pending': 'snoozed',
+        'hold': 'snoozed', 'solved': 'resolved', 'closed': 'resolved',
     }
     status_meta = {}
     native_default = {}
@@ -101,8 +104,9 @@ def main():
         }
         if st.get('default') and st.get('active'):
             native = category_to_native.get(st['status_category'])
-            # 'open' pode vir de new e de open: o padrao de "aberto" e o da categoria open
-            if native and (native not in native_default or st['status_category'] == 'open'):
+            # 'open' vem de new e open; 'snoozed' de pending e hold: o padrao de
+            # cada status nativo e o da categoria open / pending / solved.
+            if native and st['status_category'] in ('open', 'pending', 'solved'):
                 native_default[native] = label
 
     meta = {

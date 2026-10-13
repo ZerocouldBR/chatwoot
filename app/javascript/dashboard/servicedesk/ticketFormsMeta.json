@@ -333,11 +333,7 @@
       }
     ]
   },
-  "required_field_ids": [
-    21587135564955,
-    23735231881243,
-    27073292749723
-  ],
+  "required_field_ids": [21587135564955, 23735231881243, 27073292749723],
   "statuses": {
     "Novo": {
       "id": 20487430798747,
@@ -372,49 +368,49 @@
     "Pendente": {
       "id": 20487412004251,
       "category": "pending",
-      "native": "pending",
+      "native": "snoozed",
       "active": true
     },
     "Pendente Autenticação": {
       "id": 51446269872667,
       "category": "pending",
-      "native": "pending",
+      "native": "snoozed",
       "active": false
     },
     "Aguardando Desenvolvimento": {
       "id": 20487430857883,
       "category": "hold",
-      "native": "pending",
+      "native": "snoozed",
       "active": false
     },
     "Escalonado": {
       "id": 21790215283483,
       "category": "hold",
-      "native": "pending",
+      "native": "snoozed",
       "active": false
     },
     "Desenvolvimento": {
       "id": 21790243451291,
       "category": "hold",
-      "native": "pending",
+      "native": "snoozed",
       "active": true
     },
     "Retorno Integrações": {
       "id": 22412122152347,
       "category": "hold",
-      "native": "pending",
+      "native": "snoozed",
       "active": false
     },
     "Devolvido": {
       "id": 26904974432923,
       "category": "hold",
-      "native": "pending",
+      "native": "snoozed",
       "active": true
     },
     "Desenvolvimento Concluído": {
       "id": 26950275108635,
       "category": "hold",
-      "native": "pending",
+      "native": "snoozed",
       "active": true
     },
     "Resolvido": {
@@ -444,7 +440,7 @@
   },
   "native_status_default": {
     "open": "Aberto",
-    "pending": "Pendente",
+    "snoozed": "Pendente",
     "resolved": "Resolvido"
   }
 }
