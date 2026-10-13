@@ -59,6 +59,10 @@ const panelTitle = computed(() =>
     : t('SERVICEDESK_TICKET_PANEL.WORKSPACE.PROPERTIES')
 );
 
+// No workspace, a seção "Ações do ticket" (grupo, responsável, prioridade,
+// tags) fica oculta: já está nas propriedades à esquerda. (Sem comentário no
+// template: o slot #item do Draggable aceita um único nó.)
+
 const dragging = ref(false);
 const conversationSidebarItems = ref([]);
 
@@ -179,8 +183,6 @@ onMounted(() => {
         @end="onDragEnd"
       >
         <template #item="{ element }">
-          <!-- ServiceDesk: no workspace, grupo/responsável/prioridade/tags
-               já estão nas propriedades à esquerda -->
           <div
             v-if="element.name === 'conversation_actions'"
             v-show="!isWorkspaceLayout"
