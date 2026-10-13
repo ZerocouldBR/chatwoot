@@ -361,6 +361,9 @@ RSpec.describe 'Api::V1::Accounts::MacrosController', type: :request do
     let(:user_1) { create(:user, role: 0) }
 
     before do
+      # ServiceDesk: estes exemplos cobrem o comportamento original (resposta enviada na hora).
+      # O modo padrão do ServiceDesk (macro_fill_editor) está nos exemplos logo abaixo.
+      account.update!(macro_fill_editor: false)
       create(:team_member, user: user_1, team: team)
       create(:account_user, user: user_1, account: account)
       create(:inbox_member, user: user_1, inbox: inbox)
@@ -384,6 +387,32 @@ RSpec.describe 'Api::V1::Accounts::MacrosController', type: :request do
     end
 
     context 'when it is an authenticated user' do
+      context 'when the account fills the editor with the macro reply (ServiceDesk default)' do
+        before { account.update!(macro_fill_editor: nil) }
+
+        it 'applies the actions without sending the reply or the note' do
+          expect(conversation.messages).to be_empty
+
+          perform_enqueued_jobs do
+            post "/api/v1/accounts/#{account.id}/macros/#{macro.id}/execute",
+                 params: { conversation_ids: [conversation.display_id] },
+                 headers: administrator.create_new_auth_token
+          end
+
+          expect(conversation.reload.messages.outgoing.where(private: false)).to be_empty
+          expect(conversation.messages.outgoing.where(private: true).pluck(:content)).to eq(['We are sending greeting message to customer.'])
+          expect(conversation.status).to eq('snoozed')
+          expect(conversation.team_id).to eq(team.id)
+        end
+
+        it 'tells the dashboard to fill the editor' do
+          get "/api/v1/accounts/#{account.id}/macros/#{macro.id}",
+              headers: administrator.create_new_auth_token
+
+          expect(response.parsed_body['payload']['fill_editor']).to be(true)
+        end
+      end
+
       context 'when execute the macro' do
         it 'send the message with sender' do
           expect(conversation.messages).to be_empty
