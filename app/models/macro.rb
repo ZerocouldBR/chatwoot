@@ -29,10 +29,11 @@ class Macro < ApplicationRecord
   enum visibility: { personal: 0, global: 1 }
 
   validate :json_actions_format
+  include Servicedesk::ActionsValidatable
 
-  ACTIONS_ATTRS = %w[send_message add_label assign_team assign_agent mute_conversation change_status remove_label remove_assigned_agent
-                     remove_assigned_team resolve_conversation snooze_conversation change_priority send_email_transcript
-                     send_attachment add_private_note send_webhook_event].freeze
+  ACTIONS_ATTRS = (%w[send_message add_label assign_team assign_agent mute_conversation change_status remove_label remove_assigned_agent
+                      remove_assigned_team resolve_conversation snooze_conversation change_priority send_email_transcript
+                      send_attachment add_private_note send_webhook_event] + Servicedesk::ConversationActionParams::ACTION_NAMES).freeze
 
   def set_visibility(user, params)
     self.visibility = params[:visibility]
