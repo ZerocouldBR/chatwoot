@@ -17,6 +17,8 @@ import DeleteCustomViews from 'dashboard/routes/dashboard/customviews/DeleteCust
 import ConversationBulkActions from './widgets/conversation/conversationBulkActions/Index.vue';
 import TeleportWithDirection from 'dashboard/components-next/TeleportWithDirection.vue';
 import ConversationResolveAttributesModal from 'dashboard/components-next/ConversationWorkflow/ConversationResolveAttributesModal.vue';
+import TicketTable from 'dashboard/servicedesk/ticketList/TicketTable.vue';
+import { useTicketListMode } from 'dashboard/servicedesk/ticketList/useTicketListMode';
 
 import { useUISettings } from 'dashboard/composables/useUISettings';
 import { useAlert } from 'dashboard/composables';
@@ -70,6 +72,12 @@ const { buildConversationPath, buildConversationListPath } =
   useConversationRoutePath();
 
 const resolveAttributesModalRef = ref(null);
+
+// ServiceDesk: modo tabela (estilo Views) so no layout expandido.
+const { isTableMode } = useTicketListMode();
+const showTicketTable = computed(
+  () => isTableMode.value && props.isOnExpandedLayout
+);
 
 const activeAssigneeTab = ref(wootConstants.ASSIGNEE_TYPE.ME);
 const activeStatus = ref(wootConstants.STATUS_TYPE.OPEN);
@@ -973,7 +981,22 @@ watch(appliedFilters, () => resetBulkActions());
       :class="isOnExpandedLayout && 'sm:!w-[24rem] !w-full'"
       @select-all-conversations="toggleSelectAll"
     />
+    <TicketTable
+      v-if="showTicketTable"
+      :conversation-list="conversationList"
+      :is-loading="chatListLoading"
+      :show-end-of-list-message="showEndOfListMessage"
+      :all-conversations-selected="allConversationsSelected"
+      :label="label"
+      :team-id="teamId"
+      :folders-id="foldersId"
+      :conversation-type="conversationType"
+      @load-more="loadMoreConversations"
+      @select-all="toggleSelectAll"
+      @sort-change="value => onBasicFilterChange(value, 'sort')"
+    />
     <ConversationList
+      v-else
       :conversation-list="conversationList"
       :is-loading="chatListLoading"
       :show-end-of-list-message="showEndOfListMessage"

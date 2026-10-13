@@ -7,6 +7,7 @@ import wootConstants from 'dashboard/constants/globals';
 import ConversationBasicFilter from './widgets/conversation/ConversationBasicFilter.vue';
 import SwitchLayout from 'dashboard/routes/dashboard/conversation/search/SwitchLayout.vue';
 import NextButton from 'dashboard/components-next/button/Button.vue';
+import TicketListModeToggle from 'dashboard/servicedesk/ticketList/TicketListModeToggle.vue';
 
 const props = defineProps({
   pageTitle: { type: String, required: true },
@@ -175,6 +176,7 @@ const toggleConversationLayout = () => {
         :show-status-filter="!hasAppliedFiltersOrActiveFolders"
         @change-filter="onBasicFilterChange"
       />
+      <TicketListModeToggle :is-on-expanded-layout="isOnExpandedLayout" />
       <SwitchLayout
         :is-on-expanded-layout="isOnExpandedLayout"
         @toggle="toggleConversationLayout"
