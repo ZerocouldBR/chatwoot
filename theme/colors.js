@@ -1,6 +1,4 @@
 const {
-  blue,
-  blueDark,
   green,
   greenDark,
   yellow,
@@ -14,8 +12,7 @@ const {
 } = require('@radix-ui/colors');
 
 export const colors = {
-  // ServiceDesk: escala legada `woot` trocada pelo azul Zendesk Garden
-  // ServiceDesk: escala legada `woot` trocada pelo azul Zendesk Garden
+  // ServiceDesk: escala legada `woot` trocada pelo azul Garden
   woot: {
     25: '#F5FAFF',
     50: '#EDF7FF',

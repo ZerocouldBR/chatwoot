@@ -8,8 +8,7 @@ const {
   getIconCollections,
 } = require('@egoist/tailwindcss-icons');
 
-// ServiceDesk: pilha system-ui do Zendesk Garden
-// ServiceDesk: pilha system-ui do Zendesk Garden
+// ServiceDesk: pilha system-ui (Garden)
 const defaultSansFonts = [
   'system-ui',
   '-apple-system',

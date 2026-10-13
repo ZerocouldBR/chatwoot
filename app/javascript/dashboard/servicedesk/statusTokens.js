@@ -1,19 +1,23 @@
 /**
- * ServiceDesk — tokens de status de ticket (estilo Agent Workspace / Zendesk Garden).
+ * ServiceDesk — tokens de status de ticket (estilo Agent Workspace / Garden).
  *
  * Fonte única para listas, painel do ticket, filtros e relatórios.
  * As cores reais vivem em variáveis CSS (`--sd-status-*`, ver
  * assets/scss/_servicedesk-theme.scss), então claro/escuro funcionam sozinhos.
  * As classes Tailwind abaixo vêm de `theme/colors.js` (chave `sd.status`).
  *
- * Categorias (as mesmas de CustomStatus.category no design de migração):
- *   new (Novo) · open (Aberto) · pending (Pendente) · hold (Em espera)
- *   · solved (Resolvido) · closed (Fechado)
+ * STATUS CANÔNICO (decisão 1 do projeto; fonte: zendesk_field_map.json,
+ * custom_statuses[].chatwoot_status):
+ *   new -> open · open -> open · pending -> snoozed · hold -> snoozed
+ *   · solved -> resolved · closed -> resolved
+ * O rótulo exato (Novo, Em andamento, Desenvolvimento...) fica no atributo
+ * `zd_status` da conversa; Pendente x Em espera se distinguem por ele.
+ * O status nativo `pending` do Chatwoot NÃO é usado (reservado a bot/IA).
  *
  * Uso:
- *   import { getStatusToken } from 'dashboard/servicedesk/statusTokens';
- *   const token = getStatusToken(conversation.status); // aceita status nativo
- *   <span :class="token.classes.badge">{{ $t(token.labelKey) }}</span>
+ *   import { resolveTicketStatus } from 'dashboard/servicedesk/statusTokens';
+ *   const s = resolveTicketStatus(conversation);
+ *   // s.token.classes.badge, s.label (zd_status) ou $t(s.token.labelKey)
  */
 
 export const STATUS_CATEGORIES = Object.freeze([
@@ -25,24 +29,60 @@ export const STATUS_CATEGORIES = Object.freeze([
   'closed',
 ]);
 
-// Status nativo do Chatwoot -> categoria ServiceDesk/Zendesk.
-// "new" não existe no Chatwoot: vem do status personalizado (categoria new).
-export const NATIVE_STATUS_TO_CATEGORY = Object.freeze({
-  open: 'open',
-  pending: 'pending',
-  snoozed: 'hold',
-  resolved: 'solved',
-});
-
-// Categoria -> status nativo usado quando um status personalizado é aplicado.
+// Categoria -> status nativo do Chatwoot (status canônico).
 export const CATEGORY_TO_NATIVE_STATUS = Object.freeze({
   new: 'open',
   open: 'open',
-  pending: 'pending',
+  pending: 'snoozed',
   hold: 'snoozed',
   solved: 'resolved',
   closed: 'resolved',
 });
+
+// Status nativo -> categoria usada quando o ticket não tem `zd_status`.
+// snoozed é ambíguo (Pendente ou Em espera): sem rótulo, vale Pendente.
+// pending (fila do bot/IA) é exibido como Aberto.
+export const NATIVE_STATUS_TO_CATEGORY = Object.freeze({
+  open: 'open',
+  snoozed: 'pending',
+  resolved: 'solved',
+  pending: 'open',
+});
+
+// Status personalizados (rótulo normalizado: minúsculas, sem acento) ->
+// categoria. Inclui os inativos, que ainda aparecem em tickets antigos.
+export const CUSTOM_STATUS_CATEGORY = Object.freeze({
+  novo: 'new',
+  aberto: 'open',
+  'em andamento': 'open',
+  'devolvido cliente': 'open',
+  reaberto: 'open',
+  pendente: 'pending',
+  'pendente autenticacao': 'pending',
+  'aguardando desenvolvimento': 'hold',
+  escalonado: 'hold',
+  desenvolvimento: 'hold',
+  'retorno integracoes': 'hold',
+  devolvido: 'hold',
+  'desenvolvimento concluido': 'hold',
+  resolvido: 'solved',
+  concluido: 'solved',
+  'respondido cliente': 'solved',
+  'autenticacao pendente': 'solved',
+  fechado: 'closed',
+});
+
+export const normalizeStatusLabel = label =>
+  String(label ?? '')
+    .normalize('NFD')
+    .replace(/[̀-ͯ]/g, '')
+    .replace(/\s+/g, ' ')
+    .trim()
+    .toLowerCase();
+
+/** Categoria de um rótulo de status personalizado (ou null se desconhecido). */
+export const categoryForCustomStatus = label =>
+  CUSTOM_STATUS_CATEGORY[normalizeStatusLabel(label)] || null;
 
 const build = (category, hex) => {
   const name = `sd-status-${category}`;
@@ -120,14 +160,44 @@ export const STATUS_TOKENS = Object.freeze({
  */
 
 /**
- * Resolve o token a partir de uma categoria (new/open/...) ou de um status
- * nativo do Chatwoot (open/pending/snoozed/resolved). Desconhecido -> open.
+ * Resolve o token a partir de uma categoria (new/open/pending/...) ou de um
+ * status nativo do Chatwoot (open/snoozed/resolved). Desconhecido -> open.
+ * `pending` é lido como categoria; para status nativo use getNativeStatusToken.
  */
 export const getStatusToken = statusOrCategory => {
   const key = String(statusOrCategory || '').toLowerCase();
   if (STATUS_TOKENS[key]) return STATUS_TOKENS[key];
   const category = NATIVE_STATUS_TO_CATEGORY[key];
   return STATUS_TOKENS[category] || STATUS_TOKENS.open;
+};
+
+/**
+ * Token de um status NATIVO do Chatwoot. Diferente de getStatusToken, trata
+ * `pending` como status nativo (fila do bot/IA -> Aberto), não como categoria.
+ */
+export const getNativeStatusToken = nativeStatus =>
+  STATUS_TOKENS[NATIVE_STATUS_TO_CATEGORY[nativeStatus] || 'open'];
+
+/**
+ * Status exibido de um ticket: rótulo `zd_status` (quando existe) com a cor da
+ * sua categoria; senão a categoria derivada do status nativo.
+ * Aceita a conversa (status + custom_attributes) ou `{ status, zdStatus }`.
+ */
+export const resolveTicketStatus = (conversationOrStatus = {}) => {
+  const nativeStatus = conversationOrStatus.status || 'open';
+  const rawLabel =
+    conversationOrStatus.zdStatus ??
+    conversationOrStatus.custom_attributes?.zd_status;
+  const label = rawLabel ? String(rawLabel).trim() : '';
+  const nativeCategory = NATIVE_STATUS_TO_CATEGORY[nativeStatus] || 'open';
+  const category = (label && categoryForCustomStatus(label)) || nativeCategory;
+  return {
+    category,
+    label,
+    isCustom: !!label,
+    nativeStatus,
+    token: STATUS_TOKENS[category],
+  };
 };
 
 export default STATUS_TOKENS;
