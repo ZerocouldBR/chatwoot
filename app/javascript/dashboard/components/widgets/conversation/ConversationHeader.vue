@@ -16,6 +16,10 @@ import { useInbox } from 'dashboard/composables/useInbox';
 import { useAlert } from 'dashboard/composables';
 import { useI18n } from 'vue-i18n';
 import { copyTextToClipboard } from 'shared/helpers/clipboard';
+import {
+  getTicketHeaderTitle,
+  getTicketHeaderStatus,
+} from 'dashboard/servicedesk/ticketHeader';
 
 const props = defineProps({
   chat: {
@@ -33,7 +37,7 @@ const store = useStore();
 const route = useRoute();
 const conversationHeader = ref(null);
 const { width } = useElementSize(conversationHeader);
-const { isAWebWidgetInbox, isAnEmailChannel } = useInbox();
+const { isAWebWidgetInbox } = useInbox();
 
 const currentChat = computed(() => store.getters.getSelectedChat);
 const accountId = computed(() => store.getters.getCurrentAccountId);
@@ -68,25 +72,30 @@ const isHMACVerified = computed(() => {
   return chatMetadata.value.hmac_verified;
 });
 
-const mailSubject = computed(() => {
-  if (!isAnEmailChannel.value) return '';
-  return props.chat.additional_attributes?.mail_subject;
-});
-
 const currentContact = computed(() =>
   store.getters['contacts/getContact'](props.chat.meta.sender.id)
+);
+
+// ServiceDesk: assunto em destaque (fallback: nome do contato) e selo com o
+// rótulo zd_status na cor da categoria, no lugar de "Adiado até a próxima
+// resposta".
+const headerTitle = computed(() =>
+  getTicketHeaderTitle(props.chat, currentContact.value?.name)
+);
+const ticketStatus = computed(() => getTicketHeaderStatus(props.chat));
+const ticketStatusLabel = computed(
+  () => ticketStatus.value.label || t(ticketStatus.value.token.labelKey)
 );
 
 const isSnoozed = computed(
   () => currentChat.value.status === wootConstants.STATUS_TYPE.SNOOZED
 );
 
+// Só quando há data de reabertura (adiamento com prazo).
 const snoozedDisplayText = computed(() => {
   const { snoozed_until: snoozedUntil } = currentChat.value;
-  if (snoozedUntil) {
-    return `${t('CONVERSATION.HEADER.SNOOZED_UNTIL')} ${snoozedReopenTime(snoozedUntil)}`;
-  }
-  return t('CONVERSATION.HEADER.SNOOZED_UNTIL_NEXT_REPLY');
+  if (!snoozedUntil) return '';
+  return `${t('CONVERSATION.HEADER.SNOOZED_UNTIL')} ${snoozedReopenTime(snoozedUntil)}`;
 });
 
 const inbox = computed(() => {
@@ -135,9 +144,15 @@ const copyConversationId = async () => {
       <div class="flex flex-col items-start min-w-0 ms-2 overflow-hidden">
         <div class="flex flex-row items-center max-w-full gap-1 p-0 m-0">
           <span
-            class="text-sm font-medium truncate leading-tight text-n-slate-12"
+            v-tooltip.bottom="
+              headerTitle.hasSubject
+                ? { content: headerTitle.title, delay: { show: 500, hide: 0 } }
+                : null
+            "
+            class="text-[15px] font-semibold truncate leading-tight text-n-slate-12"
+            data-testid="ticket-header-title"
           >
-            {{ currentContact.name }}
+            {{ headerTitle.title }}
           </span>
           <fluent-icon
             v-if="!isHMACVerified"
@@ -158,20 +173,26 @@ const copyConversationId = async () => {
           >
             {{ `#${chat.id}` }}
           </button>
+          <span
+            class="inline-flex items-center h-[18px] px-2 rounded-full text-xs font-semibold leading-none whitespace-nowrap shrink-0 ring-1 ring-inset ring-black/5 dark:ring-white/10"
+            :class="ticketStatus.token.classes.badge"
+            :data-category="ticketStatus.category"
+            data-testid="ticket-header-status"
+          >
+            {{ ticketStatusLabel }}
+          </span>
+          <template v-if="headerTitle.hasSubject && currentContact.name">
+            <span>•</span>
+            <span class="min-w-0 truncate text-label-small text-n-slate-11">
+              {{ currentContact.name }}
+            </span>
+          </template>
           <span v-if="hasMultipleInboxes">•</span>
           <InboxName v-if="hasMultipleInboxes" :inbox="inbox" class="!mx-0" />
-          <span v-if="mailSubject">•</span>
+          <span v-if="isSnoozed && snoozedDisplayText">•</span>
           <span
-            v-if="mailSubject"
-            v-tooltip="mailSubject"
-            class="flex-1 min-w-16 truncate text-label-small text-n-slate-11"
-          >
-            {{ mailSubject }}
-          </span>
-          <span v-if="isSnoozed">•</span>
-          <span
-            v-if="isSnoozed"
-            class="min-w-0 truncate font-medium text-n-amber-10 shrink-0"
+            v-if="isSnoozed && snoozedDisplayText"
+            class="min-w-0 truncate font-medium text-n-amber-10"
           >
             {{ snoozedDisplayText }}
           </span>
