@@ -22,19 +22,25 @@
     },
     "CHAT_STATUS_FILTER_ITEMS": {
       "open": {
-        "TEXT": "Abertas"
+        "TEXT": "Aberto"
+      },
+      "sd_pending": {
+        "TEXT": "Pendente"
+      },
+      "sd_hold": {
+        "TEXT": "Em espera"
       },
       "resolved": {
-        "TEXT": "Resolvidas"
+        "TEXT": "Resolvido"
       },
       "pending": {
-        "TEXT": "Pendentes"
+        "TEXT": "Com o bot"
       },
       "snoozed": {
-        "TEXT": "Adiadas"
+        "TEXT": "Pendente ou em espera"
       },
       "all": {
-        "TEXT": "Todas"
+        "TEXT": "Todos"
       }
     },
     "VIEW_FILTER": "Visualizar",

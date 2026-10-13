@@ -146,6 +146,10 @@ class ConversationFinder
     return if params[:status] == 'all'
 
     @conversations = @conversations.where(status: params[:status] || DEFAULT_STATUS)
+    # ServiceDesk: Pendente x Em espera (ambos snoozed) pela categoria do zd_status
+    return unless params[:status] == 'snoozed' && params[:zd_status_category].present?
+
+    @conversations = Servicedesk::TicketStatusFilter.apply(@conversations, params[:zd_status_category])
   end
 
   def filter_by_team

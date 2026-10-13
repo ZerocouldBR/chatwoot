@@ -24,6 +24,12 @@
       "open": {
         "TEXT": "Open"
       },
+      "sd_pending": {
+        "TEXT": "Pending"
+      },
+      "sd_hold": {
+        "TEXT": "On-hold"
+      },
       "resolved": {
         "TEXT": "Resolved"
       },

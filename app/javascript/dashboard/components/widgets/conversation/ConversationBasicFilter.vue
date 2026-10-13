@@ -8,6 +8,7 @@ import { useMapGetter, useStore } from 'dashboard/composables/store.js';
 import wootConstants from 'dashboard/constants/globals';
 import SelectMenu from 'dashboard/components-next/selectmenu/SelectMenu.vue';
 import NextButton from 'dashboard/components-next/button/Button.vue';
+import { SD_STATUS_FILTER_OPTIONS } from 'dashboard/servicedesk/statusFilter';
 
 defineProps({
   isOnExpandedLayout: {
@@ -42,28 +43,20 @@ const currentSortBy = computed(() => {
   );
 });
 
-const chatStatusOptions = computed(() => [
-  {
-    label: t('CHAT_LIST.CHAT_STATUS_FILTER_ITEMS.open.TEXT'),
-    value: 'open',
-  },
-  {
-    label: t('CHAT_LIST.CHAT_STATUS_FILTER_ITEMS.resolved.TEXT'),
-    value: 'resolved',
-  },
-  {
-    label: t('CHAT_LIST.CHAT_STATUS_FILTER_ITEMS.pending.TEXT'),
-    value: 'pending',
-  },
-  {
-    label: t('CHAT_LIST.CHAT_STATUS_FILTER_ITEMS.snoozed.TEXT'),
-    value: 'snoozed',
-  },
-  {
-    label: t('CHAT_LIST.CHAT_STATUS_FILTER_ITEMS.all.TEXT'),
-    value: 'all',
-  },
-]);
+// ServiceDesk: Aberto · Pendente · Em espera · Resolvido · Todos (status
+// canônico; Pendente/Em espera = snoozed pela categoria do zd_status).
+// Valores antigos salvos (pending/snoozed nativos) continuam funcionando e
+// aparecem no menu só enquanto estiverem selecionados.
+const chatStatusOptions = computed(() => {
+  const values = [...SD_STATUS_FILTER_OPTIONS];
+  if (chatStatusFilter.value && !values.includes(chatStatusFilter.value)) {
+    values.push(chatStatusFilter.value);
+  }
+  return values.map(value => ({
+    label: t(`CHAT_LIST.CHAT_STATUS_FILTER_ITEMS.${value}.TEXT`),
+    value,
+  }));
+});
 
 const chatSortOptions = computed(() => [
   {
