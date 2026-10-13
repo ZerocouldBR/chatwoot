@@ -1,0 +1,23 @@
+{
+  "SD_THEME": {
+    "BRAND_NAME": "ServiceDesk",
+    "TICKET": "Ticket",
+    "TICKETS": "Tickets",
+    "STATUS": {
+      "NEW": "New",
+      "OPEN": "Open",
+      "PENDING": "Pending",
+      "HOLD": "On-hold",
+      "SOLVED": "Solved",
+      "CLOSED": "Closed"
+    },
+    "STATUS_SHORT": {
+      "NEW": "N",
+      "OPEN": "O",
+      "PENDING": "P",
+      "HOLD": "H",
+      "SOLVED": "S",
+      "CLOSED": "C"
+    }
+  }
+}

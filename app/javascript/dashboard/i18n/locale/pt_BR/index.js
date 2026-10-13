@@ -33,6 +33,7 @@ import mfa from './mfa.json';
 import onboarding from './onboarding.json';
 import report from './report.json';
 import resetPassword from './resetPassword.json';
+import sdTheme from './sdTheme.json';
 import search from './search.json';
 import setNewPassword from './setNewPassword.json';
 import sessionLimit from './sessionLimit.json';
@@ -82,6 +83,7 @@ export default {
   ...onboarding,
   ...report,
   ...resetPassword,
+  ...sdTheme,
   ...search,
   ...setNewPassword,
   ...sessionLimit,
