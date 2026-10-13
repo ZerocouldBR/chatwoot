@@ -44,6 +44,7 @@ import mfa from './mfa.json';
 import onboarding from './onboarding.json';
 import sessionLimit from './sessionLimit.json';
 import yearInReview from './yearInReview.json';
+import servicedeskTicketPanel from './servicedeskTicketPanel.json';
 
 export default {
   ...advancedFilters,
@@ -92,4 +93,5 @@ export default {
   ...onboarding,
   ...sessionLimit,
   ...yearInReview,
+  ...servicedeskTicketPanel,
 };
