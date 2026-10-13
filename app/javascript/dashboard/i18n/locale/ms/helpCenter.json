@@ -430,7 +430,7 @@
         "SLUG": {
           "LABEL": "Slug",
           "PLACEHOLDER": "Slug kategori untuk url",
-          "HELP_TEXT": "app.chatwoot.com/hc/my-portal/en-US/categories/my-slug",
+          "HELP_TEXT": "help.example.com/hc/my-portal/en-US/categories/my-slug",
           "ERROR": "Slug diperlukan"
         },
         "DESCRIPTION": {
@@ -461,7 +461,7 @@
         "SLUG": {
           "LABEL": "Slug",
           "PLACEHOLDER": "Slug kategori untuk url",
-          "HELP_TEXT": "app.chatwoot.com/hc/my-portal/en-US/categories/my-slug",
+          "HELP_TEXT": "help.example.com/hc/my-portal/en-US/categories/my-slug",
           "ERROR": "Slug diperlukan"
         },
         "DESCRIPTION": {
@@ -698,7 +698,7 @@
             "LABEL": "Slug",
             "PLACEHOLDER": "Slug kategori untuk url",
             "ERROR": "Slug diperlukan",
-            "HELP_TEXT": "app.chatwoot.com/hc/{portalSlug}/{localeCode}/categories/{categorySlug}"
+            "HELP_TEXT": "help.example.com/hc/{portalSlug}/{localeCode}/categories/{categorySlug}"
           },
           "DESCRIPTION": {
             "LABEL": "Penerangan",
@@ -933,7 +933,7 @@
           },
           "DNS_CONFIGURATION_DIALOG": {
             "HEADER": "Konfigurasi DNS",
-            "DESCRIPTION": "Log masuk ke akaun anda dengan penyedia DNS anda, dan tambah rekod CNAME untuk subdomain yang menunjuk ke chatwoot.help",
+            "DESCRIPTION": "Log masuk ke akaun anda dengan penyedia DNS anda, dan tambah rekod CNAME untuk subdomain yang menunjuk ke {domain}",
             "COPY": "Berjaya menyalin CNAME",
             "SEND_INSTRUCTIONS": {
               "HEADER": "Hantar arahan",

@@ -70,7 +70,7 @@ describe('Shopify signup', () => {
     expect(
       wrapper.findComponent(SignupForm).props('shopifyPendingInstall')
     ).toBe('');
-    expect(wrapper.text()).toContain('REGISTER.GET_STARTED');
+    expect(wrapper.text()).toContain('REGISTER.TRY_WOOT');
     expect(wrapper.find('a').exists()).toBe(true);
   });
 });

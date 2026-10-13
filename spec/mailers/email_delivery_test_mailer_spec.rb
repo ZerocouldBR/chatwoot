@@ -9,9 +9,9 @@ RSpec.describe EmailDeliveryTestMailer do
   it 'sends a branded test email to the user' do
     expect(mail.to).to eq(['agent@example.com'])
     expect(mail.from).to eq([Mail::Address.new(ApplicationMailer.default[:from]).address])
-    expect(mail.subject).to eq('Test email from Chatwoot support')
+    expect(mail.subject).to eq('Test email from Helpdesk support')
     expect(mail.body.encoded).to include('Hi Jane Agent,')
-    expect(mail.body.encoded).to include('check that emails from Chatwoot reach your inbox')
+    expect(mail.body.encoded).to include('check that emails from Helpdesk reach your inbox')
   end
 
   it 'uses the installation brand name' do

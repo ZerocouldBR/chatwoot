@@ -298,16 +298,6 @@ export default {
           <HmacSecretKey :inbox="inbox" />
           <p class="mt-1.5 text-label-small text-n-slate-11">
             {{ $t('INBOX_MGMT.SETTINGS_POPUP.HMAC_DESCRIPTION') }}
-            <a
-              target="_blank"
-              rel="noopener noreferrer"
-              href="https://www.chatwoot.com/docs/product/channels/live-chat/sdk/identity-validation/"
-              class="text-n-blue-11 hover:underline text-label-small"
-            >
-              {{
-                $t('INBOX_MGMT.SETTINGS_POPUP.IDENTITY_VALIDATION.VIEW_DOCS')
-              }}
-            </a>
           </p>
         </template>
       </SettingsToggleSection>

@@ -158,7 +158,13 @@ export default {
         {
           path: 'sla',
           name: 'sla_reports',
-          meta,
+          meta: {
+            ...meta,
+            installationTypes: [
+              INSTALLATION_TYPES.CLOUD,
+              INSTALLATION_TYPES.ENTERPRISE,
+            ],
+          },
           component: SLAReports,
         },
         {

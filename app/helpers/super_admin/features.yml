@@ -1,58 +1,12 @@
 # TODO: Move this values to features.yml itself
 # No need to replicate the same values in two places
 
-# ------- Premium Features ------- #
-saml:
-  name: 'SAML SSO'
-  description: 'Configuration for controlling SAML Single Sign-On availability'
-  enabled: <%= ChatwootApp.enterprise? %>
-  icon: 'i-lucide-key-round'
-  config_key: 'saml'
-  enterprise: true
-custom_branding:
-  name: 'Custom Branding'
-  description: 'Apply your own branding to this installation.'
-  enabled: <%= (ChatwootHub.pricing_plan != 'community') %>
-  icon: 'i-lucide-palette'
-  config_key: 'custom_branding'
-  enterprise: true
-agent_capacity:
-  name: 'Agent Capacity'
-  description: 'Set limits to auto-assigning conversations to your agents.'
-  enabled: <%= (ChatwootHub.pricing_plan != 'community') %>
-  icon: 'i-lucide-gauge'
-  enterprise: true
-audit_logs:
-  name: 'Audit Logs'
-  description: 'Track and trace account activities with ease with detailed audit logs.'
-  enabled: <%= (ChatwootHub.pricing_plan != 'community') %>
-  icon: 'i-lucide-scroll-text'
-  enterprise: true
-disable_branding:
-  name: 'Disable Branding'
-  description: 'Disable branding on live-chat widget and external emails.'
-  enabled: <%= (ChatwootHub.pricing_plan != 'community') %>
-  icon: 'i-lucide-eye-off'
-  enterprise: true
-voice_calls:
-  name: 'Voice Calls'
-  description: 'Enable voice calling capabilities for your agents and customers.'
-  enabled: <%= (ChatwootHub.pricing_plan != 'community') %>
-  icon: 'i-lucide-phone-call'
-  enterprise: true
-
 # ------- Product Features ------- #
 help_center:
   name: 'Help Center'
   description: 'Allow agents to create help center articles and publish them in a portal.'
   enabled: true
   icon: 'i-lucide-book-open'
-captain:
-  name: 'Captain'
-  description: 'Enable AI-powered conversations with your customers.'
-  enabled: true
-  icon: 'i-woot-captain text-n-violet-9'
-  config_key: 'captain'
 
 # ------- Communication Channels ------- #
 live_chat:
@@ -62,13 +16,13 @@ live_chat:
   icon: 'i-lucide-message-circle'
 email:
   name: 'Email'
-  description: 'Manage your email customer interactions from Chatwoot.'
+  description: 'Manage your email customer interactions in one place.'
   enabled: true
   icon: 'i-lucide-mail'
   config_key: 'email'
 sms:
   name: 'SMS'
-  description: 'Manage your SMS customer interactions from Chatwoot.'
+  description: 'Manage your SMS customer interactions in one place.'
   enabled: true
   icon: 'i-lucide-message-square-text'
 messenger:
@@ -91,17 +45,17 @@ tiktok:
   config_key: 'tiktok'
 whatsapp:
   name: 'WhatsApp'
-  description: 'Manage your WhatsApp business interactions from Chatwoot.'
+  description: 'Manage your WhatsApp business interactions in one place.'
   enabled: true
   icon: 'i-logos-whatsapp-icon'
 telegram:
   name: 'Telegram'
-  description: 'Manage your Telegram customer interactions from Chatwoot.'
+  description: 'Manage your Telegram customer interactions in one place.'
   enabled: true
   icon: 'i-logos-telegram'
 line:
   name: 'Line'
-  description: 'Manage your Line customer interactions from Chatwoot.'
+  description: 'Manage your Line customer interactions in one place.'
   enabled: true
   icon: 'i-ri-line-fill text-[#06C755]'
 

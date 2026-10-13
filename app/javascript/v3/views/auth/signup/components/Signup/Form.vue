@@ -60,14 +60,15 @@ const v$ = useVuelidate(rules, { credentials });
 
 const globalConfig = computed(() => store.getters['globalConfig/get']);
 
-const termsLink = computed(() =>
-  t('REGISTER.TERMS_ACCEPT')
-    .replace('https://www.chatwoot.com/terms', globalConfig.value.termsURL)
-    .replace(
-      'https://www.chatwoot.com/privacy-policy',
-      globalConfig.value.privacyURL
-    )
-);
+// The upstream translation links to the vendor's legal pages; point it at the
+// installation's own URLs and hide it entirely when none are configured.
+const termsLink = computed(() => {
+  const { termsURL, privacyURL } = globalConfig.value;
+  if (!termsURL || !privacyURL) return '';
+  return t('REGISTER.TERMS_ACCEPT')
+    .replace(/href="[^"]*\/terms"/i, `href="${termsURL}"`)
+    .replace(/href="[^"]*\/privacy-policy"/i, `href="${privacyURL}"`);
+});
 
 const sanitizedTermsLink = computed(() => DOMPurify.sanitize(termsLink.value));
 
@@ -199,6 +200,7 @@ const onCaptchaError = () => {
       {{ $t('REGISTER.OAUTH.GOOGLE_SIGNUP') }}
     </GoogleOAuthButton>
     <p
+      v-if="sanitizedTermsLink"
       class="text-sm mt-5 mb-0 text-n-slate-11 [&>a]:text-n-blue-10 [&>a]:font-medium [&>a]:hover:text-n-blue-11"
       v-html="sanitizedTermsLink"
     />
