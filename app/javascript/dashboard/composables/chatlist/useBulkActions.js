@@ -4,7 +4,10 @@ import { useAlert, useTrack } from 'dashboard/composables';
 import { useI18n } from 'vue-i18n';
 import { useMapGetter } from 'dashboard/composables/store.js';
 import { useConversationRequiredAttributes } from 'dashboard/composables/useConversationRequiredAttributes';
-import { resolvesConversation } from 'dashboard/composables/useMacroExecution';
+import {
+  getEditorFill,
+  resolvesConversation,
+} from 'dashboard/composables/useMacroExecution';
 import { CONVERSATION_EVENTS } from 'dashboard/helper/AnalyticsHelper/events';
 import wootConstants from 'dashboard/constants/globals';
 
@@ -241,6 +244,13 @@ export function useBulkActions() {
       });
       useTrack(CONVERSATION_EVENTS.EXECUTED_A_MACRO);
       store.dispatch('bulkActions/clearSelectedConversationIds');
+      // ServiceDesk M5.1: em massa não há editor para revisar, então a resposta da macro não é aplicada
+      if (getEditorFill(macro)) {
+        useAlert(
+          t('BULK_ACTION.MACROS.QUEUED_WITHOUT_REPLY', { count }, count)
+        );
+        return;
+      }
       useAlert(
         hasMissingRequiredAttributes
           ? t(

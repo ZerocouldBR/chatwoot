@@ -83,7 +83,11 @@
       "BUTTON_TOOLTIP": "Executar",
       "PREVIEW": "Pré-visualizar Macro",
       "EXECUTED_SUCCESSFULLY": "Macro executada com sucesso",
-      "EXECUTED_WITHOUT_RESOLVING": "Macro executada. O ticket não foi resolvido porque faltam atributos obrigatórios."
+      "EXECUTED_WITHOUT_RESOLVING": "Macro executada. O ticket não foi resolvido porque faltam atributos obrigatórios.",
+      "FILLED_EDITOR": "Macro aplicada. Revise o texto no editor e envie.",
+      "FILLED_EDITOR_WITHOUT_RESOLVING": "Macro aplicada. Revise o texto no editor e envie. O ticket não foi resolvido porque faltam atributos obrigatórios.",
+      "ATTACHMENT_FAILED": "Alguns anexos da macro não puderam ser adicionados ao editor.",
+      "CLEAR_VALUE": "(limpar)"
     },
     "ERRORS": {
       "ATTRIBUTE_KEY_REQUIRED": "A chave do atributo é necessária",
@@ -110,7 +114,10 @@
       "SEND_MESSAGE": "Enviar uma Mensagem",
       "CHANGE_PRIORITY": "Alterar Prioridade",
       "ADD_PRIVATE_NOTE": "Adicionar uma Nota Privada",
-      "SEND_WEBHOOK_EVENT": "Enviar evento de Webhook"
+      "SEND_WEBHOOK_EVENT": "Enviar evento de Webhook",
+      "SET_TICKET_STATUS": "Definir status do ticket",
+      "SET_CUSTOM_ATTRIBUTE": "Definir campo",
+      "CHANGE_SUBJECT": "Alterar assunto"
     },
     "PRIORITY_TYPES": {
       "NONE": "Nenhuma",

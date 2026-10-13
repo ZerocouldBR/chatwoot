@@ -144,7 +144,10 @@
       "TEAM_DROPDOWN_PLACEHOLDER": "Selecione times",
       "EMAIL_INPUT_PLACEHOLDER": "Insira o e-mail",
       "URL_INPUT_PLACEHOLDER": "Insira a URL",
-      "INSERT_CONTACT_EMAIL": "Usar o e-mail do contato"
+      "INSERT_CONTACT_EMAIL": "Usar o e-mail do contato",
+      "SUBJECT_INPUT_PLACEHOLDER": "Novo assunto",
+      "ATTRIBUTE_PLACEHOLDER": "Selecione o campo",
+      "ATTRIBUTE_VALUE_PLACEHOLDER": "Valor"
     },
     "TOGGLE": {
       "ACTIVATION_TITLE": "Ativar regra de automação",
@@ -202,7 +205,10 @@
       "CHANGE_PRIORITY": "Alterar Prioridade",
       "ADD_SLA": "Adicionar SLA",
       "OPEN_CONVERSATION": "Abrir ticket",
-      "PENDING_CONVERSATION": "Marcar ticket como pendente"
+      "PENDING_CONVERSATION": "Marcar ticket como pendente",
+      "SET_TICKET_STATUS": "Definir status do ticket",
+      "SET_CUSTOM_ATTRIBUTE": "Definir campo",
+      "CHANGE_SUBJECT": "Alterar assunto"
     },
     "MESSAGE_TYPES": {
       "INCOMING": "Mensagem Recebida",

@@ -83,7 +83,11 @@
       "BUTTON_TOOLTIP": "Execute",
       "PREVIEW": "Preview Macro",
       "EXECUTED_SUCCESSFULLY": "Macro executed successfully",
-      "EXECUTED_WITHOUT_RESOLVING": "Macro executed. The conversation was not resolved because required attributes are missing."
+      "EXECUTED_WITHOUT_RESOLVING": "Macro executed. The conversation was not resolved because required attributes are missing.",
+      "FILLED_EDITOR": "Macro applied. Review the text in the editor and send it.",
+      "FILLED_EDITOR_WITHOUT_RESOLVING": "Macro applied. Review the text in the editor and send it. The conversation was not resolved because required attributes are missing.",
+      "ATTACHMENT_FAILED": "Some macro attachments could not be added to the editor.",
+      "CLEAR_VALUE": "(clear)"
     },
     "ERRORS": {
       "ATTRIBUTE_KEY_REQUIRED": "Attribute key is required",
@@ -110,7 +114,10 @@
       "SEND_MESSAGE": "Send a Message",
       "CHANGE_PRIORITY": "Change Priority",
       "ADD_PRIVATE_NOTE": "Add a Private Note",
-      "SEND_WEBHOOK_EVENT": "Send Webhook Event"
+      "SEND_WEBHOOK_EVENT": "Send Webhook Event",
+      "SET_TICKET_STATUS": "Set ticket status",
+      "SET_CUSTOM_ATTRIBUTE": "Set a field",
+      "CHANGE_SUBJECT": "Change subject"
     },
     "PRIORITY_TYPES": {
       "NONE": "None",
