@@ -1,0 +1,6 @@
+-r requirements.txt
+-r requirements-stt.txt
+pytest==8.4.2
+fakeredis==2.31.3
+respx==0.22.0
+jiwer==4.0.0

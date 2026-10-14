@@ -1,0 +1,5 @@
+# STT local gratuito (CPU). Separado para a imagem "slim" sem STT, se desejado.
+faster-whisper==1.2.1
+# av 16+ removeu o argumento metadata_errors usado pelo faster-whisper 1.2.1
+av==15.1.0
+ctranslate2==4.6.0
