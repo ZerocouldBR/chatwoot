@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2026_10_14_103419) do
+ActiveRecord::Schema[7.1].define(version: 2026_10_14_105618) do
   # These extensions should be enabled to support this database
   enable_extension "pg_stat_statements"
   enable_extension "pg_trgm"
@@ -321,6 +321,19 @@ ActiveRecord::Schema[7.1].define(version: 2026_10_14_103419) do
     t.datetime "monitor_event_activated_at"
     t.index ["account_id"], name: "index_automation_rules_on_account_id"
     t.index ["monitor_id"], name: "index_automation_rules_on_monitor_id"
+  end
+
+  create_table "business_schedules", force: :cascade do |t|
+    t.bigint "account_id", null: false
+    t.string "name", null: false
+    t.string "time_zone", null: false
+    t.boolean "is_default", default: false, null: false
+    t.jsonb "intervals", default: [], null: false
+    t.jsonb "holidays", default: [], null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["account_id"], name: "index_business_schedules_on_account_id"
+    t.index ["account_id"], name: "index_business_schedules_one_default_per_account", unique: true, where: "is_default"
   end
 
   create_table "calls", force: :cascade do |t|

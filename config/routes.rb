@@ -155,6 +155,7 @@ Rails.application.routes.draw do
             end
           end
           resources :canned_responses, only: [:index, :create, :update, :destroy]
+          resources :business_schedules, only: [:index, :show, :create, :update, :destroy]
           resources :ticket_home, only: [:index] do
             get :stats, on: :collection
           end

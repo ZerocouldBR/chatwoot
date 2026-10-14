@@ -948,6 +948,12 @@ const menuItems = computed(() => {
           to: accountScopedRoute('sla_list'),
         },
         {
+          name: 'Business Hours',
+          label: t('SIDEBAR.BUSINESS_HOURS'),
+          icon: 'i-lucide-calendar-clock',
+          to: accountScopedRoute('business_hours_index'),
+        },
+        {
           name: 'Conversation Workflow',
           label: t('SIDEBAR.CONVERSATION_WORKFLOW'),
           icon: 'i-lucide-workflow',

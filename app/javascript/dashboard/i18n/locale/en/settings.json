@@ -420,7 +420,8 @@
     "SECURITY": "Security",
     "CAPTAIN_AI": "Captain",
     "CONVERSATION_WORKFLOW": "Ticket Workflow",
-    "TICKET_HOME": "Home"
+    "TICKET_HOME": "Home",
+    "BUSINESS_HOURS": "Business hours"
   },
   "DATA_IMPORTS": {
     "HEADER": "Data",
@@ -1118,5 +1119,38 @@
       "CONFIRM_BUTTON_LABEL": "Delete",
       "CANCEL_BUTTON_LABEL": "Cancel"
     }
+  },
+  "BUSINESS_HOURS": {
+    "TITLE": "Business hours",
+    "DESCRIPTION": "Define when your team works. SLA targets in business hours and business-hours rules only count time inside these hours, skipping holidays.",
+    "NEW": "New schedule",
+    "NAME": "Name",
+    "TIME_ZONE": "Time zone",
+    "DEFAULT": "Default schedule",
+    "DEFAULT_BADGE": "Default",
+    "HOURS": "Weekly hours",
+    "CLOSED": "Closed",
+    "ADD_INTERVAL": "Add hours",
+    "REMOVE": "Remove",
+    "HOLIDAYS": "Holidays",
+    "HOLIDAY_NAME": "Holiday name",
+    "START_DATE": "Start",
+    "END_DATE": "End",
+    "ADD_HOLIDAY": "Add holiday",
+    "SAVE": "Save",
+    "DELETE": "Delete",
+    "SAVED": "Schedule saved",
+    "DELETED": "Schedule deleted",
+    "ERROR": "Could not save the schedule. Check the hours and holidays.",
+    "EMPTY": "No schedules yet",
+    "DAYS": [
+      "Sunday",
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday"
+    ]
   }
 }

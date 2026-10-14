@@ -415,7 +415,8 @@
     "SECURITY": "Segurança",
     "CAPTAIN_AI": "Capitão",
     "CONVERSATION_WORKFLOW": "Fluxo de Conversa",
-    "TICKET_HOME": "Página inicial"
+    "TICKET_HOME": "Página inicial",
+    "BUSINESS_HOURS": "Horário comercial"
   },
   "DATA_IMPORTS": {
     "HEADER": "Dados",
@@ -1081,5 +1082,38 @@
       "CONFIRM_BUTTON_LABEL": "Excluir",
       "CANCEL_BUTTON_LABEL": "Cancelar"
     }
+  },
+  "BUSINESS_HOURS": {
+    "TITLE": "Horário comercial",
+    "DESCRIPTION": "Defina quando sua equipe trabalha. Metas de SLA em horário comercial e regras por horas úteis só contam o tempo dentro deste horário, pulando os feriados.",
+    "NEW": "Novo horário",
+    "NAME": "Nome",
+    "TIME_ZONE": "Fuso horário",
+    "DEFAULT": "Horário padrão",
+    "DEFAULT_BADGE": "Padrão",
+    "HOURS": "Horário semanal",
+    "CLOSED": "Fechado",
+    "ADD_INTERVAL": "Adicionar horário",
+    "REMOVE": "Remover",
+    "HOLIDAYS": "Feriados",
+    "HOLIDAY_NAME": "Nome do feriado",
+    "START_DATE": "Início",
+    "END_DATE": "Fim",
+    "ADD_HOLIDAY": "Adicionar feriado",
+    "SAVE": "Salvar",
+    "DELETE": "Excluir",
+    "SAVED": "Horário salvo",
+    "DELETED": "Horário excluído",
+    "ERROR": "Não foi possível salvar o horário. Confira os horários e feriados.",
+    "EMPTY": "Nenhum horário ainda",
+    "DAYS": [
+      "Domingo",
+      "Segunda",
+      "Terça",
+      "Quarta",
+      "Quinta",
+      "Sexta",
+      "Sábado"
+    ]
   }
 }

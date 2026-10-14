@@ -26,6 +26,7 @@ import customRoles from './customRoles/customRole.routes';
 import profile from './profile/profile.routes';
 import security from './security/security.routes';
 import conversationWorkflow from './conversationWorkflow/conversationWorkflow.routes';
+import businessHours from './businessHours/businessHours.routes';
 import captain from './captain/captain.routes';
 import data from './data/data.routes';
 
@@ -70,6 +71,7 @@ export default {
     ...profile.routes,
     ...security.routes,
     ...conversationWorkflow.routes,
+    ...businessHours.routes,
     ...captain.routes,
   ],
 };
