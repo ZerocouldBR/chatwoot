@@ -80,7 +80,7 @@ class OpsSettings:
     s3_region: str = "us-east-1"
     s3_access_key_id: str = ""
     s3_secret_access_key: str = ""
-    recording_initial_delay_s: int = 60
+    recording_initial_delay_s: int = 120
     recording_max_attempts: int = 12
     recording_min_bytes: int = 1024
     recording_max_duration_s: int = 4 * 3600
@@ -151,7 +151,7 @@ class OpsSettings:
             s3_region=_env("S3_REGION", "us-east-1"),
             s3_access_key_id=_env("S3_ACCESS_KEY_ID", "") or "",
             s3_secret_access_key=_env("S3_SECRET_ACCESS_KEY", "") or "",
-            recording_initial_delay_s=_int("RECORDING_INITIAL_DELAY_S", 60),
+            recording_initial_delay_s=_int("RECORDING_INITIAL_DELAY_S", 120),
             recording_max_attempts=_int("RECORDING_MAX_ATTEMPTS", 12),
             recording_min_bytes=_int("RECORDING_MIN_BYTES", 1024),
             recording_max_duration_s=_int("RECORDING_MAX_DURATION_S", 4 * 3600),

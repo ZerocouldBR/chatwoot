@@ -152,6 +152,11 @@ class ChatwootSync:
                 m.integration_credentials_refs.c.tenant_id == tenant_id,
                 m.integration_credentials_refs.c.name == "chatwoot_api_token")).scalar()
         over = {k: v for k, v in (row.get("settings") or {}).items() if k in BRIDGE_OVERRIDABLE}
+        with self.engine.begin() as conn:
+            maps = {r.branch: r.agent_email for r in conn.execute(sa.select(m.agent_phone_mappings).where(
+                m.agent_phone_mappings.c.tenant_id == tenant_id, m.agent_phone_mappings.c.active.is_(True)))}
+        if maps:  # ops.agent_phone_mappings (admin) vence o BRANCH_AGENT_MAP do ambiente
+            over["branch_agent_map"] = dict(over.get("branch_agent_map") or self.s.bridge.branch_agent_map, **maps)
         b = dataclasses.replace(self.s.bridge, chatwoot_account_id=row["chatwoot_account_id"],
                                 pbx_inbox_id=row.get("pbx_inbox_id") or self.s.bridge.pbx_inbox_id,
                                 integration_user_id=row.get("integration_user_id") or self.s.bridge.integration_user_id,
