@@ -201,7 +201,7 @@
         "NONE": "Nenhuma",
         "URGENT": "Urgente",
         "HIGH": "Alta",
-        "MEDIUM": "Média",
+        "MEDIUM": "Normal",
         "LOW": "Baixa"
       },
       "CHANGE_PRIORITY": {
@@ -399,6 +399,25 @@
       "resolved": "Resolvido",
       "closed": "Fechado",
       "pending": "Com o robô"
+    },
+    "TICKET_FIELDS": {
+      "TITLE": "Ticket",
+      "SUBJECT": "Assunto",
+      "SUBJECT_PLACEHOLDER": "Adicione um assunto",
+      "TYPE": "Tipo",
+      "TYPE_PLACEHOLDER": "Selecione um tipo",
+      "NO_TYPE": "-",
+      "DUE_DATE": "Vencimento",
+      "COMPANY": "Empresa",
+      "NO_COMPANY": "Sem empresa",
+      "UPDATED": "Ticket atualizado",
+      "UPDATE_FAILED": "Não foi possível atualizar o ticket",
+      "TYPES": {
+        "question": "Pergunta",
+        "incident": "Incidente",
+        "problem": "Problema",
+        "task": "Tarefa"
+      }
     }
   },
   "EMAIL_TRANSCRIPT": {

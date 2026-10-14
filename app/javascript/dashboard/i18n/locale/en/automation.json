@@ -230,7 +230,7 @@
     "PRIORITY_TYPES": {
       "NONE": "None",
       "LOW": "Low",
-      "MEDIUM": "Medium",
+      "MEDIUM": "Normal",
       "HIGH": "High",
       "URGENT": "Urgent"
     },

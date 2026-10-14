@@ -10,12 +10,15 @@
 #  cached_label_list      :text
 #  contact_last_seen_at   :datetime
 #  custom_attributes      :jsonb
+#  due_at                 :datetime
 #  first_reply_created_at :datetime
 #  identifier             :string
 #  last_activity_at       :datetime         not null
 #  priority               :integer
 #  status                 :integer          default("new_ticket"), not null
 #  status_changed_at      :datetime
+#  subject                :string(150)
+#  ticket_type            :integer
 #  uuid                   :uuid             not null
 #  waiting_since          :datetime
 #  created_at             :datetime         not null
@@ -24,11 +27,13 @@
 #  assignee_agent_bot_id  :bigint
 #  assignee_id            :integer
 #  campaign_id            :bigint
+#  company_id             :bigint
 #  contact_id             :bigint
 #  contact_inbox_id       :bigint
 #  display_id             :integer          not null
 #  inbox_id               :integer          not null
 #  sla_policy_id          :bigint
+#  submitter_id           :bigint
 #  team_id                :bigint
 #
 # Indexes
@@ -36,8 +41,10 @@
 #  conv_acid_inbid_stat_asgnid_idx                    (account_id,inbox_id,status,assignee_id)
 #  index_conversations_on_account_id                  (account_id)
 #  index_conversations_on_account_id_and_display_id   (account_id,display_id) UNIQUE
+#  index_conversations_on_account_id_and_due_at       (account_id,due_at)
 #  index_conversations_on_assignee_id_and_account_id  (assignee_id,account_id)
 #  index_conversations_on_campaign_id                 (campaign_id)
+#  index_conversations_on_company_id                  (company_id)
 #  index_conversations_on_contact_id                  (contact_id)
 #  index_conversations_on_contact_inbox_id            (contact_inbox_id)
 #  index_conversations_on_created_at                  (created_at)
@@ -82,10 +89,15 @@ class Conversation < ApplicationRecord
   validates :uuid, uniqueness: true
   validate :validate_referer_url
   validate :priority_cannot_be_cleared
+  validate :ticket_type_cannot_be_cleared
+  validate :due_at_only_for_tasks
+  validate :company_matches_requester
+  validates :subject, length: { maximum: 150 }
 
   # Ticket statuses follow Zendesk: new_ticket (New), open, waiting_on_customer (Pending), on_hold, resolved (Solved), closed.
   # `pending` is the AI agent state: the bot is handling the ticket.
   enum status: { open: 0, resolved: 1, pending: 2, new_ticket: 4, waiting_on_customer: 5, on_hold: 6, closed: 7 }
+  enum ticket_type: { question: 0, incident: 1, problem: 2, task: 3 }, _prefix: true
   UNSOLVED_STATUSES = %w[new_ticket open waiting_on_customer on_hold].freeze
   # Statuses an agent can pick; New and Closed are only set by the system.
   AGENT_SETTABLE_STATUSES = %w[open waiting_on_customer on_hold resolved pending].freeze
@@ -127,6 +139,9 @@ class Conversation < ApplicationRecord
   belongs_to :contact
   belongs_to :contact_inbox
   belongs_to :team, optional: true
+  belongs_to :company, optional: true
+  # The agent who opened the ticket on the requester's behalf; blank when the requester submitted it.
+  belongs_to :submitter, class_name: 'User', optional: true
   belongs_to :campaign, optional: true
 
   has_many :mentions, dependent: :destroy_async
@@ -142,6 +157,7 @@ class Conversation < ApplicationRecord
   before_save :open_new_ticket_on_assignment
   before_save :set_status_changed_at
   before_create :determine_conversation_status
+  before_create :fill_ticket_defaults
   before_create :ensure_waiting_since
   after_create :mark_contact_as_lead
 
@@ -311,6 +327,27 @@ class Conversation < ApplicationRecord
     errors.add(:priority, :blank)
   end
 
+  def ticket_type_cannot_be_cleared
+    return unless persisted? && will_save_change_to_ticket_type? && ticket_type.nil?
+
+    errors.add(:ticket_type, :blank)
+  end
+
+  def due_at_only_for_tasks
+    errors.add(:due_at, :present) if due_at.present? && !ticket_type_task?
+  end
+
+  def company_matches_requester
+    return unless will_save_change_to_company_id? && company_id.present?
+
+    errors.add(:company_id, :invalid) unless company_id == contact&.company_id
+  end
+
+  def fill_ticket_defaults
+    self.company_id ||= contact&.company_id
+    self.subject ||= additional_attributes&.dig('mail_subject')&.truncate(150)
+  end
+
   def set_status_changed_at
     self.status_changed_at = Time.current if new_record? || status_changed?
   end
@@ -374,7 +411,7 @@ class Conversation < ApplicationRecord
 
   def list_of_keys
     %w[team_id assignee_id assignee_agent_bot_id ai_assignee_type status custom_attributes label_list waiting_since
-       first_reply_created_at priority]
+       first_reply_created_at priority subject ticket_type due_at company_id]
   end
 
   def allowed_keys?

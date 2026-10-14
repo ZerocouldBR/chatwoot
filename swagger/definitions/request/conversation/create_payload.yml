@@ -41,10 +41,18 @@ properties:
     type: integer
     description: Team Id for assigning a conversation to a team\
     example: 1
-  snoozed_until:
+  subject:
+    type: string
+    description: Ticket subject (up to 150 characters)
+    example: Card not authorized
+  ticket_type:
+    type: string
+    enum: ['question', 'incident', 'problem', 'task']
+    description: Ticket type
+  due_at:
     type: string
     format: date-time
-    description: Snoozed until date time
+    description: Due date, only for task tickets
     example: '2030-07-21T17:32:28Z'
   message:
     type: object

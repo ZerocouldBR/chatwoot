@@ -211,7 +211,7 @@
     "PRIORITY_TYPES": {
       "NONE": "Nenhuma",
       "LOW": "Baixa",
-      "MEDIUM": "Média",
+      "MEDIUM": "Normal",
       "HIGH": "Alta",
       "URGENT": "Urgente"
     },

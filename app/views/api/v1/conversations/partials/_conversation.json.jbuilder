@@ -54,6 +54,12 @@ json.inbox_id conversation.inbox_id
 json.labels conversation.cached_label_list_array
 json.muted conversation.muted?
 json.status conversation.status
+json.subject conversation.subject
+json.ticket_type conversation.ticket_type
+json.due_at conversation.due_at&.to_i
+json.submitter_id conversation.submitter_id
+json.company_id conversation.company_id
+json.company_name conversation.company&.name
 json.created_at conversation.created_at.to_i
 json.updated_at conversation.updated_at.to_f
 json.timestamp conversation.last_activity_at.to_i

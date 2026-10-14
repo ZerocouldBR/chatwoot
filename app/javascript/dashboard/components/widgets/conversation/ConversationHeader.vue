@@ -68,6 +68,7 @@ const isHMACVerified = computed(() => {
 });
 
 const mailSubject = computed(() => {
+  if (props.chat.subject) return props.chat.subject;
   if (!isAnEmailChannel.value) return '';
   return props.chat.additional_attributes?.mail_subject;
 });

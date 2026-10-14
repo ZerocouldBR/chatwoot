@@ -138,8 +138,9 @@ class Api::V1::Accounts::ConversationsController < Api::V1::Accounts::BaseContro
   def permitted_update_params
     # TODO: Move the other conversation attributes to this method and remove specific endpoints for each attribute
     raise ActionController::ParameterMissing, :priority unless params[:priority].nil? || Conversation.priorities.key?(params[:priority])
+    raise ActionController::ParameterMissing, :ticket_type if params.key?(:ticket_type) && Conversation.ticket_types.exclude?(params[:ticket_type])
 
-    params.permit(:priority)
+    params.permit(:priority, :subject, :ticket_type, :due_at, :company_id)
   end
 
   def attachment_params

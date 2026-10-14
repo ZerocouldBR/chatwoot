@@ -14,7 +14,7 @@ properties:
     description: Timestamp of when the contact last seen the conversation (Unix timestamp)
   status:
     type: string
-    enum: ['open', 'resolved', 'pending', 'snoozed']
+    enum: ['new_ticket', 'open', 'waiting_on_customer', 'on_hold', 'resolved', 'closed', 'pending']
     description: The status of the conversation
   agent_last_seen_at:
     type: integer

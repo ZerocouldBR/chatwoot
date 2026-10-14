@@ -42,15 +42,43 @@ properties:
   muted:
     type: boolean
     description: Whether the conversation is muted
-  snoozed_until:
+  status:
+    type: string
+    enum: ['new_ticket', 'open', 'waiting_on_customer', 'on_hold', 'resolved', 'closed', 'pending']
+    description: >-
+      The ticket status. `new_ticket`, `open`, `waiting_on_customer` (Pending), `on_hold`, `resolved` (Solved)
+      and `closed` follow Zendesk; `pending` means a bot is handling the ticket.
+  subject:
+    type:
+      - string
+      - 'null'
+    description: Ticket subject (up to 150 characters)
+  ticket_type:
+    type:
+      - string
+      - 'null'
+    enum: ['question', 'incident', 'problem', 'task', null]
+    description: Ticket type
+  due_at:
     type:
       - number
       - 'null'
-    description: The time at which the conversation will be unmuted
-  status:
-    type: string
-    enum: ['open', 'resolved', 'pending']
-    description: The status of the conversation
+    description: Due date of a task ticket (Unix timestamp)
+  submitter_id:
+    type:
+      - number
+      - 'null'
+    description: ID of the agent who created the ticket on the requester's behalf
+  company_id:
+    type:
+      - number
+      - 'null'
+    description: ID of the requester's company
+  company_name:
+    type:
+      - string
+      - 'null'
+    description: Name of the requester's company
   created_at:
     type: number
     description: The time at which conversation was created

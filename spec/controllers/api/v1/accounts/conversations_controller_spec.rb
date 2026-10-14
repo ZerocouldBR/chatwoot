@@ -408,6 +408,35 @@ RSpec.describe 'Conversations API', type: :request do
         expect(response).to have_http_status(:success)
         expect(JSON.parse(response.body, symbolize_names: true)[:priority]).to eq('high')
       end
+
+      it 'updates the ticket subject, type and due date' do
+        due_at = 3.days.from_now.change(usec: 0)
+        patch "/api/v1/accounts/#{account.id}/conversations/#{conversation.display_id}",
+              params: { subject: 'Cancelamento de reserva', ticket_type: 'task', due_at: due_at.iso8601 },
+              headers: administrator.create_new_auth_token,
+              as: :json
+
+        expect(response).to have_http_status(:success)
+        expect(conversation.reload).to have_attributes(subject: 'Cancelamento de reserva', ticket_type: 'task', due_at: due_at)
+      end
+
+      it 'rejects an unknown ticket type' do
+        patch "/api/v1/accounts/#{account.id}/conversations/#{conversation.display_id}",
+              params: { ticket_type: 'bug' },
+              headers: administrator.create_new_auth_token,
+              as: :json
+
+        expect(response).to have_http_status(:unprocessable_entity)
+      end
+
+      it 'rejects a due date on a ticket that is not a task' do
+        patch "/api/v1/accounts/#{account.id}/conversations/#{conversation.display_id}",
+              params: { due_at: 1.day.from_now.iso8601 },
+              headers: administrator.create_new_auth_token,
+              as: :json
+
+        expect(response).to have_http_status(:unprocessable_entity)
+      end
     end
   end
 

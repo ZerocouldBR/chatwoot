@@ -229,7 +229,7 @@
         "NONE": "None",
         "URGENT": "Urgent",
         "HIGH": "High",
-        "MEDIUM": "Medium",
+        "MEDIUM": "Normal",
         "LOW": "Low"
       },
       "CHANGE_PRIORITY": {
@@ -429,6 +429,25 @@
       "resolved": "Solved",
       "closed": "Closed",
       "pending": "With bot"
+    },
+    "TICKET_FIELDS": {
+      "TITLE": "Ticket",
+      "SUBJECT": "Subject",
+      "SUBJECT_PLACEHOLDER": "Add a subject",
+      "TYPE": "Type",
+      "TYPE_PLACEHOLDER": "Select a type",
+      "NO_TYPE": "-",
+      "DUE_DATE": "Due date",
+      "COMPANY": "Company",
+      "NO_COMPANY": "No company",
+      "UPDATED": "Ticket updated",
+      "UPDATE_FAILED": "Could not update the ticket",
+      "TYPES": {
+        "question": "Question",
+        "incident": "Incident",
+        "problem": "Problem",
+        "task": "Task"
+      }
     }
   },
   "EMAIL_TRANSCRIPT": {

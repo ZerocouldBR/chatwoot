@@ -331,12 +331,21 @@ class Message < ApplicationRecord
   def execute_after_create_commit_callbacks
     # rails issue with order of active record callbacks being executed https://github.com/rails/rails/issues/20911
     reopen_conversation
+    fill_conversation_subject
     mark_pending_conversation_as_open_for_human_response
     set_conversation_activity
     dispatch_create_events
     send_reply
     execute_message_template_hooks
     update_contact_activity
+  end
+
+  # Chat channels have no e-mail subject: the first customer or agent message names the ticket.
+  def fill_conversation_subject
+    return if conversation.subject.present? || private? || content.blank?
+    return unless incoming? || outgoing?
+
+    conversation.update(subject: content.squish.truncate(150))
   end
 
   def update_contact_activity

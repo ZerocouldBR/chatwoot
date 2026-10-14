@@ -83,9 +83,16 @@ describe('#getters', () => {
     it('return correct UI Settings', () => {
       expect(
         getters.getUISettings({
-          currentUser: { ui_settings: { is_contact_sidebar_open: true } },
+          currentUser: { ui_settings: { is_contact_sidebar_open: false } },
         })
-      ).toEqual({ is_contact_sidebar_open: true });
+      ).toEqual({ is_contact_sidebar_open: false, is_conv_actions_open: true });
+    });
+
+    it('opens the ticket properties panel by default', () => {
+      expect(getters.getUISettings({ currentUser: {} })).toEqual({
+        is_contact_sidebar_open: true,
+        is_conv_actions_open: true,
+      });
     });
   });
 

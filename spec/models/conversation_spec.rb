@@ -397,6 +397,51 @@ RSpec.describe Conversation do
     end
   end
 
+  describe 'ticket fields' do
+    let(:account) { create(:account) }
+    let(:company) { create(:company, account: account) }
+    let(:contact) { create(:contact, account: account, company: company) }
+    let(:inbox) { create(:inbox, account: account) }
+    let(:contact_inbox) { create(:contact_inbox, contact: contact, inbox: inbox) }
+    let(:conversation) do
+      create(:conversation, account: account, inbox: inbox, contact: contact, contact_inbox: contact_inbox,
+                            additional_attributes: { 'mail_subject' => 'Cartão não autorizado' })
+    end
+
+    it 'copies the requester company and the e-mail subject on creation' do
+      expect(conversation).to have_attributes(company_id: company.id, subject: 'Cartão não autorizado')
+    end
+
+    it 'only accepts the requester company' do
+      conversation.company = create(:company, account: account)
+
+      expect(conversation).not_to be_valid
+      expect(conversation.errors[:company_id]).to be_present
+    end
+
+    it 'allows a due date only on tasks' do
+      conversation.due_at = 2.days.from_now
+      expect(conversation).not_to be_valid
+
+      conversation.ticket_type = :task
+      expect(conversation).to be_valid
+    end
+
+    it 'does not clear a ticket type once set' do
+      conversation.update!(ticket_type: :incident)
+
+      expect(conversation.update(ticket_type: nil)).to be(false)
+    end
+
+    it 'names chat tickets after the first message' do
+      chat = create(:conversation, account: account, inbox: inbox, contact: contact, contact_inbox: contact_inbox)
+
+      create(:message, conversation: chat, account: account, inbox: inbox, message_type: :incoming, content: "  Reserva   negada\n hoje ")
+
+      expect(chat.reload.subject).to eq('Reserva negada hoje')
+    end
+  end
+
   describe 'ticket status rules' do
     let(:account) { create(:account) }
     let(:inbox) { create(:inbox, account: account) }
@@ -756,6 +801,12 @@ RSpec.describe Conversation do
         last_activity_at: conversation.last_activity_at.to_i,
         inbox_id: conversation.inbox_id,
         status: conversation.status,
+        subject: nil,
+        ticket_type: nil,
+        due_at: nil,
+        submitter_id: nil,
+        company_id: nil,
+        company_name: nil,
         contact_inbox: conversation.contact_inbox,
         timestamp: conversation.last_activity_at.to_i,
         can_reply: true,

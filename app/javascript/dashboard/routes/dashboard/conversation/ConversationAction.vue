@@ -13,6 +13,7 @@ import {
   CONVERSATION_EVENTS,
 } from 'dashboard/helper/AnalyticsHelper/events';
 import ContactDetailsItem from './ContactDetailsItem.vue';
+import TicketFields from './TicketFields.vue';
 import MultiselectDropdown from 'shared/components/ui/MultiselectDropdown.vue';
 import ConversationLabels from './labels/LabelBox.vue';
 import NextButton from 'dashboard/components-next/button/Button.vue';
@@ -56,12 +57,17 @@ const {
   dismiss: dismissLabelSuggestions,
 } = useConversationSuggestions('labels', currentChat);
 
+// Once set, a ticket priority cannot go back to empty (Zendesk rule), so "None" is only offered before that.
 const priorityOptions = computed(() => [
-  {
-    id: null,
-    name: t('CONVERSATION.PRIORITY.OPTIONS.NONE'),
-    icon: 'i-woot-priority-empty',
-  },
+  ...(currentChat.value?.priority
+    ? []
+    : [
+        {
+          id: null,
+          name: t('CONVERSATION.PRIORITY.OPTIONS.NONE'),
+          icon: 'i-woot-priority-empty',
+        },
+      ]),
   {
     id: CONVERSATION_PRIORITY.URGENT,
     name: t('CONVERSATION.PRIORITY.OPTIONS.URGENT'),
@@ -140,7 +146,13 @@ const assignedPriority = computed({
     const selectedOption = priorityOptions.value.find(
       opt => opt.id === currentChat.value.priority
     );
-    return selectedOption || priorityOptions.value[0];
+    return (
+      selectedOption || {
+        id: null,
+        name: t('CONVERSATION.PRIORITY.OPTIONS.NONE'),
+        icon: 'i-woot-priority-empty',
+      }
+    );
   },
   set(priorityItem) {
     const conversationId = currentChat.value.id;
@@ -252,10 +264,8 @@ const onClickAssignTeam = selectedItemTeam => {
 };
 
 const onClickAssignPriority = selectedPriorityItem => {
-  const isSamePriority = assignedPriority.value?.id === selectedPriorityItem.id;
-  assignedPriority.value = isSamePriority
-    ? priorityOptions.value[0]
-    : selectedPriorityItem;
+  if (assignedPriority.value?.id === selectedPriorityItem.id) return;
+  assignedPriority.value = selectedPriorityItem;
 };
 
 const acceptSuggestedPriority = () => {
@@ -300,6 +310,7 @@ const rejectSuggestedLabel = ({ title }) => {
 
 <template>
   <div>
+    <TicketFields :conversation="currentChat" />
     <div>
       <ContactDetailsItem
         compact

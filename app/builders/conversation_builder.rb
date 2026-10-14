@@ -34,6 +34,15 @@ class ConversationBuilder
       custom_attributes: custom_attributes,
       assignee_id: params[:assignee_id],
       team_id: params[:team_id]
-    }.merge(status)
+    }.merge(status, ticket_params)
+  end
+
+  def ticket_params
+    {
+      subject: params[:subject],
+      ticket_type: params[:ticket_type],
+      due_at: params[:due_at],
+      submitter_id: Current.user.is_a?(User) ? Current.user.id : nil
+    }
   end
 end
