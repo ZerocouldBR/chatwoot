@@ -2,6 +2,8 @@ name: Migration Version Check
 
 on:
   pull_request:
+    branches-ignore:
+      - 'servicedesk/**'
     paths:
       - 'db/migrate/**'
 
