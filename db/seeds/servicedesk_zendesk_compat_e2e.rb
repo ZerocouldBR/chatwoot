@@ -1,8 +1,9 @@
 # Dados FICTÍCIOS para o e2e da API de compatibilidade com o Zendesk (M7) num banco de DESENVOLVIMENTO.
 # Uso: ZENDESK_COMPAT_E2E_TOKEN=<token> bundle exec rails runner db/seeds/servicedesk_zendesk_compat_e2e.rb
-# Idempotente (rodar de novo volta os tickets ao estado inicial). Cria (ou reaproveita) a conta "B2B e2e M7", a usuária de integração Cema (admin, zendesk_user_id do AI
-# agent dos workflows) com o token informado, um agente, o time "suporte" (grupo 20487412043675), uma caixa API
-# (sem envio real) e os tickets 426563 (e-mail, histórico) e 427406 (chat). Nunca rode em produção.
+# Idempotente (rodar de novo volta os tickets ao estado inicial). Cria (ou reaproveita) a conta "B2B e2e M7", a usuária
+# de integração Cema (admin, zendesk_user_id do AI agent dos workflows) com o token informado, um agente, o time
+# "suporte" (grupo 20487412043675), uma caixa API (sem envio real) e os tickets 426563 (e-mail, histórico) e 427406 (chat).
+# Nunca rode em produção.
 # rubocop:disable Metrics/ParameterLists, Rails/Output
 abort('Somente em development/test') if Rails.env.production?
 
