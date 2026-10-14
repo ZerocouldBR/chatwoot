@@ -40,7 +40,7 @@ RSpec.describe 'Zendesk compat: recursos do ticket', type: :request do
   end
 
   describe 'GET /api/v2/tickets/:id/audits' do
-    it 'monta o 1º audit com Create + 1º comentário, um audit por comentário e um por alteração registrada' do
+    it 'monta o 1º audit com Create + 1º comentário, um audit por comentário e um por alteração registrada', :legacy_ticket_model do
       ticket_with_history
       put "/api/v2/tickets/#{ticket.display_id}.json", params: { ticket: { assignee_id: 21_000_000_000_001, status: 'pending' } }.to_json,
                                                        headers: json_headers
@@ -76,7 +76,7 @@ RSpec.describe 'Zendesk compat: recursos do ticket', type: :request do
       expect(ids).to eq(all_ids)
     end
 
-    it 'registra alterações feitas fora da API (painel, regras) com o autor' do
+    it 'registra alterações feitas fora da API (painel, regras) com o autor', :legacy_ticket_model do
       Current.user = human_agent
       ticket.update!(team: nil, priority: :urgent)
       Current.reset

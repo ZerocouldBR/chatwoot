@@ -5,11 +5,15 @@ RSpec.describe 'ZendeskCompat: tradução de status, campos, ids e tags' do
   let(:account) { create(:account) }
 
   describe ZendeskCompat::StatusTranslator do
+    before do |example|
+      skip 'exemplo do modelo de ticket legado' if example.metadata[:legacy_ticket_model] && ZendeskCompat::TicketModel.native?
+    end
+
     def snapshot(status, label = nil, system = nil)
       Servicedesk::TicketAuditEvents::Snapshot.new(status, { 'zd_status' => label, 'zd_status_sistema' => system }.compact)
     end
 
-    it 'lê a categoria pelo rótulo, closed pelo status do sistema e cai no nativo sem rótulo' do
+    it 'lê a categoria pelo rótulo, closed pelo status do sistema e cai no nativo sem rótulo', :legacy_ticket_model do
       expect(described_class.category(snapshot('open', 'Novo'))).to eq('new')
       expect(described_class.category(snapshot('snoozed', 'Desenvolvimento'))).to eq('hold')
       expect(described_class.category(snapshot('resolved', 'Concluído'))).to eq('solved')
@@ -18,7 +22,7 @@ RSpec.describe 'ZendeskCompat: tradução de status, campos, ids e tags' do
       expect(described_class.category(snapshot('pending'))).to eq('new')
     end
 
-    it 'traduz status e custom_status_id do Zendesk para rótulo + status nativo' do
+    it 'traduz status e custom_status_id do Zendesk para rótulo + status nativo', :legacy_ticket_model do
       expect(described_class.attributes_for(status: 'pending')).to include(native: 'snoozed', label: 'Pendente')
       expect(described_class.attributes_for(status: 'solved')).to include(native: 'resolved', label: 'Resolvido')
       expect(described_class.attributes_for(status: 'hold')).to include(native: 'snoozed', label: 'Desenvolvimento')

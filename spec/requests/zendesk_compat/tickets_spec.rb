@@ -49,7 +49,8 @@ RSpec.describe 'Zendesk compat: /api/v2/tickets', type: :request do
       get "/api/v2/tickets/#{ticket.display_id}.json", headers: headers
 
       data = json['ticket']
-      expect(data).to include('id' => 426_563, 'status' => 'open', 'custom_status_id' => 20_487_400_901_659,
+      expect(data['custom_status_id']).to eq(20_487_400_901_659) if ZendeskCompat::TicketModel.labels?
+      expect(data).to include('id' => 426_563, 'status' => 'open',
                               'assignee_id' => ai_agent_zid, 'group_id' => support_group_zid, 'requester_id' => 24_033_324_330_395,
                               'organization_id' => 21_300_000_000_001, 'subject' => 'Reserva 21429607 - cancelamento',
                               'type' => 'task', 'tags' => %w[atendimento_ia cancelamento], 'email_cc_ids' => [31_255_458_137_883],
@@ -72,7 +73,7 @@ RSpec.describe 'Zendesk compat: /api/v2/tickets', type: :request do
       expect(roles).to include(ai_agent_zid => 'admin', 24_033_324_330_395 => 'end-user', 31_255_458_137_883 => 'end-user')
     end
 
-    it 'deriva o status da categoria do rótulo e trata o rótulo que ficou para trás' do
+    it 'deriva o status da categoria do rótulo e trata o rótulo que ficou para trás', :legacy_ticket_model do
       ticket.update!(custom_attributes: ticket.custom_attributes.merge('zd_status' => 'Pendente'), status: :snoozed)
       get "/api/v2/tickets/#{ticket.display_id}.json", headers: headers
       expect(json['ticket']).to include('status' => 'pending', 'custom_status_id' => 20_487_412_004_251)
@@ -117,7 +118,7 @@ RSpec.describe 'Zendesk compat: /api/v2/tickets', type: :request do
                                                              'value' => '21000000000001', 'previous_value' => ai_agent_zid.to_s))
     end
 
-    it 'aplica status, tabulação e nota interna (payload do "Cataloga Tickets Zendesk")' do
+    it 'aplica status, tabulação e nota interna (payload do "Cataloga Tickets Zendesk")', :legacy_ticket_model do
       put_ticket(status: 'solved', custom_fields: [{ id: tabulacao_field_id, value: 'cancelamento_interno' }],
                  comment: { body: 'Tabulação automática: cancelamento interno.', public: false })
       ticket.reload
@@ -128,7 +129,7 @@ RSpec.describe 'Zendesk compat: /api/v2/tickets', type: :request do
       expect(json['ticket']).to include('status' => 'solved', 'custom_status_id' => 20_487_384_870_939)
     end
 
-    it 'responde em público com html, anexo e CCs (payload do "Tratamento Envio")' do
+    it 'responde em público com html, anexo e CCs (payload do "Tratamento Envio")', :legacy_ticket_model do
       blob = ZendeskCompat::Uploads.create(io: StringIO.new('%PDF-1.4'), filename: 'comprovante.pdf', content_type: 'application/pdf')
       put_ticket(status: 'pending', email_ccs: [{ user_email: 'Financeiro@Agencia-Exemplo.com.br', action: 'put' }],
                  comment: { html_body: '<p>Olá!<br>Segue o <b>comprovante</b>.</p>', public: true, uploads: [ZendeskCompat::Uploads.token(blob)] })
@@ -142,13 +143,13 @@ RSpec.describe 'Zendesk compat: /api/v2/tickets', type: :request do
       expect(ticket).to be_snoozed
     end
 
-    it 'remove CC com action delete (nó "atualiza_ccs")' do
+    it 'remove CC com action delete (nó "atualiza_ccs")', :legacy_ticket_model do
       put_ticket(email_ccs: [{ user_email: 'agencia@agencia-exemplo.com.br', action: 'delete' }])
       expect(ticket.reload.custom_attributes).not_to have_key('zd_cc')
       expect(json.dig('ticket', 'email_cc_ids')).to eq([])
     end
 
-    it 'aceita custom_status_id, group_id, priority, type, tags e additional/remove_tags' do
+    it 'aceita custom_status_id, group_id, priority, type, tags e additional/remove_tags', :legacy_ticket_model do
       put_ticket(custom_status_id: 21_790_243_451_291, group_id: support_group_zid, priority: 'high', type: 'incident',
                  additional_tags: ['vip'], remove_tags: ['atendimento_ia'])
       ticket.reload
@@ -192,7 +193,7 @@ RSpec.describe 'Zendesk compat: /api/v2/tickets', type: :request do
   end
 
   describe 'POST /api/v2/tickets' do
-    it 'cria o ticket com solicitante novo, caixa do destinatário, CCs e comentário (payload do "Envolve Agência")' do
+    it 'cria o ticket com solicitante novo, caixa do destinatário, CCs e comentário (payload do "Envolve Agência")', :legacy_ticket_model do
       email_inbox
       support_team.add_members([cema.id]) # como no Zendesk, o responsável precisa ser do grupo (senão o ServiceDesk tira o responsável)
       payload = { ticket: { requester: { email: 'hotel.novo@example.com', name: 'Hotel Novo' },

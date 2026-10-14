@@ -64,6 +64,22 @@ RSpec.describe 'Zendesk compat: modelo de ticket nativo (f10)', type: :request d
     expect(Servicedesk::TicketAudit.where(conversation_id: native_ticket.id)).to be_empty
   end
 
+  it 'cria o ticket com status, assunto, tipo e CCs no modelo nativo' do
+    email_inbox
+    cc_contact
+    support_team.add_members([cema.id])
+    payload = { ticket: { requester: { email: 'hotel.novo@example.com', name: 'Hotel Novo' }, subject: 'Pendência de cobrança',
+                          type: 'question', assignee_id: ai_agent_zid, group_id: support_group_zid, recipient: 'atendimentob2b@example.com',
+                          comment: { body: 'Segue a pendência.', public: false },
+                          email_ccs: [{ user_email: 'agencia@agencia-exemplo.com.br', action: 'put' }] } }
+    post '/api/v2/tickets.json', params: payload.to_json, headers: json_headers
+    expect(response).to have_http_status(:created), response.body
+    conversation = account.conversations.find_by(display_id: json.dig('ticket', 'id'))
+    expect(conversation).to have_attributes(status: 'open', subject: 'Pendência de cobrança', ticket_type: 'question', assignee: cema)
+    expect(conversation.conversation_ccs.pluck(:email)).to eq(['agencia@agencia-exemplo.com.br'])
+    expect(json['ticket']).to include('status' => 'open', 'type' => 'question', 'email_cc_ids' => [31_255_458_137_883])
+  end
+
   it 'busca pela categoria do enum' do
     native_ticket.update!(status: :on_hold)
     get "/api/v2/search.json?#{{ query: 'type:ticket status:hold' }.to_query}", headers: headers

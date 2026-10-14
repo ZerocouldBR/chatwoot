@@ -19,12 +19,12 @@ class ZendeskCompat::AuditSource::Native
   end
 
   def last_id
-    events_scope.maximum(:id)
+    ConversationEvent.where(conversation_id: @conversation.id).maximum(:id)
   end
 
   # Valores da criação (evento "create"), já no formato do Zendesk: { 'status' => 'new', 'group_id' => '...' }
   def create_values
-    created = events_scope.find_by(event_type: 'create')
+    created = ConversationEvent.where(conversation_id: @conversation.id).order(:id).find_by(event_type: 'create')
     return if created.nil?
 
     (created.value || {}).each_with_object({}) do |(field, raw), memo|

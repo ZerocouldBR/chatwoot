@@ -33,20 +33,30 @@ RSpec.shared_context 'with zendesk compat data' do
   let(:ticket) do
     support_team.add_members([human_agent.id, cema.id])
     cc_contact
-    create_ticket(426_563, inbox: email_inbox, assignee: cema, status: :open,
-                           custom_attributes: { 'zd_status' => 'Aberto', 'zd_tabulacao' => 'Checkout - Estorno',
-                                                'zd_cc' => 'agencia@agencia-exemplo.com.br', 'zd_tipo' => 'Tarefa', 'zd_canal' => 'E-mail' },
-                           additional_attributes: { 'mail_subject' => 'Reserva 21429607 - cancelamento',
-                                                    'zendesk' => { 'via' => { 'channel' => 'email', 'source' => {
-                                                      'from' => { 'address' => 'reservas@hotel-exemplo.com.br',
-                                                                  'name' => 'Reservas Hotel Exemplo' },
-                                                      'to' => { 'address' => 'atendimentob2b@b2breservas.com.br', 'name' => 'B2B Reservas' },
-                                                      'rel' => nil
-                                                    } } } })
+    conversation = create_ticket(426_563, inbox: email_inbox, assignee: cema, status: :open,
+                                          custom_attributes: { 'zd_status' => 'Aberto', 'zd_tabulacao' => 'Checkout - Estorno',
+                                                               'zd_cc' => 'agencia@agencia-exemplo.com.br', 'zd_tipo' => 'Tarefa',
+                                                               'zd_canal' => 'E-mail' },
+                                          additional_attributes: { 'mail_subject' => 'Reserva 21429607 - cancelamento',
+                                                                   'zendesk' => { 'via' => { 'channel' => 'email', 'source' => {
+                                                                     'from' => { 'address' => 'reservas@hotel-exemplo.com.br',
+                                                                                 'name' => 'Reservas Hotel Exemplo' },
+                                                                     'to' => { 'address' => 'atendimentob2b@b2breservas.com.br',
+                                                                               'name' => 'B2B Reservas' },
+                                                                     'rel' => nil
+                                                                   } } } })
+    seed_native_fields(conversation, cc: 'agencia@agencia-exemplo.com.br', ticket_type: :task)
   end
 
   let(:chat_ticket) do
     create_ticket(427_406, inbox: api_inbox, assignee: cema, status: :open, custom_attributes: { 'zd_status' => 'Aberto', 'zd_canal' => 'WhatsApp' })
+  end
+
+  # Exemplos do modelo de ticket legado (zd_status/zd_cc/sd_ticket_audits) ficam pendentes no modelo nativo (f10), e
+  # os que dependem dos status personalizados (config/servicedesk/ticket_statuses.yml) ficam pendentes num fork sem eles.
+  before do |example|
+    skip 'exemplo do modelo de ticket legado' if example.metadata[:legacy_ticket_model] && ZendeskCompat::TicketModel.native?
+    skip 'fork sem status personalizados' if example.metadata[:custom_statuses] && !ZendeskCompat::TicketModel.labels?
   end
 
   before do
@@ -57,6 +67,22 @@ RSpec.shared_context 'with zendesk compat data' do
   end
 
   after { ENV.delete('ZENDESK_COMPAT_ENABLED') }
+
+  # status do modelo de ticket do fork para uma categoria do Zendesk
+  def status_for(category)
+    native = { open: :open, pending: :waiting_on_customer, hold: :on_hold, solved: :resolved }
+    legacy = { open: :open, pending: :snoozed, hold: :snoozed, solved: :resolved }
+    (ZendeskCompat::TicketModel.native? ? native : legacy).fetch(category)
+  end
+
+  # No modelo nativo o assunto, o tipo e os CCs ficam em colunas/tabela próprias (os zd_* do seed não valem).
+  def seed_native_fields(conversation, cc: nil, ticket_type: nil)
+    return conversation unless ZendeskCompat::TicketModel.native?
+
+    conversation.update!(subject: conversation.additional_attributes['mail_subject'], ticket_type: ticket_type)
+    conversation.conversation_ccs.create!(account_id: conversation.account_id, email: cc) if cc
+    conversation.reload
+  end
 
   def zendesk_basic_headers(user, token: user.access_token.token)
     { 'Authorization' => ActionController::HttpAuthentication::Basic.encode_credentials("#{user.email}/token", token) }

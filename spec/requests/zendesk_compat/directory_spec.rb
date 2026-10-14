@@ -70,9 +70,9 @@ RSpec.describe 'Zendesk compat: usuários, grupos, organizações e busca', type
   describe 'GET /api/v2/search' do
     before do
       ticket
-      chat_ticket.update!(status: :resolved, custom_attributes: chat_ticket.custom_attributes.merge('zd_status' => 'Resolvido'))
+      chat_ticket.update!(status: status_for(:solved), custom_attributes: chat_ticket.custom_attributes.merge('zd_status' => 'Resolvido'))
       other = create_ticket(430_001, inbox: email_inbox, assignee: human_agent, custom_attributes: { 'zd_status' => 'Pendente' })
-      other.update!(status: :snoozed)
+      other.update!(status: status_for(:pending))
     end
 
     it 'busca da Monitor Intervenção Humana: assignee + status<solved + updated>' do

@@ -15,7 +15,7 @@ RSpec.describe 'Zendesk compat: campos, status, uploads, notificações e dispon
   end
 
   describe 'GET /api/v2/custom_statuses' do
-    it 'lista os status personalizados com a categoria' do
+    it 'lista os status personalizados com a categoria', :custom_statuses do
       get '/api/v2/custom_statuses.json', headers: headers
       pendente = json['custom_statuses'].find { |status| status['agent_label'] == 'Pendente' }
       expect(pendente).to include('id' => 20_487_412_004_251, 'status_category' => 'pending', 'end_user_label' => 'Aguardando resposta',
