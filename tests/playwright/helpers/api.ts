@@ -81,6 +81,16 @@ export class ApiClient {
     throw new Error(`no matching ticket in inbox ${inboxId} within ${timeoutMs}ms`);
   }
 
+  // A ticket opened by the customer: the first message is incoming (an API inbox accepts it from the agent API).
+  async createCustomerTicket(inboxId: number, contactId: number, message: string) {
+    const ticket = await this.call<{ id: number; status: string }>('post', '/conversations', {
+      inbox_id: inboxId,
+      contact_id: contactId,
+    });
+    await this.call('post', `/conversations/${ticket.id}/messages`, { content: message, message_type: 'incoming' });
+    return ticket;
+  }
+
   async getConversation(id: number) {
     return this.call<Record<string, unknown>>('get', `/conversations/${id}`);
   }

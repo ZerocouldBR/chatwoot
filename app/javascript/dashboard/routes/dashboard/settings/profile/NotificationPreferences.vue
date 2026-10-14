@@ -8,7 +8,6 @@ import {
   requestPushPermissions,
   verifyServiceWorkerExistence,
 } from 'dashboard/helper/pushHelper.js';
-import { FEATURE_FLAGS } from 'dashboard/featureFlags';
 import ToggleSwitch from 'dashboard/components-next/switch/Switch.vue';
 import { NOTIFICATION_TYPES } from './constants';
 
@@ -29,27 +28,11 @@ export default {
   },
   computed: {
     ...mapGetters({
-      accountId: 'getCurrentAccountId',
       emailFlags: 'userNotificationSettings/getSelectedEmailFlags',
       pushFlags: 'userNotificationSettings/getSelectedPushFlags',
-      isFeatureEnabledonAccount: 'accounts/isFeatureEnabledonAccount',
     }),
     hasPushAPISupport() {
       return !!('Notification' in window);
-    },
-    isSLAEnabled() {
-      return this.isFeatureEnabledonAccount(this.accountId, FEATURE_FLAGS.SLA);
-    },
-    filteredNotificationTypes() {
-      return this.notificationTypes.filter(notification =>
-        this.isSLAEnabled
-          ? true
-          : ![
-              'sla_missed_first_response',
-              'sla_missed_next_response',
-              'sla_missed_resolution',
-            ].includes(notification.value)
-      );
     },
   },
   watch: {
@@ -192,10 +175,7 @@ export default {
           </div>
         </TableHeaderCell>
       </div>
-      <div
-        v-for="(notification, index) in filteredNotificationTypes"
-        :key="index"
-      >
+      <div v-for="(notification, index) in notificationTypes" :key="index">
         <div
           class="grid items-center content-center h-12 grid-cols-12 gap-4 py-0 rounded-t-xl"
         >
@@ -230,7 +210,7 @@ export default {
       </span>
       <div class="flex flex-col gap-4">
         <div
-          v-for="(notification, index) in filteredNotificationTypes"
+          v-for="(notification, index) in notificationTypes"
           :key="index"
           class="flex flex-row items-start gap-2"
         >
@@ -254,7 +234,7 @@ export default {
 
       <div class="flex flex-col gap-4">
         <div
-          v-for="(notification, index) in filteredNotificationTypes"
+          v-for="(notification, index) in notificationTypes"
           :key="index"
           class="flex flex-row items-start gap-2"
         >

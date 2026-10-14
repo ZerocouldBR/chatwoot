@@ -1115,5 +1115,58 @@
       "Sexta",
       "Sábado"
     ]
+  },
+  "TICKET_SLA": {
+    "TITLE": "Políticas de SLA",
+    "DESCRIPTION": "As políticas são verificadas em ordem: vale a primeira cujas condições casam com o ticket. Cada política define metas por prioridade para cada métrica, em horas corridas ou comerciais. Tickets sem prioridade não têm SLA.",
+    "NEW": "Nova política",
+    "EMPTY": "Nenhuma política de SLA ainda",
+    "NAME": "Nome",
+    "DESCRIPTION_FIELD": "Descrição",
+    "CONDITIONS": "Condições",
+    "CONDITIONS_HINT": "Deixe vazio para valer em todos os tickets com prioridade.",
+    "ALL": "Atender a todas",
+    "ANY": "Atender a qualquer uma",
+    "ADD_CONDITION": "Adicionar condição",
+    "VALUE": "Valor",
+    "TARGETS": "Metas (minutos)",
+    "METRIC": "Métrica",
+    "BUSINESS_HOURS": "Horário comercial",
+    "SAVE": "Salvar",
+    "DELETE": "Excluir",
+    "MOVE_UP": "Subir",
+    "MOVE_DOWN": "Descer",
+    "SAVED": "Política salva",
+    "DELETED": "Política excluída",
+    "ERROR": "Não foi possível salvar a política",
+    "REMOVE": "Remover",
+    "OPERATORS": {
+      "equal_to": "é",
+      "not_equal_to": "não é"
+    },
+    "FIELDS": {
+      "status": "Status",
+      "priority": "Prioridade",
+      "ticket_type": "Tipo",
+      "team_id": "Grupo",
+      "inbox_id": "Canal",
+      "company_id": "Empresa",
+      "labels": "Tags"
+    },
+    "METRICS": {
+      "first_reply_time": "Tempo de primeira resposta",
+      "next_reply_time": "Tempo de próxima resposta",
+      "periodic_update": "Atualizações periódicas",
+      "pausable_update": "Atualizações pausáveis",
+      "requester_wait_time": "Tempo de espera do solicitante",
+      "agent_work_time": "Tempo de trabalho do agente",
+      "total_resolution_time": "Tempo total de resolução"
+    },
+    "PRIORITIES": {
+      "urgent": "Urgente",
+      "high": "Alta",
+      "medium": "Normal",
+      "low": "Baixa"
+    }
   }
 }

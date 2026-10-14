@@ -9,7 +9,7 @@ import TimeAgo from 'dashboard/components/ui/TimeAgo.vue';
 import CardLabels from './conversationCardComponents/CardLabels.vue';
 import CardPriorityIcon from 'dashboard/components-next/Conversation/ConversationCard/CardPriorityIcon.vue';
 import UnreadBadge from 'dashboard/components-next/Conversation/ConversationCard/UnreadBadge.vue';
-import SLACardLabel from './components/SLACardLabel.vue';
+import TicketSlaBadge from 'dashboard/components-next/Conversation/Sla/TicketSlaBadge.vue';
 import VoiceCallStatus from './VoiceCallStatus.vue';
 import Checkbox from 'dashboard/components-next/checkbox/Checkbox.vue';
 
@@ -63,7 +63,7 @@ const isAIAssignee = computed(() =>
 );
 
 const hasSlaPolicyId = computed(
-  () => props.chat?.applied_sla?.id && !props.currentContact?.blocked
+  () => !!props.chat?.sla_policy_id && !props.currentContact?.blocked
 );
 
 const showLabelsSection = computed(() => {
@@ -236,7 +236,11 @@ watch(
         class="mt-0.5 mx-2 mb-0"
       >
         <template v-if="hasSlaPolicyId" #before>
-          <SLACardLabel :chat="chat" class="ltr:mr-1 rtl:ml-1" />
+          <TicketSlaBadge
+            :next-breach-at="chat.next_sla_breach_at"
+            :breached="chat.sla_breached"
+            class="ltr:mr-1 rtl:ml-1"
+          />
         </template>
       </CardLabels>
     </div>

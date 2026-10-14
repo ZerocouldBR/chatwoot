@@ -156,6 +156,15 @@ Rails.application.routes.draw do
           end
           resources :canned_responses, only: [:index, :create, :update, :destroy]
           resources :business_schedules, only: [:index, :show, :create, :update, :destroy]
+          resources :sla_policies, only: [:index, :show, :create, :update, :destroy] do
+            post :reorder, on: :collection
+          end
+          resources :applied_slas, only: [:index] do
+            collection do
+              get :metrics
+              get :download
+            end
+          end
           resources :ticket_home, only: [:index] do
             get :stats, on: :collection
           end

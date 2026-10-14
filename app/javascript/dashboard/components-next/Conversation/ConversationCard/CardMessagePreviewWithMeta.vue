@@ -1,11 +1,11 @@
 <script setup>
-import { computed, ref } from 'vue';
+import { computed } from 'vue';
 import { useSnakeCase } from 'dashboard/composables/useTransformKeys';
 
 import Avatar from 'dashboard/components-next/avatar/Avatar.vue';
 import MessagePreview from 'dashboard/components-next/Conversation/ConversationCard/MessagePreview.vue';
 import CardLabels from 'dashboard/components-next/Conversation/ConversationCard/CardLabels.vue';
-import SLACardLabel from 'dashboard/components-next/Conversation/ConversationCard/SLACardLabel.vue';
+import TicketSlaBadge from 'dashboard/components-next/Conversation/Sla/TicketSlaBadge.vue';
 
 const props = defineProps({
   conversation: {
@@ -26,8 +26,6 @@ const props = defineProps({
   },
 });
 
-const slaCardLabelRef = ref(null);
-
 const lastNonActivityMessage = computed(() =>
   useSnakeCase(props.conversation.lastNonActivityMessage ?? {}, { deep: true })
 );
@@ -47,11 +45,7 @@ const unreadMessagesCount = computed(() => {
 });
 
 const hasSlaThreshold = computed(() => {
-  return (
-    !props.contact?.blocked &&
-    slaCardLabelRef.value?.hasSlaThreshold &&
-    props.conversation?.appliedSla?.id
-  );
+  return !props.contact?.blocked && !!props.conversation?.slaPolicyId;
 });
 
 defineExpose({
@@ -86,10 +80,10 @@ defineExpose({
           : 'grid-cols-[1fr_20px]'
       "
     >
-      <SLACardLabel
-        v-show="hasSlaThreshold"
-        ref="slaCardLabelRef"
-        :conversation="conversation"
+      <TicketSlaBadge
+        v-if="hasSlaThreshold"
+        :next-breach-at="conversation.nextSlaBreachAt"
+        :breached="conversation.slaBreached"
       />
       <div v-if="hasSlaThreshold && hasLabels" class="w-px h-3 bg-n-slate-4" />
       <div v-if="hasLabels" class="overflow-hidden">

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2026_10_14_105618) do
+ActiveRecord::Schema[7.1].define(version: 2026_10_14_110327) do
   # These extensions should be enabled to support this database
   enable_extension "pg_stat_statements"
   enable_extension "pg_trgm"
@@ -184,6 +184,8 @@ ActiveRecord::Schema[7.1].define(version: 2026_10_14_105618) do
     t.datetime "updated_at", null: false
     t.integer "sla_status", default: 0
     t.datetime "completed_at"
+    t.jsonb "metrics", default: {}, null: false
+    t.datetime "next_breach_at"
     t.index ["account_id", "sla_policy_id", "conversation_id"], name: "index_applied_slas_on_account_sla_policy_conversation", unique: true
     t.index ["account_id"], name: "index_applied_slas_on_account_id"
     t.index ["conversation_id"], name: "index_applied_slas_on_conversation_id"
@@ -1051,10 +1053,13 @@ ActiveRecord::Schema[7.1].define(version: 2026_10_14_105618) do
     t.bigint "submitter_id"
     t.bigint "company_id"
     t.bigint "followup_source_id"
+    t.datetime "next_sla_breach_at"
+    t.boolean "sla_breached", default: false, null: false
     t.index ["account_id", "display_id"], name: "index_conversations_on_account_id_and_display_id", unique: true
     t.index ["account_id", "due_at"], name: "index_conversations_on_account_id_and_due_at"
     t.index ["account_id", "id"], name: "index_conversations_on_id_and_account_id"
     t.index ["account_id", "inbox_id", "status", "assignee_id"], name: "conv_acid_inbid_stat_asgnid_idx"
+    t.index ["account_id", "next_sla_breach_at"], name: "index_conversations_on_account_id_and_next_sla_breach_at"
     t.index ["account_id", "status", "created_at"], name: "index_conversations_on_account_id_status_created_at"
     t.index ["account_id", "status", "status_changed_at"], name: "index_conversations_on_account_status_changed_at"
     t.index ["account_id"], name: "index_conversations_on_account_id"
@@ -1616,14 +1621,13 @@ ActiveRecord::Schema[7.1].define(version: 2026_10_14_105618) do
 
   create_table "sla_policies", force: :cascade do |t|
     t.string "name", null: false
-    t.float "first_response_time_threshold"
-    t.float "next_response_time_threshold"
-    t.boolean "only_during_business_hours", default: false
     t.bigint "account_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "description"
-    t.float "resolution_time_threshold"
+    t.integer "position", default: 0, null: false
+    t.jsonb "filter", default: {}, null: false
+    t.jsonb "targets", default: [], null: false
     t.index ["account_id"], name: "index_sla_policies_on_account_id"
   end
 

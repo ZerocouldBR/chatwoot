@@ -62,6 +62,9 @@ json.company_id conversation.company_id
 json.company_name conversation.company&.name
 json.followup_source_id conversation.followup_source&.display_id
 json.cc_emails conversation.conversation_ccs.map(&:email)
+json.sla_policy_id conversation.sla_policy_id
+json.next_sla_breach_at conversation.next_sla_breach_at&.to_i
+json.sla_breached conversation.sla_breached
 json.created_at conversation.created_at.to_i
 json.updated_at conversation.updated_at.to_f
 json.timestamp conversation.last_activity_at.to_i
@@ -71,6 +74,4 @@ json.last_non_activity_message conversation.messages.where(account_id: conversat
 json.last_activity_at conversation.last_activity_at.to_i
 json.priority conversation.priority
 json.waiting_since conversation.waiting_since.to_i.to_i
-sla_applicable = conversation.account.feature_enabled?('sla') && (!conversation.respond_to?(:sla_applicable?) || conversation.sla_applicable?)
-json.sla_policy_id sla_applicable ? conversation.sla_policy_id : nil
 json.partial! 'enterprise/api/v1/conversations/partials/conversation', conversation: conversation if ChatwootApp.enterprise?

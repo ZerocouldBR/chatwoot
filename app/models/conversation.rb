@@ -14,7 +14,9 @@
 #  first_reply_created_at :datetime
 #  identifier             :string
 #  last_activity_at       :datetime         not null
+#  next_sla_breach_at     :datetime
 #  priority               :integer
+#  sla_breached           :boolean          default(FALSE), not null
 #  status                 :integer          default("new_ticket"), not null
 #  status_changed_at      :datetime
 #  subject                :string(150)
@@ -74,6 +76,7 @@ class Conversation < ApplicationRecord
   include PushDataHelper
   include ConversationMuteHelpers
   include TicketAuditable
+  include SlaTrackable
 
   CONVERSATION_UPDATED_ADDITIONAL_ATTRIBUTE_KEYS = %w[conversation_language].freeze
   FILTERED_UNREAD_COUNT_ADDITIONAL_ATTRIBUTE_KEYS = %w[browser_language conversation_language mail_subject referer].freeze

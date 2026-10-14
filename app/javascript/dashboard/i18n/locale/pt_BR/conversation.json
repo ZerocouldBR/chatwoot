@@ -458,7 +458,14 @@
       "META": "{via} · {time}"
     },
     "CLOSED_TICKET_BANNER": "Este ticket está fechado. Um novo e-mail do cliente abre um ticket de acompanhamento.",
-    "FOLLOWUP_OF": "Acompanhamento do #{id}"
+    "FOLLOWUP_OF": "Acompanhamento do #{id}",
+    "SLA_BADGE": {
+      "BREACHED": "SLA violado",
+      "MINUTES": "{count} min",
+      "HOURS": "{count} h",
+      "DAYS": "{count} d",
+      "TOOLTIP": "Tempo até a próxima meta de SLA"
+    }
   },
   "EMAIL_TRANSCRIPT": {
     "TITLE": "Enviar transcrição de ticket",

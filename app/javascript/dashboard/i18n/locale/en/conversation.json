@@ -488,7 +488,14 @@
       "META": "{via} · {time}"
     },
     "CLOSED_TICKET_BANNER": "This ticket is closed. A new customer e-mail opens a follow-up ticket.",
-    "FOLLOWUP_OF": "Follow-up of #{id}"
+    "FOLLOWUP_OF": "Follow-up of #{id}",
+    "SLA_BADGE": {
+      "BREACHED": "SLA breached",
+      "MINUTES": "{count}m",
+      "HOURS": "{count}h",
+      "DAYS": "{count}d",
+      "TOOLTIP": "Time left before the next SLA target"
+    }
   },
   "EMAIL_TRANSCRIPT": {
     "TITLE": "Send ticket transcript",

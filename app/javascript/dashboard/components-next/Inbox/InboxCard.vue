@@ -13,7 +13,7 @@ import { NOTIFICATION_TYPES_MAPPING } from 'dashboard/routes/dashboard/inbox/hel
 import Icon from 'dashboard/components-next/icon/Icon.vue';
 import Avatar from 'dashboard/components-next/avatar/Avatar.vue';
 import CardPriorityIcon from 'dashboard/components-next/Conversation/ConversationCard/CardPriorityIcon.vue';
-import SLACardLabel from 'dashboard/components-next/Conversation/ConversationCard/SLACardLabel.vue';
+import TicketSlaBadge from 'dashboard/components-next/Conversation/Sla/TicketSlaBadge.vue';
 import InboxContextMenu from 'dashboard/routes/dashboard/inbox/components/InboxContextMenu.vue';
 
 const props = defineProps({
@@ -36,7 +36,6 @@ const { t } = useI18n();
 
 const isContextMenuOpen = ref(false);
 const contextMenuPosition = ref({ x: null, y: null });
-const slaCardLabel = ref(null);
 
 const getMessageClasses = {
   emphasis: 'text-sm font-medium text-n-slate-11',
@@ -57,7 +56,7 @@ const inboxIcon = computed(() => {
 });
 
 const hasSlaThreshold = computed(() => {
-  return slaCardLabel.value?.hasSlaThreshold && primaryActor.value?.slaPolicyId;
+  return !!primaryActor.value?.slaPolicyId;
 });
 
 const lastActivityAt = computed(() => {
@@ -211,14 +210,10 @@ onBeforeMount(contextMenuActions.close);
         </div>
       </div>
       <div class="flex items-center flex-shrink-0 gap-2">
-        <SLACardLabel
-          v-show="hasSlaThreshold"
-          ref="slaCardLabel"
-          :conversation="primaryActor"
-          class="[&>span]:text-xs"
-          :class="
-            !isUnread && '[&>span]:text-n-slate-11 [&>div>svg]:fill-n-slate-11'
-          "
+        <TicketSlaBadge
+          v-if="hasSlaThreshold"
+          :next-breach-at="primaryActor.nextSlaBreachAt"
+          :breached="primaryActor.slaBreached"
         />
         <div v-if="hasSlaThreshold" class="w-px h-3 rounded-sm bg-n-slate-4" />
         <CardPriorityIcon

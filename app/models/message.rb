@@ -353,6 +353,7 @@ class Message < ApplicationRecord
 
     conversation.record_ticket_event(event_type: 'comment', author: sender, via: COMMENT_VIA_BY_SENDER.fetch(sender_type, 'system'),
                                      value: { message_id: id, public: !private? })
+    conversation.schedule_sla_update unless private?
   end
 
   # Chat channels have no e-mail subject: the first customer or agent message names the ticket.

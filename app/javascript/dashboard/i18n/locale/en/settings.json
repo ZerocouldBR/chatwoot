@@ -1152,5 +1152,58 @@
       "Friday",
       "Saturday"
     ]
+  },
+  "TICKET_SLA": {
+    "TITLE": "SLA policies",
+    "DESCRIPTION": "Policies are checked in order: the first one whose conditions match a ticket applies. Each policy sets targets per priority for each metric, in calendar or business hours. Tickets without priority have no SLA.",
+    "NEW": "New policy",
+    "EMPTY": "No SLA policies yet",
+    "NAME": "Name",
+    "DESCRIPTION_FIELD": "Description",
+    "CONDITIONS": "Conditions",
+    "CONDITIONS_HINT": "Leave empty to apply to every ticket with a priority.",
+    "ALL": "Meet all of",
+    "ANY": "Meet any of",
+    "ADD_CONDITION": "Add condition",
+    "VALUE": "Value",
+    "TARGETS": "Targets (minutes)",
+    "METRIC": "Metric",
+    "BUSINESS_HOURS": "Business hours",
+    "SAVE": "Save",
+    "DELETE": "Delete",
+    "MOVE_UP": "Move up",
+    "MOVE_DOWN": "Move down",
+    "SAVED": "Policy saved",
+    "DELETED": "Policy deleted",
+    "ERROR": "Could not save the policy",
+    "REMOVE": "Remove",
+    "OPERATORS": {
+      "equal_to": "is",
+      "not_equal_to": "is not"
+    },
+    "FIELDS": {
+      "status": "Status",
+      "priority": "Priority",
+      "ticket_type": "Type",
+      "team_id": "Group",
+      "inbox_id": "Channel",
+      "company_id": "Company",
+      "labels": "Tags"
+    },
+    "METRICS": {
+      "first_reply_time": "First reply time",
+      "next_reply_time": "Next reply time",
+      "periodic_update": "Periodic update",
+      "pausable_update": "Pausable update",
+      "requester_wait_time": "Requester wait time",
+      "agent_work_time": "Agent work time",
+      "total_resolution_time": "Total resolution time"
+    },
+    "PRIORITIES": {
+      "urgent": "Urgent",
+      "high": "High",
+      "medium": "Normal",
+      "low": "Low"
+    }
   }
 }

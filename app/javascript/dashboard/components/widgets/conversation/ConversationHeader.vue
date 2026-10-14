@@ -1,13 +1,12 @@
 <script setup>
-import { computed, ref } from 'vue';
+import { computed } from 'vue';
 import { useRoute } from 'vue-router';
 import { useStore } from 'vuex';
-import { useElementSize } from '@vueuse/core';
 import BackButton from '../BackButton.vue';
 import InboxName from '../InboxName.vue';
 import MoreActions from './MoreActions.vue';
 import Avatar from 'next/avatar/Avatar.vue';
-import SLACardLabel from './components/SLACardLabel.vue';
+import TicketSlaBadge from 'dashboard/components-next/Conversation/Sla/TicketSlaBadge.vue';
 import ConversationCallButton from './ConversationCallButton.vue';
 import {
   conversationListPageURL,
@@ -34,8 +33,6 @@ const props = defineProps({
 const { t } = useI18n();
 const store = useStore();
 const route = useRoute();
-const conversationHeader = ref(null);
-const { width } = useElementSize(conversationHeader);
 const { isAWebWidgetInbox, isAnEmailChannel } = useInbox();
 
 const currentChat = computed(() => store.getters.getSelectedChat);
@@ -103,7 +100,7 @@ const hasMultipleInboxes = computed(
 );
 
 const hasSlaPolicyId = computed(
-  () => props.chat?.applied_sla?.id && !currentContact.value?.blocked
+  () => !!props.chat?.sla_policy_id && !currentContact.value?.blocked
 );
 
 const copyConversationId = async () => {
@@ -118,7 +115,7 @@ const copyConversationId = async () => {
 
 <template>
   <div
-    ref="conversationHeader"
+    data-testid="ticket-header"
     class="flex flex-col gap-3 items-center justify-between flex-1 w-full min-w-0 xl:flex-row px-3 pt-3 pb-2 h-24 xl:h-12"
   >
     <div
@@ -197,12 +194,10 @@ const copyConversationId = async () => {
     <div
       class="flex flex-row items-center justify-start xl:justify-end flex-shrink-0 gap-2 w-full xl:w-auto header-actions-wrap"
     >
-      <SLACardLabel
+      <TicketSlaBadge
         v-if="hasSlaPolicyId"
-        :chat="chat"
-        show-extended-info
-        :parent-width="width"
-        class="hidden md:flex"
+        :next-breach-at="chat.next_sla_breach_at"
+        :breached="chat.sla_breached"
       />
       <ConversationCallButton :inbox="inbox" :chat="currentChat" />
       <MoreActions :conversation-id="currentChat.id" />

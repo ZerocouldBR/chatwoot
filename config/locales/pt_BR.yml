@@ -98,6 +98,8 @@ pt_BR:
       multi_account_invitation_not_allowed: Usuários associados a outra conta não podem ser adicionados enquanto o SAML estiver habilitado
     ticket_home:
       invalid_view: 'Visão desconhecida. Use mine, ccs, following ou solved'
+    sla:
+      business_hours_need_schedule: 'precisam de um horário comercial padrão (Configurações > Horário comercial) para metas em horas úteis'
     conversations:
       resolved: O ticket está resolvido e não aceita novas mensagens
       invalid_cc: Informe um e-mail válido para copiar no ticket

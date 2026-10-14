@@ -115,6 +115,8 @@ en:
       multi_account_invitation_not_allowed: Users associated with another account cannot be added while SAML is enabled
     ticket_home:
       invalid_view: 'Unknown home view. Use mine, ccs, following or solved'
+    sla:
+      business_hours_need_schedule: 'need a default business schedule (Settings > Business hours) for business-hours targets'
     conversations:
       resolved: Ticket is resolved and does not accept new messages
       invalid_cc: Enter a valid e-mail address to copy on the ticket
