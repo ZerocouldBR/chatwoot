@@ -58,6 +58,8 @@ pt_BR:
     sessions:
       cannot_revoke_current: Você não pode revogar a sessão atual.
   errors:
+    servicedesk:
+      required_form_fields: 'Preencha os campos obrigatórios antes de resolver o ticket: %{fields}'
     account:
       not_authorized: Você não está autorizado a acessar esta conta
       email_limit_exceeded: O limite diário de envio de e-mails desta conta foi atingido

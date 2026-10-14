@@ -1,3 +1,7 @@
+import {
+  SD_SORT_OPTIONS,
+  SD_SORT_CONFIG,
+} from 'dashboard/servicedesk/views/sdSort';
 import { CONVERSATION_PRIORITY_ORDER } from 'shared/constants/messages';
 import { UNSOLVED_STATUSES } from 'dashboard/constants/ticketStatuses';
 
@@ -124,6 +128,8 @@ const SORT_OPTIONS = {
   waiting_since_desc: ['sortOnWaitingSince', 'desc'],
   priority_desc_created_at_asc: ['sortOnPriorityCreatedAt', 'desc'],
   unread: ['sortOnUnread', 'desc'],
+  // ServiceDesk: ordenações das views do Zendesk (sd_*), ver servicedesk/views/sdSort.js
+  ...SD_SORT_OPTIONS,
 };
 const sortAscending = (valueA, valueB) => valueA - valueB;
 const sortDescending = (valueA, valueB) => valueB - valueA;
@@ -176,6 +182,8 @@ const sortConfig = {
 
     return (b.last_activity_at || 0) - (a.last_activity_at || 0);
   },
+
+  ...SD_SORT_CONFIG,
 };
 
 export const sortComparator = (a, b, sortKey) => {

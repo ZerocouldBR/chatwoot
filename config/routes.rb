@@ -341,6 +341,12 @@ Rails.application.routes.draw do
 
           resources :custom_attribute_definitions, only: [:index, :show, :create, :update, :destroy]
           resources :custom_filters, only: [:index, :show, :create, :update, :destroy]
+          # ServiceDesk: views compartilhadas do Zendesk (visibilidade por grupo) com contadores
+          namespace :servicedesk do
+            resources :views, only: [:index] do
+              get :counts, on: :collection
+            end
+          end
           resource :branded_email_layout, only: [:show, :update]
           resources :inboxes, only: [:index, :show, :create, :update, :destroy] do
             get :assignable_agents, on: :member

@@ -48,6 +48,11 @@ import {
 import { createFiltersMatcher } from '../store/modules/conversations/helpers/filterHelpers';
 import { sortComparator } from '../store/modules/conversations/helpers';
 import { CONVERSATION_EVENTS } from '../helper/AnalyticsHelper/events';
+import {
+  buildViewColumns,
+  viewSort as buildViewSort,
+  serverSortFor,
+} from 'dashboard/servicedesk/views/viewColumns';
 import { ASSIGNEE_TYPE_TAB_PERMISSIONS } from 'dashboard/constants/permissions.js';
 
 const props = defineProps({
@@ -157,6 +162,35 @@ const folderContactId = useMapGetter('customViews/getActiveFolderContactId');
 const activeFolderName = computed(() => {
   return activeFolder.value?.name;
 });
+
+// ServiceDesk: colunas e ordenação da view do Zendesk (views.json), como no
+// Zendesk. A ordenação do servidor vai em appliedFiltersSortBy (busca e ordem
+// da store); o clique no cabeçalho troca só a ordenação desta view, sem salvar
+// na preferência do usuário. Sem colunas, a lista por assunto continua igual.
+const attributesByModel = useMapGetter('attributes/getAttributesByModel');
+const conversationAttributeDefinitions = computed(
+  () => attributesByModel.value?.('conversation_attribute') || []
+);
+const activeViewColumns = computed(() =>
+  activeFolder.value
+    ? buildViewColumns(
+        activeFolder.value.columns,
+        conversationAttributeDefinitions.value
+      )
+    : []
+);
+const sdViewSortOverride = ref(null);
+const activeViewSort = computed(
+  () =>
+    sdViewSortOverride.value ||
+    (activeFolder.value
+      ? buildViewSort(
+          activeFolder.value,
+          conversationAttributeDefinitions.value
+        )
+      : null)
+);
+const activeViewSortBy = computed(() => activeViewSort.value?.sortBy || '');
 
 const hasActiveFolders = computed(() => {
   return Boolean(activeFolder.value && props.foldersId !== 0);
@@ -596,6 +630,9 @@ function resetAndFetchData() {
   store.dispatch('emptyAllConversations');
   store.dispatch('clearConversationFilters');
   if (hasActiveFolders.value) {
+    if (activeViewSortBy.value) {
+      store.dispatch('setConversationFiltersSort', activeViewSortBy.value);
+    }
     const payload = activeFolder.value.query;
     fetchSavedFilteredConversations(payload);
   }
@@ -644,6 +681,21 @@ function updateAssigneeTab(selectedTab) {
       store.dispatch('updateChatListFilters', conversationFilters.value);
     }
   }
+}
+
+// ServiceDesk: clique no cabeçalho da tabela da view
+function onViewSortChange({ column, direction }) {
+  sdViewSortOverride.value = {
+    column,
+    direction,
+    sortBy: serverSortFor(column, direction),
+  };
+  if (!activeViewSortBy.value || !hasActiveFolders.value) return;
+  resetBulkActions();
+  store.dispatch('setConversationFiltersSort', activeViewSortBy.value);
+  store.dispatch('conversationPage/reset');
+  store.dispatch('emptyAllConversations');
+  fetchSavedFilteredConversations(activeFolder.value.query);
 }
 
 function onBasicFilterChange(value, type) {
@@ -879,6 +931,7 @@ watch(activeFolder, (newVal, oldVal) => {
   if (newVal !== oldVal) {
     store.dispatch('customViews/setActiveConversationFolder', newVal || null);
   }
+  if (newVal?.id !== oldVal?.id) sdViewSortOverride.value = null;
   resetAndFetchData();
 });
 
@@ -967,7 +1020,10 @@ watch(appliedFilters, () => resetBulkActions());
       :conversation-type="conversationType"
       :show-assignee="showAssigneeInConversationCard"
       :is-on-expanded-layout="isOnExpandedLayout"
+      :view-columns="activeViewColumns"
+      :view-sort="activeViewSort"
       @load-more="loadMoreConversations"
+      @view-sort="onViewSortChange"
     />
     <Dialog
       ref="deleteConversationDialogRef"

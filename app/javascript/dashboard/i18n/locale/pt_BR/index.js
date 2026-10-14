@@ -47,6 +47,7 @@ import webhooks from './webhooks.json';
 import whatsappTemplates from './whatsappTemplates.json';
 import whatsappTemplateMgmt from './whatsappTemplateMgmt.json';
 import yearInReview from './yearInReview.json';
+import sdViewTable from './sdViewTable.json';
 
 export default {
   ...advancedFilters,
@@ -98,4 +99,5 @@ export default {
   ...whatsappTemplates,
   ...whatsappTemplateMgmt,
   ...yearInReview,
+  ...sdViewTable,
 };

@@ -34,6 +34,7 @@ class Account < ApplicationRecord
   include AccountSettingsSchema
   include Servicedesk::AccountMacroSettings
   include Servicedesk::AccountRoles # M13: papéis (sd_roles) semeados na criação da conta
+  include Servicedesk::AccountAgentUiSettings
 
   DEFAULT_QUERY_SETTING = {
     flag_query_mode: :bit_operator,

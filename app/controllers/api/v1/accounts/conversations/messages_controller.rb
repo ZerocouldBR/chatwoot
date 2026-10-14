@@ -1,8 +1,10 @@
 class Api::V1::Accounts::Conversations::MessagesController < Api::V1::Accounts::Conversations::BaseController
   include ConversationStatusConcern
+  include Servicedesk::ConversationResolveGuard
 
   before_action :ensure_api_inbox, only: :update
   before_action -> { validate_agent_status(params[:ticket_status]) }, only: :create
+  before_action :servicedesk_require_form_on_resolve, only: :create
 
   def index
     @messages = message_finder.perform
@@ -61,6 +63,11 @@ class Api::V1::Accounts::Conversations::MessagesController < Api::V1::Accounts::
   end
 
   private
+
+  # ServiceDesk (M1): "Enviar como Resolvido" manda o status em `ticket_status`, junto com a resposta.
+  def servicedesk_requested_status
+    params[:ticket_status]
+  end
 
   # "Submit as <status>": the reply and the status change land in the same request.
   def submit_as_status
