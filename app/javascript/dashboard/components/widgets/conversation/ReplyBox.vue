@@ -49,6 +49,7 @@ import {
 } from 'dashboard/helper/editorHelper';
 import { useCopilotReply } from 'dashboard/composables/useCopilotReply';
 import { useMacroExecution } from 'dashboard/composables/useMacroExecution';
+import { useConversationRequiredAttributes } from 'dashboard/composables/useConversationRequiredAttributes';
 import ConversationResolveAttributesModal from 'dashboard/components-next/ConversationWorkflow/ConversationResolveAttributesModal.vue';
 import { useKbd } from 'dashboard/composables/utils/useKbd';
 import { isFileTypeAllowedForChannel } from 'shared/helpers/FileHelper';
@@ -95,6 +96,7 @@ export default {
     const messageEditor = useTemplateRef('messageEditor');
     const copilot = useCopilotReply();
     const macroExecution = useMacroExecution();
+    const { checkMissingAttributes } = useConversationRequiredAttributes();
     const shortcutKey = useKbd(['$mod', '+', 'enter']);
 
     // Options API state and methods live on the instance proxy
@@ -151,6 +153,7 @@ export default {
     });
 
     return {
+      checkMissingAttributes,
       uiSettings,
       isEditorHotKeyEnabled,
       fetchSignatureFlagFromUISettings,
@@ -979,6 +982,20 @@ export default {
       this.submitStatus = null;
     },
     onSendReplyAs(status) {
+      // ServiceDesk (M1): "Enviar como Resolvido" exige os campos obrigatórios
+      if (status === wootConstants.STATUS_TYPE.RESOLVED) {
+        const { hasMissing, missing } = this.checkMissingAttributes(
+          this.currentChat?.custom_attributes || {}
+        );
+        if (hasMissing) {
+          useAlert(
+            this.$t('SD_RESOLVE.MISSING_FIELDS', {
+              fields: missing.map(attribute => attribute.label).join(', '),
+            })
+          );
+          return;
+        }
+      }
       this.submitStatus = status;
       this.onSendReply();
     },

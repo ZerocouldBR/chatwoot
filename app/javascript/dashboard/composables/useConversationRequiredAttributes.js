@@ -3,6 +3,7 @@ import { useMapGetter } from 'dashboard/composables/store';
 import { useAccount } from 'dashboard/composables/useAccount';
 import { FEATURE_FLAGS } from 'dashboard/featureFlags';
 import { ATTRIBUTE_TYPES } from 'dashboard/components-next/ConversationWorkflow/constants';
+import { getMissingRequiredFields } from 'dashboard/servicedesk/ticketFormHelper';
 
 /**
  * Composable for managing conversation required attributes workflow
@@ -17,6 +18,13 @@ export function useConversationRequiredAttributes() {
   );
   const conversationAttributes = useMapGetter(
     'attributes/getConversationAttributes'
+  );
+  const attributesByModel = useMapGetter('attributes/getAttributesByModel');
+
+  // ServiceDesk (M1): campos obrigatórios do formulário do ticket ao resolver
+  // (servicedesk_require_form_on_resolve da conta, desligado por padrão)
+  const isFormRequiredOnResolve = computed(
+    () => currentAccount.value?.servicedesk?.require_form_on_resolve === true
   );
 
   const isFeatureEnabled = computed(() =>
@@ -56,6 +64,15 @@ export function useConversationRequiredAttributes() {
         .filter(Boolean) // Remove any undefined attributes (deleted attributes)
   );
 
+  const missingFormAttributes = (values = {}) => {
+    if (!isFormRequiredOnResolve.value) return [];
+    const definitions = attributesByModel.value('conversation_attribute') || [];
+    const options = allAttributeOptions.value;
+    return getMissingRequiredFields({ attributes: definitions, values })
+      .map(field => options.find(option => option.value === field.key))
+      .filter(Boolean);
+  };
+
   /**
    * Check if a conversation is missing any required attributes
    *
@@ -63,13 +80,17 @@ export function useConversationRequiredAttributes() {
    * @returns {Object} - Analysis result with missing attributes info
    */
   const checkMissingAttributes = (conversationCustomAttributes = {}) => {
+    const formMissing = missingFormAttributes(conversationCustomAttributes);
+
     // If no attributes are required, conversation can be resolved
     if (!requiredAttributes.value.length) {
-      return { hasMissing: false, missing: [] };
+      return formMissing.length
+        ? { hasMissing: true, missing: formMissing, all: formMissing }
+        : { hasMissing: false, missing: [] };
     }
 
     // Find attributes that are missing or empty
-    const missing = requiredAttributes.value.filter(attribute => {
+    const nativeMissing = requiredAttributes.value.filter(attribute => {
       const value = conversationCustomAttributes[attribute.value];
 
       // A checkbox is filled once true or false is picked. An explicit null is
@@ -82,6 +103,11 @@ export function useConversationRequiredAttributes() {
       // Allow falsy values like 0, false as they are valid filled values
       return value == null || String(value).trim() === '';
     });
+    const nativeKeys = new Set(nativeMissing.map(attribute => attribute.value));
+    const missing = [
+      ...nativeMissing,
+      ...formMissing.filter(attribute => !nativeKeys.has(attribute.value)),
+    ];
 
     return {
       hasMissing: missing.length > 0,

@@ -4,9 +4,11 @@ class Api::V1::Accounts::ConversationsController < Api::V1::Accounts::BaseContro
   include ConversationCustomAttributesConcern
   include ConversationAssignmentTargetsConcern
   include ConversationStatusConcern
+  include Servicedesk::ConversationResolveGuard
 
   before_action :conversation, except: [:index, :meta, :search, :create, :filter]
   before_action :validate_status_param, only: [:toggle_status]
+  before_action :servicedesk_require_form_on_resolve, only: [:toggle_status]
   before_action :validate_assignment_targets, :inbox, :contact, :contact_inbox, only: [:create]
 
   ATTACHMENT_RESULTS_PER_PAGE = 100
@@ -134,6 +136,15 @@ class Api::V1::Accounts::ConversationsController < Api::V1::Accounts::BaseContro
   end
 
   private
+
+  # ServiceDesk (M1): o toggle_status pede o status em `status`; sem ele, o toggle do Chatwoot resolve um aberto.
+  def servicedesk_requested_status
+    params[:status]
+  end
+
+  def servicedesk_toggle_without_status?
+    !bot_handoff?
+  end
 
   def permitted_update_params
     # TODO: Move the other conversation attributes to this method and remove specific endpoints for each attribute

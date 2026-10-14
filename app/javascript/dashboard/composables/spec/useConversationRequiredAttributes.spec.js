@@ -348,3 +348,76 @@ describe('useConversationRequiredAttributes', () => {
     });
   });
 });
+
+describe('useConversationRequiredAttributes (ServiceDesk: formulário ao resolver)', () => {
+  const area = {
+    attribute_key: 'zd_area_interna',
+    attribute_display_name: 'Área interna',
+    attribute_display_type: 'list',
+    attribute_values: ['Suporte', 'Hospitality'],
+    attribute_description: 'zendesk_field:21587135564955',
+  };
+  const camel = {
+    attributeKey: 'zd_area_interna',
+    attributeDisplayName: 'Área interna',
+    attributeDisplayType: 'list',
+    attributeValues: ['Suporte', 'Hospitality'],
+  };
+
+  const setup = ({ requireForm = true, nativeRequired = [] } = {}) => {
+    useMapGetter.mockImplementation(getter => {
+      if (getter === 'accounts/isFeatureEnabledonAccount') {
+        return { value: () => nativeRequired.length > 0 };
+      }
+      if (getter === 'attributes/getConversationAttributes') {
+        return { value: [...defaultAttributes, camel] };
+      }
+      if (getter === 'attributes/getAttributesByModel') {
+        return { value: () => [area] };
+      }
+      return { value: null };
+    });
+    useAccount.mockReturnValue({
+      currentAccount: {
+        value: {
+          settings: { conversation_required_attributes: nativeRequired },
+          servicedesk: { agent_ui: true, require_form_on_resolve: requireForm },
+        },
+      },
+      accountId: { value: 1 },
+    });
+  };
+
+  it('blocks resolving while the required form field is empty', () => {
+    setup();
+    const { checkMissingAttributes } = useConversationRequiredAttributes();
+    const result = checkMissingAttributes({});
+    expect(result.hasMissing).toBe(true);
+    expect(result.missing.map(attribute => attribute.value)).toEqual([
+      'zd_area_interna',
+    ]);
+    expect(result.missing[0].label).toBe('Área interna');
+  });
+
+  it('lets the ticket be resolved once the field is filled', () => {
+    setup();
+    const { checkMissingAttributes } = useConversationRequiredAttributes();
+    expect(
+      checkMissingAttributes({ zd_area_interna: 'Suporte' }).hasMissing
+    ).toBe(false);
+  });
+
+  it('merges with the native required attributes without duplicates', () => {
+    setup({ nativeRequired: ['priority', 'zd_area_interna'] });
+    const { checkMissingAttributes } = useConversationRequiredAttributes();
+    expect(
+      checkMissingAttributes({}).missing.map(attribute => attribute.value)
+    ).toEqual(['priority', 'zd_area_interna']);
+  });
+
+  it('does nothing when the account turned the rule off', () => {
+    setup({ requireForm: false });
+    const { checkMissingAttributes } = useConversationRequiredAttributes();
+    expect(checkMissingAttributes({}).hasMissing).toBe(false);
+  });
+});
