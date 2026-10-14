@@ -48,7 +48,7 @@ class Servicedesk::SharedViews
 
   # Grupos do Zendesk de quem está logado: pelos times dele (descrição zendesk_group:<id>), a mesma fonte do M13
   def user_zd_group_ids
-    @user_zd_group_ids ||= user_teams.filter_map { |team| zd_group_id(team) }.map(&:to_s).to_set
+    @user_zd_group_ids ||= user_teams.filter_map { |team| zd_group_id(team) }.to_set(&:to_s)
   end
 
   def user_zd_id

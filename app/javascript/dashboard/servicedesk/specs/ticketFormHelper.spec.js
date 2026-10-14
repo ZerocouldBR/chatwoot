@@ -120,20 +120,22 @@ describe('ticketFormHelper', () => {
     expect(defaultCustomStatusFor('pending', meta)).toBe(null);
   });
 
-  it('o JSON versionado segue o status canônico', () => {
+  it('o JSON versionado segue o status nativo da v3 (enum do Victor)', () => {
     const canon = {
-      new: 'open',
+      new: 'new_ticket',
       open: 'open',
-      pending: 'snoozed',
-      hold: 'snoozed',
+      pending: 'waiting_on_customer',
+      hold: 'on_hold',
       solved: 'resolved',
+      closed: 'closed',
     };
     Object.values(ticketFormsMeta.statuses).forEach(status => {
       expect(status.native).toBe(canon[status.category]);
     });
     expect(ticketFormsMeta.native_status_default).toEqual({
       open: 'Aberto',
-      snoozed: 'Pendente',
+      waiting_on_customer: 'Pendente',
+      on_hold: 'Desenvolvimento',
       resolved: 'Resolvido',
     });
   });

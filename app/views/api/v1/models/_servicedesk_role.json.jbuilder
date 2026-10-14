@@ -10,5 +10,5 @@ json.ticket_access access.ticket_access
 json.ticket_access_override account_user.ticket_access_override
 json.only_private_comments account_user.only_private_comments
 json.default_team_id account_user.default_team_id
-json.team_ids account_user.user.teams.where(account_id: account_user.account_id).pluck(:id)
+json.team_ids local_assigns.fetch(:team_ids) { account_user.user.teams.where(account_id: account_user.account_id).pluck(:id) }
 json.permissions access.permissions

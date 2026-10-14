@@ -49,6 +49,8 @@ RSpec.describe 'Portal do cliente: login do contato', type: :request do
 
     it 'gera o e-mail com o link de acesso' do
       url = 'https://helpdesk.example/hc/x/pt_BR/login/verify?token=abc'
+      # o mailer só monta o e-mail com SMTP configurado (como os mailers do upstream); nada é entregue no teste
+      allow_any_instance_of(PortalCustomerMailer).to receive(:smtp_config_set_or_development?).and_return(true) # rubocop:disable RSpec/AnyInstance
       mail = PortalCustomerMailer.with(account: account).magic_link(contact, portal, url, 'pt_BR')
       expect(mail.to).to eq([contact.email])
       expect(mail.subject).to include('Seu link de acesso')
