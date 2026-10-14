@@ -9,7 +9,8 @@ RSpec.describe 'Zendesk compat: Sunshine Conversations (/sc/v2)', type: :request
     add_message(chat_ticket, type: :incoming, content: 'Oi, quero cancelar', sender: requester, created_at: 5.minutes.ago)
   end
 
-  it 'acha a conversa do contato pelo userId do conversation_log (Recebe Mensagens Zendesk)' do
+  it 'acha a conversa do contato pelo userId do conversation_log (Recebe Mensagens Zendesk), sem os tickets de e-mail/API' do
+    create_ticket(430_002, inbox: api_inbox, custom_attributes: { 'zd_canal' => 'API' })
     user_id = ZendeskCompat::ConversationLogBuilder.sunco_user_id(requester)
     get "#{base}/conversations?#{{ filter: { userId: user_id } }.to_query}", headers: headers
     expect(json['conversations']).to contain_exactly(include('id' => chat_ticket.uuid, 'type' => 'personal'))
