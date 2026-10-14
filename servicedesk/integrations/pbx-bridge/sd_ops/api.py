@@ -1030,7 +1030,13 @@ def build(svc) -> APIRouter:
         return None, None
 
     async def pbx_webhook(secret: str, request: Request) -> JSONResponse:
-        tenant_id, acc = _account_by_secret(secret)
+        try:
+            tenant_id, acc = _account_by_secret(secret)
+        except sa.exc.OperationalError:
+            # banco fora: 503 (nada foi aceito; o Report02 recupera o que a 55PBX não reenviar)
+            obs.METRICS.inc("sdops_webhook_received_total", source="55pbx", result="db_unavailable")
+            log.error("webhook recusado: banco indisponível")
+            return err("unavailable", "temporariamente indisponível", 503)
         if tenant_id is None:
             obs.METRICS.inc("sdops_webhook_received_total", source="55pbx", result="bad_secret")
             return err("not_found", "not found", 404)
@@ -1052,9 +1058,13 @@ def build(svc) -> APIRouter:
         if body is None:
             return err("too_large", "payload grande demais", 413)
         with obs.context(tenant=tenant_id):
-            with engine.begin() as conn:
-                res = accept(conn, tenant_id, "webhook", body, request.headers.get("content-type", ""),
-                             {"ip": mask(ip), "method": request.method})
+            try:
+                with engine.begin() as conn:
+                    res = accept(conn, tenant_id, "webhook", body, request.headers.get("content-type", ""),
+                                 {"ip": mask(ip), "method": request.method})
+            except sa.exc.OperationalError:
+                log.error("webhook recusado: banco indisponível")
+                return err("unavailable", "temporariamente indisponível", 503)
             obs.METRICS.inc("sdops_webhook_received_total", source="55pbx",
                             result="duplicate" if res["duplicate"] else "accepted")
             svc.worker.wake.set()
