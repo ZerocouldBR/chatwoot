@@ -46,7 +46,8 @@
       "EXECUTE_MACRO": "Execute macro",
       "EXECUTE_CONFIRMATION_LABEL": "Are you sure you want to run {macroName} on {n} conversation? | Are you sure you want to run {macroName} on {n} conversations?",
       "QUEUED": "Macro queued for {count} conversation. | Macro queued for {count} conversations.",
-      "QUEUED_WITH_MISSING_ATTRIBUTES": "Macro queued for {count} conversation. It currently lacks required attributes and may remain open. | Macro queued for {count} conversations. At least one currently lacks required attributes and may remain open."
+      "QUEUED_WITH_MISSING_ATTRIBUTES": "Macro queued for {count} conversation. It currently lacks required attributes and may remain open. | Macro queued for {count} conversations. At least one currently lacks required attributes and may remain open.",
+      "QUEUED_WITHOUT_REPLY": "Macro queued for {count} conversation. Its reply was not applied: run the macro inside the conversation to review and send it. | Macro queued for {count} conversations. Its reply was not applied: run the macro inside each conversation to review and send it."
     }
   }
 }

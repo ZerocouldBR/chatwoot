@@ -2,7 +2,14 @@ import { flushPromises } from '@vue/test-utils';
 import { useAlert, useTrack } from 'dashboard/composables';
 import { useMapGetter, useStore } from 'dashboard/composables/store';
 import { useConversationRequiredAttributes } from 'dashboard/composables/useConversationRequiredAttributes';
-import { useMacroExecution } from '../useMacroExecution';
+import { emitter } from 'shared/helpers/mitt';
+import { BUS_EVENTS } from 'shared/constants/busEvents';
+import {
+  getEditorFill,
+  hasActionsToExecute,
+  resolvesConversation,
+  useMacroExecution,
+} from '../useMacroExecution';
 
 vi.mock('dashboard/composables/store');
 vi.mock('dashboard/composables');
@@ -206,5 +213,158 @@ describe('useMacroExecution', () => {
 
     expect(useAlert).toHaveBeenCalledWith('MACROS.ERROR');
     expect(executingMacroId.value).toBeNull();
+  });
+
+  describe('ServiceDesk: macro preenche o editor (fill_editor)', () => {
+    const reply = { action_name: 'send_message', action_params: ['Olá!'] };
+    const note = { action_name: 'add_private_note', action_params: ['Nota'] };
+    const ticketStatus = {
+      action_name: 'set_ticket_status',
+      action_params: ['Desenvolvimento'],
+    };
+    const fillMacro = (actions, extra = {}) => ({
+      ...macroWith(actions),
+      fill_editor: true,
+      ...extra,
+    });
+    let emitSpy;
+
+    beforeEach(() => {
+      emitSpy = vi.spyOn(emitter, 'emit');
+    });
+
+    afterEach(() => {
+      emitSpy.mockRestore();
+    });
+
+    it('fills the editor with the reply and runs the other actions', async () => {
+      const { execute } = useMacroExecution();
+
+      execute(fillMacro([reply, addLabel, ticketStatus]), CONVERSATION_ID);
+      await flushPromises();
+
+      expect(emitSpy).toHaveBeenCalledWith(BUS_EVENTS.SD_MACRO_FILL_EDITOR, {
+        conversationId: CONVERSATION_ID,
+        isPrivate: false,
+        content: 'Olá!',
+        files: [],
+      });
+      expect(dispatch).toHaveBeenCalledWith('macros/execute', {
+        macroId: 7,
+        conversationIds: [CONVERSATION_ID],
+      });
+      expect(useAlert).toHaveBeenCalledWith('MACROS.EXECUTE.FILLED_EDITOR');
+    });
+
+    it('does not call the backend when the macro only has the reply', async () => {
+      const { execute } = useMacroExecution();
+
+      execute(fillMacro([reply]), CONVERSATION_ID);
+      await flushPromises();
+
+      expect(emitSpy).toHaveBeenCalledWith(
+        BUS_EVENTS.SD_MACRO_FILL_EDITOR,
+        expect.objectContaining({ content: 'Olá!' })
+      );
+      expect(dispatch).not.toHaveBeenCalled();
+    });
+
+    it('keeps the upstream flow when fill_editor is off', async () => {
+      const { execute } = useMacroExecution();
+
+      execute(macroWith([reply]), CONVERSATION_ID);
+      await flushPromises();
+
+      expect(emitSpy).not.toHaveBeenCalledWith(
+        BUS_EVENTS.SD_MACRO_FILL_EDITOR,
+        expect.anything()
+      );
+      expect(dispatch).toHaveBeenCalledWith(
+        'macros/execute',
+        expect.anything()
+      );
+    });
+
+    it('holds a set_ticket_status that resolves until required attributes are filled', async () => {
+      checkMissingAttributes.mockReturnValue({
+        hasMissing: true,
+        missing: ['priority'],
+      });
+      const { execute } = useMacroExecution();
+      const resolving = fillMacro([
+        reply,
+        { action_name: 'set_ticket_status', action_params: ['Concluído'] },
+      ]);
+
+      expect(execute(resolving, CONVERSATION_ID)).not.toBeNull();
+      await flushPromises();
+      expect(emitSpy).not.toHaveBeenCalledWith(
+        BUS_EVENTS.SD_MACRO_FILL_EDITOR,
+        expect.anything()
+      );
+      expect(dispatch).not.toHaveBeenCalled();
+    });
+
+    it('treats only solved/closed labels as resolving', () => {
+      expect(resolvesConversation(macroWith([ticketStatus]))).toBe(false);
+      expect(
+        resolvesConversation(
+          macroWith([
+            { action_name: 'set_ticket_status', action_params: ['Resolvido'] },
+          ])
+        )
+      ).toBe(true);
+    });
+
+    describe('getEditorFill', () => {
+      it('uses the private note when there is no public reply', () => {
+        expect(getEditorFill(fillMacro([note, addLabel]))).toEqual({
+          isPrivate: true,
+          content: 'Nota',
+          files: [],
+        });
+      });
+
+      it('prefers the public reply and joins several replies', () => {
+        const second = { action_name: 'send_message', action_params: ['Até'] };
+
+        expect(getEditorFill(fillMacro([reply, note, second]))).toEqual({
+          isPrivate: false,
+          content: 'Olá!\n\nAté',
+          files: [],
+        });
+      });
+
+      it('brings the macro attachments to the editor', () => {
+        const file = { blob_id: 9, filename: 'a.pdf', file_url: '/a.pdf' };
+        const macro = fillMacro(
+          [{ action_name: 'send_attachment', action_params: [9] }],
+          { files: [file, { blob_id: 10, filename: 'b.pdf' }] }
+        );
+
+        expect(getEditorFill(macro)).toEqual({
+          isPrivate: false,
+          content: '',
+          files: [file],
+        });
+      });
+
+      it('returns null without fill_editor or without text', () => {
+        expect(getEditorFill(macroWith([reply]))).toBeNull();
+        expect(getEditorFill(fillMacro([addLabel]))).toBeNull();
+      });
+    });
+
+    describe('hasActionsToExecute', () => {
+      it('ignores the actions that went to the editor', () => {
+        expect(hasActionsToExecute(fillMacro([reply]))).toBe(false);
+        expect(hasActionsToExecute(fillMacro([note]))).toBe(false);
+        expect(hasActionsToExecute(fillMacro([reply, note]))).toBe(true);
+        expect(hasActionsToExecute(fillMacro([reply, ticketStatus]))).toBe(
+          true
+        );
+        expect(hasActionsToExecute(macroWith([reply]))).toBe(true);
+      });
+    });
   });
 });

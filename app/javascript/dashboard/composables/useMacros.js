@@ -10,6 +10,10 @@ import {
   resolveActionName,
   getFileName,
 } from 'dashboard/routes/dashboard/settings/macros/macroHelper';
+import {
+  describeCustomAttributeAction,
+  getTicketStatusOptions,
+} from 'dashboard/servicedesk/actionOptions';
 
 /**
  * Composable for handling macro-related functionality
@@ -22,6 +26,12 @@ export const useMacros = () => {
   const labels = computed(() => getters['labels/getLabels'].value);
   const teams = computed(() => getters['teams/getTeams'].value);
   const agents = computed(() => getters['agents/getVerifiedAgents'].value);
+  const conversationAttributes = computed(
+    () =>
+      getters['attributes/getAttributesByModel']?.value?.(
+        'conversation_attribute'
+      ) || []
+  );
 
   const withNoneOption = options => [
     { id: 'nil', name: t('AUTOMATION.NONE_OPTION') },
@@ -51,6 +61,8 @@ export const useMacros = () => {
           id: item.id,
           name: t(`MACROS.PRIORITY_TYPES.${item.i18nKey}`),
         }));
+      case 'set_ticket_status':
+        return getTicketStatusOptions(conversationAttributes.value);
       default:
         return [];
     }
@@ -61,6 +73,14 @@ export const useMacros = () => {
     files
   ) => {
     if (!params?.length) return '';
+
+    if (name === 'set_custom_attribute') {
+      return describeCustomAttributeAction(
+        params,
+        conversationAttributes.value,
+        t
+      );
+    }
 
     const options = getMacroDropdownValues(name);
     if (options.length) {

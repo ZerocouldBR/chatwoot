@@ -1,4 +1,8 @@
 class Macros::ExecutionService < ActionService
+  # ServiceDesk M5.1 (macro_fill_editor): estas ações vão para o editor do agente, que revisa e envia.
+  # O backend nunca as executa nesse modo, nem em execução em massa: nada sai para o cliente sem revisão.
+  EDITOR_ACTIONS = %w[send_message send_attachment].freeze
+
   def initialize(macro, conversation, user)
     super(conversation)
     @macro = macro
@@ -10,6 +14,8 @@ class Macros::ExecutionService < ActionService
   def perform
     @macro.actions.each do |action|
       action = action.with_indifferent_access
+      next if filled_in_editor?(action[:action_name])
+
       begin
         send(action[:action_name], action[:action_params])
       rescue StandardError => e
@@ -21,6 +27,20 @@ class Macros::ExecutionService < ActionService
   end
 
   private
+
+  def fill_editor?
+    @fill_editor = @account.macro_fill_editor? if @fill_editor.nil?
+    @fill_editor
+  end
+
+  # A nota privada vai para o editor só quando a macro não tem resposta pública (o editor tem um modo por vez);
+  # com resposta pública, a nota é interna e continua sendo gravada direto.
+  def filled_in_editor?(action_name)
+    return false unless fill_editor?
+    return true if EDITOR_ACTIONS.include?(action_name)
+
+    action_name == 'add_private_note' && @macro.actions.none? { |action| action.with_indifferent_access[:action_name] == 'send_message' }
+  end
 
   def assign_agent(agent_ids)
     agent_ids = agent_ids.map { |id| id == 'self' ? @user.id : id }

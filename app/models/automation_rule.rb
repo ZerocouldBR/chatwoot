@@ -39,6 +39,7 @@ class AutomationRule < ApplicationRecord
   validate :captain_conditions_operator
   validate :captain_conditions_description
   validate :json_actions_format
+  include Servicedesk::ActionsValidatable
   validate :query_operator_presence
   validate :query_operator_value
   validates :account_id, presence: true
@@ -61,7 +62,7 @@ class AutomationRule < ApplicationRecord
     %w[send_message add_label remove_label send_email_to_team assign_team assign_agent remove_assigned_agent
        remove_assigned_team send_webhook_event mute_conversation send_attachment change_status resolve_conversation
        open_conversation pending_conversation snooze_conversation change_priority send_email_transcript
-       add_private_note].freeze
+       add_private_note] + Servicedesk::ConversationActionParams::ACTION_NAMES
   end
 
   def file_base_data

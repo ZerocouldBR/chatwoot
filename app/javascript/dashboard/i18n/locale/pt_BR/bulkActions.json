@@ -46,7 +46,8 @@
       "EXECUTE_MACRO": "Executar macro",
       "EXECUTE_CONFIRMATION_LABEL": "Executar {macroName} em {n} ticket? | Executar {macroName} em {n} tickets?",
       "QUEUED": "Macro enfileirada para {count} ticket. | Macro enfileirada para {count} tickets.",
-      "QUEUED_WITH_MISSING_ATTRIBUTES": "Macro enfileirada para {count} ticket. Faltam campos obrigatórios e ele pode continuar aberto. | Macro enfileirada para {count} tickets. Ao menos um tem campos obrigatórios faltando e pode continuar aberto."
+      "QUEUED_WITH_MISSING_ATTRIBUTES": "Macro enfileirada para {count} ticket. Faltam campos obrigatórios e ele pode continuar aberto. | Macro enfileirada para {count} tickets. Ao menos um tem campos obrigatórios faltando e pode continuar aberto.",
+      "QUEUED_WITHOUT_REPLY": "Macro enfileirada para {count} ticket. A resposta da macro não foi aplicada: aplique a macro dentro do ticket para revisar e enviar. | Macro enfileirada para {count} tickets. A resposta da macro não foi aplicada: aplique a macro dentro de cada ticket para revisar e enviar."
     }
   }
 }

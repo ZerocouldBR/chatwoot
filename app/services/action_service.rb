@@ -1,5 +1,6 @@
 class ActionService
   include EmailHelper
+  include Servicedesk::ConversationActions
 
   def initialize(conversation)
     @conversation = conversation.reload
