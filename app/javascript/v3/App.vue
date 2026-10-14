@@ -56,6 +56,7 @@ export default {
 @tailwind utilities;
 
 @import '../dashboard/assets/scss/next-colors';
+@import '../dashboard/assets/scss/servicedesk-theme';
 
 html,
 body {

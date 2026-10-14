@@ -2,8 +2,10 @@
 # installation name in the translation templates (before interpolation, so
 # dynamic values such as URLs or customer content are never rewritten).
 module BrandNameTranslation
-  BRAND_PATTERN = /chatwoot/i
-  DEFAULT_BRAND_NAME = 'Helpdesk'.freeze
+  # ServiceDesk: só a palavra isolada; domínios, caminhos, e-mails e chaves de
+  # interpolação (%{chatwoot_url}) ficam intactos.
+  BRAND_PATTERN = %r{(?<![\w./@-])chatwoot(?![\w/-]|\.\w)}i
+  DEFAULT_BRAND_NAME = 'ServiceDesk'.freeze
 
   protected
 

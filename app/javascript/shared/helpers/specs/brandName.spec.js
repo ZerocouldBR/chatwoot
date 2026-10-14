@@ -14,7 +14,7 @@ describe('brandName', () => {
   });
 
   it('falls back to a neutral name', () => {
-    expect(getBrandName()).toBe('Helpdesk');
+    expect(getBrandName()).toBe('ServiceDesk');
   });
 
   it('rewrites nested message templates without touching placeholders', () => {
@@ -33,5 +33,16 @@ describe('brandName', () => {
         LIST: ['Acme Desk'],
       },
     });
+  });
+
+  it('keeps domains, paths, e-mails and placeholders intact', () => {
+    window.globalConfig = { INSTALLATION_NAME: 'Acme Desk' };
+    expect(
+      replaceBrandName(
+        'Chatwoot: https://www.chatwoot.com/terms, chatwoot/chatwoot, a@chatwoot.com, {latestChatwootVersion}. Chatwoot.'
+      )
+    ).toBe(
+      'Acme Desk: https://www.chatwoot.com/terms, chatwoot/chatwoot, a@chatwoot.com, {latestChatwootVersion}. Acme Desk.'
+    );
   });
 });
