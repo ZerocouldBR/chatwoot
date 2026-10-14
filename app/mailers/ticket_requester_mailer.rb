@@ -7,6 +7,8 @@ class TicketRequesterMailer < ConversationReplyMailer
     @body = body
     @options = { to: to, cc: cc.presence, from: email_from, reply_to: email_reply_to, subject: subject,
                  in_reply_to: in_reply_to_email, references: references_header }
+    # Marks the e-mail as automatic so out-of-office replies are not sent back (RFC 3834).
+    headers['Auto-Submitted'] = 'auto-generated'
     oauth_smtp_settings
     set_delivery_method
     mail(@options)

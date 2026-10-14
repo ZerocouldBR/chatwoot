@@ -1,5 +1,12 @@
 <script setup>
-import { computed, onUnmounted } from 'vue';
+import { computed, onUnmounted, ref } from 'vue';
+import { useRouter } from 'vue-router';
+import { useAdmin } from 'dashboard/composables/useAdmin';
+import TicketsAPI from 'dashboard/api/tickets';
+import { UNSOLVED_STATUSES } from 'dashboard/constants/ticketStatuses';
+import MergeTicketDialog from './MergeTicketDialog.vue';
+import Dialog from 'dashboard/components-next/dialog/Dialog.vue';
+import { frontendURL } from 'dashboard/helper/URLHelper';
 import { useToggle } from '@vueuse/core';
 import { useStore } from 'vuex';
 import { useAlert } from 'dashboard/composables';
@@ -24,6 +31,10 @@ const [showEmailActionsModal, toggleEmailModal] = useToggle(false);
 const [showActionsDropdown, toggleDropdown] = useToggle(false);
 
 const currentChat = computed(() => store.getters.getSelectedChat);
+const router = useRouter();
+const { isAdmin } = useAdmin();
+const mergeDialog = ref(null);
+const spamDialog = ref(null);
 
 const actionMenuItems = computed(() => {
   const items = [];
@@ -51,8 +62,35 @@ const actionMenuItems = computed(() => {
     value: 'send_transcript',
   });
 
+  if (UNSOLVED_STATUSES.includes(currentChat.value.status)) {
+    items.push({
+      icon: 'i-lucide-merge',
+      label: t('TICKET_MERGE.ACTION'),
+      action: 'merge',
+      value: 'merge',
+    });
+  }
+
+  if (isAdmin.value) {
+    items.push({
+      icon: 'i-lucide-shield-ban',
+      label: t('TICKET_SPAM.ACTION'),
+      action: 'spam',
+      value: 'spam',
+    });
+  }
+
   return items;
 });
+
+const markAsSpam = async () => {
+  await TicketsAPI.markAsSpam(currentChat.value.id);
+  spamDialog.value.close();
+  useAlert(t('TICKET_SPAM.DONE'));
+  router.push(
+    frontendURL(`accounts/${currentChat.value.account_id}/dashboard`)
+  );
+};
 
 const handleActionClick = ({ action }) => {
   toggleDropdown(false);
@@ -65,6 +103,10 @@ const handleActionClick = ({ action }) => {
     useAlert(t('CONTACT_PANEL.UNMUTED_SUCCESS'));
   } else if (action === 'send_transcript') {
     toggleEmailModal();
+  } else if (action === 'merge') {
+    mergeDialog.value.open();
+  } else if (action === 'spam') {
+    spamDialog.value.open();
   }
 };
 
@@ -102,6 +144,7 @@ onUnmounted(() => {
     >
       <ButtonV4
         v-tooltip="$t('CONVERSATION.HEADER.MORE_ACTIONS')"
+        data-testid="ticket-more-actions"
         size="sm"
         variant="ghost"
         color="slate"
@@ -116,6 +159,15 @@ onUnmounted(() => {
         @action="handleActionClick"
       />
     </div>
+    <MergeTicketDialog ref="mergeDialog" :ticket="currentChat" />
+    <Dialog
+      ref="spamDialog"
+      type="alert"
+      :title="$t('TICKET_SPAM.TITLE')"
+      :description="$t('TICKET_SPAM.DESCRIPTION')"
+      :confirm-button-label="$t('TICKET_SPAM.CONFIRM')"
+      @confirm="markAsSpam"
+    />
     <EmailTranscriptModal
       v-if="showEmailActionsModal"
       :show="showEmailActionsModal"

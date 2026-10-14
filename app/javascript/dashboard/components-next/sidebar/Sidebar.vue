@@ -1,4 +1,5 @@
 <script setup>
+import { useAdmin } from 'dashboard/composables/useAdmin';
 import { h, ref, computed, onMounted, watch } from 'vue';
 import { provideSidebarContext, useSidebarResize } from './provider';
 import { useAccount } from 'dashboard/composables/useAccount';
@@ -53,6 +54,7 @@ const isCallsAvailable = computed(
 );
 const searchShortcut = useKbd([`$mod`, 'k']);
 const { t } = useI18n();
+const { isAdmin } = useAdmin();
 
 const isRTL = useMapGetter('accounts/isRTL');
 
@@ -425,6 +427,24 @@ const menuItems = computed(() => {
             : 0,
           to: accountScopedRoute('conversation_unattended'),
         },
+        ...(isAdmin.value
+          ? [
+              {
+                name: 'Suspended Tickets',
+                label: t('SIDEBAR.SUSPENDED_TICKETS'),
+                icon: 'i-lucide-mail-warning',
+                activeOn: ['suspended_tickets'],
+                to: accountScopedRoute('suspended_tickets'),
+              },
+              {
+                name: 'Deleted Tickets',
+                label: t('SIDEBAR.DELETED_TICKETS'),
+                icon: 'i-lucide-trash-2',
+                activeOn: ['deleted_tickets'],
+                to: accountScopedRoute('deleted_tickets'),
+              },
+            ]
+          : []),
         {
           name: 'Folders',
           label: t('SIDEBAR.CUSTOM_VIEWS_FOLDER'),

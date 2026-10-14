@@ -422,7 +422,10 @@
       "CC_PLACEHOLDER": "Adicione um e-mail para copiar",
       "CC_ADD": "Adicionar",
       "CC_REMOVE": "Remover {email}",
-      "CC_EMPTY": "Ninguém em cópia"
+      "CC_EMPTY": "Ninguém em cópia",
+      "PROBLEM": "Problema",
+      "PROBLEM_PLACEHOLDER": "Número do ticket de problema",
+      "INCIDENTS": "Incidentes ({count})"
     },
     "TICKET_EVENTS": {
       "TITLE": "Eventos do ticket",
@@ -452,10 +455,12 @@
         "company_id": "Empresa",
         "contact_id": "Solicitante",
         "cached_label_list": "Tags",
-        "ccs": "Em cópia (CC)"
+        "ccs": "Em cópia (CC)",
+        "problem_id": "Problema"
       },
       "CHANGE_VALUES": "{from} → {to}",
-      "META": "{via} · {time}"
+      "META": "{via} · {time}",
+      "REDACTED": "{author} redigiu um comentário"
     },
     "CLOSED_TICKET_BANNER": "Este ticket está fechado. Um novo e-mail do cliente abre um ticket de acompanhamento.",
     "FOLLOWUP_OF": "Acompanhamento do #{id}",
@@ -465,7 +470,8 @@
       "HOURS": "{count} h",
       "DAYS": "{count} d",
       "TOOLTIP": "Tempo até a próxima meta de SLA"
-    }
+    },
+    "MERGED_INTO": "Mesclado no #{id}"
   },
   "EMAIL_TRANSCRIPT": {
     "TITLE": "Enviar transcrição de ticket",
@@ -662,6 +668,65 @@
       "COMMENTED": "{author} comentou em {subject}",
       "CHANGED": "{author} atualizou {subject}",
       "SOMEONE": "Alguém"
+    }
+  },
+  "TICKET_MERGE": {
+    "ACTION": "Mesclar em outro ticket",
+    "TITLE": "Mesclar o ticket #{id}",
+    "DESCRIPTION": "Este ticket será fechado e mesclado no ticket escolhido. O solicitante dele entra em cópia nesse ticket.",
+    "TARGET": "Mesclar no ticket número",
+    "NOT_FOUND": "Ticket não encontrado",
+    "SOURCE_COMMENT": "Comentário no ticket #{id}",
+    "TARGET_COMMENT": "Comentário no ticket de destino",
+    "COMMENT_PLACEHOLDER": "Deixe vazio para o comentário padrão",
+    "PUBLIC": "Os solicitantes podem ver estes comentários",
+    "IRREVERSIBLE": "A mesclagem não pode ser desfeita.",
+    "CONFIRM": "Mesclar",
+    "DONE": "Mesclado no ticket #{id}",
+    "ERROR": "Não foi possível mesclar os tickets"
+  },
+  "TICKET_SPAM": {
+    "ACTION": "Marcar como spam",
+    "TITLE": "Marcar este ticket como spam?",
+    "DESCRIPTION": "O ticket vai para os excluídos e o solicitante é bloqueado: os próximos e-mails dele ficam suspensos.",
+    "CONFIRM": "Marcar como spam",
+    "DONE": "Ticket marcado como spam"
+  },
+  "TICKET_REDACTION": {
+    "ACTION": "Redigir",
+    "TITLE": "Redigir este comentário",
+    "DESCRIPTION": "A redação é permanente: o texto é substituído por blocos em todo lugar onde fica guardado, inclusive no e-mail original.",
+    "TEXT": "Texto a redigir",
+    "TEXT_PLACEHOLDER": "Deixe vazio para redigir o comentário inteiro",
+    "ATTACHMENTS": "Excluir os anexos ({count})",
+    "CONFIRM": "Redigir",
+    "DONE": "Comentário redigido",
+    "ERROR": "Não foi possível redigir o comentário"
+  },
+  "TICKET_QUEUES": {
+    "NO_SUBJECT": "(sem assunto)",
+    "DELETED_AT": "excluído {time}",
+    "DELETED": {
+      "TITLE": "Tickets excluídos",
+      "DESCRIPTION": "Tickets excluídos podem ser restaurados por 30 dias; depois são apagados de vez.",
+      "EMPTY": "Nenhum ticket excluído",
+      "RESTORE": "Restaurar",
+      "DELETE": "Excluir permanentemente",
+      "RESTORED": "Ticket restaurado",
+      "DELETED": "Ticket excluído permanentemente"
+    },
+    "SUSPENDED": {
+      "TITLE": "Tickets suspensos",
+      "DESCRIPTION": "E-mails retidos em vez de virarem tickets. Recupere um para transformá-lo em ticket; eles são apagados após 14 dias.",
+      "EMPTY": "Nenhum ticket suspenso",
+      "RESTORE": "Recuperar",
+      "DELETE": "Excluir",
+      "RESTORED": "E-mail recuperado",
+      "DELETED": "E-mail excluído",
+      "REASONS": {
+        "blocked_sender": "Remetente bloqueado",
+        "automated_response": "Resposta automática"
+      }
     }
   }
 }

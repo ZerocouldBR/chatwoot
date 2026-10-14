@@ -72,6 +72,9 @@ const description = event => {
   if (event.event_type === 'create') {
     return t('CONVERSATION.TICKET_EVENTS.CREATED', { author });
   }
+  if (event.event_type === 'redaction') {
+    return t('CONVERSATION.TICKET_EVENTS.REDACTED', { author });
+  }
   if (event.event_type === 'comment') {
     return event.value?.public
       ? t('CONVERSATION.TICKET_EVENTS.PUBLIC_COMMENT', { author })

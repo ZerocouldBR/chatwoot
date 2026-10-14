@@ -50,6 +50,19 @@ const selectedType = computed(
 );
 
 const isTask = computed(() => props.conversation.ticket_type === 'task');
+const isIncident = computed(
+  () => props.conversation.ticket_type === 'incident'
+);
+const isProblem = computed(() => props.conversation.ticket_type === 'problem');
+const problemId = ref(props.conversation.problem_id || '');
+watch(
+  () => props.conversation.problem_id,
+  value => {
+    problemId.value = value || '';
+  }
+);
+const ticketPath = id =>
+  `/app/accounts/${props.conversation.account_id}/tickets/${id}`;
 
 // The API returns due_at as a Unix timestamp; the date input wants YYYY-MM-DD.
 const dueDate = computed(() => {
@@ -68,6 +81,12 @@ const update = async attributes => {
         t('CONVERSATION.TICKET_FIELDS.UPDATE_FAILED')
     );
   }
+};
+
+const saveProblem = () => {
+  const value = problemId.value ? Number(problemId.value) : null;
+  if (value === (props.conversation.problem_id || null)) return;
+  update({ problem_id: value });
 };
 
 const addCc = async () => {
@@ -162,6 +181,45 @@ const onDueDateChange = event => {
         class="w-full mb-2 text-sm"
         @change="onDueDateChange"
       />
+    </template>
+    <template v-if="isIncident">
+      <ContactDetailsItem
+        compact
+        :title="$t('CONVERSATION.TICKET_FIELDS.PROBLEM')"
+      />
+      <input
+        v-model="problemId"
+        data-testid="ticket-problem"
+        type="number"
+        min="1"
+        :placeholder="$t('CONVERSATION.TICKET_FIELDS.PROBLEM_PLACEHOLDER')"
+        class="w-full mb-2 text-sm"
+        @blur="saveProblem"
+        @keydown.enter.prevent="saveProblem"
+      />
+    </template>
+    <template v-if="isProblem">
+      <ContactDetailsItem
+        compact
+        :title="
+          $t('CONVERSATION.TICKET_FIELDS.INCIDENTS', {
+            count: conversation.incident_ids?.length || 0,
+          })
+        "
+      />
+      <p
+        class="flex flex-wrap gap-2 mb-2 text-sm"
+        data-testid="ticket-incidents"
+      >
+        <router-link
+          v-for="id in conversation.incident_ids"
+          :key="id"
+          :to="ticketPath(id)"
+          class="text-n-blue-11 hover:underline"
+        >
+          #{{ id }}
+        </router-link>
+      </p>
     </template>
     <ContactDetailsItem compact :title="$t('CONVERSATION.TICKET_FIELDS.CC')" />
     <div data-testid="ticket-ccs" class="flex flex-col gap-1 mb-2">

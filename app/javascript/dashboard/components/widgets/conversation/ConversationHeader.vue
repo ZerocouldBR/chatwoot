@@ -86,6 +86,14 @@ const followupSourceLink = computed(() => {
   );
 });
 
+const mergedIntoLink = computed(() => {
+  const targetId = props.chat.merged_into_id;
+  if (!targetId) return null;
+  return frontendURL(
+    conversationUrl({ accountId: route.params.accountId, id: targetId })
+  );
+});
+
 const statusLabel = computed(() =>
   t(`CONVERSATION.TICKET_STATUS.${currentChat.value.status}`)
 );
@@ -179,6 +187,16 @@ const copyConversationId = async () => {
               {{
                 $t('CONVERSATION.FOLLOWUP_OF', { id: chat.followup_source_id })
               }}
+            </router-link>
+          </template>
+          <template v-if="mergedIntoLink">
+            <span>•</span>
+            <router-link
+              :to="mergedIntoLink"
+              data-testid="merged-into-link"
+              class="shrink-0 text-n-blue-11 hover:underline"
+            >
+              {{ $t('CONVERSATION.MERGED_INTO', { id: chat.merged_into_id }) }}
             </router-link>
           </template>
           <span>•</span>

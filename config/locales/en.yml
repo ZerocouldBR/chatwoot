@@ -117,6 +117,13 @@ en:
       invalid_view: 'Unknown home view. Use mine, ccs, following or solved'
     sla:
       business_hours_need_schedule: 'need a default business schedule (Settings > Business hours) for business-hours targets'
+    tickets:
+      redaction:
+        text_not_found: 'The text to redact was not found in the comment'
+      merge:
+        same_ticket: 'A ticket cannot be merged into itself'
+        source_solved: 'Only unsolved tickets can be merged into another ticket'
+        target_closed: 'Tickets cannot be merged into a closed ticket'
     ticket_rules:
       invalid_kind: 'kind must be trigger or automation'
       needs_time_condition: 'need at least one "hours since" condition'
@@ -1050,6 +1057,9 @@ en:
           queued: 'Test email on its way to %{email}. Ask the user to check their inbox and spam folder.'
           subject: 'Test email from %{brand_name} support'
   tickets:
+    merge:
+      source_comment: 'This request was closed and merged into request #%{id} "%{subject}".'
+      target_comment: 'Request #%{id} "%{subject}" was closed and merged into this request.'
     statuses:
       new_ticket: 'New'
       open: 'Open'

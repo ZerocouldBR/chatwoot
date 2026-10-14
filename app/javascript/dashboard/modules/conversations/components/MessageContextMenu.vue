@@ -16,6 +16,7 @@ import MenuItem from '../../../components/widgets/conversation/contextMenu/menuI
 import { useTrack } from 'dashboard/composables';
 import NextButton from 'dashboard/components-next/button/Button.vue';
 import ReportCaptainMessageDialog from './ReportCaptainMessageDialog.vue';
+import RedactMessageDialog from './RedactMessageDialog.vue';
 
 export default {
   components: {
@@ -24,6 +25,7 @@ export default {
     ContextMenu,
     NextButton,
     ReportCaptainMessageDialog,
+    RedactMessageDialog,
   },
   props: {
     message: {
@@ -163,6 +165,10 @@ export default {
     closeDeleteModal() {
       this.showDeleteModal = false;
     },
+    openRedactDialog() {
+      this.handleClose();
+      this.$refs.redactDialog?.open();
+    },
     openReportDialog() {
       this.handleClose();
       this.$refs.reportDialog?.open();
@@ -277,6 +283,16 @@ export default {
           variant="icon"
           @click.stop="openReportDialog"
         />
+        <MenuItem
+          v-if="enabledOptions['redact']"
+          :option="{
+            icon: 'eye-hide',
+            label: $t('TICKET_REDACTION.ACTION'),
+          }"
+          variant="icon"
+          data-testid="message-redact"
+          @click.stop="openRedactDialog"
+        />
         <hr v-if="enabledOptions['delete']" />
         <MenuItem
           v-if="enabledOptions['delete']"
@@ -289,6 +305,11 @@ export default {
         />
       </div>
     </ContextMenu>
+    <RedactMessageDialog
+      v-if="enabledOptions['redact']"
+      ref="redactDialog"
+      :message="message"
+    />
     <ReportCaptainMessageDialog
       v-if="enabledOptions['report']"
       ref="reportDialog"

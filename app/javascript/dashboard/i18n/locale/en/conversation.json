@@ -452,7 +452,10 @@
       "CC_PLACEHOLDER": "Add an e-mail to copy",
       "CC_ADD": "Add",
       "CC_REMOVE": "Remove {email}",
-      "CC_EMPTY": "No one copied"
+      "CC_EMPTY": "No one copied",
+      "PROBLEM": "Problem",
+      "PROBLEM_PLACEHOLDER": "Problem ticket number",
+      "INCIDENTS": "Incidents ({count})"
     },
     "TICKET_EVENTS": {
       "TITLE": "Ticket events",
@@ -482,10 +485,12 @@
         "company_id": "Company",
         "contact_id": "Requester",
         "cached_label_list": "Tags",
-        "ccs": "CC"
+        "ccs": "CC",
+        "problem_id": "Problem"
       },
       "CHANGE_VALUES": "{from} → {to}",
-      "META": "{via} · {time}"
+      "META": "{via} · {time}",
+      "REDACTED": "{author} redacted a comment"
     },
     "CLOSED_TICKET_BANNER": "This ticket is closed. A new customer e-mail opens a follow-up ticket.",
     "FOLLOWUP_OF": "Follow-up of #{id}",
@@ -495,7 +500,8 @@
       "HOURS": "{count}h",
       "DAYS": "{count}d",
       "TOOLTIP": "Time left before the next SLA target"
-    }
+    },
+    "MERGED_INTO": "Merged into #{id}"
   },
   "EMAIL_TRANSCRIPT": {
     "TITLE": "Send ticket transcript",
@@ -701,6 +707,65 @@
       "COMMENTED": "{author} commented on {subject}",
       "CHANGED": "{author} updated {subject}",
       "SOMEONE": "Someone"
+    }
+  },
+  "TICKET_MERGE": {
+    "ACTION": "Merge into another ticket",
+    "TITLE": "Merge ticket #{id}",
+    "DESCRIPTION": "This ticket will be closed and merged into the ticket you choose. Its requester is copied on that ticket.",
+    "TARGET": "Merge into ticket number",
+    "NOT_FOUND": "Ticket not found",
+    "SOURCE_COMMENT": "Comment on ticket #{id}",
+    "TARGET_COMMENT": "Comment on the ticket it is merged into",
+    "COMMENT_PLACEHOLDER": "Leave empty for the default comment",
+    "PUBLIC": "Requesters can see these comments",
+    "IRREVERSIBLE": "Merging cannot be undone.",
+    "CONFIRM": "Merge",
+    "DONE": "Merged into ticket #{id}",
+    "ERROR": "Could not merge the tickets"
+  },
+  "TICKET_SPAM": {
+    "ACTION": "Mark as spam",
+    "TITLE": "Mark this ticket as spam?",
+    "DESCRIPTION": "The ticket goes to the deleted tickets and the requester is blocked: their next e-mails are suspended.",
+    "CONFIRM": "Mark as spam",
+    "DONE": "Ticket marked as spam"
+  },
+  "TICKET_REDACTION": {
+    "ACTION": "Redact",
+    "TITLE": "Redact this comment",
+    "DESCRIPTION": "Redaction is permanent: the text is replaced with blocks everywhere it is stored, including the original e-mail.",
+    "TEXT": "Text to redact",
+    "TEXT_PLACEHOLDER": "Leave empty to redact the whole comment",
+    "ATTACHMENTS": "Delete the attachments ({count})",
+    "CONFIRM": "Redact",
+    "DONE": "Comment redacted",
+    "ERROR": "Could not redact the comment"
+  },
+  "TICKET_QUEUES": {
+    "NO_SUBJECT": "(no subject)",
+    "DELETED_AT": "deleted {time}",
+    "DELETED": {
+      "TITLE": "Deleted tickets",
+      "DESCRIPTION": "Deleted tickets can be restored for 30 days, then they are deleted for good.",
+      "EMPTY": "No deleted tickets",
+      "RESTORE": "Restore",
+      "DELETE": "Delete permanently",
+      "RESTORED": "Ticket restored",
+      "DELETED": "Ticket deleted permanently"
+    },
+    "SUSPENDED": {
+      "TITLE": "Suspended tickets",
+      "DESCRIPTION": "E-mails held instead of becoming tickets. Recover one to turn it into a ticket; they are deleted after 14 days.",
+      "EMPTY": "No suspended tickets",
+      "RESTORE": "Recover",
+      "DELETE": "Delete",
+      "RESTORED": "E-mail recovered",
+      "DELETED": "E-mail deleted",
+      "REASONS": {
+        "blocked_sender": "Sender is blocked",
+        "automated_response": "Automated response"
+      }
     }
   }
 }

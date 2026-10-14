@@ -418,7 +418,9 @@
     "TICKET_HOME": "Página inicial",
     "BUSINESS_HOURS": "Horário comercial",
     "TICKET_TRIGGERS": "Gatilhos",
-    "TICKET_AUTOMATIONS": "Automações"
+    "TICKET_AUTOMATIONS": "Automações",
+    "SUSPENDED_TICKETS": "Suspensos",
+    "DELETED_TICKETS": "Excluídos"
   },
   "DATA_IMPORTS": {
     "HEADER": "Dados",

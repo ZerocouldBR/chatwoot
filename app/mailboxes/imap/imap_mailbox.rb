@@ -16,6 +16,7 @@ class Imap::ImapMailbox
 
     # Skip processing email if it belongs to any of the edge cases
     return unless incoming_email_from_valid_email?
+    return if SuspendedTicket.hold_if_needed(@inbox, @processed_mail, @inbound_mail.to_s)
 
     ActiveRecord::Base.transaction do
       find_or_create_contact
@@ -44,7 +45,7 @@ class Imap::ImapMailbox
     return if in_reply_to.blank?
 
     message = @inbox.messages.find_by(source_id: in_reply_to)
-    return @inbox.conversations.find(message.conversation_id) if message.present? && !message.forwarded?
+    return @inbox.conversations.find_by(id: message.conversation_id) if message.present? && !message.forwarded?
 
     @contact.conversations.where(inbox: @inbox).find_by("additional_attributes->>'in_reply_to' = ?", in_reply_to)
   end

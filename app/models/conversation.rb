@@ -10,6 +10,7 @@
 #  cached_label_list      :text
 #  contact_last_seen_at   :datetime
 #  custom_attributes      :jsonb
+#  deleted_at             :datetime
 #  due_at                 :datetime
 #  first_reply_created_at :datetime
 #  identifier             :string
@@ -36,6 +37,8 @@
 #  display_id             :integer          not null
 #  followup_source_id     :bigint
 #  inbox_id               :integer          not null
+#  merged_into_id         :bigint
+#  problem_id             :bigint
 #  sla_policy_id          :bigint
 #  submitter_id           :bigint
 #  team_id                :bigint
@@ -44,6 +47,7 @@
 #
 #  conv_acid_inbid_stat_asgnid_idx                           (account_id,inbox_id,status,assignee_id)
 #  index_conversations_on_account_id                         (account_id)
+#  index_conversations_on_account_id_and_deleted_at          (account_id,deleted_at)
 #  index_conversations_on_account_id_and_display_id          (account_id,display_id) UNIQUE
 #  index_conversations_on_account_id_and_due_at              (account_id,due_at)
 #  index_conversations_on_account_id_and_next_sla_breach_at  (account_id,next_sla_breach_at)
@@ -61,6 +65,7 @@
 #  index_conversations_on_identifier_and_account_id          (identifier,account_id)
 #  index_conversations_on_inbox_id                           (inbox_id)
 #  index_conversations_on_priority                           (priority)
+#  index_conversations_on_problem_id                         (problem_id)
 #  index_conversations_on_status_and_account_id              (status,account_id)
 #  index_conversations_on_status_and_priority                (status,priority)
 #  index_conversations_on_team_id                            (team_id)
@@ -80,6 +85,8 @@ class Conversation < ApplicationRecord
   include ConversationMuteHelpers
   include TicketAuditable
   include SlaTrackable
+  include TicketProblemLinkable
+  include TicketTrashable
 
   CONVERSATION_UPDATED_ADDITIONAL_ATTRIBUTE_KEYS = %w[conversation_language].freeze
   FILTERED_UNREAD_COUNT_ADDITIONAL_ATTRIBUTE_KEYS = %w[browser_language conversation_language mail_subject referer].freeze
@@ -111,7 +118,7 @@ class Conversation < ApplicationRecord
   enum ticket_type: { question: 0, incident: 1, problem: 2, task: 3 }, _prefix: true
   UNSOLVED_STATUSES = %w[new_ticket open waiting_on_customer on_hold].freeze
   # Ticket fields that freeze once a ticket is closed (tags stay editable).
-  LOCKED_WHEN_CLOSED = %w[status priority assignee_id team_id subject ticket_type due_at company_id contact_id custom_attributes].freeze
+  LOCKED_WHEN_CLOSED = %w[status priority assignee_id team_id subject ticket_type due_at company_id contact_id problem_id custom_attributes].freeze
   # Statuses an agent can pick; New and Closed are only set by the system.
   AGENT_SETTABLE_STATUSES = %w[open waiting_on_customer on_hold resolved pending].freeze
   enum priority: { low: 0, medium: 1, high: 2, urgent: 3 }
@@ -465,7 +472,7 @@ class Conversation < ApplicationRecord
     # Display id is set via a trigger in the database
     # So we need to specifically fetch it after the record is created
     # We can't use reload because it will clear the previous changes, which we need for the dispatcher
-    obj_from_db = self.class.find(id)
+    obj_from_db = self.class.unscoped.find(id)
     self[:display_id] = obj_from_db[:display_id]
     self[:uuid] = obj_from_db[:uuid]
   end

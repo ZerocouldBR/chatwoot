@@ -193,9 +193,25 @@ RSpec.describe Imap::ImapMailbox do
     context 'when an auto reply email' do
       let(:auto_reply_mail) { create_inbound_email_from_fixture('auto_reply.eml') }
 
-      it 'does not create a new conversation' do
-        expect { class_instance.process(auto_reply_mail.mail, channel) }.to change(Conversation, :count)
-        expect(Conversation.last.additional_attributes['auto_reply']).to be true
+      it 'holds it as a suspended ticket instead of creating a ticket' do
+        expect { class_instance.process(auto_reply_mail.mail, channel) }.not_to change(Conversation, :count)
+        expect(SuspendedTicket.last).to have_attributes(reason: 'automated_response', inbox_id: channel.inbox.id)
+        expect(SuspendedTicket.last.raw_email).to be_attached
+      end
+    end
+
+    context 'when the sender is blocked' do
+      let(:inbound_mail) { create_inbound_email_from_mail(from: 'blocked@example.com', to: 'imap@gmail.com', subject: 'Spam!') }
+
+      before { create(:contact, email: 'blocked@example.com', account: channel.account, blocked: true) }
+
+      it 'holds the e-mail and creates the ticket once an agent recovers it' do
+        expect { class_instance.process(inbound_mail.mail, channel) }.not_to change(Conversation, :count)
+        held = SuspendedTicket.last
+        expect(held).to have_attributes(reason: 'blocked_sender', from_email: 'blocked@example.com', subject: 'Spam!')
+
+        expect { held.recover! }.to change(Conversation, :count).by(1)
+        expect(held.reload.recovered_at).to be_present
       end
     end
 

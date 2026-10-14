@@ -49,6 +49,7 @@ import ForwardEmailPanel from './forward/ForwardEmailPanel.vue';
 import ForwardedEmailBanner from './forward/ForwardedEmailBanner.vue';
 import ContextMenu from 'dashboard/modules/conversations/components/MessageContextMenu.vue';
 import { useBranding } from 'shared/composables/useBranding';
+import { useAdmin } from 'dashboard/composables/useAdmin';
 
 /**
  * @typedef {Object} Attachment
@@ -391,8 +392,11 @@ const payloadForContextMenu = computed(() => {
     content_attributes: props.contentAttributes,
     content: props.content,
     conversation_id: props.conversationId,
+    attachments: props.attachments,
   };
 });
+
+const { isAdmin } = useAdmin();
 
 const contextMenuEnabledOptions = computed(() => {
   const hasText = !!props.content;
@@ -410,6 +414,8 @@ const contextMenuEnabledOptions = computed(() => {
       !isFailedOrProcessing &&
       !isMessageDeleted.value,
     cannedResponse: isOutgoing && hasText && !isMessageDeleted.value,
+    redact:
+      isAdmin.value && (hasText || hasAttachments) && !isMessageDeleted.value,
     copyLink: !isFailedOrProcessing,
     translate: !isFailedOrProcessing && !isMessageDeleted.value && hasText,
     replyTo:

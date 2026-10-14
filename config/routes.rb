@@ -159,6 +159,12 @@ Rails.application.routes.draw do
           resources :sla_policies, only: [:index, :show, :create, :update, :destroy] do
             post :reorder, on: :collection
           end
+          resources :suspended_tickets, only: [:index, :destroy] do
+            post :recover, on: :member
+          end
+          resources :deleted_tickets, only: [:index, :destroy] do
+            post :restore, on: :member
+          end
           resources :ticket_rules, only: [:index, :show, :create, :update, :destroy] do
             post :reorder, on: :collection
           end
@@ -201,11 +207,14 @@ Rails.application.routes.draw do
                   post :translate
                   post :retry
                 end
+                resource :redaction, only: [:create]
               end
               resource :contact_info_request, only: [:show, :create]
               resources :assignments, only: [:create]
               resources :labels, only: [:create, :index]
               resources :events, only: [:index]
+              resource :merge, only: [:create]
+              resource :spam, only: [:create]
               resource :ccs, only: [:show, :create, :destroy]
               resource :participants, only: [:show, :create, :update, :destroy]
               resource :direct_uploads, only: [:create]

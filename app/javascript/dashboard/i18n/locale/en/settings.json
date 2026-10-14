@@ -423,7 +423,9 @@
     "TICKET_HOME": "Home",
     "BUSINESS_HOURS": "Business hours",
     "TICKET_TRIGGERS": "Triggers",
-    "TICKET_AUTOMATIONS": "Automations"
+    "TICKET_AUTOMATIONS": "Automations",
+    "SUSPENDED_TICKETS": "Suspended",
+    "DELETED_TICKETS": "Deleted"
   },
   "DATA_IMPORTS": {
     "HEADER": "Data",

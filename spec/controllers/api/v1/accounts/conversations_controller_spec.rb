@@ -1513,27 +1513,25 @@ RSpec.describe 'Conversations API', type: :request do
         create(:inbox_member, user: administrator, inbox: conversation.inbox)
       end
 
-      it 'successfully deletes the conversation' do
-        expect do
-          delete "/api/v1/accounts/#{account.id}/conversations/#{conversation.display_id}",
-                 headers: administrator.create_new_auth_token,
-                 as: :json
-        end.to have_enqueued_job(DeleteObjectJob).with(conversation, administrator, anything)
+      it 'moves the ticket to the trash' do
+        delete "/api/v1/accounts/#{account.id}/conversations/#{conversation.display_id}",
+               headers: administrator.create_new_auth_token,
+               as: :json
 
         expect(response).to have_http_status(:ok)
+        expect(Conversation.trashed.find(conversation.id)).to be_present
       end
 
       it 'can delete conversations from inboxes without direct access' do
         other_inbox = create(:inbox, account: account)
         other_conversation = create(:conversation, account: account, inbox: other_inbox)
 
-        expect do
-          delete "/api/v1/accounts/#{account.id}/conversations/#{other_conversation.display_id}",
-                 headers: administrator.create_new_auth_token,
-                 as: :json
-        end.to have_enqueued_job(DeleteObjectJob).with(other_conversation, administrator, anything)
+        delete "/api/v1/accounts/#{account.id}/conversations/#{other_conversation.display_id}",
+               headers: administrator.create_new_auth_token,
+               as: :json
 
         expect(response).to have_http_status(:ok)
+        expect(Conversation.trashed.find(other_conversation.id)).to be_present
       end
     end
   end

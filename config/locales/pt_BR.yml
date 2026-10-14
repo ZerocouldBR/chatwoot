@@ -100,6 +100,13 @@ pt_BR:
       invalid_view: 'Visão desconhecida. Use mine, ccs, following ou solved'
     sla:
       business_hours_need_schedule: 'precisam de um horário comercial padrão (Configurações > Horário comercial) para metas em horas úteis'
+    tickets:
+      redaction:
+        text_not_found: 'O texto a redigir não foi encontrado no comentário'
+      merge:
+        same_ticket: 'Um ticket não pode ser mesclado nele mesmo'
+        source_solved: 'Só tickets não resolvidos podem ser mesclados em outro ticket'
+        target_closed: 'Não é possível mesclar em um ticket fechado'
     ticket_rules:
       invalid_kind: 'o tipo deve ser trigger ou automation'
       needs_time_condition: 'precisam de pelo menos uma condição de "horas desde"'
@@ -674,6 +681,9 @@ pt_BR:
         sent: 'E-mail de confirmação enviado.'
         already_confirmed: 'O usuário já está confirmado.'
   tickets:
+    merge:
+      source_comment: 'Esta solicitação foi fechada e mesclada na solicitação #%{id} "%{subject}".'
+      target_comment: 'A solicitação #%{id} "%{subject}" foi fechada e mesclada nesta solicitação.'
     statuses:
       new_ticket: 'Novo'
       open: 'Aberto'

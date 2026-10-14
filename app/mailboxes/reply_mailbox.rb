@@ -6,6 +6,7 @@ class ReplyMailbox < ApplicationMailbox
   def process
     # Return early if no conversation was found (e.g., notification emails, suspended accounts)
     return unless @conversation
+    return if SuspendedTicket.hold_if_needed(@conversation.inbox, MailPresenter.new(mail, @conversation.account), mail.to_s)
 
     # Wrap everything in a transaction to ensure atomicity
     # This prevents orphan conversations if message/attachment creation fails

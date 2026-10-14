@@ -61,6 +61,9 @@ json.submitter_id conversation.submitter_id
 json.company_id conversation.company_id
 json.company_name conversation.company&.name
 json.followup_source_id conversation.followup_source&.display_id
+json.merged_into_id conversation.merged_into&.display_id
+json.problem_id conversation.problem&.display_id
+json.incident_ids conversation.incidents.pluck(:display_id) if conversation.ticket_type_problem?
 json.cc_emails conversation.conversation_ccs.map(&:email)
 json.sla_policy_id conversation.sla_policy_id
 json.next_sla_breach_at conversation.next_sla_breach_at&.to_i

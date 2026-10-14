@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2026_10_14_152126) do
+ActiveRecord::Schema[7.1].define(version: 2026_10_14_160816) do
   # These extensions should be enabled to support this database
   enable_extension "pg_stat_statements"
   enable_extension "pg_trgm"
@@ -1056,6 +1056,10 @@ ActiveRecord::Schema[7.1].define(version: 2026_10_14_152126) do
     t.datetime "next_sla_breach_at"
     t.boolean "sla_breached", default: false, null: false
     t.bigint "triggers_event_cursor"
+    t.bigint "merged_into_id"
+    t.bigint "problem_id"
+    t.datetime "deleted_at"
+    t.index ["account_id", "deleted_at"], name: "index_conversations_on_account_id_and_deleted_at"
     t.index ["account_id", "display_id"], name: "index_conversations_on_account_id_and_display_id", unique: true
     t.index ["account_id", "due_at"], name: "index_conversations_on_account_id_and_due_at"
     t.index ["account_id", "id"], name: "index_conversations_on_id_and_account_id"
@@ -1075,6 +1079,7 @@ ActiveRecord::Schema[7.1].define(version: 2026_10_14_152126) do
     t.index ["identifier", "account_id"], name: "index_conversations_on_identifier_and_account_id"
     t.index ["inbox_id"], name: "index_conversations_on_inbox_id"
     t.index ["priority"], name: "index_conversations_on_priority"
+    t.index ["problem_id"], name: "index_conversations_on_problem_id"
     t.index ["status", "account_id"], name: "index_conversations_on_status_and_account_id"
     t.index ["status", "priority"], name: "index_conversations_on_status_and_priority"
     t.index ["team_id"], name: "index_conversations_on_team_id"
@@ -1632,6 +1637,21 @@ ActiveRecord::Schema[7.1].define(version: 2026_10_14_152126) do
     t.jsonb "filter", default: {}, null: false
     t.jsonb "targets", default: [], null: false
     t.index ["account_id"], name: "index_sla_policies_on_account_id"
+  end
+
+  create_table "suspended_tickets", force: :cascade do |t|
+    t.bigint "account_id", null: false
+    t.bigint "inbox_id", null: false
+    t.string "from_email", null: false
+    t.string "from_name"
+    t.string "subject"
+    t.string "message_id"
+    t.string "reason", null: false
+    t.datetime "recovered_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["account_id", "created_at"], name: "index_suspended_tickets_on_account_id_and_created_at"
+    t.index ["inbox_id", "message_id"], name: "index_suspended_tickets_on_inbox_id_and_message_id"
   end
 
   create_table "taggings", id: :serial, force: :cascade do |t|

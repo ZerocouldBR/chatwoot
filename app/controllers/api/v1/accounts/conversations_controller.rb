@@ -140,7 +140,14 @@ class Api::V1::Accounts::ConversationsController < Api::V1::Accounts::BaseContro
     raise ActionController::ParameterMissing, :priority unless params[:priority].nil? || Conversation.priorities.key?(params[:priority])
     raise ActionController::ParameterMissing, :ticket_type if params.key?(:ticket_type) && Conversation.ticket_types.exclude?(params[:ticket_type])
 
-    params.permit(:priority, :subject, :ticket_type, :due_at, :company_id)
+    attributes = params.permit(:priority, :subject, :ticket_type, :due_at, :company_id)
+    attributes[:problem_id] = problem_ticket_id if params.key?(:problem_id)
+    attributes
+  end
+
+  # The API speaks ticket numbers; the link stores the problem ticket's id.
+  def problem_ticket_id
+    params[:problem_id].presence && Current.account.conversations.find_by!(display_id: params[:problem_id]).id
   end
 
   def attachment_params

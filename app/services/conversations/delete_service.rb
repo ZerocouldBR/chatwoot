@@ -1,9 +1,10 @@
+# Deleting a ticket moves it to the trash; it is purged for good after TicketTrashable::TRASH_RETENTION.
 class Conversations::DeleteService
   pattr_initialize [:conversation!, :user, :ip]
 
   def perform
     track_deleted_email_messages
-    ::DeleteObjectJob.perform_later(conversation, user, ip)
+    conversation.trash!
   end
 
   private
