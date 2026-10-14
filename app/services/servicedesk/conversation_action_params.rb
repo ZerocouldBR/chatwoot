@@ -12,6 +12,8 @@ class Servicedesk::ConversationActionParams
   ACTION_NAMES = %w[set_custom_attribute set_ticket_status change_subject].freeze
   SUBJECT_MAX_LENGTH = 500
   TEXT_MAX_LENGTH = 10_000
+  # O regex_pattern vem da definição do atributo (admin); o valor pode vir de uma macro pessoal de agente.
+  REGEX_TIMEOUT = 0.5
   TRUE_VALUES = [true, 'true', '1', 1].freeze
   FALSE_VALUES = [false, 'false', '0', 0].freeze
 
@@ -153,12 +155,18 @@ class Servicedesk::ConversationActionParams
   def cast_text(definition, value)
     text = value.to_s
     return Result.new(nil, "texto com mais de #{TEXT_MAX_LENGTH} caracteres") if text.length > TEXT_MAX_LENGTH
-    if definition.regex_pattern.present? && !Regexp.new(definition.regex_pattern.delete_prefix('/').delete_suffix('/')).match?(text)
+    if definition.regex_pattern.present? && !text_regex(definition).match?(text)
       return Result.new(nil, "valor não segue o formato de #{definition.attribute_key}")
     end
 
     Result.new(text, nil)
+  rescue Regexp::TimeoutError
+    Result.new(nil, "valor não segue o formato de #{definition.attribute_key} (tempo de validação esgotado)")
   rescue RegexpError
     Result.new(text, nil)
+  end
+
+  def text_regex(definition)
+    Regexp.new(definition.regex_pattern.delete_prefix('/').delete_suffix('/'), timeout: REGEX_TIMEOUT)
   end
 end

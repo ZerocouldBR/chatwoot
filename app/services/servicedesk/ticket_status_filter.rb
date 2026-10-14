@@ -7,19 +7,13 @@
 #     vazio ou desconhecido), igual ao que a tela mostra (statusTokens.js).
 # Assim cada ticket snoozed cai em exatamente um dos dois filtros.
 #
-# HOLD_LABELS espelha os status de categoria "hold" de
-# app/javascript/dashboard/servicedesk/ticketFormsMeta.json (a spec confere).
+# HOLD_LABELS vem de config/servicedesk/ticket_statuses.yml (Servicedesk::TicketStatuses,
+# a mesma fonte da ação set_ticket_status); as specs conferem o yml e esta lista
+# contra app/javascript/dashboard/servicedesk/ticketFormsMeta.json.
 module Servicedesk::TicketStatusFilter
   CATEGORIES = %w[pending hold].freeze
 
-  HOLD_LABELS = [
-    'Aguardando Desenvolvimento',
-    'Escalonado',
-    'Desenvolvimento',
-    'Retorno Integrações',
-    'Devolvido',
-    'Desenvolvimento Concluído'
-  ].freeze
+  HOLD_LABELS = Servicedesk::TicketStatuses.statuses.select { |status| status['category'] == 'hold' }.pluck('label').freeze
 
   ZD_STATUS_SQL = "LOWER(TRIM(conversations.custom_attributes ->> 'zd_status'))".freeze
 
