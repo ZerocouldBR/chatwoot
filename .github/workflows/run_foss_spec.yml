@@ -7,6 +7,8 @@ on:
       - develop
       - master
   pull_request:
+    branches-ignore:
+      - 'servicedesk/**'
   workflow_dispatch:
 
 jobs:
