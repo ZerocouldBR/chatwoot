@@ -86,23 +86,26 @@ class Imap::ImapMailbox
   end
 
   def find_or_create_conversation
-    @conversation = find_conversation_by_in_reply_to || find_conversation_by_reference_ids || ::Conversation.create!(
-      {
-        account_id: @account.id,
-        inbox_id: @inbox.id,
-        contact_id: @contact.id,
-        contact_inbox_id: @contact_inbox.id,
-        additional_attributes: {
-          source: 'email',
-          in_reply_to: in_reply_to,
-          auto_reply: @processed_mail.auto_reply?,
-          mail_subject: sanitize_mailbox_value(@processed_mail.subject),
-          initiated_at: {
-            timestamp: Time.now.utc
-          }
-        }
-      }
-    )
+    existing = find_conversation_by_in_reply_to || find_conversation_by_reference_ids
+    @conversation = if existing.nil?
+                      ::Conversation.create!(account_id: @account.id, inbox_id: @inbox.id, contact_id: @contact.id,
+                                             contact_inbox_id: @contact_inbox.id, additional_attributes: email_conversation_attributes)
+                    elsif existing.closed?
+                      # A reply to a closed ticket opens a linked follow-up ticket.
+                      Tickets::FollowupBuilder.new(source: existing, additional_attributes: email_conversation_attributes).build.tap(&:save!)
+                    else
+                      existing
+                    end
+  end
+
+  def email_conversation_attributes
+    {
+      source: 'email',
+      in_reply_to: in_reply_to,
+      auto_reply: @processed_mail.auto_reply?,
+      mail_subject: sanitize_mailbox_value(@processed_mail.subject),
+      initiated_at: { timestamp: Time.now.utc }
+    }
   end
 
   def find_or_create_contact

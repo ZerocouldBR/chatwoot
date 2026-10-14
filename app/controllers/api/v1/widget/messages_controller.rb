@@ -53,7 +53,8 @@ class Api::V1::Widget::MessagesController < Api::V1::Widget::BaseController
   end
 
   def set_conversation
-    return if conversation.present?
+    # A closed ticket never takes new messages: the visitor's next message opens a new ticket.
+    return if conversation.present? && !conversation.closed?
 
     @conversation = create_conversation
     apply_labels if permitted_params[:labels].present?

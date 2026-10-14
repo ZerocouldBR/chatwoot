@@ -121,6 +121,16 @@
       "FEATURES": {
         "INBOUND_EMAIL_ENABLED": "A continuidade dos tickets com e-mails está ativada para sua conta.",
         "CUSTOM_EMAIL_DOMAIN_ENABLED": "Você pode receber e-mails em seu domínio personalizado agora."
+      },
+      "CLOSE_SOLVED": {
+        "TITLE": "Fechar tickets resolvidos",
+        "NOTE": "Tickets resolvidos passam a Fechado depois deste prazo. Um ticket fechado não pode ser reaberto: a resposta do cliente por e-mail abre um ticket de acompanhamento vinculado, e respostas em outros canais abrem um ticket novo.",
+        "LABEL": "Fechar após (horas)",
+        "HELP": "Entre 1 e 672 horas (28 dias). Padrão: 96 horas (4 dias).",
+        "SUBMIT": "Salvar",
+        "SUCCESS": "Prazo de fechamento salvo",
+        "ERROR": "Informe um número inteiro de horas entre 1 e 672",
+        "API_ERROR": "Não foi possível salvar o prazo de fechamento"
       }
     },
     "UPDATE_CHATWOOT": "Uma atualização {latestChatwootVersion} para o Chatwoot está disponível. Por favor, atualize sua instância.",

@@ -9,7 +9,11 @@ import MoreActions from './MoreActions.vue';
 import Avatar from 'next/avatar/Avatar.vue';
 import SLACardLabel from './components/SLACardLabel.vue';
 import ConversationCallButton from './ConversationCallButton.vue';
-import { conversationListPageURL } from 'dashboard/helper/URLHelper';
+import {
+  conversationListPageURL,
+  conversationUrl,
+  frontendURL,
+} from 'dashboard/helper/URLHelper';
 import CardStatusIcon from 'dashboard/components-next/Conversation/ConversationCard/CardStatusIcon.vue';
 import { useInbox } from 'dashboard/composables/useInbox';
 import { useAlert } from 'dashboard/composables';
@@ -76,6 +80,14 @@ const mailSubject = computed(() => {
 const currentContact = computed(() =>
   store.getters['contacts/getContact'](props.chat.meta.sender.id)
 );
+
+const followupSourceLink = computed(() => {
+  const sourceId = props.chat.followup_source_id;
+  if (!sourceId) return null;
+  return frontendURL(
+    conversationUrl({ accountId: route.params.accountId, id: sourceId })
+  );
+});
 
 const statusLabel = computed(() =>
   t(`CONVERSATION.TICKET_STATUS.${currentChat.value.status}`)
@@ -160,6 +172,18 @@ const copyConversationId = async () => {
           >
             {{ mailSubject }}
           </span>
+          <template v-if="followupSourceLink">
+            <span>•</span>
+            <router-link
+              :to="followupSourceLink"
+              data-testid="followup-source-link"
+              class="shrink-0 text-n-blue-11 hover:underline"
+            >
+              {{
+                $t('CONVERSATION.FOLLOWUP_OF', { id: chat.followup_source_id })
+              }}
+            </router-link>
+          </template>
           <span>•</span>
           <span
             class="flex items-center gap-1 min-w-0 truncate font-medium text-n-slate-12 shrink-0"

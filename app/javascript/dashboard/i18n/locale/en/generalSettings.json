@@ -129,6 +129,16 @@
       "FEATURES": {
         "INBOUND_EMAIL_ENABLED": "Ticket continuity with emails is enabled for your account.",
         "CUSTOM_EMAIL_DOMAIN_ENABLED": "You can receive emails in your custom domain now."
+      },
+      "CLOSE_SOLVED": {
+        "TITLE": "Close solved tickets",
+        "NOTE": "Solved tickets become Closed after this delay. A closed ticket cannot be reopened: a customer e-mail reply opens a linked follow-up ticket, and replies on other channels open a new ticket.",
+        "LABEL": "Close after (hours)",
+        "HELP": "Between 1 and 672 hours (28 days). Default: 96 hours (4 days).",
+        "SUBMIT": "Save",
+        "SUCCESS": "Close delay saved",
+        "ERROR": "Enter a whole number of hours between 1 and 672",
+        "API_ERROR": "Could not save the close delay"
       }
     },
     "UPDATE_CHATWOOT": "An update {latestChatwootVersion} for Chatwoot is available. Please update your instance.",

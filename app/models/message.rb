@@ -80,6 +80,7 @@ class Message < ApplicationRecord
   validates :content_type, presence: true
   validates :content, length: { maximum: 150_000 }
   validates :processed_message_content, length: { maximum: 150_000 }
+  validate :conversation_accepts_messages, on: :create
 
   # when you have a temperory id in your frontend and want it echoed back via action cable
   attr_accessor :echo_id
@@ -340,6 +341,11 @@ class Message < ApplicationRecord
     send_reply
     execute_message_template_hooks
     update_contact_activity
+  end
+
+  # A closed ticket only records system activity; replies go to a follow-up or a new ticket.
+  def conversation_accepts_messages
+    errors.add(:base, I18n.t('errors.conversations.closed')) if conversation&.closed? && !activity?
   end
 
   def record_ticket_comment

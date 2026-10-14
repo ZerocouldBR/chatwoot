@@ -206,6 +206,33 @@ RSpec.describe Imap::ImapMailbox do
       end
     end
 
+    context 'when a reply arrives for a closed ticket' do
+      let(:closed_ticket) do
+        create(:conversation, account: account, inbox: channel.inbox, contact: contact, assignee: agent, priority: :high,
+                              subject: 'Cartão recusado', label_list: ['vip'])
+      end
+      let(:reply_mail) do
+        create_inbound_email_from_mail(from: 'email@gmail.com', to: 'imap@gmail.com', subject: 'Re: Cartão recusado', in_reply_to: 'closed-reply-id')
+      end
+
+      before do
+        create(:message, message_type: 'outgoing', inbox: inbox, account: account, conversation: closed_ticket, source_id: 'closed-reply-id')
+        closed_ticket.update!(status: :closed)
+      end
+
+      it 'opens a follow-up ticket linked to the closed one' do
+        expect { class_instance.process(reply_mail.mail, channel) }.to change(Conversation, :count).by(1)
+
+        followup = Conversation.order(:id).last
+        expect(followup).to have_attributes(followup_source_id: closed_ticket.id, status: 'new_ticket', subject: 'Cartão recusado',
+                                            contact_id: contact.id, priority: nil, assignee_id: nil)
+        expect(followup.label_list).to eq(['vip'])
+        expect(followup.messages.last.content_attributes['email']['in_reply_to']).to eq('closed-reply-id')
+        expect(closed_ticket.reload.status).to eq('closed')
+        expect(closed_ticket.messages.count).to eq(1)
+      end
+    end
+
     context 'when a reply to a forwarded email' do
       let(:prev_conversation) { create(:conversation, account: account, inbox: channel.inbox, assignee: agent) }
       let(:supplier_reply) do

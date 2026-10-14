@@ -115,6 +115,7 @@ en:
       multi_account_invitation_not_allowed: Users associated with another account cannot be added while SAML is enabled
     conversations:
       resolved: Ticket is resolved and does not accept new messages
+      closed: Ticket is closed. Replies open a follow-up ticket
       invalid_status: Invalid ticket status. New and Closed are set by the system
       unread_counts:
         feature_not_enabled: Ticket unread counts feature not enabled for this account

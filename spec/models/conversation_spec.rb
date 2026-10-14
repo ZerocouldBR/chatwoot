@@ -442,6 +442,30 @@ RSpec.describe Conversation do
     end
   end
 
+  describe 'closed tickets' do
+    let(:conversation) { create(:conversation, status: :resolved) }
+
+    before { conversation.update!(status: :closed) }
+
+    it 'cannot be reopened or edited' do
+      expect(conversation.update(status: :open)).to be(false)
+      expect(conversation.reload.update(priority: :high)).to be(false)
+      expect(conversation.errors[:base]).to include(I18n.t('errors.conversations.closed'))
+    end
+
+    it 'still accepts tags' do
+      expect(conversation.update(label_list: ['billing'])).to be(true)
+    end
+
+    it 'rejects new replies but keeps system activity' do
+      reply = build(:message, conversation: conversation, account: conversation.account, inbox: conversation.inbox, message_type: :incoming)
+      activity = build(:message, conversation: conversation, account: conversation.account, inbox: conversation.inbox, message_type: :activity)
+
+      expect(reply).not_to be_valid
+      expect(activity).to be_valid
+    end
+  end
+
   describe 'ticket status rules' do
     let(:account) { create(:account) }
     let(:inbox) { create(:inbox, account: account) }
@@ -807,6 +831,7 @@ RSpec.describe Conversation do
         submitter_id: nil,
         company_id: nil,
         company_name: nil,
+        followup_source_id: nil,
         contact_inbox: conversation.contact_inbox,
         timestamp: conversation.last_activity_at.to_i,
         can_reply: true,

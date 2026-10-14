@@ -147,7 +147,8 @@ class Api::V1::AccountsController < Api::BaseController
   end
 
   def permitted_settings_attributes
-    attributes = [:auto_resolve_after, :auto_resolve_message, :auto_resolve_ignore_waiting, :audio_transcriptions, :auto_resolve_label]
+    attributes = [:auto_resolve_after, :auto_resolve_message, :auto_resolve_ignore_waiting, :audio_transcriptions, :auto_resolve_label,
+                  :close_solved_after_hours]
     attributes << :enforce_mfa if Chatwoot.mfa_enabled?
     attributes
   end

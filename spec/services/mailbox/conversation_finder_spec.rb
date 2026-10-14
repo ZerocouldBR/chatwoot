@@ -7,6 +7,23 @@ RSpec.describe Mailbox::ConversationFinder do
   let(:mail) { Mail.new }
 
   describe '#find' do
+    context 'when the matched ticket is closed' do
+      before do
+        conversation.update!(uuid: '12345678-1234-1234-1234-123456789012', subject: 'Reserva')
+        conversation.update!(status: :closed)
+        mail.to = 'reply+12345678-1234-1234-1234-123456789012@example.com'
+        mail.subject = 'Re: Reserva'
+      end
+
+      it 'returns an unsaved follow-up ticket linked to the closed one' do
+        followup = described_class.new(mail).find
+
+        expect(followup).to be_new_record
+        expect(followup).to have_attributes(followup_source: conversation, inbox: conversation.inbox, subject: 'Reserva')
+        expect(followup.additional_attributes).to include('source' => 'email', 'mail_subject' => 'Re: Reserva')
+      end
+    end
+
     context 'when receiver uuid strategy finds conversation' do
       before do
         conversation.update!(uuid: '12345678-1234-1234-1234-123456789012')

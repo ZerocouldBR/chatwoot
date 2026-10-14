@@ -46,7 +46,8 @@ class Conversations::EventDataPresenter < SimpleDelegator
       due_at: due_at&.to_i,
       submitter_id: submitter_id,
       company_id: company_id,
-      company_name: company&.name
+      company_name: company&.name,
+      followup_source_id: followup_source&.display_id
     }
   end
 

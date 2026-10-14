@@ -31,6 +31,7 @@
 #  contact_id             :bigint
 #  contact_inbox_id       :bigint
 #  display_id             :integer          not null
+#  followup_source_id     :bigint
 #  inbox_id               :integer          not null
 #  sla_policy_id          :bigint
 #  submitter_id           :bigint
@@ -42,6 +43,7 @@
 #  index_conversations_on_account_id                  (account_id)
 #  index_conversations_on_account_id_and_display_id   (account_id,display_id) UNIQUE
 #  index_conversations_on_account_id_and_due_at       (account_id,due_at)
+#  index_conversations_on_account_status_changed_at   (account_id,status,status_changed_at)
 #  index_conversations_on_assignee_id_and_account_id  (assignee_id,account_id)
 #  index_conversations_on_campaign_id                 (campaign_id)
 #  index_conversations_on_company_id                  (company_id)
@@ -49,6 +51,7 @@
 #  index_conversations_on_contact_inbox_id            (contact_inbox_id)
 #  index_conversations_on_created_at                  (created_at)
 #  index_conversations_on_first_reply_created_at      (first_reply_created_at)
+#  index_conversations_on_followup_source_id          (followup_source_id)
 #  index_conversations_on_id_and_account_id           (account_id,id)
 #  index_conversations_on_identifier_and_account_id   (identifier,account_id)
 #  index_conversations_on_inbox_id                    (inbox_id)
@@ -93,6 +96,7 @@ class Conversation < ApplicationRecord
   validate :ticket_type_cannot_be_cleared
   validate :due_at_only_for_tasks
   validate :company_matches_requester
+  validate :closed_ticket_is_read_only
   validates :subject, length: { maximum: 150 }
 
   # Ticket statuses follow Zendesk: new_ticket (New), open, waiting_on_customer (Pending), on_hold, resolved (Solved), closed.
@@ -100,10 +104,15 @@ class Conversation < ApplicationRecord
   enum status: { open: 0, resolved: 1, pending: 2, new_ticket: 4, waiting_on_customer: 5, on_hold: 6, closed: 7 }
   enum ticket_type: { question: 0, incident: 1, problem: 2, task: 3 }, _prefix: true
   UNSOLVED_STATUSES = %w[new_ticket open waiting_on_customer on_hold].freeze
+  # Ticket fields that freeze once a ticket is closed (tags stay editable).
+  LOCKED_WHEN_CLOSED = %w[status priority assignee_id team_id subject ticket_type due_at company_id contact_id custom_attributes].freeze
   # Statuses an agent can pick; New and Closed are only set by the system.
   AGENT_SETTABLE_STATUSES = %w[open waiting_on_customer on_hold resolved pending].freeze
   enum priority: { low: 0, medium: 1, high: 2, urgent: 3 }
 
+  # Closed tickets never take new messages; resolved ones only reopen when the inbox keeps a single ticket per contact.
+  scope :not_closed, -> { where.not(status: :closed) }
+  scope :unfinished, -> { where.not(status: %i[resolved closed]) }
   scope :unassigned, -> { where(assignee_id: nil, assignee_agent_bot_id: nil) }
   scope :assigned, -> { where.not(assignee_id: nil).or(where.not(assignee_agent_bot_id: nil)) }
   scope :assigned_to, ->(agent) { where(assignee_id: agent.id) }
@@ -143,6 +152,9 @@ class Conversation < ApplicationRecord
   belongs_to :company, optional: true
   # The agent who opened the ticket on the requester's behalf; blank when the requester submitted it.
   belongs_to :submitter, class_name: 'User', optional: true
+  # A follow-up ticket points to the closed ticket the customer replied to.
+  belongs_to :followup_source, class_name: 'Conversation', optional: true
+  has_many :followups, class_name: 'Conversation', foreign_key: :followup_source_id, dependent: :nullify, inverse_of: :followup_source
   belongs_to :campaign, optional: true
 
   has_many :mentions, dependent: :destroy_async
@@ -342,6 +354,13 @@ class Conversation < ApplicationRecord
     return unless will_save_change_to_company_id? && company_id.present?
 
     errors.add(:company_id, :invalid) unless company_id == contact&.company_id
+  end
+
+  def closed_ticket_is_read_only
+    return unless persisted? && status_in_database == 'closed'
+    return unless changed_attribute_names_to_save.intersect?(LOCKED_WHEN_CLOSED)
+
+    errors.add(:base, I18n.t('errors.conversations.closed'))
   end
 
   def fill_ticket_defaults

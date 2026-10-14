@@ -450,7 +450,9 @@
       },
       "CHANGE_VALUES": "{from} → {to}",
       "META": "{via} · {time}"
-    }
+    },
+    "CLOSED_TICKET_BANNER": "Este ticket está fechado. Um novo e-mail do cliente abre um ticket de acompanhamento.",
+    "FOLLOWUP_OF": "Acompanhamento do #{id}"
   },
   "EMAIL_TRANSCRIPT": {
     "TITLE": "Enviar transcrição de ticket",
