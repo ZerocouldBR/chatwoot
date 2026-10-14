@@ -1,6 +1,7 @@
 import { INSTALLATION_TYPES } from 'dashboard/constants/installationTypes';
 import { FEATURE_FLAGS } from 'dashboard/featureFlags';
 import { frontendURL } from '../../../../helper/URLHelper';
+import { SD_ROUTE_PERMISSIONS } from 'dashboard/servicedesk/roles/permissions';
 
 import ReportsWrapper from './components/ReportsWrapper.vue';
 import Index from './Index.vue';
@@ -29,7 +30,8 @@ import SLAReports from './SLAReports.vue';
 
 const meta = {
   featureFlag: FEATURE_FLAGS.REPORTS,
-  permissions: ['administrator', 'report_manage'],
+  // ServiceDesk M13: admin e papéis com reports >= readonly (Agente light no Zendesk)
+  permissions: SD_ROUTE_PERMISSIONS.reports,
 };
 
 const monitorsMeta = {

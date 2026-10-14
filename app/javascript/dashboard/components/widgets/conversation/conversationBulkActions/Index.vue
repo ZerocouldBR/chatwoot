@@ -5,6 +5,7 @@ import { useMapGetter } from 'dashboard/composables/store.js';
 import { emitter } from 'shared/helpers/mitt';
 import { useBulkActions } from 'dashboard/composables/chatlist/useBulkActions.js';
 import { usePolicy } from 'dashboard/composables/usePolicy';
+import { useSdRolePermissions } from 'dashboard/servicedesk/roles/useSdRolePermissions';
 import { FEATURE_FLAGS } from 'dashboard/featureFlags';
 import {
   CMD_BULK_ACTION_REOPEN_CONVERSATION,
@@ -54,6 +55,8 @@ const {
 } = useBulkActions();
 
 const { isFeatureFlagEnabled } = usePolicy();
+// ServiceDesk M13: o papel decide o que aparece (o backend devolve 403 do mesmo jeito)
+const { canEditTicket, canEditTags } = useSdRolePermissions();
 const isMacrosEnabled = computed(() =>
   isFeatureFlagEnabled(FEATURE_FLAGS.MACROS)
 );
@@ -146,19 +149,25 @@ onUnmounted(() => {
           />
         </div>
         <div class="flex items-center gap-2 flex-shrink-0">
-          <BulkLabelActions @assign="onAssignLabels" />
+          <BulkLabelActions v-if="canEditTags" @assign="onAssignLabels" />
           <BulkLabelActions
+            v-if="canEditTags"
             action="remove"
             :applied-labels="appliedLabelsForSelection"
             @remove="onRemoveLabels"
           />
-          <BulkUpdateActions @update="onUpdateConversations" />
+          <BulkUpdateActions
+            v-if="canEditTicket"
+            @update="onUpdateConversations"
+          />
           <BulkAgentActions
+            v-if="canEditTicket"
             :selected-inboxes="selectedInboxes"
             :conversation-count="conversations.length"
             @select="onAssignAgent"
           />
           <BulkTeamActions
+            v-if="canEditTicket"
             :conversation-count="conversations.length"
             @select="onAssignTeam"
           />

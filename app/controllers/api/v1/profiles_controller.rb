@@ -1,6 +1,8 @@
 class Api::V1::ProfilesController < Api::BaseController
   include MfaEnforcementGuard
 
+  SD_LOCKED_PROFILE_FIELDS = %w[name display_name message_signature avatar].freeze # ServiceDesk M13
+
   before_action :set_user
   # show leaks pubsub_token, which grants realtime access; the rest of the
   # profile surface is equally off-limits to a token that MFA enforcement blocks.
@@ -15,12 +17,16 @@ class Api::V1::ProfilesController < Api::BaseController
       @user.update!(password_params.except(:current_password))
     end
 
+    return render_sd_profile_locked if sd_profile_locked_change?
+
     @user.assign_attributes(profile_params)
     @user.custom_attributes.merge!(custom_attributes_params)
     @user.save!
   end
 
   def avatar
+    return render_sd_profile_locked if sd_profile_locked?
+
     @user.avatar.attachment.destroy! if @user.avatar.attached?
     @user.reload
   end
@@ -49,6 +55,24 @@ class Api::V1::ProfilesController < Api::BaseController
   end
 
   private
+
+  # ServiceDesk M13: papel sem profile.edit_own (Agente light e Colaborador no Zendesk) não altera nome, alias,
+  # assinatura nem foto. Senha, idioma (ui_settings) e disponibilidade continuam liberados.
+  def sd_profile_locked?
+    @user.account_users.includes(:sd_role).any? { |account_user| !account_user.sd_access.can?('profile.edit_own') }
+  end
+
+  def sd_profile_locked_change?
+    return false unless params[:profile].respond_to?(:key?)
+
+    changed = SD_LOCKED_PROFILE_FIELDS.select { |field| params[:profile].key?(field) }
+    changed = changed.reject { |field| field != 'avatar' && params[:profile][field].to_s == @user.public_send(field).to_s }
+    changed.any? && sd_profile_locked?
+  end
+
+  def render_sd_profile_locked
+    render json: { error: 'ServiceDesk: seu papel não permite alterar nome, alias, assinatura ou foto' }, status: :forbidden
+  end
 
   def set_user
     @user = current_user

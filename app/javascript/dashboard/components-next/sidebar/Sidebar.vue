@@ -1,12 +1,12 @@
 <script setup>
 import NotificationsBell from './NotificationsBell.vue';
-import { useAdmin } from 'dashboard/composables/useAdmin';
 import { h, ref, computed, onMounted, watch } from 'vue';
 import { provideSidebarContext, useSidebarResize } from './provider';
 import { useAccount } from 'dashboard/composables/useAccount';
 import { useConfig } from 'dashboard/composables/useConfig';
 import { useKbd } from 'dashboard/composables/utils/useKbd';
 import { useMapGetter } from 'dashboard/composables/store';
+import { useSdRolePermissions } from 'dashboard/servicedesk/roles/useSdRolePermissions';
 import { useStore } from 'vuex';
 import { useI18n } from 'vue-i18n';
 import { useSidebarKeyboardShortcuts } from './useSidebarKeyboardShortcuts';
@@ -53,7 +53,8 @@ const isCallsAvailable = computed(
 );
 const searchShortcut = useKbd([`$mod`, 'k']);
 const { t } = useI18n();
-const { isAdmin } = useAdmin();
+const { canManageSuspendedTickets, canViewDeletedTickets } =
+  useSdRolePermissions();
 
 const isRTL = useMapGetter('accounts/isRTL');
 
@@ -404,7 +405,8 @@ const menuItems = computed(() => {
             : 0,
           to: accountScopedRoute('conversation_unattended'),
         },
-        ...(isAdmin.value
+        // ServiceDesk M13: suspensos e lixeira conforme o papel (suspended_tickets.manage, ticket.view_deleted)
+        ...(canManageSuspendedTickets.value
           ? [
               {
                 name: 'Suspended Tickets',
@@ -413,6 +415,10 @@ const menuItems = computed(() => {
                 activeOn: ['suspended_tickets'],
                 to: accountScopedRoute('suspended_tickets'),
               },
+            ]
+          : []),
+        ...(canViewDeletedTickets.value
+          ? [
               {
                 name: 'Deleted Tickets',
                 label: t('SIDEBAR.DELETED_TICKETS'),
@@ -795,6 +801,13 @@ const menuItems = computed(() => {
           label: t('SIDEBAR.AGENTS'),
           icon: 'i-lucide-square-user',
           to: accountScopedRoute('agent_list'),
+        },
+        {
+          // ServiceDesk M13: papéis (Admin Center > Pessoas > Papéis no Zendesk)
+          name: 'Settings Papeis',
+          label: t('SD_ROLES.MENU'),
+          icon: 'i-lucide-shield-check',
+          to: accountScopedRoute('sd_roles_list'),
         },
         {
           name: 'Settings Teams',
