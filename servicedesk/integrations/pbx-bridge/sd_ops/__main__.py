@@ -7,7 +7,9 @@
   poll-once                     uma passada do Report02 (janela POLL_LOOKBACK_MIN) + processamento
   reconcile --from ISO --to ISO reconciliação histórica pelo Report02 (blocos de 6 h)
   seed-tenant ...               cadastra/atualiza um tenant (idempotente)
-  new-service-token NOME        gera token de serviço (mostra uma vez) e a linha para SDOPS_SERVICE_TOKENS
+  new-service-token NOME [--profile n8n|qa-pipeline] [--scopes a,b] [--tenants b2b]
+                                gera token de serviço (mostra uma vez) e a linha para SDOPS_SERVICE_TOKENS;
+                                NOME igual a um perfil (n8n, qa-pipeline) usa os escopos dele
   export-openapi [ARQ]          grava o OpenAPI (padrão: openapi.json ao lado do pacote)
 """
 from __future__ import annotations
@@ -46,6 +48,9 @@ def main(argv=None) -> int:
     st.add_argument("--ura-token-env", help="variável com o token do Menu Dinâmico (header X-SD-URA-Token)")
     nt = sub.add_parser("new-service-token")
     nt.add_argument("name")
+    nt.add_argument("--profile", help="perfil de escopos (n8n, qa-pipeline); padrão: o NOME, se for um perfil")
+    nt.add_argument("--scopes", default="", help="escopos extras separados por vírgula")
+    nt.add_argument("--tenants", default="", help="tenants separados por vírgula (padrão: SDOPS_DEFAULT_TENANT; * = todos)")
     ex = sub.add_parser("export-openapi")
     ex.add_argument("file", nargs="?")
     a = ap.parse_args(argv)
@@ -56,10 +61,24 @@ def main(argv=None) -> int:
     obs.setup_logging(s.bridge.log_level, s.log_json)
 
     if a.cmd == "new-service-token":
-        from .auth import new_service_token
+        from .auth import SERVICE_PROFILES, new_service_token, service_token_entry
+        profile = a.profile or (a.name if a.name in SERVICE_PROFILES else None)
+        if profile and profile not in SERVICE_PROFILES:
+            print("perfil desconhecido: %s (válidos: %s)" % (profile, ", ".join(SERVICE_PROFILES)), file=sys.stderr)
+            return 2
+        tenants = [x.strip() for x in a.tenants.split(",") if x.strip()] or [s.default_tenant]
+        try:
+            entry = service_token_entry(a.name, "", tenants, profile, [x.strip() for x in a.scopes.split(",") if x.strip()])
+        except ValueError as e:
+            print(str(e), file=sys.stderr)
+            return 2
+        if not entry[a.name]["scopes"]:
+            print("AVISO: token sem escopos (use --profile ou --scopes); só servirá para /auth/me", file=sys.stderr)
         t = new_service_token()
+        entry[a.name]["sha256"] = t["sha256"]
         print("token (guarde agora, não é mostrado de novo): %s" % t["token"])
-        print(json.dumps({a.name: {"sha256": t["sha256"], "tenants": [s.default_tenant], "scopes": []}}))
+        print("perfil: %s | escopos: %s" % (profile or "-", ", ".join(entry[a.name]["scopes"]) or "-"))
+        print(json.dumps(entry))
         return 0
     if a.cmd == "export-openapi":
         from .app import create_app

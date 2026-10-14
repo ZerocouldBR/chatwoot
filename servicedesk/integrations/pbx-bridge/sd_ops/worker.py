@@ -188,7 +188,7 @@ class Worker:
     def _target(self, kind: str) -> str:
         if kind.startswith("chatwoot."):
             return "chatwoot"
-        if kind == "webhook.deliver":
+        if kind in ("webhook.deliver", "fanout"):
             return "automation"
         if kind == "stream":
             return "redis"
@@ -220,6 +220,10 @@ class Worker:
             rid = self.pub.publish(p)
             self._fanout(row, p)
             return rid
+        if k == "fanout":
+            # evento de outro serviço (ex. qa.completed do qa-pipeline): só para as rotas de automação
+            self._fanout(row, p)
+            return "fanout"
         if k == "webhook.deliver":
             return self._deliver(row)
         if k == "chatwoot.sync_call":

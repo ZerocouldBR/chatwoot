@@ -428,6 +428,19 @@
       "title": "Channel",
       "type": "string"
      },
+     "dedupe_key": {
+      "anyOf": [
+       {
+        "maxLength": 200,
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "description": "Chave única do envio no tenant (ex. whatsapp_pos_atendimento:<ticket>). Ausente: usa o header Idempotency-Key. Repetir a chave devolve 200 + Idempotent-Replay: true e o registro original.",
+      "title": "Dedupe Key"
+     },
      "detail": {
       "additionalProperties": true,
       "title": "Detail",
@@ -2054,6 +2067,26 @@
     ]
    }
   },
+  "/sd-ops/api/v1/capabilities": {
+   "get": {
+    "description": "O que o CTI pode oferecer a ESTE usuário agora (o sd-console não sonda nem adivinha). Capacidade\ndesabilitada vem com o motivo em pt-BR; nada é simulado (mode=mock só existe no DEV).",
+    "operationId": "capabilities_sd_ops_api_v1_capabilities_get",
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      },
+      "description": "Successful Response"
+     }
+    },
+    "summary": "Capabilities",
+    "tags": [
+     "cti"
+    ]
+   }
+  },
   "/sd-ops/api/v1/context": {
    "get": {
     "operationId": "context_sd_ops_api_v1_context_get",
@@ -2474,7 +2507,80 @@
    }
   },
   "/sd-ops/api/v1/notifications/log": {
+   "get": {
+    "operationId": "notif_list_sd_ops_api_v1_notifications_log_get",
+    "parameters": [
+     {
+      "in": "query",
+      "name": "ticket_id",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Ticket Id"
+      }
+     },
+     {
+      "in": "query",
+      "name": "dedupe_key",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Dedupe Key"
+      }
+     },
+     {
+      "in": "query",
+      "name": "limit",
+      "required": false,
+      "schema": {
+       "default": 50,
+       "maximum": 200,
+       "title": "Limit",
+       "type": "integer"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "summary": "Notif List",
+    "tags": [
+     "operação"
+    ]
+   },
    "post": {
+    "description": "Registro de envio ao cliente (n8n WF05/WF06/WF07). Idempotente e permanente por (tenant, dedupe_key):\na 1ª chamada grava (201); as seguintes devolvem o registro original (200 + Idempotent-Replay: true), para o\nn8n decidir \"já enviado\" sem guardar estado próprio.",
     "operationId": "notif_log_sd_ops_api_v1_notifications_log_post",
     "requestBody": {
      "content": {

@@ -97,6 +97,7 @@ class OpsSettings:
     dial_jwt: str = ""
     dial_timeout_s: float = 20.0
     dial_pending_s: int = 45
+    webphone_url: str = ""                   # webphone oficial da 55PBX (ex. https://fone.55pbx.com); vazio = desabilitado
     # CTI / sessão
     allowed_origins: List[str] = field(default_factory=list)
     session_idle_min: int = 30
@@ -167,6 +168,7 @@ class OpsSettings:
             dial_jwt=_env("PBX_DIAL_JWT", "") or "",
             dial_timeout_s=float(_env("PBX_DIAL_TIMEOUT_S", "20")),
             dial_pending_s=_int("PBX_DIAL_PENDING_S", 45),
+            webphone_url=_env("PBX_WEBPHONE_URL", "") or "",
             allowed_origins=_list("SDOPS_ALLOWED_ORIGINS", ""),
             session_idle_min=_int("SESSION_IDLE_MIN", 30),
             session_max_hours=_int("SESSION_MAX_HOURS", 8),

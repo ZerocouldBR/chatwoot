@@ -180,6 +180,32 @@ class Auth:
                 raise AuthError("csrf", "header X-SD-CSRF ausente ou inválido", 403)
 
 
+KNOWN_SCOPES = ("calls:read", "recordings:read", "tickets:read", "tickets:write", "tickets:close", "callbacks:write",
+                "reconcile:run", "notify:send", "reports:read", "analysis:write", "dial:write")
+
+# Perfis de token de serviço (CTI_AUTH.md §3). "n8n" = o que os workflows WF00–WF12 chamam no sd-ops
+# (servicedesk/integrations/n8n/sdops_endpoints_used.json): tickets:read/write (WF04–WF08, WF10, WF11),
+# notify:send (WF05–WF07), reconcile:run (WF09), reports:read (WF12), calls:read (WF02, WF11). Sem tickets:close
+# (o n8n nunca encerra/cancela) e sem dial:write.
+SERVICE_PROFILES: Dict[str, List[str]] = {
+    "n8n": ["calls:read", "tickets:read", "tickets:write", "notify:send", "reconcile:run", "reports:read"],
+    "qa-pipeline": ["calls:read", "recordings:read", "analysis:write", "tickets:read"],
+}
+
+
+def service_token_entry(name: str, sha256: str, tenants: List[str], profile: Optional[str] = None,
+                        scopes: Optional[List[str]] = None) -> Dict[str, Any]:
+    """Linha de SDOPS_SERVICE_TOKENS para um token novo: escopos do perfil (+ os extras), validados."""
+    out = list(SERVICE_PROFILES[profile]) if profile else []
+    for sc in scopes or []:
+        if sc not in out:
+            out.append(sc)
+    bad = [sc for sc in out if sc not in KNOWN_SCOPES]
+    if bad:
+        raise ValueError("escopo desconhecido: %s (válidos: %s)" % (", ".join(bad), ", ".join(KNOWN_SCOPES)))
+    return {name: {"sha256": sha256, "tenants": tenants, "scopes": out}}
+
+
 def new_service_token() -> Dict[str, str]:
     tok = "sdsvc_" + secrets.token_urlsafe(32)
     return {"token": tok, "sha256": db.sha256(tok)}

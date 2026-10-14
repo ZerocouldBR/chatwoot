@@ -54,20 +54,36 @@ def enqueue(conn: Connection, tenant_id: str, kind: str, dedup_key: str, payload
     stmt = pg_insert(m.outbox).values(
         tenant_id=tenant_id, kind=kind, dedup_key=dedup_key, payload=payload, ordering_key=ordering_key,
         next_attempt_at=utcnow() + dt.timedelta(seconds=delay_s), correlation_id=obs.correlation_id(),
-    ).on_conflict_do_nothing(index_elements=["dedup_key"])
-    return conn.execute(stmt).rowcount == 1
+    ).on_conflict_do_nothing(index_elements=["dedup_key"]).returning(m.outbox.c.id)
+    # RETURNING (e não rowcount, que o psycopg devolve -1 em INSERT ... ON CONFLICT): True só se inseriu agora
+    return conn.execute(stmt).first() is not None
+
+
+def envelope(tenant_id: str, etype: str, natural_key: str, payload: Dict[str, Any],
+             occurred_at: Optional[dt.datetime] = None, subject: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+    """Envelope fixo do projeto (WEBHOOK_CONTRACTS.md §8.2). O id é determinístico (tipo + tenant + chave natural)."""
+    eid = stable_id(etype, tenant_id, natural_key)
+    ctx = obs.current()
+    return {"type": etype, "id": eid, "occurred_at": iso(occurred_at or utcnow()), "tenant_id": tenant_id,
+            "version": 1, "source": "sd-ops", "correlation_id": ctx.get("correlation_id"),
+            "caused_by": ctx.get("caused_by"), "subject": subject or {}, "payload": payload}
 
 
 def publish(conn: Connection, tenant_id: str, etype: str, natural_key: str, payload: Dict[str, Any],
             occurred_at: Optional[dt.datetime] = None, subject: Optional[Dict[str, Any]] = None) -> bool:
-    """Evento para o stream sd:events, via outbox (só sai se a transação for confirmada).
-    O id é determinístico (tipo + tenant + chave natural): reprocessar não gera evento novo."""
-    eid = stable_id(etype, tenant_id, natural_key)
-    ctx = obs.current()
-    env = {"type": etype, "id": eid, "occurred_at": iso(occurred_at or utcnow()), "tenant_id": tenant_id,
-           "version": 1, "source": "sd-ops", "correlation_id": ctx.get("correlation_id"),
-           "caused_by": ctx.get("caused_by"), "subject": subject or {}, "payload": payload}
-    return enqueue(conn, tenant_id, "stream", "stream:" + eid, env)
+    """Evento para o stream sd:events, via outbox (só sai se a transação for confirmada), e daí para as rotas
+    de automação (n8n). Reprocessar não gera evento novo (id determinístico)."""
+    env = envelope(tenant_id, etype, natural_key, payload, occurred_at, subject)
+    return enqueue(conn, tenant_id, "stream", "stream:" + env["id"], env)
+
+
+def forward(conn: Connection, tenant_id: str, etype: str, natural_key: str, payload: Dict[str, Any],
+            occurred_at: Optional[dt.datetime] = None, subject: Optional[Dict[str, Any]] = None) -> bool:
+    """Evento de OUTRO serviço repassado só às rotas de automação (n8n), pela mesma outbox/ponte HMAC e com o
+    mesmo anti-loop (caused_by), SEM XADD no sd:events (o produtor original já publica lá; evita duplicata).
+    Uso: qa.completed recebido do qa-pipeline em POST /analysis-results."""
+    env = envelope(tenant_id, etype, natural_key, payload, occurred_at, subject)
+    return enqueue(conn, tenant_id, "fanout", "fanout:" + env["id"], env)
 
 
 def audit(conn: Connection, tenant_id: Optional[str], action: str, entity_type: Optional[str] = None,

@@ -161,6 +161,10 @@ class NotificationLogIn(BaseModel):
     status: str = "sent"
     opt_out: bool = False
     detail: Dict[str, Any] = Field(default_factory=dict)
+    dedupe_key: Optional[str] = Field(
+        None, max_length=200,
+        description="Chave única do envio no tenant (ex. whatsapp_pos_atendimento:<ticket>). Ausente: usa o header "
+                    "Idempotency-Key. Repetir a chave devolve 200 + Idempotent-Replay: true e o registro original.")
 
 
 class MappingIn(BaseModel):
@@ -846,13 +850,50 @@ def build(svc) -> APIRouter:
                      actor_type=p.kind, actor_id=str(p.user_id or p.service))
         return JSONResponse(res, status_code=202 if "error" not in res else 502)
 
+    def _notif_view(x) -> Dict[str, Any]:
+        return {"id": x.id, "dedupe_key": x.dedupe_key, "channel": x.channel, "template": x.template,
+                "ticket_id": x.ticket_id, "call_id": x.call_id, "status": x.status, "opt_out": x.opt_out,
+                "created_at": db.iso(x.created_at)}
+
     @r.post(PREFIX + "/notifications/log", tags=["operação"], status_code=201)
-    def notif_log(body: NotificationLogIn, p: Principal = Depends(principal)):
+    def notif_log(body: NotificationLogIn, request: Request, p: Principal = Depends(principal)):
+        """Registro de envio ao cliente (n8n WF05/WF06/WF07). Idempotente e permanente por (tenant, dedupe_key):
+        a 1ª chamada grava (201); as seguintes devolvem o registro original (200 + Idempotent-Replay: true), para o
+        n8n decidir "já enviado" sem guardar estado próprio."""
         need(p, "notify:send", "admin")
+        key = (body.dedupe_key or request.headers.get("idempotency-key") or "").strip()
+        if not key:
+            raise ApiError("dedupe_key_required", "informe dedupe_key no corpo ou o header Idempotency-Key", 422)
+        if len(key) > 200:
+            raise ApiError("dedupe_key_too_long", "dedupe_key com mais de 200 caracteres", 422)
+        nl = m.notification_logs
         with engine.begin() as conn:
+            new = conn.execute(pg_insert(nl).values(
+                tenant_id=p.tenant_id, dedupe_key=key, channel=body.channel, template=body.template,
+                ticket_id=body.ticket_id, call_id=body.call_id, status=body.status, opt_out=body.opt_out,
+                detail=body.detail, actor=p.actor, caused_by=p.caused_by,
+            ).on_conflict_do_nothing(index_elements=["tenant_id", "dedupe_key"]).returning(nl.c.id)).first()
+            if new is None:
+                prev = conn.execute(sa.select(nl).where(nl.c.tenant_id == p.tenant_id, nl.c.dedupe_key == key)).first()
+                return JSONResponse(dict(_notif_view(prev), ok=True, duplicate=True), status_code=200,
+                                    headers={"Idempotent-Replay": "true"})
             db.audit(conn, p.tenant_id, "notification.%s" % body.status, "ticket" if body.ticket_id else "call",
-                     body.ticket_id or body.call_id, body.model_dump(), actor_type=p.kind, actor_id=str(p.service or p.user_id))
-        return JSONResponse({"ok": True}, status_code=201)
+                     body.ticket_id or body.call_id, dict(body.model_dump(), dedupe_key=key), actor_type=p.kind,
+                     actor_id=str(p.service or p.user_id))
+        return JSONResponse({"ok": True, "duplicate": False, "id": new[0], "dedupe_key": key}, status_code=201)
+
+    @r.get(PREFIX + "/notifications/log", tags=["operação"])
+    def notif_list(ticket_id: Optional[str] = None, dedupe_key: Optional[str] = None,
+                   limit: int = Query(50, le=200), p: Principal = Depends(principal)):
+        need(p, "notify:send", "supervisor")
+        nl = m.notification_logs
+        q = sa.select(nl).where(nl.c.tenant_id == p.tenant_id)
+        if ticket_id:
+            q = q.where(nl.c.ticket_id == ticket_id)
+        if dedupe_key:
+            q = q.where(nl.c.dedupe_key == dedupe_key)
+        with engine.begin() as conn:
+            return {"items": [_notif_view(x) for x in conn.execute(q.order_by(nl.c.id.desc()).limit(limit))]}
 
     # ============================================================== resultados do A3
     @r.post(PREFIX + "/analysis-results", tags=["qa"])
@@ -879,13 +920,93 @@ def build(svc) -> APIRouter:
                 m.analysis_refs.c.id)).first()
             if r0 is None:
                 return {"duplicate": True}
-            for t in (tickets.tickets_of_call(conn, call_id) if call_id else []):
+            tks = tickets.tickets_of_call(conn, call_id) if call_id else []
+            for t in tks:
                 tickets.add_activity(conn, t, "analise", None, {"kind": body.kind, "status": body.status,
                                                                  "score": body.score, "external_id": body.external_id},
                                      p.actor, p.service, call_id, dedup_key="analise:%s:%s:%s" % (body.kind, body.external_id, t["id"]))
             db.audit(conn, p.tenant_id, "analysis.%s" % body.kind, "call", call_id,
                      {"status": body.status, "external_id": body.external_id}, actor_type="service", actor_id=p.service)
-        return {"id": r0[0], "duplicate": False}
+            forwarded = False
+            if body.kind == "qa" and body.status in ("completed", "partial"):
+                forwarded = _forward_qa(conn, p, body, r0[0], call_id, tks)
+        return {"id": r0[0], "duplicate": False, "forwarded": forwarded}
+
+    def _forward_qa(conn, p: Principal, body: AnalysisIn, ref_id: int, call_id: Optional[str],
+                    tks: List[Dict[str, Any]]) -> bool:
+        """qa.completed -> n8n (WF11) pela mesma outbox/ponte HMAC das chamadas, com o anti-loop do caused_by.
+        Não vai para o sd:events (o qa-pipeline já publica lá o evento original; evita duplicata no stream)."""
+        conv = None
+        if call_id:
+            conv = conn.execute(sa.select(m.calls.c.conversation_id).where(m.calls.c.id == call_id)).scalar()
+        t0 = sorted(tks, key=lambda t: t.get("created_at") or db.utcnow())[0] if tks else None
+        if conv is None and t0 is not None:
+            conv = conn.execute(sa.select(m.ticket_conversations.c.conversation_id).where(
+                m.ticket_conversations.c.ticket_id == t0["id"]).limit(1)).scalar()
+        d = body.data or {}
+        ev_id = d.get("evaluation_id") or body.external_id.rsplit(":", 1)[-1]
+        alerts = d.get("alerts") or []
+        payload = {"evaluation_id": ev_id, "external_id": body.external_id, "analysis_ref_id": ref_id,
+                   "status": body.status, "score": body.score, "alerts": alerts,
+                   "critical_alerts": d.get("critical_alerts") or alerts,
+                   "rubric_version": d.get("rubric_version"), "console_url": d.get("console_url"),
+                   "recording_id": body.recording_id, "call_id": call_id,
+                   "ticket_id": t0["id"] if t0 else None, "ticket_protocol": t0["protocol"] if t0 else None,
+                   "conversation_id": conv, "is_recommendation": True, "origin": p.service or "qa-pipeline"}
+        subject = {"call_id": call_id, "ticket_id": payload["ticket_id"], "conversation_id": conv,
+                   "recording_id": body.recording_id}
+        return db.forward(conn, p.tenant_id, "qa.completed", body.external_id, payload,
+                          occurred_at=_when(body.completed_at, db.utcnow()), subject=subject)
+
+    # ============================================================== capacidades (CTI)
+    @r.get(PREFIX + "/capabilities", tags=["cti"])
+    def capabilities(p: Principal = Depends(principal)):
+        """O que o CTI pode oferecer a ESTE usuário agora (o sd-console não sonda nem adivinha). Capacidade
+        desabilitada vem com o motivo em pt-BR; nada é simulado (mode=mock só existe no DEV)."""
+        why = svc.dial.available()
+        dial: Dict[str, Any] = {"enabled": why is None, "mode": s.dial_mode, "reason": why}
+        with engine.begin() as conn:
+            if dial["enabled"]:
+                if p.kind == "service":
+                    if "dial:write" not in p.scopes:
+                        dial.update(enabled=False, reason="token de serviço sem o escopo dial:write")
+                elif not p.has("agente", "supervisor", "admin"):
+                    dial.update(enabled=False, reason="seu papel não permite discar")
+                else:
+                    apm = m.agent_phone_mappings
+                    branch = conn.execute(sa.select(apm.c.branch).where(
+                        apm.c.tenant_id == p.tenant_id, apm.c.active.is_(True),
+                        sa.or_(apm.c.chatwoot_user_id == p.user_id,
+                               sa.func.lower(apm.c.agent_email) == (p.email or "").lower())).limit(1)).scalar()
+                    if branch is None:
+                        dial.update(enabled=False,
+                                    reason="seu usuário não tem ramal mapeado (admin: /admin/agent-phone-mappings)")
+                    else:
+                        dial["branch"] = branch
+            ura_cfgs = [x[0] or {} for x in conn.execute(sa.select(m.integration_accounts.c.ura_auth).where(
+                m.integration_accounts.c.tenant_id == p.tenant_id, m.integration_accounts.c.active.is_(True)))]
+        if dial["enabled"] and s.dial_mode == "mock":
+            dial["reason"] = "MODO MOCK (DEV): nenhuma ligação real"
+        webphone = ({"enabled": True, "mode": "external", "url": s.webphone_url, "reason": None} if s.webphone_url
+                    else {"enabled": False, "mode": "external", "url": None,
+                          "reason": "webphone da 55PBX não configurado no sd-ops (PBX_WEBPHONE_URL)"})
+        cb_ok = p.can("callbacks:write", "agente", "supervisor")
+        callbacks = {"enabled": cb_ok, "reason": None if cb_ok else "sem permissão para retornos"}
+        rec_cfg = len(s.recording_url_secret or "") >= 32
+        rec_ok = rec_cfg and (p.kind == "user" or "recordings:read" in p.scopes)
+        recordings = {"enabled": rec_ok, "mode": s.storage_backend,
+                      "reason": None if rec_ok else ("gravações sem RECORDING_URL_SECRET configurado" if not rec_cfg
+                                                     else "token de serviço sem o escopo recordings:read")}
+
+        def _ura_ok(c: Dict[str, Any]) -> bool:
+            refs = [c.get("ref")] if c.get("type") in ("token", "bearer") else [c.get("user_ref"), c.get("pass_ref")]
+            return bool(c.get("type")) and all(s.cred(x) for x in refs)
+        ura_ok = any(_ura_ok(c) for c in ura_cfgs)
+        ura = {"enabled": ura_ok, "mode": "menu_dinamico",
+               "reason": None if ura_ok else "Menu Dinâmico (URA) sem credencial configurada para este tenant"}
+        return {"tenant_id": p.tenant_id, "env": s.env, "integration_enabled": s.enabled,
+                "capabilities": {"dial": dial, "webphone": webphone, "callbacks": callbacks,
+                                 "recordings": recordings, "ura": ura}}
 
     # ============================================================== admin
     def admin(p: Principal):

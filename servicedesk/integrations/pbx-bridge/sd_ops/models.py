@@ -643,6 +643,27 @@ automation_executions = sa.Table(
     sa.UniqueConstraint("route_id", "event_id"),
 )
 
+notification_logs = sa.Table(
+    # Registro de envio ao cliente (WhatsApp, e-mail, CSAT) feito pelo n8n. A chave única (tenant, dedupe_key)
+    # torna POST /notifications/log idempotente e permanente: o n8n não guarda estado ("1 envio por ticket").
+    "notification_logs", metadata,
+    sa.Column("id", sa.BigInteger, primary_key=True),
+    tenant_fk(),
+    sa.Column("dedupe_key", sa.Text, nullable=False),      # ex. whatsapp_pos_atendimento:<ticket>
+    sa.Column("channel", sa.Text, nullable=False),         # whatsapp | email | sms | outro
+    sa.Column("template", sa.Text),
+    sa.Column("ticket_id", sa.Text),
+    sa.Column("call_id", sa.Text),
+    sa.Column("status", sa.Text, nullable=False),          # enviando | simulado | sent | failed | opt_out ...
+    sa.Column("opt_out", sa.Boolean, nullable=False, server_default=sa.false()),
+    sa.Column("detail", JSONB, nullable=False, server_default=EMPTY_OBJ),
+    sa.Column("actor", sa.Text),                           # service:n8n / user:<id>
+    sa.Column("caused_by", sa.Text),                       # n8n:WFxx
+    sa.Column("created_at", TS, nullable=False, server_default=NOW),
+    sa.UniqueConstraint("tenant_id", "dedupe_key"),
+    sa.Index("ix_notification_logs_ticket", "tenant_id", "ticket_id"),
+)
+
 idempotency_keys = sa.Table(
     "idempotency_keys", metadata,
     sa.Column("key", sa.Text, primary_key=True),          # <ator>:<Idempotency-Key>
