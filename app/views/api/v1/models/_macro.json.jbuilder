@@ -17,4 +17,6 @@ end
 
 json.account_id macro.account_id
 json.actions macro.actions
+# ServiceDesk M5.1: resposta e nota da macro vão para o editor (o agente revisa e envia); ver Macros::ExecutionService
+json.fill_editor macro.account.macro_fill_editor?
 json.files macro.file_base_data if macro.files.any?

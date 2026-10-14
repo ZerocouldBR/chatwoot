@@ -1,0 +1,43 @@
+# ServiceDesk: fonte de verdade dos status de ticket (backend).
+#
+# Usado por Servicedesk::TicketStatuses, pela ação set_ticket_status (macros e automações) e pelos importadores.
+# O frontend tem a mesma tabela em app/javascript/dashboard/servicedesk/ticketFormsMeta.json (chave "statuses");
+# spec/services/servicedesk/ticket_statuses_spec.rb falha se as duas divergirem.
+#
+# Status nativo (v3, modelo do Victor): o rótulo exato fica no atributo de conversa `zd_status` e o status
+# nativo do ticket é derivado da CATEGORIA, com o mesmo mapa do Zendesk:
+#   new -> new_ticket, open -> open, pending -> waiting_on_customer ("Pendente"), hold -> on_hold ("Em espera"),
+#   solved -> resolved, closed -> closed
+# O status nativo `pending` NÃO é usado: fica reservado à fila do bot/IA. Como no Zendesk, macros e automações
+# não levam um ticket para Novo nem para Fechado (set_ticket_status recusa essas categorias).
+#
+# Para mudar a lista: altere este arquivo E o ticketFormsMeta.json (gerador do painel) e a lista de valores do
+# atributo `zd_status` da conta (provision_fields_extra.rb). `origin_id` é o id do status no sistema de origem.
+attribute_key: zd_status
+
+categories:
+  new: new_ticket
+  open: open
+  pending: waiting_on_customer
+  hold: on_hold
+  solved: resolved
+  closed: closed
+
+statuses:
+  - { label: 'Novo', category: new, active: true, origin_id: 20487430798747 }
+  - { label: 'Aberto', category: open, active: true, origin_id: 20487400901659 }
+  - { label: 'Em andamento', category: open, active: true, origin_id: 21790194164379 }
+  - { label: 'Devolvido Cliente', category: open, active: false, origin_id: 26469791141275 }
+  - { label: 'Reaberto', category: open, active: true, origin_id: 26915958510619 }
+  - { label: 'Pendente', category: pending, active: true, origin_id: 20487412004251 }
+  - { label: 'Pendente Autenticação', category: pending, active: false, origin_id: 51446269872667 }
+  - { label: 'Aguardando Desenvolvimento', category: hold, active: false, origin_id: 20487430857883 }
+  - { label: 'Escalonado', category: hold, active: false, origin_id: 21790215283483 }
+  - { label: 'Desenvolvimento', category: hold, active: true, origin_id: 21790243451291 }
+  - { label: 'Retorno Integrações', category: hold, active: false, origin_id: 22412122152347 }
+  - { label: 'Devolvido', category: hold, active: true, origin_id: 26904974432923 }
+  - { label: 'Desenvolvimento Concluído', category: hold, active: true, origin_id: 26950275108635 }
+  - { label: 'Resolvido', category: solved, active: true, origin_id: 20487384870939 }
+  - { label: 'Concluído', category: solved, active: true, origin_id: 21802712943899 }
+  - { label: 'Respondido cliente', category: solved, active: true, origin_id: 23819380599963 }
+  - { label: 'Autenticação Pendente', category: solved, active: false, origin_id: 51446767948059 }
