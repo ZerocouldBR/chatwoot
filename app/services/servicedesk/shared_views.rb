@@ -55,9 +55,9 @@ class Servicedesk::SharedViews
     (user.custom_attributes || {})['zendesk_user_id'].to_s.presence
   end
 
+  # Mesma extração do import_rules_views/sd_views_visibility (TEAM_BY_ZD): o marcador pode vir no meio da descrição
   def zd_group_id(team)
-    description = team.description.to_s.strip
-    description.delete_prefix(GROUP_PREFIX).strip.presence if description.start_with?(GROUP_PREFIX)
+    team.description.to_s[/#{GROUP_PREFIX}\s*(\d+)/o, 1]
   end
 
   def group_member?(visibility)

@@ -103,4 +103,11 @@ RSpec.describe Servicedesk::SharedViews do
     counts = described_class.new(account: account, user: owner).counts
     expect(counts[view_named(owner, 'Quebrada')[:id]]).to be_nil
   end
+
+  it 'reads the Zendesk group in the middle of the team description, like import_rules_views' do
+    named = create(:team, account: account, description: 'Financeiro (zendesk_group:300)')
+    create(:team_member, team: named, user: agent)
+    shared_view('Do financeiro', 40, zd_group_ids: ['300'])
+    expect(names_for(agent)).to include('Do financeiro')
+  end
 end
