@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2026_10_14_165327) do
+ActiveRecord::Schema[7.1].define(version: 2026_10_14_190000) do
   # These extensions should be enabled to support this database
   enable_extension "pg_stat_statements"
   enable_extension "pg_trgm"
@@ -1609,6 +1609,18 @@ ActiveRecord::Schema[7.1].define(version: 2026_10_14_165327) do
     t.index ["account_id", "date", "dimension_type", "dimension_id", "metric"], name: "index_rollup_unique_key", unique: true
     t.index ["account_id", "dimension_type", "date"], name: "index_rollup_summary"
     t.index ["account_id", "metric", "date"], name: "index_rollup_timeseries"
+  end
+
+  create_table "sd_ticket_audits", force: :cascade do |t|
+    t.bigint "account_id", null: false
+    t.bigint "conversation_id", null: false
+    t.string "author_type"
+    t.bigint "author_id"
+    t.string "via", default: "web", null: false
+    t.jsonb "events", default: [], null: false
+    t.datetime "created_at", null: false
+    t.index ["account_id"], name: "index_sd_ticket_audits_on_account_id"
+    t.index ["conversation_id", "id"], name: "index_sd_ticket_audits_on_conversation_id_and_id"
   end
 
   create_table "sla_events", force: :cascade do |t|

@@ -1,4 +1,7 @@
 Rails.application.routes.draw do
+  # ServiceDesk (M7): compatibilidade com a API do Zendesk (config/routes/zendesk_compat.rb)
+  draw :zendesk_compat
+
   # AUTH STARTS
   mount_devise_token_auth_for 'User', at: 'auth', controllers: {
     confirmations: 'devise_overrides/confirmations',

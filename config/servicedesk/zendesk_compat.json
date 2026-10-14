@@ -1,0 +1,6126 @@
+{
+ "_source": "provisioning/zendesk_field_map.json (gerado por script/servicedesk_zendesk_compat_config.py)",
+ "_generated_from": "2026-10-13T21:50:32Z",
+ "ticket_fields": [
+  {
+   "id": 20487430449819,
+   "title": "Assunto",
+   "zendesk_type": "subject",
+   "type": null,
+   "key": "zd_assunto",
+   "system": true,
+   "active": true,
+   "position": 1,
+   "required": false,
+   "required_in_portal": true,
+   "visible_in_portal": true,
+   "description": null,
+   "tag": null,
+   "options": [],
+   "historical_options": []
+  },
+  {
+   "id": 20487400475035,
+   "title": "Descrição",
+   "zendesk_type": "description",
+   "type": null,
+   "key": null,
+   "system": true,
+   "active": true,
+   "position": 2,
+   "required": false,
+   "required_in_portal": true,
+   "visible_in_portal": true,
+   "description": "Insira os detalhes de sua solicitação. Um membro de nossa equipe de suporte responderá assim que possível.",
+   "tag": null,
+   "options": [],
+   "historical_options": []
+  },
+  {
+   "id": 20487414981659,
+   "title": "Status",
+   "zendesk_type": "status",
+   "type": null,
+   "key": "zd_status_sistema",
+   "system": true,
+   "active": true,
+   "position": 3,
+   "required": false,
+   "required_in_portal": false,
+   "visible_in_portal": false,
+   "description": "Status da solicitação",
+   "tag": null,
+   "options": [
+    [
+     "open",
+     "Aberto"
+    ],
+    [
+     "pending",
+     "Pendente"
+    ],
+    [
+     "hold",
+     "Em espera"
+    ],
+    [
+     "solved",
+     "Resolvido"
+    ]
+   ],
+   "historical_options": []
+  },
+  {
+   "id": 20487384447387,
+   "title": "Tipo",
+   "zendesk_type": "tickettype",
+   "type": "list",
+   "key": "zd_tipo",
+   "system": true,
+   "active": true,
+   "position": 4,
+   "required": false,
+   "required_in_portal": false,
+   "visible_in_portal": false,
+   "description": "Tipo de solicitação",
+   "tag": null,
+   "options": [
+    [
+     "question",
+     "Pergunta"
+    ],
+    [
+     "incident",
+     "Incidente"
+    ],
+    [
+     "problem",
+     "Problema"
+    ],
+    [
+     "task",
+     "Tarefa"
+    ]
+   ],
+   "historical_options": []
+  },
+  {
+   "id": 20487414990491,
+   "title": "Prioridade",
+   "zendesk_type": "basic_priority",
+   "type": null,
+   "key": null,
+   "system": true,
+   "active": true,
+   "position": 5,
+   "required": false,
+   "required_in_portal": false,
+   "visible_in_portal": true,
+   "description": "Prioridade da solicitação",
+   "tag": null,
+   "options": [
+    [
+     "normal",
+     "Normal"
+    ],
+    [
+     "high",
+     "Alta"
+    ]
+   ],
+   "historical_options": []
+  },
+  {
+   "id": 20487422806171,
+   "title": "Grupo",
+   "zendesk_type": "group",
+   "type": null,
+   "key": null,
+   "system": true,
+   "active": true,
+   "position": 6,
+   "required": false,
+   "required_in_portal": false,
+   "visible_in_portal": false,
+   "description": "Grupo da solicitação",
+   "tag": null,
+   "options": [],
+   "historical_options": []
+  },
+  {
+   "id": 20487384451739,
+   "title": "Atribuído para",
+   "zendesk_type": "assignee",
+   "type": null,
+   "key": null,
+   "system": true,
+   "active": true,
+   "position": 7,
+   "required": true,
+   "required_in_portal": false,
+   "visible_in_portal": true,
+   "description": "Agente atribuído à sua solicitação",
+   "tag": null,
+   "options": [],
+   "historical_options": []
+  },
+  {
+   "id": 20487422798619,
+   "title": "Ticket status",
+   "zendesk_type": "custom_status",
+   "type": null,
+   "key": "zd_status",
+   "system": true,
+   "active": true,
+   "position": 8,
+   "required": false,
+   "required_in_portal": false,
+   "visible_in_portal": false,
+   "description": "Request ticket status",
+   "tag": null,
+   "options": [],
+   "historical_options": []
+  },
+  {
+   "id": 21537516749211,
+   "title": "Financeiro",
+   "zendesk_type": "tagger",
+   "type": "list",
+   "key": "zd_financeiro",
+   "system": false,
+   "active": true,
+   "position": 9999,
+   "required": false,
+   "required_in_portal": false,
+   "visible_in_portal": false,
+   "description": null,
+   "tag": null,
+   "options": [
+    [
+     "alterar_dados_cadastrais",
+     "Alterar dados cadastrais"
+    ],
+    [
+     "cancelamento_de_nota",
+     "Cancelamento de nota"
+    ],
+    [
+     "cancelamento_de_reserva",
+     "Cancelamento de reserva"
+    ],
+    [
+     "cobrança_extrajudicial",
+     "Cobrança extrajudicial"
+    ],
+    [
+     "comprovante_de_pagamento",
+     "Comprovante de pagamento"
+    ],
+    [
+     "financeiro_conta_a_pagar",
+     "Conta a pagar"
+    ],
+    [
+     "financeiro_conta_a_receber",
+     "Conta a receber"
+    ],
+    [
+     "demanda_checkout",
+     "Demanda checkout"
+    ],
+    [
+     "financeiro_desconsiderado",
+     "Desconsiderado"
+    ],
+    [
+     "distrato/troca_de_cnpj",
+     "Distrato/Troca de CNPJ"
+    ],
+    [
+     "financeiro_encaminhado_para_outro_setor",
+     "Encaminhado para outro setor"
+    ],
+    [
+     "envio_de_danfom",
+     "Envio de Danfom"
+    ],
+    [
+     "inadimplencia/cobrança",
+     "Inadimplencia/cobrança"
+    ],
+    [
+     "informações_sobre_contrato/negociação",
+     "Informações sobre contrato/Negociação"
+    ],
+    [
+     "não_recebeu_boleto",
+     "Nao recebeu boleto"
+    ],
+    [
+     "financeiro_outro_assunto",
+     "Outro assunto"
+    ],
+    [
+     "prorrogação_de_boleto/vencimento",
+     "Prorrogação de boleto/vencimento"
+    ],
+    [
+     "segunda_via_boleto",
+     "Segunda via boleto/Fatura"
+    ],
+    [
+     "financeiro_sem_retorno",
+     "Sem retorno"
+    ],
+    [
+     "senha_da_fatura",
+     "Senha da fatura"
+    ],
+    [
+     "tarifa_bancária",
+     "Tarifa bancária"
+    ],
+    [
+     "ajuste_de_relatório",
+     "Ajuste de relatório"
+    ],
+    [
+     "erro_de_faturamento",
+     "Erro de faturamento"
+    ],
+    [
+     "troca_de_adquirente",
+     "Troca de adquirente"
+    ],
+    [
+     "impostos_/_contabilidade",
+     "Impostos / Contabilidade"
+    ]
+   ],
+   "historical_options": []
+  },
+  {
+   "id": 21537600796443,
+   "title": "Tabulação",
+   "zendesk_type": "tagger",
+   "type": "list",
+   "key": "zd_tabulacao",
+   "system": false,
+   "active": true,
+   "position": 9999,
+   "required": false,
+   "required_in_portal": false,
+   "visible_in_portal": false,
+   "description": null,
+   "tag": null,
+   "options": [
+    [
+     "ajuda_para_cobrança",
+     "Ajuda para Cobrança"
+    ],
+    [
+     "ajuda_para_cobrança_-_retentativa",
+     "Ajuda para Cobrança - Retentativa"
+    ],
+    [
+     "ajuda_para_cobrança_-_sem_retorno_da_agência",
+     "Ajuda para Cobrança - Sem Retorno Agência"
+    ],
+    [
+     "suporte_ajuste_de_pdv_e_clientes",
+     "Ajuste de PDV e Clientes"
+    ],
+    [
+     "análise_de_logs",
+     "Analise de Logs"
+    ],
+    [
+     "antecipação_",
+     "Antecipação"
+    ],
+    [
+     "automação_edição",
+     "Automação Edição"
+    ],
+    [
+     "automação_estorno",
+     "Automação Estorno"
+    ],
+    [
+     "booking_-_configurações",
+     "Booking - Configurações"
+    ],
+    [
+     "booking_-_política_pdv",
+     "Booking - Política PDV"
+    ],
+    [
+     "suporte_cancelamento_de_reserva_b2b",
+     "Cancelamento de Reserva "
+    ],
+    [
+     "cancelamento_interno",
+     "Cancelamento Interno"
+    ],
+    [
+     "carta_de_circularização",
+     "Carta de Circularização"
+    ],
+    [
+     "chamado_auttar_",
+     "Chamado Auttar/Zoop"
+    ],
+    [
+     "channel_manager",
+     "Channel Manager"
+    ],
+    [
+     "chargeback",
+     "Chargeback"
+    ],
+    [
+     "ajuste_de_pedido_-_checkout",
+     "Checkout - Ajuste de Pedido"
+    ],
+    [
+     "suporte_checkout_-_estorno",
+     "Checkout - Estorno"
+    ],
+    [
+     "checkout_-_extras_não_habilitados",
+     "Checkout - Extras não Habilitados"
+    ],
+    [
+     "suporte_checkout_-_link_de_pagamento",
+     "Checkout - Link de Pagamento"
+    ],
+    [
+     "suporte_checkout_-_relatorios",
+     "Checkout - Relatorios"
+    ],
+    [
+     "suporte_checkout_-_taxas",
+     "Checkout - Taxas"
+    ],
+    [
+     "suporte_checkout_-_transferência_bancaria",
+     "Checkout - Transferência Bancária"
+    ],
+    [
+     "suporte_comissões/fee",
+     "Comissões/Fee"
+    ],
+    [
+     "suporte_customizacao_de_voucher",
+     "Customizacao de Voucher"
+    ],
+    [
+     "dados_bancários",
+     "Dados Bancários"
+    ],
+    [
+     "dirf",
+     "DIRF"
+    ],
+    [
+     "suporte_edicao_de_fops",
+     "Edicao de FOPs"
+    ],
+    [
+     "suporte_edicao_de_reserva_-_auxilio_portal",
+     "Edicao de Reserva - Auxilio portal"
+    ],
+    [
+     "suporte_edicao_de_reserva_-_integracao",
+     "Edicao de Reserva - Integracao"
+    ],
+    [
+     "encaminhado_para_outro_setor",
+     "Encaminhado Para Outro Setor"
+    ],
+    [
+     "envio_de_nota_fiscal",
+     "Envio de Nota Fiscal"
+    ],
+    [
+     "equals/capere",
+     "Equals/Capere"
+    ],
+    [
+     "erro_google_auth_/_mfa",
+     "Erro Google auth / MFA"
+    ],
+    [
+     "erro_indisponibilidade",
+     "Erro Indisponibilidade"
+    ],
+    [
+     "finalizado_sem_autenticação_",
+     "Finalizado Sem Autenticação "
+    ],
+    [
+     "finalizado_sem_autenticação_agencia",
+     "Finalizado Sem Autenticação - Agência"
+    ],
+    [
+     "finalizado_sem_autenticação_hotel",
+     "Finalizado Sem Autenticação - Hotel"
+    ],
+    [
+     "hotel_-_ajuste_dados_cadastrais_e_políticas",
+     "Hotel - Ajuste Dados Cadastrais e Políticas"
+    ],
+    [
+     "suporte_hotel/tarifa_nao_refletindo__consulta_como_agência",
+     "Hotel/tarifa Nao Refletindo (consulta como agência)"
+    ],
+    [
+     "instabilidade_booking",
+     "Instabilidade Booking"
+    ],
+    [
+     "instabilidade_checkout",
+     "Instabilidade Checkout"
+    ],
+    [
+     "instabilidade_hospitality",
+     "Instabilidade Hospitality"
+    ],
+    [
+     "instabilidade_legado",
+     "Instabilidade Legado"
+    ],
+    [
+     "instabilidade_pay",
+     "Instabilidade Pay"
+    ],
+    [
+     "instabilidade_users",
+     "Instabilidade Users"
+    ],
+    [
+     "suporte_integracao_com_parceiro_-_pms/obt",
+     "Integracao com Parceiro - PMS/OBT"
+    ],
+    [
+     "suporte_checkout_-_localizacao_de_reserva",
+     "Localizacao de Reserva"
+    ],
+    [
+     "não_recebimento_de_e-mails",
+     "Não Recebimento de E-mails"
+    ],
+    [
+     "suporte_overbooking/nao_recebeu_reserva",
+     "Overbooking/Nao RecebeuReserva"
+    ],
+    [
+     "suporte_cadastro_de_hotel_-_pay",
+     "Pay - Cadastro de Hotel"
+    ],
+    [
+     "suporte_b2b.pay_-_controles",
+     "Pay - Controles"
+    ],
+    [
+     "suporte_fatura_b2b.pay",
+     "Pay - Fatura"
+    ],
+    [
+     "suporte_b2b.pay_-_recusas_de_cartão",
+     "Pay - Recusas de Cartão"
+    ],
+    [
+     "suporte_b2b.pay_-_relatorios",
+     "Pay - Relatorios"
+    ],
+    [
+     "b2b.pay_-_venda_de_terceiros",
+     "Pay - Venda de Terceiros"
+    ],
+    [
+     "suporte_vincular/reenviar_vcn",
+     "Pay - Vincular/Reenviar VCN"
+    ],
+    [
+     "prorrogação_nfse",
+     "Prorrogação NFSe"
+    ],
+    [
+     "relatorios",
+     "Relatorios"
+    ],
+    [
+     "retorno_ligação",
+     "Retorno Ligação"
+    ],
+    [
+     "suporte_avaliado_sem_interacao",
+     "Sem Interação"
+    ],
+    [
+     "suporte_tarifas_e_disponibilidade",
+     "Tarifas e Disponibilidade"
+    ],
+    [
+     "suporte_trancao_nao_autorizada_-_outros",
+     "Transacao Nao Autorizada - Outros"
+    ],
+    [
+     "suporte_transacao_nao_autorizada_-_saldo_ou_cartao_cancelado",
+     "Transacao Nao Autorizada - Saldo ou cartao cancelado"
+    ],
+    [
+     "suporte_transacao_nao_autorizada_-_validade",
+     "Transacao Nao Autorizada - Validade"
+    ],
+    [
+     "trava_de_domicílio_bancário",
+     "Trava de Domicílio Bancário"
+    ],
+    [
+     "treinamentos",
+     "Treinamento"
+    ],
+    [
+     "suporte_usuarios",
+     "Usuários e Acesso"
+    ],
+    [
+     "suporte_validacao_de_notas",
+     "Validacao de Notas"
+    ],
+    [
+     "venda_em_andamento",
+     "Venda em Andamento"
+    ],
+    [
+     "venda_pendente_-_auttar",
+     "Venda pendente - Auttar"
+    ],
+    [
+     "agência_-_verificação_de_reserva",
+     "Verificação de Reserva - Agência"
+    ],
+    [
+     "hotel_-_verificação_de_reserva",
+     "Verificação de Reserva - Hotel"
+    ],
+    [
+     "voetur_-_substituição_tributária",
+     "Voetur - Substituição Tributária"
+    ],
+    [
+     "voucher_-_th",
+     "Vouchers - TH"
+    ]
+   ],
+   "historical_options": [
+    [
+     "suporte_duvidas_gerais_-_hotel",
+     "Duvidas Gerais - Hotel (antiga)"
+    ],
+    [
+     "sem_retorno",
+     "Sem Retorno (antiga)"
+    ],
+    [
+     "suporte_duvidas_gerais_-_agencia",
+     "Duvidas Gerais - Agencia (antiga)"
+    ],
+    [
+     "suporte_cancelamento_de_reserva_-_auxilio_portal",
+     "Cancelamento de Reserva - Auxilio portal (antiga)"
+    ],
+    [
+     "suporte_cancelamento_de_reserva_-_integracao",
+     "Cancelamento de Reserva - Integracao (antiga)"
+    ],
+    [
+     "suporte_instabilidade",
+     "Instabilidade (antiga)"
+    ],
+    [
+     "suporte_ajuda_para_cobranca_com_cartao_virtual",
+     "Ajuda para Cobranca com Cartao Virtual (antiga)"
+    ],
+    [
+     "suporte_b2b_pay",
+     "B2B Pay (antiga)"
+    ],
+    [
+     "contato_mcc_",
+     "Contato MCC (antiga)"
+    ],
+    [
+     "booking_novo",
+     "Booking Novo (antiga)"
+    ],
+    [
+     "rede",
+     "Rede (antiga)"
+    ],
+    [
+     "suporte_cancelamento_de_reserva_integrado",
+     "Cancelamento de Reserva Integrado (antiga)"
+    ],
+    [
+     "cancelamento_banco_de_dados",
+     "Cancelamento Banco de Dados (antiga)"
+    ],
+    [
+     "b2b.pay_v2",
+     "B2B.pay v2 (antiga)"
+    ],
+    [
+     "excluído/spam",
+     "Excluído/Spam (antiga)"
+    ],
+    [
+     "suporte_ajuda_para_cobranca",
+     "Ajuda para Cobranca (antiga)"
+    ],
+    [
+     "restaurar_pedido_-_checkout",
+     "Restaurar pedido - checkout (antiga)"
+    ]
+   ]
+  },
+  {
+   "id": 21537769310747,
+   "title": "Checkout",
+   "zendesk_type": "tagger",
+   "type": "list",
+   "key": "zd_checkout_inativo",
+   "system": false,
+   "active": false,
+   "position": 9999,
+   "required": false,
+   "required_in_portal": false,
+   "visible_in_portal": false,
+   "description": null,
+   "tag": null,
+   "options": [
+    [
+     "checkout_abertura_do_e-commerce",
+     "Abertura do e-commerce"
+    ],
+    [
+     "ajuda_para_cobrança",
+     "Ajuda para cobrança"
+    ],
+    [
+     "ajuda_para_visualização_de_cartão",
+     "Ajuda Para Visualização de Cartão"
+    ],
+    [
+     "antecipação",
+     "Antecipação"
+    ],
+    [
+     "atendimento_checkout",
+     "Atendimento "
+    ],
+    [
+     "checkout_atualizacao_tef",
+     "Atualizacao TEF"
+    ],
+    [
+     "checkout_cadastro_checkout_avancado",
+     "Cadastro checkout avancado realizado"
+    ],
+    [
+     "chamado_auttar",
+     "Chamado Auttar"
+    ],
+    [
+     "chamado_zoop",
+     "Chamado Zoop"
+    ],
+    [
+     "contato_mcc",
+     "Contato MCC"
+    ],
+    [
+     "checkout_criacao_de_usuario",
+     "Criacao de usuario checkout"
+    ],
+    [
+     "checkout_dirf",
+     "DIRF"
+    ],
+    [
+     "checkout_emissao_de_relatório_checkout_av.",
+     "Emissao de relatório checkout av."
+    ],
+    [
+     "erro_092",
+     "Erro 092"
+    ],
+    [
+     "erro_de_carga_-_0210",
+     "Erro de Carga - 0210"
+    ],
+    [
+     "erro_de_integração",
+     "Erro de integração"
+    ],
+    [
+     "checkout_erro_de_nf_-_divisao",
+     "Erro de NF - divisao"
+    ],
+    [
+     "erro_split_de_pagamento_",
+     "Erro Split de Pagamento "
+    ],
+    [
+     "checkout_erro_zoop",
+     "Erro Zoop"
+    ],
+    [
+     "estorno",
+     "Estorno"
+    ],
+    [
+     "checkout_importacao_de_reserva",
+     "Importacao de reserva"
+    ],
+    [
+     "checkout_instabilidade_checkout_basico",
+     "Instabilidade checkout basico"
+    ],
+    [
+     "checkout_instabilidade_zoop",
+     "Instabilidade Zoop"
+    ],
+    [
+     "mcc_inválido_",
+     "MCC inválido "
+    ],
+    [
+     "checkout_nao_autorizado_-_erro_inesperado",
+     "Nao autorizado - erro inesperado"
+    ],
+    [
+     "nova_integração",
+     "Nova Integração"
+    ],
+    [
+     "novos_negócios_checkout",
+     "Novos Negócios"
+    ],
+    [
+     "reanálise_seller",
+     "Reanálise Seller"
+    ],
+    [
+     "avaliado_sem_interação",
+     "Sem interação"
+    ],
+    [
+     "checkout_sem_retorno",
+     "Sem retorno"
+    ],
+    [
+     "checkout_suporte_agencia",
+     "Suporte agencia"
+    ],
+    [
+     "suporte_nf_split_de_pagamento",
+     "Suporte NF Split de Pagamento"
+    ],
+    [
+     "transação_não_autorizada_-_057",
+     "Transação Não Autorizada - 057"
+    ],
+    [
+     "transação_não_autorizada_-_adquirente",
+     "Transação Não Autorizada - Adquirente"
+    ],
+    [
+     "transação_não_autorizada_-_cartão_cancelado",
+     "Transação Não Autorizada - Cartão Cancelado"
+    ],
+    [
+     "transação_não_autorizada_-_saldo",
+     "Transação Não Autorizada - Saldo"
+    ],
+    [
+     "transação_não_autorizada_-_validade",
+     "Transação Não Autorizada - Validade"
+    ],
+    [
+     "trava_de_domícilio_bancário",
+     "Trava de Domícilio Bancário"
+    ],
+    [
+     "checkout_treinamento",
+     "Treinamento"
+    ],
+    [
+     "checkout_troca_de_cnpj",
+     "Solicitação Troca de CNPJ "
+    ],
+    [
+     "checkout_troca_de_mcc",
+     "Troca de MCC"
+    ],
+    [
+     "validação_de_nf",
+     "Validação de NF"
+    ],
+    [
+     "checkout_valores_parados_na_zoop",
+     "Valores parados na Zoop"
+    ],
+    [
+     "checkout_visualizacao_dos_dados_do_cartao",
+     "Visualizacao dos dados do cartao"
+    ],
+    [
+     "troca_de_cnpj_realizada_",
+     "Troca de CNPJ realizada "
+    ],
+    [
+     "erro_de_transação_teste_",
+     "Erro de transação teste "
+    ],
+    [
+     "cadastro_checkout_basico_realizado",
+     "Cadastro checkout basico realizado"
+    ],
+    [
+     "cadastro_agencia_realizado",
+     "Cadastro agencia realizado"
+    ],
+    [
+     "marileia",
+     "Marileia"
+    ]
+   ],
+   "historical_options": []
+  },
+  {
+   "id": 21538028391067,
+   "title": "Hospitality",
+   "zendesk_type": "tagger",
+   "type": "list",
+   "key": "zd_hospitality",
+   "system": false,
+   "active": true,
+   "position": 9999,
+   "required": false,
+   "required_in_portal": false,
+   "visible_in_portal": false,
+   "description": null,
+   "tag": null,
+   "options": [
+    [
+     "hospitality_agendar_treinamento",
+     "Agendar Treinamento"
+    ],
+    [
+     "alteração_de_nomenclatura",
+     "Alteração de nomenclatura"
+    ],
+    [
+     "apresentação_piloto_parceiro_-_v2_",
+     "Apresentação piloto parceiro - V2 "
+    ],
+    [
+     "associação_de_hotel_no_login",
+     "Associação de hotel no login"
+    ],
+    [
+     "cadastro_/_entrevista_realizada_",
+     "Cadastro / Entrevista realizada "
+    ],
+    [
+     "cadastro_ameris_concluido",
+     "Cadastro Ameris concluido"
+    ],
+    [
+     "cadastro_artax_concluído_",
+     "Cadastro Artax concluído "
+    ],
+    [
+     "cadastro_foco_concluído",
+     "Cadastro Foco concluído"
+    ],
+    [
+     "cadastro_hotel",
+     "Cadastro hotel realizado"
+    ],
+    [
+     "cadastro_troca_de_rede_",
+     "Cadastro troca de rede "
+    ],
+    [
+     "cartão_virtual_liberado",
+     "Cartão virtual liberado"
+    ],
+    [
+     "ciente",
+     "Ciente"
+    ],
+    [
+     "hospitality_conexao_channel",
+     "Conexao Channel agendada "
+    ],
+    [
+     "hospitality_conexao_concluida_-_channel",
+     "Conexao Channel concluida "
+    ],
+    [
+     "hospitality_consulta_p.venda",
+     "Consulta p.vendas"
+    ],
+    [
+     "contato_para_liberar_cartão_virtual_",
+     "Contato para liberar cartão virtual "
+    ],
+    [
+     "contato_pré-treinamento_",
+     "Contato pré-treinamento "
+    ],
+    [
+     "convite_treinamento_checkout_",
+     "Convite treinamento checkout "
+    ],
+    [
+     "criacao_de_usuário_checkout",
+     "Criacao de usuário checkout"
+    ],
+    [
+     "hospitality_criacao_de_usuário",
+     "Criacao de usuário hospitality"
+    ],
+    [
+     "hospitality_desconsiderado",
+     "Desconsiderado"
+    ],
+    [
+     "diretório_-_valores_validados_",
+     "Diretório - valores validados "
+    ],
+    [
+     "duvidas_sobre_tarifas_",
+     "Duvidas de tarifas "
+    ],
+    [
+     "e-mail_-_força_tarefa_comissionada_",
+     "E-mail - força tarefa comissionada "
+    ],
+    [
+     "e-mail_pós_treinamento",
+     "E-mail pós treinamento"
+    ],
+    [
+     "e-mail_tarifa_e_dispo_vencidas_",
+     "E-mail tarifa e dispo vencidas "
+    ],
+    [
+     "e-mail_tarifa_negociada",
+     "E-mail tarifa negociada"
+    ],
+    [
+     "follow_boas-vindas_artax_realizado",
+     "Follow boas-vindas ARTAX realizado"
+    ],
+    [
+     "follow_mapeamento_artax_realizado",
+     "Follow mapeamento ARTAX realizado"
+    ],
+    [
+     "follow_mapeamento_foco_realizado",
+     "Follow mapeamento FOCO realizado"
+    ],
+    [
+     "follow_pipe",
+     "Follow pipe"
+    ],
+    [
+     "follow_pós_treinamento_checkout_",
+     "Follow pós treinamento checkout "
+    ],
+    [
+     "follow_pós_treinamento",
+     "Follow pós treinamento hospitality "
+    ],
+    [
+     "follow_tarifa_negociada_",
+     "Follow tarifa negociada "
+    ],
+    [
+     "_força_tarefa_-_tarifa_comissionada_carregada",
+     "Força tarefa - tarifa comissionada carregada"
+    ],
+    [
+     "hotel_liberado_-_cadastro_concluido",
+     "Hotel liberado - cadastro concluido"
+    ],
+    [
+     "hotel_liberado_ameris_-_cadastro_concluido",
+     "Hotel liberado AMERIS - cadastro concluido"
+    ],
+    [
+     "hotel_liberado_artax_-_cadastro_concluido",
+     "Hotel liberado ARTAX - cadastro concluido"
+    ],
+    [
+     "hotel_liberado_foco_-_cadastro_concluido",
+     "Hotel liberado FOCO - cadastro concluido"
+    ],
+    [
+     "integração_pms_concluida_",
+     "Integração PMS concluida "
+    ],
+    [
+     "lembrete_de_treinamento",
+     "Lembrete de treinamento"
+    ],
+    [
+     "ligação_-_força_tarefa_comissionada_",
+     "Ligação - força tarefa comissionada "
+    ],
+    [
+     "ligacao_renovar_tarifa_e_dispo",
+     "Ligacao renovar tarifa e dispo"
+    ],
+    [
+     "ligacao_tarifa_negociada",
+     "Ligacao tarifa negociada"
+    ],
+    [
+     "nova_tarifa_cadastrada",
+     "Nova tarifa cadastrada"
+    ],
+    [
+     "pesquisa_de_satisfação",
+     "Pesquisa de satisfação"
+    ],
+    [
+     "pesquisa_pms_",
+     "Pesquisa PMS "
+    ],
+    [
+     "retorno_-_status_diretorio",
+     "Retorno - Status diretorio"
+    ],
+    [
+     "hospitality_sem_retorno",
+     "Sem retorno"
+    ],
+    [
+     "solicitação_de_integração_pms_",
+     "Solicitação de integração PMS "
+    ],
+    [
+     "ajuste_de_uh_",
+     "Suporte cadastro gerais "
+    ],
+    [
+     "hospitality_ajuste_na_politica",
+     "Suporte politicas"
+    ],
+    [
+     "suporte_zendesk",
+     "Suporte Zendesk"
+    ],
+    [
+     "tarifa_e_dispo_atualizadas",
+     "Tarifa e dispo atualizadas"
+    ],
+    [
+     "tarifa_flutuante_cadastrada",
+     "Tarifa flutuante cadastrada"
+    ],
+    [
+     "hospitality_tarifa_negociada",
+     "Tarifa negociada carregada"
+    ],
+    [
+     "treinamento_agendado_channel",
+     "Treinamento agendado Channel"
+    ],
+    [
+     "treinamento_agendado_hospitality_",
+     "Treinamento agendado Hospitality "
+    ],
+    [
+     "treinamento_ameris_realizado_",
+     "Treinamento AMERIS realizado "
+    ],
+    [
+     "treinamento_artax_realizado_",
+     "Treinamento ARTAX realizado "
+    ],
+    [
+     "hospitality_treinamento_channel",
+     "Treinamento Channel realizado"
+    ],
+    [
+     "treinamento_checkout_realizado",
+     "Treinamento Checkout realizado"
+    ],
+    [
+     "treinamento_foco_realizado",
+     "Treinamento FOCO realizado"
+    ],
+    [
+     "treinamento_hospitality_grupo_realizado",
+     "Treinamento Hospitality grupo realizado"
+    ],
+    [
+     "hospitality_treinamento_hospitality",
+     "Treinamento Hospitality individual realizado"
+    ],
+    [
+     "treinamento_reagendado",
+     "Treinamento Reagendado"
+    ],
+    [
+     "treinamento_realizado_/_com_entrevista_",
+     "Treinamento realizado / com entrevista "
+    ],
+    [
+     "ligação_channel_-_força_tarefa_",
+     "Ligação Channel - força tarefa "
+    ],
+    [
+     "conexão_channel_agendada_-_força_tarefa_",
+     "Conexão Channel agendada - força tarefa "
+    ],
+    [
+     "treinamento_bitz_realizado",
+     "Treinamento BITZ realizado"
+    ],
+    [
+     "uhs_cadastradas_",
+     "Uhs cadastradas "
+    ],
+    [
+     "treinamento_rede_realizado_",
+     "Treinamento rede realizado "
+    ],
+    [
+     "e-mail_-_hotel_sem_informacoes",
+     "E-mail - hotel sem informacoes"
+    ],
+    [
+     "forca_tarefa_-_ligacao_treinamento",
+     "Ligacao - follow pipe treinamento "
+    ],
+    [
+     "cadastro_hospitality_arg_realizado_",
+     "Cadastro hospitality ARG realizado "
+    ],
+    [
+     "treinamento_hospitality_arg_realizado",
+     "Treinamento hospitality ARG realizado"
+    ],
+    [
+     "hotel_liberado_arg_-_cadastro_concluido",
+     "Hotel liberado ARG - cadastro concluido"
+    ],
+    [
+     "criacao_de_usuário_arg_hospitality",
+     "Criacao de usuário ARG hospitality"
+    ],
+    [
+     "ligação_-_reagendar_treinamento",
+     "Ligação - reagendar treinamento"
+    ],
+    [
+     "e-mail_-_ausencia_treinamento_",
+     "E-mail - ausencia treinamento "
+    ],
+    [
+     "contrato_atualizado_hospitality",
+     "Contrato atualizado hospitality"
+    ],
+    [
+     "aditivo_atualizado_hospitality",
+     "Aditivo atualizado hospitality"
+    ],
+    [
+     "tira_duvidas_hospitality",
+     "Tira duvidas hospitality"
+    ],
+    [
+     "ligacao_sem_retorno_",
+     "Ligacao sem retorno "
+    ]
+   ],
+   "historical_options": []
+  },
+  {
+   "id": 21538097335195,
+   "title": "Cadastro",
+   "zendesk_type": "tagger",
+   "type": "list",
+   "key": "zd_cadastro",
+   "system": false,
+   "active": true,
+   "position": 9999,
+   "required": false,
+   "required_in_portal": false,
+   "visible_in_portal": false,
+   "description": null,
+   "tag": null,
+   "options": [
+    [
+     "cadastro_hospitality_realizado",
+     "Cadastro Hospitality realizado"
+    ],
+    [
+     "cadastro_usuario_hospitality",
+     "Cadastro usuario hospitality"
+    ],
+    [
+     "cadastro_checkout_realizado",
+     "Cadastro Checkout realizado"
+    ],
+    [
+     "cadastro_usuario_checkout",
+     "Cadastro usuario checkout"
+    ],
+    [
+     "cadastro_id_planilha",
+     "Cadastro id planilha"
+    ],
+    [
+     "duvidas_cadastro",
+     "Duvidas cadastro"
+    ],
+    [
+     "disponibilidade_reaberta",
+     "Disponibilidade reaberta"
+    ],
+    [
+     "disponibilidade_bloqueada",
+     "Disponibilidade bloqueada"
+    ],
+    [
+     "ongoing_desativacao",
+     "Hotel desativado"
+    ],
+    [
+     "ongoing_duvidas_gerais",
+     "Duvidas gerais"
+    ],
+    [
+     "ongoing_desconsiderado",
+     "Desconsiderado "
+    ],
+    [
+     "informação_de_alteração_de_responsável_legal",
+     "Informação de alteração de responsável legal"
+    ],
+    [
+     "alteração_de_responsável_legal",
+     "Solicitação - Alteração de responsável legal"
+    ],
+    [
+     "alteração_de_responsável_legal_concluida",
+     "Alteração de responsável legal concluida"
+    ],
+    [
+     "alteração_de_nome_fantasia",
+     "Solicitação - Alteração de nome fantasia"
+    ],
+    [
+     "alteração_de_nome_fantasia_concluida_",
+     "Alteração de nome fantasia concluida "
+    ],
+    [
+     "informação_de_troca_de_cnpj",
+     "Informação de troca de CNPJ"
+    ],
+    [
+     "solicitação_troca_de_cnpj",
+     "Solicitação troca de cnpj"
+    ],
+    [
+     "troca_de_cnpj_concluida",
+     "Troca de cnpj concluida"
+    ],
+    [
+     "informaçao_de_troca_razao_social",
+     "Informaçao de troca razao social"
+    ],
+    [
+     "solicitação_de_troca_razao_social",
+     "solicitação de troca razao social"
+    ],
+    [
+     "troca_razao_social_concluida",
+     "troca razao social concluida"
+    ],
+    [
+     "solicitação_de_contrato_cnpj",
+     "Solicitação de contrato cnpj"
+    ],
+    [
+     "informação_de_troca_de_rede",
+     "Informação de troca de rede"
+    ],
+    [
+     "troca_de_rede/cnpj",
+     "Solicitação troca de rede"
+    ],
+    [
+     "troca_de_rede/cnpj_concluida",
+     "Troca de rede concluida"
+    ],
+    [
+     "cancelamento_pms",
+     "Solicitação - Remover integração PMS"
+    ],
+    [
+     "ciente.",
+     "Ciente."
+    ],
+    [
+     "distrato_notificação_ar",
+     "Distrato notificação AR"
+    ],
+    [
+     "follow_ligação",
+     "Follow ligação"
+    ],
+    [
+     "confecção_distrato",
+     "confecção distrato"
+    ],
+    [
+     "formulario_distrato",
+     "Formulario distrato"
+    ],
+    [
+     "formulario_cadastro",
+     "Formulario cadastro"
+    ],
+    [
+     "follow_up",
+     "Follow up"
+    ],
+    [
+     "desativado_nao_ativou",
+     "desativado nao ativou"
+    ],
+    [
+     "desativado_sem_produçao",
+     "desativado sem produçao"
+    ],
+    [
+     "retençao_feita",
+     "Retençao feita"
+    ],
+    [
+     "distrato_finalizado",
+     "distrato finalizado"
+    ],
+    [
+     "comunicaçao_agencia_distrato",
+     "Comunicaçao agencia distrato"
+    ],
+    [
+     "duvidas_distrato",
+     "Duvidas distrato"
+    ],
+    [
+     "cobrança_assin_distrato",
+     "Cobrança assinatura distrato"
+    ],
+    [
+     "ticket_juridico",
+     "Ticket juridico"
+    ],
+    [
+     "solicitado_desativacao",
+     "Solicitado desativacao"
+    ],
+    [
+     "cadastro_sla",
+     "Cadastro SLA"
+    ]
+   ],
+   "historical_options": []
+  },
+  {
+   "id": 21538153888667,
+   "title": "Novos Negocios",
+   "zendesk_type": "tagger",
+   "type": "list",
+   "key": "zd_novos_negocios",
+   "system": false,
+   "active": true,
+   "position": 9999,
+   "required": false,
+   "required_in_portal": false,
+   "visible_in_portal": false,
+   "description": null,
+   "tag": null,
+   "options": [
+    [
+     "novos_negocios_cadastro_de_hoteis",
+     "Cadastro de hoteis"
+    ],
+    [
+     "novos_negocios_channel",
+     "Channel"
+    ],
+    [
+     "novos_negocios_negociação_comercial",
+     "Negociação comercial"
+    ],
+    [
+     "novos_negocios_pre-venda_b2b.checkout",
+     "B2B.checkout"
+    ],
+    [
+     "prospecção",
+     "Prospecção"
+    ],
+    [
+     "integraçao_com_pms",
+     "Integraçao com PMS"
+    ],
+    [
+     "retenção",
+     "Retenção"
+    ],
+    [
+     "análise_de_perfil",
+     "Análise de perfil"
+    ],
+    [
+     "tarifas/diretório",
+     "Tarifas/diretório"
+    ],
+    [
+     "integração_rms",
+     "Integração RMS"
+    ],
+    [
+     "agendamento_treinamento",
+     "Agendamento Treinamento"
+    ],
+    [
+     "entrevista_de_perfil",
+     "Entrevista de Perfil"
+    ],
+    [
+     "motor_de_reservas",
+     "Motor de Reservas"
+    ]
+   ],
+   "historical_options": []
+  },
+  {
+   "id": 21583294863643,
+   "title": "CNPJ o CUIT (Argentina)",
+   "zendesk_type": "text",
+   "type": "text",
+   "key": "zd_cnpj_o_cuit_argentina",
+   "system": false,
+   "active": true,
+   "position": 9999,
+   "required": false,
+   "required_in_portal": false,
+   "visible_in_portal": true,
+   "description": null,
+   "tag": null,
+   "options": [],
+   "historical_options": []
+  },
+  {
+   "id": 21587135564955,
+   "title": "Área interna",
+   "zendesk_type": "tagger",
+   "type": "list",
+   "key": "zd_area_interna",
+   "system": false,
+   "active": true,
+   "position": 9999,
+   "required": true,
+   "required_in_portal": false,
+   "visible_in_portal": false,
+   "description": null,
+   "tag": null,
+   "options": [
+    [
+     "financeiro",
+     "Financeiro"
+    ],
+    [
+     "suporte",
+     "Suporte"
+    ],
+    [
+     "hospitality",
+     "Hospitality"
+    ],
+    [
+     "checkout",
+     "Checkout"
+    ],
+    [
+     "relacionamento_onboarding",
+     "Relacionamento Onboarding"
+    ],
+    [
+     "novos_negócios",
+     "Novos negócios"
+    ],
+    [
+     "area_integrações",
+     "Integrações"
+    ],
+    [
+     "cadastro_",
+     "Cadastro"
+    ]
+   ],
+   "historical_options": []
+  },
+  {
+   "id": 21616306669595,
+   "title": "Nome da empresa",
+   "zendesk_type": "text",
+   "type": "text",
+   "key": "zd_nome_da_empresa",
+   "system": false,
+   "active": true,
+   "position": 9999,
+   "required": false,
+   "required_in_portal": false,
+   "visible_in_portal": true,
+   "description": null,
+   "tag": null,
+   "options": [],
+   "historical_options": []
+  },
+  {
+   "id": 21762823073179,
+   "title": "Detalhes",
+   "zendesk_type": "text",
+   "type": "text",
+   "key": "zd_detalhes",
+   "system": false,
+   "active": true,
+   "position": 9999,
+   "required": false,
+   "required_in_portal": true,
+   "visible_in_portal": true,
+   "description": null,
+   "tag": null,
+   "options": [],
+   "historical_options": []
+  },
+  {
+   "id": 21763267803931,
+   "title": "Motivo do contato (Cliente)",
+   "zendesk_type": "tagger",
+   "type": "list",
+   "key": "zd_motivo_do_contato_cliente",
+   "system": false,
+   "active": false,
+   "position": 9999,
+   "required": false,
+   "required_in_portal": true,
+   "visible_in_portal": true,
+   "description": null,
+   "tag": null,
+   "options": [
+    [
+     "motivo_cliente_treinamento",
+     "Treinamento"
+    ],
+    [
+     "motivo_cliente_suporte",
+     "Suporte"
+    ],
+    [
+     "motivo_cliente_integração_pms",
+     "Integração PMS"
+    ],
+    [
+     "motivo_cliente_solicitação_de_distrato",
+     "Solicitação de distrato"
+    ],
+    [
+     "motivo_cliente_financeiro",
+     "Financeiro"
+    ],
+    [
+     "motivo_cliente_tarifas_e_disponibilidade",
+     "Tarifas e disponibilidade"
+    ],
+    [
+     "motivo_cliente_quero_ser_parceiro",
+     "Quero ser parceiro"
+    ]
+   ],
+   "historical_options": []
+  },
+  {
+   "id": 21797736040987,
+   "title": "Motivos TI",
+   "zendesk_type": "tagger",
+   "type": "list",
+   "key": "zd_motivos_ti",
+   "system": false,
+   "active": true,
+   "position": 9999,
+   "required": false,
+   "required_in_portal": false,
+   "visible_in_portal": false,
+   "description": null,
+   "tag": null,
+   "options": [
+    [
+     "análise_log_geral",
+     "Análise log Geral"
+    ],
+    [
+     "solicitações_de_pv",
+     "Customização"
+    ],
+    [
+     "desativação_ou_ativação_de_hotel",
+     "Desativação ou Ativação de Hotel"
+    ],
+    [
+     "dúvidas",
+     "Dúvidas"
+    ],
+    [
+     "estorno_checkout_básico",
+     "Estorno Checkout Básico"
+    ],
+    [
+     "integrações",
+     "Integrações"
+    ],
+    [
+     "manutenção_de_hardware",
+     "Manutenção de Hardware"
+    ],
+    [
+     "sistema",
+     "Sistema"
+    ],
+    [
+     "solicitação_de_uso__aquisição_ou_liberação_de_software",
+     "Solicitação de uso, Aquisição ou Liberação de software"
+    ],
+    [
+     "solicitações_de_canal",
+     "Solicitações de Canal"
+    ],
+    [
+     "sugestão_de_melhoria",
+     "Sugestão de Melhoria"
+    ],
+    [
+     "usuários",
+     "Usuários"
+    ]
+   ],
+   "historical_options": []
+  },
+  {
+   "id": 21797784572187,
+   "title": "Produtos/Serviços",
+   "zendesk_type": "tagger",
+   "type": "list",
+   "key": "zd_produtos_servicos",
+   "system": false,
+   "active": true,
+   "position": 9999,
+   "required": false,
+   "required_in_portal": false,
+   "visible_in_portal": false,
+   "description": null,
+   "tag": null,
+   "options": [
+    [
+     "produtos_servicos_booking",
+     "Booking"
+    ],
+    [
+     "produtos_servicos_channel",
+     "Channel"
+    ],
+    [
+     "produtos_servicos_checkout",
+     "Checkout"
+    ],
+    [
+     "produtos_servicos_hospitality",
+     "Hospitality"
+    ],
+    [
+     "produtos_servicos_integração",
+     "Integração"
+    ],
+    [
+     "produtos_servicos_legado",
+     "Legado"
+    ],
+    [
+     "produtos_servicos_pay_-_vcn",
+     "Pay - VCN"
+    ],
+    [
+     "users",
+     "Users"
+    ]
+   ],
+   "historical_options": []
+  },
+  {
+   "id": 21799500603547,
+   "title": "Tipo de Canal",
+   "zendesk_type": "tagger",
+   "type": "list",
+   "key": "zd_tipo_de_canal",
+   "system": false,
+   "active": true,
+   "position": 9999,
+   "required": false,
+   "required_in_portal": false,
+   "visible_in_portal": false,
+   "description": null,
+   "tag": null,
+   "options": [
+    [
+     "agência",
+     "Agência"
+    ],
+    [
+     "tipo_canal_b2b_pay",
+     "B2B Pay"
+    ],
+    [
+     "tipo_canal_b2b_reservas",
+     "B2B Reservas"
+    ],
+    [
+     "operador",
+     "Operador"
+    ],
+    [
+     "tipo_canal_ota",
+     "OTA"
+    ],
+    [
+     "tipo_canal_pms",
+     "PMS"
+    ],
+    [
+     "tipo_canal_rms",
+     "RMS"
+    ]
+   ],
+   "historical_options": []
+  },
+  {
+   "id": 21799568297883,
+   "title": "Setor",
+   "zendesk_type": "text",
+   "type": "text",
+   "key": "zd_setor",
+   "system": false,
+   "active": true,
+   "position": 9999,
+   "required": false,
+   "required_in_portal": false,
+   "visible_in_portal": false,
+   "description": null,
+   "tag": null,
+   "options": [],
+   "historical_options": []
+  },
+  {
+   "id": 21799571288603,
+   "title": "Número do patrimônio",
+   "zendesk_type": "text",
+   "type": "text",
+   "key": "zd_numero_do_patrimonio",
+   "system": false,
+   "active": true,
+   "position": 9999,
+   "required": false,
+   "required_in_portal": false,
+   "visible_in_portal": false,
+   "description": null,
+   "tag": null,
+   "options": [],
+   "historical_options": []
+  },
+  {
+   "id": 21799577941147,
+   "title": "Patrimônio",
+   "zendesk_type": "text",
+   "type": "text",
+   "key": "zd_patrimonio",
+   "system": false,
+   "active": true,
+   "position": 9999,
+   "required": false,
+   "required_in_portal": false,
+   "visible_in_portal": false,
+   "description": null,
+   "tag": null,
+   "options": [],
+   "historical_options": []
+  },
+  {
+   "id": 21799649122203,
+   "title": "Software",
+   "zendesk_type": "tagger",
+   "type": "list",
+   "key": "zd_software",
+   "system": false,
+   "active": true,
+   "position": 9999,
+   "required": false,
+   "required_in_portal": false,
+   "visible_in_portal": false,
+   "description": null,
+   "tag": null,
+   "options": [
+    [
+     "microsoft_office",
+     "Microsoft Office"
+    ],
+    [
+     "microsoft_office_empresa",
+     "Microsoft Office Empresa"
+    ],
+    [
+     "usuário_de_e-mail",
+     "Usuário de e-mail"
+    ],
+    [
+     "antivirus",
+     "Antivirus"
+    ],
+    [
+     "baixar_software_para_window",
+     "Baixar software para window"
+    ],
+    [
+     "acessar_site",
+     "Acessar Site"
+    ]
+   ],
+   "historical_options": []
+  },
+  {
+   "id": 21799651549851,
+   "title": "Nome do software",
+   "zendesk_type": "text",
+   "type": "text",
+   "key": "zd_nome_do_software",
+   "system": false,
+   "active": true,
+   "position": 9999,
+   "required": false,
+   "required_in_portal": false,
+   "visible_in_portal": false,
+   "description": null,
+   "tag": null,
+   "options": [],
+   "historical_options": []
+  },
+  {
+   "id": 21799654784539,
+   "title": "URL",
+   "zendesk_type": "text",
+   "type": "text",
+   "key": "zd_url",
+   "system": false,
+   "active": true,
+   "position": 9999,
+   "required": false,
+   "required_in_portal": false,
+   "visible_in_portal": false,
+   "description": null,
+   "tag": null,
+   "options": [],
+   "historical_options": []
+  },
+  {
+   "id": 21799731126299,
+   "title": "Nome da agência",
+   "zendesk_type": "text",
+   "type": "text",
+   "key": "zd_nome_da_agencia",
+   "system": false,
+   "active": true,
+   "position": 9999,
+   "required": false,
+   "required_in_portal": false,
+   "visible_in_portal": false,
+   "description": null,
+   "tag": null,
+   "options": [],
+   "historical_options": []
+  },
+  {
+   "id": 21799748798747,
+   "title": "Código da agência",
+   "zendesk_type": "text",
+   "type": "text",
+   "key": "zd_codigo_da_agencia",
+   "system": false,
+   "active": true,
+   "position": 9999,
+   "required": false,
+   "required_in_portal": false,
+   "visible_in_portal": false,
+   "description": null,
+   "tag": null,
+   "options": [],
+   "historical_options": []
+  },
+  {
+   "id": 21799839840155,
+   "title": "PDV + Cliente",
+   "zendesk_type": "checkbox",
+   "type": "checkbox",
+   "key": "zd_pdv_cliente",
+   "system": false,
+   "active": true,
+   "position": 9999,
+   "required": false,
+   "required_in_portal": false,
+   "visible_in_portal": false,
+   "description": null,
+   "tag": null,
+   "options": [],
+   "historical_options": []
+  },
+  {
+   "id": 21799847688859,
+   "title": "Somente PDV",
+   "zendesk_type": "checkbox",
+   "type": "checkbox",
+   "key": "zd_somente_pdv",
+   "system": false,
+   "active": true,
+   "position": 9999,
+   "required": false,
+   "required_in_portal": false,
+   "visible_in_portal": false,
+   "description": null,
+   "tag": null,
+   "options": [],
+   "historical_options": []
+  },
+  {
+   "id": 21800116865819,
+   "title": "Onde deve ser inserida a informação",
+   "zendesk_type": "text",
+   "type": "text",
+   "key": "zd_onde_deve_ser_inserida_a_informacao",
+   "system": false,
+   "active": true,
+   "position": 9999,
+   "required": false,
+   "required_in_portal": false,
+   "visible_in_portal": false,
+   "description": null,
+   "tag": null,
+   "options": [],
+   "historical_options": []
+  },
+  {
+   "id": 21800119856283,
+   "title": "Informação a ser inserida",
+   "zendesk_type": "text",
+   "type": "text",
+   "key": "zd_informacao_a_ser_inserida",
+   "system": false,
+   "active": true,
+   "position": 9999,
+   "required": false,
+   "required_in_portal": false,
+   "visible_in_portal": false,
+   "description": null,
+   "tag": null,
+   "options": [],
+   "historical_options": []
+  },
+  {
+   "id": 21800229314203,
+   "title": "Nome do Hotel",
+   "zendesk_type": "text",
+   "type": "text",
+   "key": "zd_nome_do_hotel",
+   "system": false,
+   "active": true,
+   "position": 9999,
+   "required": false,
+   "required_in_portal": false,
+   "visible_in_portal": false,
+   "description": null,
+   "tag": null,
+   "options": [],
+   "historical_options": []
+  },
+  {
+   "id": 21800281565595,
+   "title": "ID Hotel",
+   "zendesk_type": "text",
+   "type": "text",
+   "key": "zd_id_hotel",
+   "system": false,
+   "active": true,
+   "position": 9999,
+   "required": false,
+   "required_in_portal": false,
+   "visible_in_portal": false,
+   "description": null,
+   "tag": null,
+   "options": [],
+   "historical_options": []
+  },
+  {
+   "id": 21800303695643,
+   "title": "Código da Empresa",
+   "zendesk_type": "text",
+   "type": "text",
+   "key": "zd_codigo_da_empresa",
+   "system": false,
+   "active": true,
+   "position": 9999,
+   "required": false,
+   "required_in_portal": false,
+   "visible_in_portal": false,
+   "description": null,
+   "tag": null,
+   "options": [],
+   "historical_options": []
+  },
+  {
+   "id": 21800374107547,
+   "title": "Registrar Log",
+   "zendesk_type": "text",
+   "type": "text",
+   "key": "zd_registrar_log",
+   "system": false,
+   "active": false,
+   "position": 9999,
+   "required": false,
+   "required_in_portal": false,
+   "visible_in_portal": false,
+   "description": null,
+   "tag": null,
+   "options": [],
+   "historical_options": []
+  },
+  {
+   "id": 22676329313947,
+   "title": "Identificação do Whats",
+   "zendesk_type": "tagger",
+   "type": "list",
+   "key": "zd_identificacao_do_whats",
+   "system": false,
+   "active": true,
+   "position": 9999,
+   "required": false,
+   "required_in_portal": false,
+   "visible_in_portal": false,
+   "description": null,
+   "tag": null,
+   "options": [
+    [
+     "65b7fa562c4f85ff79537ba5",
+     "B2B (Temp)"
+    ],
+    [
+     "65c132d62b2bfc53e8dd498f",
+     "B2B (Fixo)"
+    ]
+   ],
+   "historical_options": []
+  },
+  {
+   "id": 22726334359451,
+   "title": "Status TI/Segurança",
+   "zendesk_type": "tagger",
+   "type": "list",
+   "key": "zd_status_ti_seguranca",
+   "system": false,
+   "active": true,
+   "position": 9999,
+   "required": false,
+   "required_in_portal": false,
+   "visible_in_portal": false,
+   "description": null,
+   "tag": null,
+   "options": [
+    [
+     "status_ti_com_a_ti",
+     "Com a TI/Segurança"
+    ],
+    [
+     "status_ti_retorno_ao_grupo",
+     "Retorno ao Grupo"
+    ],
+    [
+     "status_ti_em_andamento",
+     "Em Andamento"
+    ],
+    [
+     "status_ti_aguardando_desenvolvimento",
+     "Aguardando Desenvolvimento"
+    ],
+    [
+     "status_ti_resolvido_ti",
+     "Resolvido TI/Segurança"
+    ]
+   ],
+   "historical_options": []
+  },
+  {
+   "id": 22738870947483,
+   "title": "ref Ticket filho",
+   "zendesk_type": "text",
+   "type": "text",
+   "key": "zd_ref_ticket_filho",
+   "system": false,
+   "active": false,
+   "position": 9999,
+   "required": false,
+   "required_in_portal": false,
+   "visible_in_portal": false,
+   "description": null,
+   "tag": null,
+   "options": [],
+   "historical_options": []
+  },
+  {
+   "id": 22738899190427,
+   "title": "Linked Data",
+   "zendesk_type": "text",
+   "type": "text",
+   "key": "zd_linked_data",
+   "system": false,
+   "active": true,
+   "position": 9999,
+   "required": false,
+   "required_in_portal": false,
+   "visible_in_portal": false,
+   "description": "Linked Data",
+   "tag": null,
+   "options": [],
+   "historical_options": []
+  },
+  {
+   "id": 23195770214043,
+   "title": "Tipo de parametrização",
+   "zendesk_type": "tagger",
+   "type": "list",
+   "key": "zd_tipo_de_parametrizacao",
+   "system": false,
+   "active": false,
+   "position": 9999,
+   "required": false,
+   "required_in_portal": false,
+   "visible_in_portal": false,
+   "description": null,
+   "tag": null,
+   "options": [
+    [
+     "tipo_parametrizacao_somente_pdv",
+     "Somente PDV"
+    ],
+    [
+     "tipo_parametrizacao_pdv___cliente",
+     "PDV + Cliente"
+    ]
+   ],
+   "historical_options": []
+  },
+  {
+   "id": 23295599772699,
+   "title": "Teste Jira",
+   "zendesk_type": "text",
+   "type": "text",
+   "key": "zd_teste_jira",
+   "system": false,
+   "active": false,
+   "position": 9999,
+   "required": false,
+   "required_in_portal": false,
+   "visible_in_portal": false,
+   "description": null,
+   "tag": null,
+   "options": [],
+   "historical_options": []
+  },
+  {
+   "id": 23296161765915,
+   "title": "Status Done - Jira",
+   "zendesk_type": "tagger",
+   "type": "list",
+   "key": "zd_status_done_jira",
+   "system": false,
+   "active": true,
+   "position": 9999,
+   "required": false,
+   "required_in_portal": false,
+   "visible_in_portal": false,
+   "description": null,
+   "tag": null,
+   "options": [
+    [
+     "done",
+     "Done"
+    ]
+   ],
+   "historical_options": []
+  },
+  {
+   "id": 23735231881243,
+   "title": "Motivo LGPD",
+   "zendesk_type": "tagger",
+   "type": "list",
+   "key": "zd_motivo_lgpd",
+   "system": false,
+   "active": true,
+   "position": 9999,
+   "required": true,
+   "required_in_portal": false,
+   "visible_in_portal": false,
+   "description": null,
+   "tag": null,
+   "options": [
+    [
+     "incidente",
+     "Incidente"
+    ],
+    [
+     "bid",
+     "BID"
+    ],
+    [
+     "privacidade_de_dados",
+     "Privacidade de dados"
+    ],
+    [
+     "segurança_da_informacao",
+     "Segurança da Informação"
+    ]
+   ],
+   "historical_options": []
+  },
+  {
+   "id": 26749132765339,
+   "title": "Integrações",
+   "zendesk_type": "tagger",
+   "type": "list",
+   "key": "zd_integracoes",
+   "system": false,
+   "active": true,
+   "position": 9999,
+   "required": false,
+   "required_in_portal": false,
+   "visible_in_portal": false,
+   "description": null,
+   "tag": null,
+   "options": [
+    [
+     "cobranca_de_integracao",
+     "Cobranca de integracao"
+    ],
+    [
+     "conexão_booking_/_expedia_realizada_",
+     "Conexão Booking / Expedia realizada "
+    ],
+    [
+     "conexão_booking_realizada_",
+     "Conexão Booking realizada "
+    ],
+    [
+     "conexão_channel_realizada_-_força_tarefa",
+     "Conexão channel realizada - força tarefa"
+    ],
+    [
+     "conexão_expedia_realizada_",
+     "Conexão Expedia realizada "
+    ],
+    [
+     "conexão_letsbook_realizada",
+     "Conexão LetsBook realizada"
+    ],
+    [
+     "divergência_na_dispo_-_channel",
+     "Divergência na dispo - Channel"
+    ],
+    [
+     "divergência_na_dispo_-_pms",
+     "Divergência na dispo - PMS"
+    ],
+    [
+     "duplicado",
+     "Duplicado"
+    ],
+    [
+     "dúvidas_channel",
+     "Dúvidas Channel"
+    ],
+    [
+     "dúvidas_motor_de_reservas",
+     "Dúvidas motor de reservas"
+    ],
+    [
+     "duvidas_piloto_",
+     "Duvidas piloto "
+    ],
+    [
+     "dúvidas_pms",
+     "Dúvidas PMS"
+    ],
+    [
+     "dúvidas_rms",
+     "Dúvidas RMS"
+    ],
+    [
+     "erro_conexão_motor_de_reservas",
+     "Erro conexão motor de reservas"
+    ],
+    [
+     "erro_conexão_pms",
+     "Erro conexão PMS"
+    ],
+    [
+     "erro_nova_integração",
+     "Erro nova integração"
+    ],
+    [
+     "erro_rms",
+     "Erro RMS"
+    ],
+    [
+     "forca_tarefa_-_hoteis_integrados_",
+     "Forca tarefa - hoteis integrados "
+    ],
+    [
+     "integração_artax_realizada_",
+     "Integração ARTAX realizada "
+    ],
+    [
+     "integração_booking_removida",
+     "Integração Booking removida"
+    ],
+    [
+     "integracao_concluida_",
+     "Integracao concluida "
+    ],
+    [
+     "integração_expedia_removida",
+     "Integração Expedia removida"
+    ],
+    [
+     "integração_finalizada_foco",
+     "Integração Finalizada Foco"
+    ],
+    [
+     "integração_foco_realizada_",
+     "Integração FOCO realizada "
+    ],
+    [
+     "integração_pms_realizada_",
+     "Integração PMS realizada "
+    ],
+    [
+     "integração_pms_removida",
+     "Integração PMS removida"
+    ],
+    [
+     "integração_rms_realizada_",
+     "Integração RMS realizada "
+    ],
+    [
+     "integração_rms_removida",
+     "Integração RMS removida"
+    ],
+    [
+     "nova_categoria_mapeada",
+     "Nova categoria mapeada"
+    ],
+    [
+     "nova_tarifa_mapeada_channel_",
+     "Nova tarifa mapeada Channel "
+    ],
+    [
+     "nova_tarifa_mapeada_pms",
+     "Nova tarifa mapeada PMS"
+    ],
+    [
+     "nova_tarifa_mapeada_rms_",
+     "Nova tarifa mapeada RMS "
+    ],
+    [
+     "piloto_pms_",
+     "Piloto PMS "
+    ],
+    [
+     "pilto_rms",
+     "Pilto RMS"
+    ],
+    [
+     "recusa_pms_",
+     "Recusa PMS "
+    ],
+    [
+     "remapeio_channel_realizado_",
+     "Remapeio Channel realizado "
+    ],
+    [
+     "remapeio_pms_realizado",
+     "Remapeio PMS realizado"
+    ],
+    [
+     "reserva_não_integrada_-_channel",
+     "Reserva não integrada - Channel"
+    ],
+    [
+     "reserva_não_integrada_-_pms",
+     "Reserva não integrada - PMS"
+    ],
+    [
+     "reserva_teste_realizada_",
+     "Reserva teste realizada "
+    ],
+    [
+     "solicitação_integrar_pms",
+     "Solicitação integrar PMS"
+    ],
+    [
+     "solicitação_integrar_rms",
+     "Solicitação integrar RMS"
+    ],
+    [
+     "solicitação_troca_de_pms_",
+     "Solicitação troca de PMS "
+    ],
+    [
+     "solicitação-mapear_nova_categoria",
+     "Solicitação-Mapear nova categoria"
+    ],
+    [
+     "validação_de_disponibilidade",
+     "validação de disponibilidade"
+    ]
+   ],
+   "historical_options": []
+  },
+  {
+   "id": 26792865704091,
+   "title": "Ticket referência",
+   "zendesk_type": "lookup",
+   "type": "number",
+   "key": "zd_ticket_referencia_4091",
+   "system": false,
+   "active": false,
+   "position": 9999,
+   "required": false,
+   "required_in_portal": false,
+   "visible_in_portal": false,
+   "description": null,
+   "tag": null,
+   "options": [],
+   "historical_options": []
+  },
+  {
+   "id": 26792899398299,
+   "title": "Ticket referência",
+   "zendesk_type": "lookup",
+   "type": "number",
+   "key": "zd_ticket_referencia_8299",
+   "system": false,
+   "active": false,
+   "position": 9999,
+   "required": true,
+   "required_in_portal": false,
+   "visible_in_portal": false,
+   "description": null,
+   "tag": null,
+   "options": [],
+   "historical_options": []
+  },
+  {
+   "id": 26793135869595,
+   "title": "Ticket referência",
+   "zendesk_type": "text",
+   "type": "text",
+   "key": "zd_ticket_referencia",
+   "system": false,
+   "active": true,
+   "position": 9999,
+   "required": false,
+   "required_in_portal": false,
+   "visible_in_portal": false,
+   "description": null,
+   "tag": null,
+   "options": [],
+   "historical_options": []
+  },
+  {
+   "id": 27073292749723,
+   "title": "Checkout Treinamento",
+   "zendesk_type": "tagger",
+   "type": "list",
+   "key": "zd_checkout_treinamento",
+   "system": false,
+   "active": true,
+   "position": 9999,
+   "required": true,
+   "required_in_portal": false,
+   "visible_in_portal": false,
+   "description": null,
+   "tag": null,
+   "options": [
+    [
+     "checkout_abertura_do_e-commerce_clonar",
+     "Abertura do e-commerce"
+    ],
+    [
+     "ajuda_para_cobrança_clonar",
+     "Ajuda para cobrança"
+    ],
+    [
+     "ajuda_para_visualização_de_cartão_clonar",
+     "Ajuda Para Visualização de Cartão"
+    ],
+    [
+     "antecipação_clonar",
+     "Antecipação"
+    ],
+    [
+     "atendimento_checkout_clonar",
+     "Atendimento "
+    ],
+    [
+     "atualização_de_dados",
+     "Atualização de dados"
+    ],
+    [
+     "checkout_atualizacao_tef_clonar",
+     "Atualizacao TEF"
+    ],
+    [
+     "cadastro_agencia_realizado_clonar",
+     "Cadastro agencia realizado"
+    ],
+    [
+     "checkout_cadastro_checkout_avancado_clonar",
+     "Cadastro checkout avancado realizado"
+    ],
+    [
+     "cadastro_checkout_basico_realizado_clonar",
+     "Cadastro checkout basico realizado"
+    ],
+    [
+     "cadastro_na_dock_realizado",
+     "Cadastro na Dock realizado"
+    ],
+    [
+     "chamado_auttar_clonar",
+     "Chamado Auttar"
+    ],
+    [
+     "chamado_dock_jira_",
+     "Chamado Dock Jira "
+    ],
+    [
+     "chamado_zoop_clonar",
+     "Chamado Zoop"
+    ],
+    [
+     "contato_mcc_clonar",
+     "Contato MCC"
+    ],
+    [
+     "checkout_criacao_de_usuario_clonar",
+     "Criacao de usuario checkout"
+    ],
+    [
+     "checkout_dirf_clonar",
+     "DIRF"
+    ],
+    [
+     "checkout_emissao_de_relatório_checkout_av._clonar",
+     "Emissao de relatório checkout av."
+    ],
+    [
+     "entre_contas_realizado_",
+     "Entre contas realizado "
+    ],
+    [
+     "erro_092_clonar",
+     "Erro 092"
+    ],
+    [
+     "erro_de_carga_-_0210_clonar",
+     "Erro de Carga - 0210"
+    ],
+    [
+     "erro_de_integração_clonar",
+     "Erro de integração"
+    ],
+    [
+     "checkout_erro_de_nf_-_divisao_clonar",
+     "Erro de NF - divisao"
+    ],
+    [
+     "erro_de_transação_teste__clonar",
+     "Erro de transação teste "
+    ],
+    [
+     "erro_dock__transação_negada_",
+     "Erro Dock: Transação Negada "
+    ],
+    [
+     "erro_dock__transação_negada_amex_",
+     "Erro Dock: Transação negada AMEX "
+    ],
+    [
+     "erro_split_de_pagamento__clonar",
+     "Erro Split de Pagamento "
+    ],
+    [
+     "checkout_erro_zoop_clonar",
+     "Erro Zoop"
+    ],
+    [
+     "estorno_clonar",
+     "Estorno"
+    ],
+    [
+     "follow_-_etapa_boas-vindas_",
+     "Follow - etapa boas-vindas "
+    ],
+    [
+     "hotel_transacionando_-_concluido",
+     "Hotel transacionando - concluido"
+    ],
+    [
+     "checkout_importacao_de_reserva_clonar",
+     "Importacao de reserva"
+    ],
+    [
+     "checkout_instabilidade_checkout_basico_clonar",
+     "Instabilidade checkout basico"
+    ],
+    [
+     "checkout_instabilidade_zoop_clonar",
+     "Instabilidade Zoop"
+    ],
+    [
+     "ligação_-_etapa_boas-vindas_",
+     "Ligação - follow pipe checkout"
+    ],
+    [
+     "ligação_dados_checkout",
+     "Ligação Dados Checkout"
+    ],
+    [
+     "mcc_inválido__clonar",
+     "MCC inválido "
+    ],
+    [
+     "checkout_nao_autorizado_-_erro_inesperado_clonar",
+     "Nao autorizado - erro inesperado"
+    ],
+    [
+     "nova_integração_clonar",
+     "Nova Integração"
+    ],
+    [
+     "novos_negócios_checkout_clonar",
+     "Novos Negócios"
+    ],
+    [
+     "pesquisa_csat",
+     "Pesquisa CSAT"
+    ],
+    [
+     "reanálise_seller_clonar",
+     "Reanálise Seller"
+    ],
+    [
+     "avaliado_sem_interação_clonar",
+     "Sem interação"
+    ],
+    [
+     "checkout_sem_retorno_clonar",
+     "Sem retorno"
+    ],
+    [
+     "solicitação_entre_contas_",
+     "Solicitação Entre contas "
+    ],
+    [
+     "checkout_troca_de_cnpj_clonar",
+     "Solicitação Troca de CNPJ "
+    ],
+    [
+     "solicitação_troca_de_rede",
+     "Solicitação Troca de rede"
+    ],
+    [
+     "checkout_suporte_agencia_clonar",
+     "Suporte agencia"
+    ],
+    [
+     "suporte_nf_split_de_pagamento_clonar",
+     "Suporte NF Split de Pagamento"
+    ],
+    [
+     "transação_não_autorizada_-_057_clonar",
+     "Transação Não Autorizada - 057"
+    ],
+    [
+     "transação_não_autorizada_-_adquirente_clonar",
+     "Transação Não Autorizada - Adquirente"
+    ],
+    [
+     "transação_não_autorizada_-_cartão_cancelado_clonar",
+     "Transação Não Autorizada - Cartão Cancelado"
+    ],
+    [
+     "transação_não_autorizada_-_saldo_clonar",
+     "Transação Não Autorizada - Saldo"
+    ],
+    [
+     "transação_não_autorizada_-_validade_clonar",
+     "Transação Não Autorizada - Validade"
+    ],
+    [
+     "trava_de_domícilio_bancário_clonar",
+     "Trava de Domícilio Bancário"
+    ],
+    [
+     "treinamento_agência_realizado_",
+     "Treinamento agência realizado "
+    ],
+    [
+     "checkout_treinamento_clonar",
+     "Treinamento realizado"
+    ],
+    [
+     "troca_de_cnpj_realizada__clonar",
+     "Troca de CNPJ realizada "
+    ],
+    [
+     "checkout_troca_de_mcc_clonar",
+     "Troca de MCC"
+    ],
+    [
+     "troca_de_rede",
+     "Troca de rede realizada"
+    ],
+    [
+     "validação_de_nf_clonar",
+     "Validação de NF"
+    ],
+    [
+     "validação_dock_realizado_",
+     "Validação Dock realizado "
+    ],
+    [
+     "validação_zoop",
+     "Validação Zoop"
+    ],
+    [
+     "checkout_valores_parados_na_zoop_clonar",
+     "Valores parados na Zoop"
+    ],
+    [
+     "checkout_visualizacao_dos_dados_do_cartao_clonar",
+     "Visualizacao dos dados do cartao"
+    ],
+    [
+     "follow_pipe_checkout",
+     "Follow pipe checkout"
+    ],
+    [
+     "follow_-_1°_cobranca_realizada_",
+     "Follow - 1° cobranca realizada "
+    ],
+    [
+     "follow_-_1°_transferencia_concluida",
+     "Follow - 1° transferencia concluida"
+    ],
+    [
+     "validacao_erro_dock_",
+     "Validacao Erro Dock "
+    ],
+    [
+     "liquidacao_concluida",
+     "Liquidacao concluida"
+    ],
+    [
+     "e-mail_follow_pipe_checkout_",
+     "E-mail follow pipe checkout "
+    ],
+    [
+     "alteracao_de_plano_dock_realizada_",
+     "Alteracao de plano DOCK realizada "
+    ],
+    [
+     "erro_transferencia_dock",
+     "Erro transferencia Dock"
+    ],
+    [
+     "troca_de_provedor",
+     "Troca de provedor"
+    ],
+    [
+     "pos_treinamento_checkout",
+     "Pos treinamento checkout"
+    ],
+    [
+     "alteracao_de_plano_zoop_realizada_",
+     "Alteracao de plano Zoop realizada "
+    ],
+    [
+     "solicitacao_cadastro_agencia",
+     "solicitacao cadastro agencia"
+    ],
+    [
+     "solicitacao_dados_agencia",
+     "solicitacao dados agencia"
+    ]
+   ],
+   "historical_options": []
+  },
+  {
+   "id": 33963552988443,
+   "title": "Onboarding Relacionamento",
+   "zendesk_type": "tagger",
+   "type": "list",
+   "key": "zd_onboarding_relacionamento",
+   "system": false,
+   "active": true,
+   "position": 9999,
+   "required": false,
+   "required_in_portal": false,
+   "visible_in_portal": false,
+   "description": null,
+   "tag": null,
+   "options": [
+    [
+     "1º_contato_telefonico",
+     "1º contato telefonico"
+    ],
+    [
+     "1º_follow_realizado",
+     "1º follow realizado"
+    ],
+    [
+     "2º_contato_telefonico",
+     "2º contato telefonico"
+    ],
+    [
+     "analise_de_perfil",
+     "Analise de perfil"
+    ],
+    [
+     "avaliação_de_desempenho",
+     "Avaliação de desempenho"
+    ],
+    [
+     "email_de_boas_vindas",
+     "Email de boas vindas"
+    ],
+    [
+     "onboarding_concluido",
+     "Onboarding concluido"
+    ],
+    [
+     "ligação",
+     "Ligação"
+    ],
+    [
+     "desconsiderado",
+     "Desconsiderado"
+    ],
+    [
+     "follow",
+     "Follow"
+    ],
+    [
+     "reagendamento_treinamento",
+     "Reagendamento treinamento"
+    ],
+    [
+     "contato_treinamento",
+     "Contato treinamento"
+    ],
+    [
+     "forca_tarefa_tarifa_comissionada",
+     "Forca tarefa tarifa comissionada"
+    ]
+   ],
+   "historical_options": []
+  },
+  {
+   "id": 34149192976667,
+   "title": "Onboarding Relacionamento",
+   "zendesk_type": "tagger",
+   "type": "list",
+   "key": "zd_onboarding_relacionamento_6667",
+   "system": false,
+   "active": false,
+   "position": 9999,
+   "required": false,
+   "required_in_portal": false,
+   "visible_in_portal": false,
+   "description": null,
+   "tag": null,
+   "options": [
+    [
+     "follow",
+     "Follow"
+    ]
+   ],
+   "historical_options": []
+  },
+  {
+   "id": 34149473771675,
+   "title": "Relacionamento Onboarding",
+   "zendesk_type": "tagger",
+   "type": "list",
+   "key": "zd_relacionamento_onboarding",
+   "system": false,
+   "active": false,
+   "position": 9999,
+   "required": false,
+   "required_in_portal": false,
+   "visible_in_portal": false,
+   "description": null,
+   "tag": null,
+   "options": [
+    [
+     "realacionamento_onboarding",
+     "realacionamento onboarding"
+    ]
+   ],
+   "historical_options": []
+  },
+  {
+   "id": 37417459820827,
+   "title": "CUIT",
+   "zendesk_type": "text",
+   "type": "text",
+   "key": "zd_cuit",
+   "system": false,
+   "active": true,
+   "position": 9999,
+   "required": false,
+   "required_in_portal": false,
+   "visible_in_portal": false,
+   "description": null,
+   "tag": null,
+   "options": [],
+   "historical_options": []
+  },
+  {
+   "id": 37684344929563,
+   "title": "Encerrado por",
+   "zendesk_type": "tagger",
+   "type": "list",
+   "key": "zd_encerrado_por",
+   "system": false,
+   "active": false,
+   "position": 9999,
+   "required": false,
+   "required_in_portal": false,
+   "visible_in_portal": false,
+   "description": null,
+   "tag": null,
+   "options": [
+    [
+     "encerrado_bot",
+     "encerrado bot"
+    ]
+   ],
+   "historical_options": []
+  },
+  {
+   "id": 39065144391195,
+   "title": "Status de aprovação",
+   "zendesk_type": "tagger",
+   "type": "list",
+   "key": "zd_status_de_aprovacao",
+   "system": false,
+   "active": true,
+   "position": 9999,
+   "required": false,
+   "required_in_portal": false,
+   "visible_in_portal": false,
+   "description": "Status de aprovação",
+   "tag": null,
+   "options": [
+    [
+     "zd_es_approval_pending",
+     "Pendente"
+    ],
+    [
+     "zd_es_approval_approved",
+     "Aprovado"
+    ],
+    [
+     "zd_es_approval_rejected",
+     "Rejeitado"
+    ],
+    [
+     "zd_es_approval_withdrawn",
+     "Retirado"
+    ]
+   ],
+   "historical_options": []
+  },
+  {
+   "id": 42231935635739,
+   "title": "Piece of Cake - Conversation ID",
+   "zendesk_type": "text",
+   "type": "text",
+   "key": "zd_piece_of_cake_conversation_id",
+   "system": false,
+   "active": true,
+   "position": 9999,
+   "required": false,
+   "required_in_portal": false,
+   "visible_in_portal": false,
+   "description": "Piece of Cake - Conversation ID",
+   "tag": null,
+   "options": [],
+   "historical_options": []
+  },
+  {
+   "id": 43002218380059,
+   "title": "Tipo de resolução",
+   "zendesk_type": "tagger",
+   "type": "list",
+   "key": "zd_tipo_de_resolucao",
+   "system": false,
+   "active": true,
+   "position": 9999,
+   "required": false,
+   "required_in_portal": false,
+   "visible_in_portal": false,
+   "description": "Identifica se um ticket foi resolvido automaticamente ou com a ajuda de um agente.",
+   "tag": null,
+   "options": [
+    [
+     "zd_automated_resolution",
+     "Automatizado"
+    ],
+    [
+     "zd_assisted_resolution",
+     "Assistidas"
+    ]
+   ],
+   "historical_options": []
+  },
+  {
+   "id": 46259082317723,
+   "title": "Entrenamiento ARG ",
+   "zendesk_type": "tagger",
+   "type": "list",
+   "key": "zd_entrenamiento_arg",
+   "system": false,
+   "active": true,
+   "position": 9999,
+   "required": false,
+   "required_in_portal": false,
+   "visible_in_portal": false,
+   "description": null,
+   "tag": null,
+   "options": [
+    [
+     "cadastro_hospitality_realizado_clonar",
+     "Cadastro Hospitality realizado"
+    ],
+    [
+     "cadastro_usuario_hospitality_clonar",
+     "Cadastro usuario hospitality"
+    ],
+    [
+     "cadastro_id_planilha_clonar",
+     "Cadastro id planilha"
+    ],
+    [
+     "duvidas_cadastro_clonar",
+     "Duvidas cadastro"
+    ],
+    [
+     "ongoing_desativacao_clonar",
+     "Hotel desativado"
+    ],
+    [
+     "ongoing_duvidas_gerais_clonar",
+     "Duvidas gerais"
+    ],
+    [
+     "ongoing_desconsiderado_clonar",
+     "Desconsiderado "
+    ],
+    [
+     "informação_de_alteração_de_responsável_legal_clonar",
+     "Informação de alteração de responsável legal"
+    ],
+    [
+     "alteração_de_responsável_legal_clonar",
+     "Solicitação - Alteração de responsável legal"
+    ],
+    [
+     "alteração_de_responsável_legal_concluida_clonar",
+     "Alteração de responsável legal concluida"
+    ],
+    [
+     "alteração_de_nome_fantasia_clonar",
+     "Solicitação - Alteração de nome fantasia"
+    ],
+    [
+     "alteração_de_nome_fantasia_concluida__clonar",
+     "Alteração de nome fantasia concluida "
+    ],
+    [
+     "informação_de_troca_de_cnpj_clonar",
+     "Informação de troca de CNPJ"
+    ],
+    [
+     "solicitação_troca_de_cnpj_clonar",
+     "Solicitação troca de cnpj"
+    ],
+    [
+     "troca_de_cnpj_concluida_clonar",
+     "Troca de cnpj concluida"
+    ],
+    [
+     "informaçao_de_troca_razao_social_clonar",
+     "Informaçao de troca razao social"
+    ],
+    [
+     "solicitação_de_troca_razao_social_clonar",
+     "solicitação de troca razao social"
+    ],
+    [
+     "troca_razao_social_concluida_clonar",
+     "troca razao social concluida"
+    ],
+    [
+     "solicitação_de_contrato_cnpj_clonar",
+     "Solicitação de contrato cnpj"
+    ],
+    [
+     "informação_de_troca_de_rede_clonar",
+     "Informação de troca de rede"
+    ],
+    [
+     "troca_de_rede/cnpj_clonar",
+     "Solicitação troca de rede"
+    ],
+    [
+     "troca_de_rede/cnpj_concluida_clonar",
+     "Troca de rede concluida"
+    ],
+    [
+     "cancelamento_pms_clonar",
+     "Solicitação - Remover integração PMS"
+    ],
+    [
+     "ciente._clonar",
+     "Ciente."
+    ],
+    [
+     "follow_ligação_clonar",
+     "Follow ligação"
+    ],
+    [
+     "formulario_cadastro_clonar",
+     "Formulario cadastro"
+    ],
+    [
+     "follow_up_clonar",
+     "Follow up"
+    ],
+    [
+     "treinamento_individual_realizado_",
+     "Treinamento individual realizado "
+    ]
+   ],
+   "historical_options": []
+  },
+  {
+   "id": 49467706060059,
+   "title": "Tarefas obrigatórias",
+   "zendesk_type": "tagger",
+   "type": "list",
+   "key": "zd_tarefas_obrigatorias",
+   "system": false,
+   "active": true,
+   "position": 9999,
+   "required": false,
+   "required_in_portal": false,
+   "visible_in_portal": false,
+   "description": "Mostra se as listas de tarefas obrigatórias estão concluídas. O ticket não pode ser resolvido até que todas as tarefas obrigatórias sejam concluídas ou quando nenhuma tarefa for necessária.",
+   "tag": null,
+   "options": [
+    [
+     "zd_es_required_tasks_not_required",
+     "Não obrigatórias"
+    ],
+    [
+     "zd_es_required_tasks_complete",
+     "Concluídas"
+    ],
+    [
+     "zd_es_required_tasks_incomplete",
+     "Incompletas"
+    ]
+   ],
+   "historical_options": []
+  },
+  {
+   "id": 50320570705819,
+   "title": "Reclamação Telefonia",
+   "zendesk_type": "checkbox",
+   "type": "checkbox",
+   "key": "zd_reclamacao_telefonia",
+   "system": false,
+   "active": false,
+   "position": 9999,
+   "required": false,
+   "required_in_portal": false,
+   "visible_in_portal": false,
+   "description": null,
+   "tag": "reclamacaotelefonia",
+   "options": [],
+   "historical_options": []
+  },
+  {
+   "id": 50338341968539,
+   "title": "Grupo do canal",
+   "zendesk_type": "tagger",
+   "type": "list",
+   "key": "zd_grupo_do_canal",
+   "system": false,
+   "active": true,
+   "position": 9999,
+   "required": false,
+   "required_in_portal": false,
+   "visible_in_portal": false,
+   "description": "Identifica o grupo de canais em que o ticket foi resolvido.",
+   "tag": null,
+   "options": [
+    [
+     "zd_channel_group_digital",
+     "Digital"
+    ],
+    [
+     "zd_channel_group_voice",
+     "Voz"
+    ]
+   ],
+   "historical_options": []
+  },
+  {
+   "id": 50338341979291,
+   "title": "Nível de resolução",
+   "zendesk_type": "tagger",
+   "type": "list",
+   "key": "zd_nivel_de_resolucao",
+   "system": false,
+   "active": true,
+   "position": 9999,
+   "required": false,
+   "required_in_portal": false,
+   "visible_in_portal": false,
+   "description": "O nível no qual uma resolução foi agrupada",
+   "tag": null,
+   "options": [
+    [
+     "zd_resolution_tier_non_automated",
+     "Não automatizado"
+    ],
+    [
+     "zd_resolution_tier_assisted_escalation",
+     "Transferência assistida"
+    ],
+    [
+     "zd_resolution_tier_contained_resolution",
+     "Resolução contida"
+    ],
+    [
+     "zd_resolution_tier_core_resolution",
+     "Resolução verificada"
+    ]
+   ],
+   "historical_options": []
+  },
+  {
+   "id": 51536727962395,
+   "title": "ID de e-mail com vários destinatários",
+   "zendesk_type": "text",
+   "type": "text",
+   "key": "zd_id_de_e_mail_com_varios_destinatarios",
+   "system": false,
+   "active": true,
+   "position": 9999,
+   "required": false,
+   "required_in_portal": false,
+   "visible_in_portal": false,
+   "description": "O ID exclusivo para e-mails com vários destinatários",
+   "tag": null,
+   "options": [],
+   "historical_options": []
+  },
+  {
+   "id": 53791741932699,
+   "title": "Pausar lembretes de mensagens",
+   "zendesk_type": "checkbox",
+   "type": "checkbox",
+   "key": "zd_pausar_lembretes_de_mensagens",
+   "system": false,
+   "active": true,
+   "position": 9999,
+   "required": false,
+   "required_in_portal": false,
+   "visible_in_portal": false,
+   "description": "Pausar lembretes de mensagens",
+   "tag": null,
+   "options": [],
+   "historical_options": []
+  },
+  {
+   "id": 54567602733851,
+   "title": "Resumo",
+   "zendesk_type": "text",
+   "type": "text",
+   "key": "zd_resumo",
+   "system": false,
+   "active": true,
+   "position": 9999,
+   "required": false,
+   "required_in_portal": false,
+   "visible_in_portal": false,
+   "description": "Resumo da conversa do ticket entre o agente e o usuário final.",
+   "tag": null,
+   "options": [],
+   "historical_options": []
+  },
+  {
+   "id": 54567602734875,
+   "title": "ID do agente do resumo",
+   "zendesk_type": "text",
+   "type": "text",
+   "key": "zd_id_do_agente_do_resumo",
+   "system": false,
+   "active": true,
+   "position": 9999,
+   "required": false,
+   "required_in_portal": false,
+   "visible_in_portal": false,
+   "description": "A ID do agente que gerou o resumo.",
+   "tag": null,
+   "options": [],
+   "historical_options": []
+  },
+  {
+   "id": 54567602735387,
+   "title": "Localidade do resumo",
+   "zendesk_type": "text",
+   "type": "text",
+   "key": "zd_localidade_do_resumo",
+   "system": false,
+   "active": true,
+   "position": 9999,
+   "required": false,
+   "required_in_portal": false,
+   "visible_in_portal": false,
+   "description": "Localidade do resumo com formato \"en-US\", \"fr-FR\" etc.",
+   "tag": null,
+   "options": [],
+   "historical_options": []
+  },
+  {
+   "id": 54567616771227,
+   "title": "Data e hora do resumo",
+   "zendesk_type": "text",
+   "type": "text",
+   "key": "zd_data_e_hora_do_resumo",
+   "system": false,
+   "active": true,
+   "position": 9999,
+   "required": false,
+   "required_in_portal": false,
+   "visible_in_portal": false,
+   "description": "Data e hora do resumo com o seguinte formato \"aaaa-MM-dd HH:mm:ss UTC\".",
+   "tag": null,
+   "options": [],
+   "historical_options": []
+  },
+  {
+   "id": 55294465499419,
+   "title": "Tópico",
+   "zendesk_type": "tagger",
+   "type": "list",
+   "key": "zd_topico",
+   "system": false,
+   "active": true,
+   "position": 9999,
+   "required": false,
+   "required_in_portal": false,
+   "visible_in_portal": false,
+   "description": "Tópico da conversa do ticket entre o agente e o usuário final.",
+   "tag": null,
+   "options": [
+    [
+     "topic__account__activation__waiting",
+     "Account::Account activation::Account verification status"
+    ],
+    [
+     "topic__account__data_restrictions__delete_account",
+     "Account::Account data restrictions::Close or delete account"
+    ],
+    [
+     "topic__account__documentation__sending_proof_of_personal_identification",
+     "Account::Account documentation::Sending proof of personal identification"
+    ],
+    [
+     "topic__account__invitation__request_new_invitation_link",
+     "Account::Account invitation::Request new invitation link"
+    ],
+    [
+     "topic__account__new__creating",
+     "Account::New account::Create new account"
+    ],
+    [
+     "topic__account__recovery__reactivate",
+     "Account::Account recovery::Reactivate account"
+    ],
+    [
+     "topic__account__status__what_is_status",
+     "Account::Account status::Account status"
+    ],
+    [
+     "topic__account__update__address_billing",
+     "Account::Account update::Change billing address"
+    ],
+    [
+     "topic__account__update__address_for_post",
+     "Account::Account update::Change post address"
+    ],
+    [
+     "topic__account__update__email",
+     "Account::Account update::Change email address"
+    ],
+    [
+     "topic__account__update__name",
+     "Account::Account update::Change name"
+    ],
+    [
+     "topic__account__update__tax_number",
+     "Account::Account update::Change tax number"
+    ],
+    [
+     "topic__billing__balance__request_statement",
+     "Billing::Balance::Request account statement"
+    ],
+    [
+     "topic__billing__balance__wrong_account_balance",
+     "Billing::Balance::Incorrect account balance"
+    ],
+    [
+     "topic__billing__checkout__issue",
+     "Billing::Billing checkout::Payment or checkout issue"
+    ],
+    [
+     "topic__billing__checkout__payment_not_recognized",
+     "Billing::Billing checkout::Payment not recognized"
+    ],
+    [
+     "topic__billing__credit_note__request",
+     "Billing::Credit note::Credit note request"
+    ],
+    [
+     "topic__billing__discount__apply_credits",
+     "Billing::Discount::Apply credits to purchase"
+    ],
+    [
+     "topic__billing__documentation__sending_proof_of_payment",
+     "Billing::Billing documentation::Sending proof of payment"
+    ],
+    [
+     "topic__billing__expenses__sending_receipt",
+     "Billing::Expenses::Sending proof of expenses"
+    ],
+    [
+     "topic__billing__invoice__rejected",
+     "Billing::Invoice::Invoice rejected"
+    ],
+    [
+     "topic__billing__invoice__request",
+     "Billing::Invoice::Request invoice or receipt"
+    ],
+    [
+     "topic__billing__invoice__submission",
+     "Billing::Invoice::Sending or submitting invoice"
+    ],
+    [
+     "topic__billing__invoice__update_data",
+     "Billing::Invoice::Change invoice or receipt data"
+    ],
+    [
+     "topic__billing__loyalty_card__claiming_missing_points",
+     "Billing::Loyalty card::Claiming missing loyalty points"
+    ],
+    [
+     "topic__billing__payment_change__cancel_direct_debit",
+     "Billing::Payment change::Cancel direct debit"
+    ],
+    [
+     "topic__billing__payment_change__cancel_payment",
+     "Billing::Payment change::Cancel payment"
+    ],
+    [
+     "topic__billing__payment_change__date",
+     "Billing::Payment change::Change payment date"
+    ],
+    [
+     "topic__billing__payment_change__method",
+     "Billing::Payment change::Change payment info or method"
+    ],
+    [
+     "topic__billing__payment_info__chargeback",
+     "Billing::Payment information::Chargeback"
+    ],
+    [
+     "topic__billing__payment_info__direct_debit_failed",
+     "Billing::Payment information::Direct debit failed"
+    ],
+    [
+     "topic__billing__payment_info__how_can_i_pay",
+     "Billing::Payment information::Accepted payment methods"
+    ],
+    [
+     "topic__billing__payment_info__pending_payment",
+     "Billing::Payment information::Pending payment"
+    ],
+    [
+     "topic__billing__payment_info__request_confirmation",
+     "Billing::Payment information::Request for payment confirmation"
+    ],
+    [
+     "topic__billing__payment_info__request_payment_link",
+     "Billing::Payment information::Request payment link"
+    ],
+    [
+     "topic__billing__price_clarification__info_included_in_price",
+     "Billing::Price clarification::What is included in price"
+    ],
+    [
+     "topic__billing__price_clarification__which_price",
+     "Billing::Price clarification::Price is different than expected"
+    ],
+    [
+     "topic__billing__refund__info_policy",
+     "Billing::Refund::Refund policy question"
+    ],
+    [
+     "topic__billing__refund__initiated",
+     "Billing::Refund::Refund initiated"
+    ],
+    [
+     "topic__billing__refund__request",
+     "Billing::Refund::Refund request"
+    ],
+    [
+     "topic__billing__refund__request_refund_channel",
+     "Billing::Refund::Refund via specific channel"
+    ],
+    [
+     "topic__billing__refund__request_reversal",
+     "Billing::Refund::Request reversal"
+    ],
+    [
+     "topic__billing__refund__waiting",
+     "Billing::Refund::Waiting for refund"
+    ],
+    [
+     "topic__billing__refund__what_is_status",
+     "Billing::Refund::Refund status"
+    ],
+    [
+     "topic__billing__request_pay__debit_missing_payment",
+     "Billing::Request to pay::Request to debit missing payment"
+    ],
+    [
+     "topic__billing__request_pay__invoice_settlement",
+     "Billing::Request to pay::Invoice settlement"
+    ],
+    [
+     "topic__billing__subscription_cancel__request",
+     "Billing::Subscription cancel::Cancel subscription"
+    ],
+    [
+     "topic__billing__subscription_update__upgrade",
+     "Billing::Subscription update::Upgrade subscription"
+    ],
+    [
+     "topic__billing__wrong__charge",
+     "Billing::Wrong charge::Incorrect amount charged"
+    ],
+    [
+     "topic__billing__wrong__why_charged",
+     "Billing::Wrong charge::Unexpected charge question"
+    ],
+    [
+     "topic__finance__card_info__card_details",
+     "Finance::Card information::Request card details"
+    ],
+    [
+     "topic__finance__card_issue__blocked",
+     "Finance::Card issue::Card blocked"
+    ],
+    [
+     "topic__finance__card_issue__not_working",
+     "Finance::Card issue::Card is not working"
+    ],
+    [
+     "topic__finance__card_issue__virtual_card_disappeared",
+     "Finance::Card issue::Virtual card disappeared"
+    ],
+    [
+     "topic__finance__card_request__activate_card",
+     "Finance::Card request::Activate card"
+    ],
+    [
+     "topic__finance__card_request__new",
+     "Finance::Card request::Request new card"
+    ],
+    [
+     "topic__finance__card_request__waiting",
+     "Finance::Card request::Waiting to receive card"
+    ],
+    [
+     "topic__finance__credit_update__request_a_rate_lock_extension",
+     "Finance::Credit update::Request mortgage rate lock extension"
+    ],
+    [
+     "topic__finance__fees_info__account",
+     "Finance::Fees information::What are the account fees"
+    ],
+    [
+     "topic__finance__fees_info__transaction",
+     "Finance::Fees information::What are the transaction fees"
+    ],
+    [
+     "topic__finance__interest__how_much_have_i_received",
+     "Finance::Interest::How much interest income was received"
+    ],
+    [
+     "topic__finance__top_up__cant_top_up",
+     "Finance::Top up::Unable to top up card"
+    ],
+    [
+     "topic__finance__transaction_issue__cant_find",
+     "Finance::Transaction issue::Unable to find transaction"
+    ],
+    [
+     "topic__finance__transaction_issue__cant_pay_online",
+     "Finance::Transaction issue::Unable to make online payment"
+    ],
+    [
+     "topic__finance__transaction_issue__transaction_failed",
+     "Finance::Transaction issue::Transaction failed"
+    ],
+    [
+     "topic__finance__transaction_issue__transaction_failed_but_i_was_charged",
+     "Finance::Transaction issue::Transaction failed but was charged"
+    ],
+    [
+     "topic__finance__transaction_notifications__payment_declined",
+     "Finance::Transaction notifications::Payment declined"
+    ],
+    [
+     "topic__finance__transaction_status__funds_not_received",
+     "Finance::Transaction status::Funds not received"
+    ],
+    [
+     "topic__finance__transaction_status__request_confirmation",
+     "Finance::Transaction status::Request transaction confirmation"
+    ],
+    [
+     "topic__finance__transaction_status__waiting_for_transaction",
+     "Finance::Transaction status::Transaction pending"
+    ],
+    [
+     "topic__finance__unauthorized_use__suspect_card_cloned",
+     "Finance::Unauthorized use::Suspicion that card was cloned"
+    ],
+    [
+     "topic__finance__unauthorized_use__transaction_not_recognized",
+     "Finance::Unauthorized use::Transaction not recognized"
+    ],
+    [
+     "topic__human_resources__employee_compensation__payslip_tax_correction",
+     "Human resources::Employee compensation::Correction of tax information on payslip"
+    ],
+    [
+     "topic__human_resources__paid_time_off__cancel_request",
+     "Human resources::Paid time off::Cancel vacation leave request"
+    ],
+    [
+     "topic__misc__contact__request_contact",
+     "Misc::Contact::Contact request"
+    ],
+    [
+     "topic__misc__contact__request_email",
+     "Misc::Contact::Request email address for contact"
+    ],
+    [
+     "topic__misc__contact__talk_to_agent_over_phone",
+     "Misc::Contact::Request phone call with agent"
+    ],
+    [
+     "topic__misc__contact__transfer_to_agent",
+     "Misc::Contact::Transfer to agent"
+    ],
+    [
+     "topic__misc__contact__want_to_contact_this_person",
+     "Misc::Contact::Request to contact specific person or role"
+    ],
+    [
+     "topic__misc__event__cancelled",
+     "Misc::Event::Event cancelled"
+    ],
+    [
+     "topic__misc__feedback__complaint",
+     "Misc::Feedback::Complaint"
+    ],
+    [
+     "topic__misc__feedback__customer_satisfaction_survey",
+     "Misc::Feedback::Customer satisfaction survey"
+    ],
+    [
+     "topic__misc__feedback__negative",
+     "Misc::Feedback::Negative service feedback"
+    ],
+    [
+     "topic__misc__handle__review_signed_document",
+     "Misc::Handle::Review signed document"
+    ],
+    [
+     "topic__misc__handle__see_attachment",
+     "Misc::Handle::See attachment"
+    ],
+    [
+     "topic__misc__image__screenshot",
+     "Misc::Image::Screenshot of problem"
+    ],
+    [
+     "topic__misc__not_received__email_delivery_failed",
+     "Misc::Unable to receive message::Email delivery failed"
+    ],
+    [
+     "topic__misc__not_received__out_of_office",
+     "Misc::Unable to receive message::Out-of-office reply"
+    ],
+    [
+     "topic__misc__previous_message__check",
+     "Misc::Previous message::Check previous message"
+    ],
+    [
+     "topic__misc__previous_message__ignore",
+     "Misc::Previous message::Ignore previous message"
+    ],
+    [
+     "topic__misc__received__chat_transcript",
+     "Misc::Received message::Chat transcript"
+    ],
+    [
+     "topic__misc__received__claim_query_has_been_updated",
+     "Misc::Received message::Claim query updated"
+    ],
+    [
+     "topic__misc__received__confirm_if_legitimate_message",
+     "Misc::Received message::Confirm if this is a legitimate message"
+    ],
+    [
+     "topic__misc__received__contact_acknowledgement",
+     "Misc::Received message::Contact acknowledgement"
+    ],
+    [
+     "topic__misc__received__greeting",
+     "Misc::Received message::Greeting"
+    ],
+    [
+     "topic__misc__received__new_message",
+     "Misc::Received message::New message received"
+    ],
+    [
+     "topic__misc__received__shareable_file_link",
+     "Misc::Received message::Shareable file link"
+    ],
+    [
+     "topic__misc__thanks__thanks",
+     "Misc::Thanks::Thank you"
+    ],
+    [
+     "topic__misc__unsolicited__event_invitation",
+     "Misc::Unsolicited::Event invitation"
+    ],
+    [
+     "topic__misc__unsolicited__marketing_or_newsletter",
+     "Misc::Unsolicited::Marketing campaign or newsletter"
+    ],
+    [
+     "topic__misc__unsolicited__partnership",
+     "Misc::Unsolicited::Partnership proposal"
+    ],
+    [
+     "topic__misc__unsolicited__spam",
+     "Misc::Unsolicited::Spam"
+    ],
+    [
+     "topic__order__cancellation__cancel",
+     "Order::Order cancelation::Cancel order"
+    ],
+    [
+     "topic__order__new__quote_request",
+     "Order::Place new order::Quote request"
+    ],
+    [
+     "topic__order__new__shipping_consumables_request",
+     "Order::Place new order::Request shipping label or airbill"
+    ],
+    [
+     "topic__sell__issue__item_not_showing",
+     "Sell::Sales issue::Item listing not showing"
+    ],
+    [
+     "topic__sell__update__price",
+     "Sell::Sales update::Change item price"
+    ],
+    [
+     "topic__service__appointment__new",
+     "Service::Appointment::Schedule appointment"
+    ],
+    [
+     "topic__software__autofill__issue_with_specific_pages",
+     "Software::Autofill feature::Autofill issue with specific website"
+    ],
+    [
+     "topic__software__connection__how_to_connect_an_integration",
+     "Software::Software connection::How to connect an integration"
+    ],
+    [
+     "topic__software__crash__website_crashing",
+     "Software::Software crash::Website crashing"
+    ],
+    [
+     "topic__software__data__cant_download",
+     "Software::Software data::Unable to download data"
+    ],
+    [
+     "topic__software__data__cant_edit",
+     "Software::Software data::Unable to edit data"
+    ],
+    [
+     "topic__software__feature_feedback__not_working",
+     "Software::Feature feedback::Feature not working"
+    ],
+    [
+     "topic__software__feature_feedback__request",
+     "Software::Feature feedback::New feature request"
+    ],
+    [
+     "topic__software__feature_feedback__request_activation",
+     "Software::Feature feedback::Feature activation or beta access request"
+    ],
+    [
+     "topic__software__feature_feedback__request_deactivation",
+     "Software::Feature feedback::Request feature deactivation"
+    ],
+    [
+     "topic__software__feature_missing__cant_find",
+     "Software::Feature missing::Unable to find feature"
+    ],
+    [
+     "topic__software__info__how_to_use",
+     "Software::Software information::Software usage instructions"
+    ],
+    [
+     "topic__software__install__integration_not_working",
+     "Software::Install::Software integration not working"
+    ],
+    [
+     "topic__software__issue_generic__error",
+     "Software::Generic error::Software error"
+    ],
+    [
+     "topic__software__login_config__login_credentials_request",
+     "Software::Login configuration::Request login credentials"
+    ],
+    [
+     "topic__software__login_issues__cant_login",
+     "Software::Login issues::Unable to login"
+    ],
+    [
+     "topic__software__login_issues__id_not_recognized",
+     "Software::Login issues::ID or email address not recognized"
+    ],
+    [
+     "topic__software__login_issues__password_cant_reset",
+     "Software::Login issues::Unable to reset password"
+    ],
+    [
+     "topic__software__login_issues__password_not_accepted",
+     "Software::Login issues::Password not accepted"
+    ],
+    [
+     "topic__software__login_issues__password_request_reset",
+     "Software::Login issues::Reset password"
+    ],
+    [
+     "topic__software__notifications__event_monitoring_alert",
+     "Software::Notifications::Event monitoring alert"
+    ],
+    [
+     "topic__software__notifications__not_received",
+     "Software::Notifications::Notifications not being received"
+    ],
+    [
+     "topic__software__notifications__verification_code",
+     "Software::Notifications::Verification code"
+    ],
+    [
+     "topic__software__seats__delete_user",
+     "Software::Seats management::Delete user"
+    ],
+    [
+     "topic__software__seats__disable_access",
+     "Software::Seats management::Deactivate user access"
+    ],
+    [
+     "topic__software__seats__enable_access",
+     "Software::Seats management::Activate user access"
+    ],
+    [
+     "topic__software__seats__new_user",
+     "Software::Seats management::Add new user"
+    ],
+    [
+     "topic__software__seats__updating_roles",
+     "Software::Seats management::Update user roles"
+    ],
+    [
+     "topic__software__sync__issue",
+     "Software::Synchronization::Sync issue"
+    ],
+    [
+     "topic__software__update__issue_after_update",
+     "Software::Software update::Issue after software update"
+    ],
+    [
+     "topic__software__verification_code__not_receiving",
+     "Software::Software verification code::Security code not received"
+    ],
+    [
+     "topic__travel__booking_cancellation__cancel",
+     "Travel::Booking cancellation::Cancel booking"
+    ],
+    [
+     "topic__travel__booking_cancellation__policy",
+     "Travel::Booking cancellation::What is the booking cancellation policy"
+    ],
+    [
+     "topic__travel__booking_cancellation__undo_cancel",
+     "Travel::Booking cancellation::Undo booking cancellation"
+    ],
+    [
+     "topic__travel__booking_cancellation__why_cancelled",
+     "Travel::Booking cancellation::Reason for booking cancellation"
+    ],
+    [
+     "topic__travel__booking_info__what_is_the_reservation_number",
+     "Travel::Booking information::Request reservation number"
+    ],
+    [
+     "topic__travel__booking_issue__cant_book",
+     "Travel::Booking issue::Unable to make a booking"
+    ],
+    [
+     "topic__travel__booking_issue__cant_check_in",
+     "Travel::Booking issue::Unable to check-in"
+    ],
+    [
+     "topic__travel__booking_new__reservation",
+     "Travel::Booking new::New booking"
+    ],
+    [
+     "topic__travel__booking_notifications__cancellation_confirmation",
+     "Travel::Booking notifications::Notification of booking cancellation"
+    ],
+    [
+     "topic__travel__booking_notifications__reservation_confirmation",
+     "Travel::Booking notifications::Booking confirmation"
+    ],
+    [
+     "topic__travel__booking_notifications__update_confirmation",
+     "Travel::Booking notifications::Notification of booking update"
+    ],
+    [
+     "topic__travel__booking_status__cant_find_reservation",
+     "Travel::Booking status::Unable to find booking"
+    ],
+    [
+     "topic__travel__booking_status__what_is_status",
+     "Travel::Booking status::What is the booking status"
+    ],
+    [
+     "topic__travel__booking_update__add_guest",
+     "Travel::Booking update::Add guest to current booking"
+    ],
+    [
+     "topic__travel__booking_update__add_reservation_to_account",
+     "Travel::Booking update::Add reservation to account"
+    ],
+    [
+     "topic__travel__booking_update__airport_transfer_arrangement",
+     "Travel::Booking update::Airport transfer arrangement"
+    ],
+    [
+     "topic__travel__booking_update__change_hotel",
+     "Travel::Booking update::Change hotel in current booking"
+    ],
+    [
+     "topic__travel__booking_update__change_passenger_name",
+     "Travel::Booking update::Change passenger name in current booking"
+    ],
+    [
+     "topic__travel__booking_update__change_passenger_passport_information",
+     "Travel::Booking update::Change passenger passport information"
+    ],
+    [
+     "topic__travel__booking_update__change_room",
+     "Travel::Booking update::Change room in current booking"
+    ],
+    [
+     "topic__travel__booking_update__change_stay_date",
+     "Travel::Booking update::Change stay date in current booking"
+    ],
+    [
+     "topic__travel__booking_update__change_travel_agent",
+     "Travel::Booking update::Change travel agent"
+    ],
+    [
+     "topic__travel__booking_update__fee_waiver_request",
+     "Travel::Booking update::Request fee waiver"
+    ],
+    [
+     "topic__travel__booking_update__meal_request",
+     "Travel::Booking update::Request meal preference"
+    ],
+    [
+     "topic__travel__booking_update__reschedule_flight",
+     "Travel::Booking update::Reschedule flight"
+    ],
+    [
+     "topic__travel__cargo_update__load_details",
+     "Travel::Cargo update::Modify cargo booking details"
+    ],
+    [
+     "topic__travel__documentation__request",
+     "Travel::Travel documentation::Request travel documents"
+    ],
+    [
+     "topic__travel__documentation__request_booking_confirmation",
+     "Travel::Travel documentation::Request booking confirmation"
+    ],
+    [
+     "topic__travel__inventory_management__turn_off_availability",
+     "Travel::Inventory management::Turn off availability of reservations"
+    ],
+    [
+     "topic__travel__luggage_issue__baggage_benefit_discrepancy",
+     "Travel::Luggage issue::Discrepancy in baggage allowance"
+    ],
+    [
+     "topic__travel__service_issue__claimant_background_investigation",
+     "Travel::Service issue::Passenger background investigation"
+    ],
+    [
+     "topic__travel__service_issue__client_no_show",
+     "Travel::Service issue::Client with reservation didn't show up"
+    ],
+    [
+     "topic__travel__service_issue__compensation_request",
+     "Travel::Service issue::Request compensation"
+    ],
+    [
+     "topic__workplace__access__activate_security_id_card",
+     "Workplace::Access::Activate security ID card or badge"
+    ],
+    [
+     "topic__workplace__access__request",
+     "Workplace::Access::Request access to facilities"
+    ]
+   ],
+   "historical_options": []
+  },
+  {
+   "id": 55294465524123,
+   "title": "Confiança do tópico",
+   "zendesk_type": "tagger",
+   "type": "list",
+   "key": "zd_confianca_do_topico",
+   "system": false,
+   "active": true,
+   "position": 9999,
+   "required": false,
+   "required_in_portal": false,
+   "visible_in_portal": false,
+   "description": "Confiança do tópico da conversa do ticket entre o agente e o usuário final.",
+   "tag": null,
+   "options": [
+    [
+     "topic_confidence__low",
+     "Low"
+    ],
+    [
+     "topic_confidence__medium",
+     "Medium"
+    ],
+    [
+     "topic_confidence__high",
+     "High"
+    ]
+   ],
+   "historical_options": []
+  },
+  {
+   "id": 55294465546139,
+   "title": "Sentimento",
+   "zendesk_type": "tagger",
+   "type": "list",
+   "key": "zd_sentimento",
+   "system": false,
+   "active": true,
+   "position": 9999,
+   "required": false,
+   "required_in_portal": false,
+   "visible_in_portal": false,
+   "description": "Sentimento da conversa do ticket entre o agente e o usuário final.",
+   "tag": null,
+   "options": [
+    [
+     "sentiment__very_positive",
+     "Very positive"
+    ],
+    [
+     "sentiment__positive",
+     "Positive"
+    ],
+    [
+     "sentiment__neutral",
+     "Neutral"
+    ],
+    [
+     "sentiment__negative",
+     "Negative"
+    ],
+    [
+     "sentiment__very_negative",
+     "Very negative"
+    ]
+   ],
+   "historical_options": []
+  },
+  {
+   "id": 55294465627291,
+   "title": "Confiança do idioma",
+   "zendesk_type": "tagger",
+   "type": "list",
+   "key": "zd_confianca_do_idioma",
+   "system": false,
+   "active": true,
+   "position": 9999,
+   "required": false,
+   "required_in_portal": false,
+   "visible_in_portal": false,
+   "description": "Confiança de idioma da conversa do ticket entre o agente e o usuário final.",
+   "tag": null,
+   "options": [
+    [
+     "language_confidence__low",
+     "Low"
+    ],
+    [
+     "language_confidence__medium",
+     "Medium"
+    ],
+    [
+     "language_confidence__high",
+     "High"
+    ]
+   ],
+   "historical_options": []
+  },
+  {
+   "id": 55294479857179,
+   "title": "Confiança do sentimento",
+   "zendesk_type": "tagger",
+   "type": "list",
+   "key": "zd_confianca_do_sentimento",
+   "system": false,
+   "active": true,
+   "position": 9999,
+   "required": false,
+   "required_in_portal": false,
+   "visible_in_portal": false,
+   "description": "Sentimento de confiança da conversa do ticket entre o agente e o usuário final.",
+   "tag": null,
+   "options": [
+    [
+     "sentiment_confidence__low",
+     "Low"
+    ],
+    [
+     "sentiment_confidence__medium",
+     "Medium"
+    ],
+    [
+     "sentiment_confidence__high",
+     "High"
+    ]
+   ],
+   "historical_options": []
+  },
+  {
+   "id": 55294479923867,
+   "title": "Idioma",
+   "zendesk_type": "tagger",
+   "type": "list",
+   "key": "zd_idioma",
+   "system": false,
+   "active": true,
+   "position": 9999,
+   "required": false,
+   "required_in_portal": false,
+   "visible_in_portal": false,
+   "description": "Idioma da conversa do ticket entre o agente e o usuário final.",
+   "tag": null,
+   "options": [
+    [
+     "language__af",
+     "Afrikaans"
+    ],
+    [
+     "language__sq",
+     "Albanian"
+    ],
+    [
+     "language__am",
+     "Amharic"
+    ],
+    [
+     "language__ar",
+     "Arabic"
+    ],
+    [
+     "language__an",
+     "Aragonese"
+    ],
+    [
+     "language__hy",
+     "Armenian"
+    ],
+    [
+     "language__as",
+     "Assamese"
+    ],
+    [
+     "language__ast",
+     "Asturian"
+    ],
+    [
+     "language__av",
+     "Avaric"
+    ],
+    [
+     "language__az",
+     "Azerbaijani"
+    ],
+    [
+     "language__bn",
+     "Bangla"
+    ],
+    [
+     "language__ba",
+     "Bashkir"
+    ],
+    [
+     "language__eu",
+     "Basque"
+    ],
+    [
+     "language__bar",
+     "Bavarian"
+    ],
+    [
+     "language__be",
+     "Belarusian"
+    ],
+    [
+     "language__bh",
+     "Bhojpuri"
+    ],
+    [
+     "language__bcl",
+     "Bikol"
+    ],
+    [
+     "language__bpy",
+     "Bishnupriya"
+    ],
+    [
+     "language__bs",
+     "Bosnian"
+    ],
+    [
+     "language__br",
+     "Breton"
+    ],
+    [
+     "language__bg",
+     "Bulgarian"
+    ],
+    [
+     "language__bxr",
+     "Buriat"
+    ],
+    [
+     "language__my",
+     "Burmese"
+    ],
+    [
+     "language__yue",
+     "Cantonese"
+    ],
+    [
+     "language__ca",
+     "Catalan"
+    ],
+    [
+     "language__ceb",
+     "Cebuano"
+    ],
+    [
+     "language__ckb",
+     "Central kurdish"
+    ],
+    [
+     "language__ce",
+     "Chechen"
+    ],
+    [
+     "language__zh",
+     "Chinese"
+    ],
+    [
+     "language__cv",
+     "Chuvash"
+    ],
+    [
+     "language__kw",
+     "Cornish"
+    ],
+    [
+     "language__co",
+     "Corsican"
+    ],
+    [
+     "language__hr",
+     "Croatian"
+    ],
+    [
+     "language__cs",
+     "Czech"
+    ],
+    [
+     "language__da",
+     "Danish"
+    ],
+    [
+     "language__dv",
+     "Divehi"
+    ],
+    [
+     "language__nl",
+     "Dutch"
+    ],
+    [
+     "language__arz",
+     "Egyptian arabic"
+    ],
+    [
+     "language__en",
+     "English"
+    ],
+    [
+     "language__myv",
+     "Erzya"
+    ],
+    [
+     "language__eo",
+     "Esperanto"
+    ],
+    [
+     "language__et",
+     "Estonian"
+    ],
+    [
+     "language__hif",
+     "Fiji hindi"
+    ],
+    [
+     "language__fi",
+     "Finnish"
+    ],
+    [
+     "language__fr",
+     "French"
+    ],
+    [
+     "language__gl",
+     "Galician"
+    ],
+    [
+     "language__ka",
+     "Georgian"
+    ],
+    [
+     "language__de",
+     "German"
+    ],
+    [
+     "language__gom",
+     "Goan konkani"
+    ],
+    [
+     "language__el",
+     "Greek"
+    ],
+    [
+     "language__gn",
+     "Guarani"
+    ],
+    [
+     "language__gu",
+     "Gujarati"
+    ],
+    [
+     "language__ht",
+     "Haitian creole"
+    ],
+    [
+     "language__he",
+     "Hebrew"
+    ],
+    [
+     "language__hi",
+     "Hindi"
+    ],
+    [
+     "language__hu",
+     "Hungarian"
+    ],
+    [
+     "language__is",
+     "Icelandic"
+    ],
+    [
+     "language__io",
+     "Ido"
+    ],
+    [
+     "language__ilo",
+     "Iloko"
+    ],
+    [
+     "language__id",
+     "Indonesian"
+    ],
+    [
+     "language__ia",
+     "Interlingua"
+    ],
+    [
+     "language__ie",
+     "Interlingue"
+    ],
+    [
+     "language__ga",
+     "Irish"
+    ],
+    [
+     "language__it",
+     "Italian"
+    ],
+    [
+     "language__ja",
+     "Japanese"
+    ],
+    [
+     "language__jv",
+     "Javanese"
+    ],
+    [
+     "language__xal",
+     "Kalmyk"
+    ],
+    [
+     "language__kn",
+     "Kannada"
+    ],
+    [
+     "language__krc",
+     "Karachay-balkar"
+    ],
+    [
+     "language__kk",
+     "Kazakh"
+    ],
+    [
+     "language__km",
+     "Khmer"
+    ],
+    [
+     "language__kv",
+     "Komi"
+    ],
+    [
+     "language__ko",
+     "Korean"
+    ],
+    [
+     "language__ku",
+     "Kurdish"
+    ],
+    [
+     "language__ky",
+     "Kyrgyz"
+    ],
+    [
+     "language__lo",
+     "Lao"
+    ],
+    [
+     "language__la",
+     "Latin"
+    ],
+    [
+     "language__lv",
+     "Latvian"
+    ],
+    [
+     "language__lez",
+     "Lezghian"
+    ],
+    [
+     "language__li",
+     "Limburgish"
+    ],
+    [
+     "language__lt",
+     "Lithuanian"
+    ],
+    [
+     "language__jbo",
+     "Lojban"
+    ],
+    [
+     "language__lmo",
+     "Lombard"
+    ],
+    [
+     "language__nds",
+     "Low german"
+    ],
+    [
+     "language__dsb",
+     "Lower sorbian"
+    ],
+    [
+     "language__lb",
+     "Luxembourgish"
+    ],
+    [
+     "language__mk",
+     "Macedonian"
+    ],
+    [
+     "language__mai",
+     "Maithili"
+    ],
+    [
+     "language__mg",
+     "Malagasy"
+    ],
+    [
+     "language__ms",
+     "Malay"
+    ],
+    [
+     "language__ml",
+     "Malayalam"
+    ],
+    [
+     "language__mt",
+     "Maltese"
+    ],
+    [
+     "language__gv",
+     "Manx"
+    ],
+    [
+     "language__mr",
+     "Marathi"
+    ],
+    [
+     "language__mhr",
+     "Mari"
+    ],
+    [
+     "language__mzn",
+     "Mazanderani"
+    ],
+    [
+     "language__min",
+     "Minangkabau"
+    ],
+    [
+     "language__xmf",
+     "Mingrelian"
+    ],
+    [
+     "language__mwl",
+     "Mirandese"
+    ],
+    [
+     "language__mn",
+     "Mongolian"
+    ],
+    [
+     "language__nap",
+     "Neapolitan"
+    ],
+    [
+     "language__ne",
+     "Nepali"
+    ],
+    [
+     "language__new",
+     "Newari"
+    ],
+    [
+     "language__frr",
+     "Northern frisian"
+    ],
+    [
+     "language__lrc",
+     "Northern luri"
+    ],
+    [
+     "language__no",
+     "Norwegian"
+    ],
+    [
+     "language__nn",
+     "Norwegian nynorsk"
+    ],
+    [
+     "language__oc",
+     "Occitan"
+    ],
+    [
+     "language__or",
+     "Odia"
+    ],
+    [
+     "language__os",
+     "Ossetic"
+    ],
+    [
+     "language__pfl",
+     "Palatine german"
+    ],
+    [
+     "language__pam",
+     "Pampanga"
+    ],
+    [
+     "language__ps",
+     "Pashto"
+    ],
+    [
+     "language__fa",
+     "Persian"
+    ],
+    [
+     "language__pms",
+     "Piedmontese"
+    ],
+    [
+     "language__pl",
+     "Polish"
+    ],
+    [
+     "language__pt",
+     "Portuguese"
+    ],
+    [
+     "language__pa",
+     "Punjabi"
+    ],
+    [
+     "language__qu",
+     "Quechua"
+    ],
+    [
+     "language__ro",
+     "Romanian"
+    ],
+    [
+     "language__rm",
+     "Romansh"
+    ],
+    [
+     "language__ru",
+     "Russian"
+    ],
+    [
+     "language__rue",
+     "Rusyn"
+    ],
+    [
+     "language__sa",
+     "Sanskrit"
+    ],
+    [
+     "language__sc",
+     "Sardinian"
+    ],
+    [
+     "language__sco",
+     "Scots"
+    ],
+    [
+     "language__gd",
+     "Scottish gaelic"
+    ],
+    [
+     "language__sr",
+     "Serbian"
+    ],
+    [
+     "language__sh",
+     "Serbo-croatian"
+    ],
+    [
+     "language__scn",
+     "Sicilian"
+    ],
+    [
+     "language__sd",
+     "Sindhi"
+    ],
+    [
+     "language__si",
+     "Sinhala"
+    ],
+    [
+     "language__sk",
+     "Slovak"
+    ],
+    [
+     "language__sl",
+     "Slovenian"
+    ],
+    [
+     "language__so",
+     "Somali"
+    ],
+    [
+     "language__es",
+     "Spanish"
+    ],
+    [
+     "language__su",
+     "Sundanese"
+    ],
+    [
+     "language__sw",
+     "Swahili"
+    ],
+    [
+     "language__sv",
+     "Swedish"
+    ],
+    [
+     "language__tl",
+     "Tagalog"
+    ],
+    [
+     "language__tg",
+     "Tajik"
+    ],
+    [
+     "language__ta",
+     "Tamil"
+    ],
+    [
+     "language__tt",
+     "Tatar"
+    ],
+    [
+     "language__te",
+     "Telugu"
+    ],
+    [
+     "language__th",
+     "Thai"
+    ],
+    [
+     "language__bo",
+     "Tibetan"
+    ],
+    [
+     "language__als",
+     "Tosk albanian"
+    ],
+    [
+     "language__tr",
+     "Turkish"
+    ],
+    [
+     "language__tk",
+     "Turkmen"
+    ],
+    [
+     "language__tyv",
+     "Tuvinian"
+    ],
+    [
+     "language__uk",
+     "Ukrainian"
+    ],
+    [
+     "language__hsb",
+     "Upper sorbian"
+    ],
+    [
+     "language__ur",
+     "Urdu"
+    ],
+    [
+     "language__ug",
+     "Uyghur"
+    ],
+    [
+     "language__uz",
+     "Uzbek"
+    ],
+    [
+     "language__vec",
+     "Venetian"
+    ],
+    [
+     "language__vep",
+     "Veps"
+    ],
+    [
+     "language__vi",
+     "Vietnamese"
+    ],
+    [
+     "language__vo",
+     "Volapük"
+    ],
+    [
+     "language__wa",
+     "Walloon"
+    ],
+    [
+     "language__war",
+     "Waray"
+    ],
+    [
+     "language__cy",
+     "Welsh"
+    ],
+    [
+     "language__vls",
+     "West flemish"
+    ],
+    [
+     "language__fy",
+     "Western frisian"
+    ],
+    [
+     "language__mrj",
+     "Western mari"
+    ],
+    [
+     "language__pnb",
+     "Western panjabi"
+    ],
+    [
+     "language__wuu",
+     "Wu chinese"
+    ],
+    [
+     "language__sah",
+     "Yakut"
+    ],
+    [
+     "language__yi",
+     "Yiddish"
+    ],
+    [
+     "language__yo",
+     "Yoruba"
+    ],
+    [
+     "language__diq",
+     "Zaza"
+    ]
+   ],
+   "historical_options": []
+  },
+  {
+   "id": 56156414164379,
+   "title": "Requer Tabulação",
+   "zendesk_type": "checkbox",
+   "type": "checkbox",
+   "key": "zd_requer_tabulacao",
+   "system": false,
+   "active": false,
+   "position": 9999,
+   "required": false,
+   "required_in_portal": false,
+   "visible_in_portal": false,
+   "description": null,
+   "tag": "requer_tabulacao",
+   "options": [],
+   "historical_options": []
+  },
+  {
+   "id": 56473726181787,
+   "title": "Nome da Organização",
+   "zendesk_type": "text",
+   "type": "text",
+   "key": "zd_nome_da_organizacao",
+   "system": false,
+   "active": true,
+   "position": 9999,
+   "required": false,
+   "required_in_portal": false,
+   "visible_in_portal": true,
+   "description": null,
+   "tag": null,
+   "options": [],
+   "historical_options": []
+  },
+  {
+   "id": 56474409637403,
+   "title": "Seu Nome",
+   "zendesk_type": "text",
+   "type": "text",
+   "key": "zd_seu_nome",
+   "system": false,
+   "active": true,
+   "position": 9999,
+   "required": false,
+   "required_in_portal": false,
+   "visible_in_portal": true,
+   "description": null,
+   "tag": null,
+   "options": [],
+   "historical_options": []
+  },
+  {
+   "id": 56945163751835,
+   "title": "Follow Pipe Argentina ",
+   "zendesk_type": "tagger",
+   "type": "list",
+   "key": "zd_follow_pipe_argentina",
+   "system": false,
+   "active": true,
+   "position": 9999,
+   "required": false,
+   "required_in_portal": false,
+   "visible_in_portal": false,
+   "description": null,
+   "tag": null,
+   "options": [
+    [
+     "cadastro_hospitality_realizado_clonar_clonar",
+     "Cadastro Hospitality realizado"
+    ],
+    [
+     "cadastro_usuario_hospitality_clonar_clonar",
+     "Cadastro usuario hospitality"
+    ],
+    [
+     "cadastro_id_planilha_clonar_clonar",
+     "Cadastro id planilha"
+    ],
+    [
+     "duvidas_cadastro_clonar_clonar",
+     "Duvidas cadastro"
+    ],
+    [
+     "ongoing_desativacao_clonar_clonar",
+     "Hotel desativado"
+    ],
+    [
+     "ongoing_duvidas_gerais_clonar_clonar",
+     "Duvidas gerais"
+    ],
+    [
+     "ongoing_desconsiderado_clonar_clonar",
+     "Desconsiderado "
+    ],
+    [
+     "informação_de_alteração_de_responsável_legal_clonar_clonar",
+     "Informação de alteração de responsável legal"
+    ],
+    [
+     "alteração_de_responsável_legal_clonar_clonar",
+     "Solicitação - Alteração de responsável legal"
+    ],
+    [
+     "alteração_de_responsável_legal_concluida_clonar_clonar",
+     "Alteração de responsável legal concluida"
+    ],
+    [
+     "alteração_de_nome_fantasia_clonar_clonar",
+     "Solicitação - Alteração de nome fantasia"
+    ],
+    [
+     "alteração_de_nome_fantasia_concluida__clonar_clonar",
+     "Alteração de nome fantasia concluida "
+    ],
+    [
+     "informação_de_troca_de_cnpj_clonar_clonar",
+     "Informação de troca de CNPJ"
+    ],
+    [
+     "solicitação_troca_de_cnpj_clonar_clonar",
+     "Solicitação troca de cnpj"
+    ],
+    [
+     "troca_de_cnpj_concluida_clonar_clonar",
+     "Troca de cnpj concluida"
+    ],
+    [
+     "informaçao_de_troca_razao_social_clonar_clonar",
+     "Informaçao de troca razao social"
+    ],
+    [
+     "solicitação_de_troca_razao_social_clonar_clonar",
+     "solicitação de troca razao social"
+    ],
+    [
+     "troca_razao_social_concluida_clonar_clonar",
+     "troca razao social concluida"
+    ],
+    [
+     "solicitação_de_contrato_cnpj_clonar_clonar",
+     "Solicitação de contrato cnpj"
+    ],
+    [
+     "informação_de_troca_de_rede_clonar_clonar",
+     "Informação de troca de rede"
+    ],
+    [
+     "troca_de_rede/cnpj_clonar_clonar",
+     "Solicitação troca de rede"
+    ],
+    [
+     "troca_de_rede/cnpj_concluida_clonar_clonar",
+     "Troca de rede concluida"
+    ],
+    [
+     "cancelamento_pms_clonar_clonar",
+     "Solicitação - Remover integração PMS"
+    ],
+    [
+     "ciente._clonar_clonar",
+     "Ciente."
+    ],
+    [
+     "follow_ligação_clonar_clonar",
+     "Follow ligação"
+    ],
+    [
+     "formulario_cadastro_clonar_clonar",
+     "Formulario cadastro"
+    ],
+    [
+     "follow_up_clonar_clonar",
+     "Follow up"
+    ],
+    [
+     "treinamento_individual_realizado__clonar",
+     "Treinamento individual realizado "
+    ]
+   ],
+   "historical_options": []
+  }
+ ],
+ "groups": {
+  "38091993384347": {
+   "name": "Alterações Cadastrais",
+   "team_name": "alterações cadastrais",
+   "deleted": false
+  },
+  "37684679032731": {
+   "name": "Analytics",
+   "team_name": "analytics",
+   "deleted": false
+  },
+  "22161807237275": {
+   "name": "Cadastro",
+   "team_name": "cadastro",
+   "deleted": false
+  },
+  "21279515292699": {
+   "name": "Comercial Agências",
+   "team_name": "comercial agências",
+   "deleted": false
+  },
+  "21279551978011": {
+   "name": "Comercial Empresas",
+   "team_name": "comercial empresas",
+   "deleted": false
+  },
+  "35786755815707": {
+   "name": "Diretório de hoteis",
+   "team_name": "diretório de hoteis",
+   "deleted": false
+  },
+  "21279547689627": {
+   "name": "Financeiro",
+   "team_name": "financeiro",
+   "deleted": false
+  },
+  "22137359259675": {
+   "name": "Gerência",
+   "team_name": "gerência",
+   "deleted": false
+  },
+  "21279583693467": {
+   "name": "Gerencia Onboarding",
+   "team_name": "gerencia onboarding",
+   "deleted": false
+  },
+  "22659522730523": {
+   "name": "Gestor  Comercial Empresas",
+   "team_name": "gestor  comercial empresas",
+   "deleted": false
+  },
+  "22495575246491": {
+   "name": "Gestor Comercial Agencias",
+   "team_name": "gestor comercial agencias",
+   "deleted": false
+  },
+  "22495568196507": {
+   "name": "Gestor Implantação",
+   "team_name": "gestor implantação",
+   "deleted": false
+  },
+  "21279532295579": {
+   "name": "Implantação",
+   "team_name": "implantação",
+   "deleted": false
+  },
+  "22162064704923": {
+   "name": "Integrações",
+   "team_name": "integrações",
+   "deleted": false
+  },
+  "41952478430747": {
+   "name": "Integrações - N3",
+   "team_name": "integrações - n3",
+   "deleted": false
+  },
+  "24855548709659": {
+   "name": "Manutenção TI",
+   "team_name": "manutenção ti",
+   "deleted": false
+  },
+  "21279532711451": {
+   "name": "Novos Negócios",
+   "team_name": "novos negócios",
+   "deleted": false
+  },
+  "43949519297435": {
+   "name": "Onboarding Argentina",
+   "team_name": "onboarding argentina",
+   "deleted": false
+  },
+  "26339876833691": {
+   "name": "Onboarding Checkout",
+   "team_name": "onboarding checkout",
+   "deleted": false
+  },
+  "40878940092187": {
+   "name": "PMS",
+   "team_name": "pms",
+   "deleted": false
+  },
+  "40213822464155": {
+   "name": "Prospecção",
+   "team_name": "prospecção",
+   "deleted": false
+  },
+  "39191109363739": {
+   "name": "Relacionamento Hospitalidade",
+   "team_name": "relacionamento hospitalidade",
+   "deleted": false
+  },
+  "42392199724699": {
+   "name": "Retenção",
+   "team_name": "retenção",
+   "deleted": false
+  },
+  "23926908162203": {
+   "name": "RH",
+   "team_name": "rh",
+   "deleted": false
+  },
+  "23731679811995": {
+   "name": "Segurança",
+   "team_name": "segurança",
+   "deleted": false
+  },
+  "38288057169307": {
+   "name": "Solicitações Redes",
+   "team_name": "solicitações redes",
+   "deleted": false
+  },
+  "20487412043675": {
+   "name": "Suporte",
+   "team_name": "suporte",
+   "deleted": false
+  },
+  "22161815896603": {
+   "name": "Tarifas e Disponibilidade",
+   "team_name": "tarifas e disponibilidade",
+   "deleted": false
+  },
+  "21788879860123": {
+   "name": "TI - N2",
+   "team_name": "ti - n2",
+   "deleted": false
+  },
+  "23731376408347": {
+   "name": "TI - Nível 3",
+   "team_name": "ti - nível 3",
+   "deleted": false
+  },
+  "22153876528795": {
+   "name": "Treinamento",
+   "team_name": "treinamento",
+   "deleted": false
+  },
+  "41952432033819": {
+   "name": "Onboarding Checkout - N3",
+   "team_name": null,
+   "deleted": true
+  },
+  "45191723496219": {
+   "name": "Entrenamiento",
+   "team_name": null,
+   "deleted": true
+  }
+ },
+ "via_channels": {
+  "email": "E-mail",
+  "web": "Web (formulário/agente)",
+  "api": "API",
+  "native_messaging": "Mensagens",
+  "whatsapp": "WhatsApp",
+  "chat": "Chat",
+  "voice": "Telefone",
+  "sms": "SMS",
+  "mobile": "Mobile",
+  "mobile_sdk": "Mobile SDK",
+  "facebook": "Facebook",
+  "instagram_dm": "Instagram",
+  "twitter": "X/Twitter",
+  "any_channel": "Canal integrado",
+  "rule": "Gatilho/Automação",
+  "closed_ticket": "Follow-up de ticket fechado",
+  "side_conversation": "Conversa paralela",
+  "sample_ticket": "Ticket de exemplo",
+  "linked_problem": "Problema vinculado",
+  "merge": "Mesclagem",
+  "help_center": "Central de Ajuda",
+  "line": "LINE",
+  "telegram": "Telegram",
+  "wechat": "WeChat",
+  "messagebird_sms": "SMS (MessageBird)",
+  "apple_business_chat": "Apple Messages"
+ },
+ "via_rel": {
+  "follow_up": "Follow-up",
+  "inbound": "Entrada",
+  "outbound": "Saída",
+  "voicemail": "Correio de voz",
+  "direct_message": "Mensagem direta",
+  "post": "Publicação",
+  "zopim_chat_ended": "Chat encerrado"
+ },
+ "priorities": {
+  "low": "low",
+  "normal": "medium",
+  "high": "high",
+  "urgent": "urgent",
+  "null": null
+ },
+ "types": {
+  "question": "Pergunta",
+  "incident": "Incidente",
+  "problem": "Problema",
+  "task": "Tarefa",
+  "null": null
+ },
+ "custom_statuses": {
+  "20487430798747": {
+   "label": "Novo",
+   "end_user_label": "Aberto",
+   "category": "new",
+   "active": true,
+   "default": true
+  },
+  "20487400901659": {
+   "label": "Aberto",
+   "end_user_label": "Aberto",
+   "category": "open",
+   "active": true,
+   "default": true
+  },
+  "21790194164379": {
+   "label": "Em andamento",
+   "end_user_label": "Em andamento",
+   "category": "open",
+   "active": true,
+   "default": false
+  },
+  "26469791141275": {
+   "label": "Devolvido Cliente",
+   "end_user_label": "Devolvido Cliente",
+   "category": "open",
+   "active": false,
+   "default": false
+  },
+  "26915958510619": {
+   "label": "Reaberto",
+   "end_user_label": "Reaberto",
+   "category": "open",
+   "active": true,
+   "default": false
+  },
+  "20487412004251": {
+   "label": "Pendente",
+   "end_user_label": "Aguardando resposta",
+   "category": "pending",
+   "active": true,
+   "default": true
+  },
+  "51446269872667": {
+   "label": "Pendente Autenticação",
+   "end_user_label": "Pendente Autenticação",
+   "category": "pending",
+   "active": false,
+   "default": false
+  },
+  "20487430857883": {
+   "label": "Aguardando Desenvolvimento",
+   "end_user_label": "Aberto",
+   "category": "hold",
+   "active": false,
+   "default": false
+  },
+  "21790215283483": {
+   "label": "Escalonado",
+   "end_user_label": "Escalonado",
+   "category": "hold",
+   "active": false,
+   "default": false
+  },
+  "21790243451291": {
+   "label": "Desenvolvimento",
+   "end_user_label": "Desenvolvimento",
+   "category": "hold",
+   "active": true,
+   "default": true
+  },
+  "22412122152347": {
+   "label": "Retorno Integrações ",
+   "end_user_label": "Retorno Integrações ",
+   "category": "hold",
+   "active": false,
+   "default": false
+  },
+  "26904974432923": {
+   "label": "Devolvido",
+   "end_user_label": "Devolvido",
+   "category": "hold",
+   "active": true,
+   "default": false
+  },
+  "26950275108635": {
+   "label": "Desenvolvimento Concluído",
+   "end_user_label": "Desenvolvimento Concluído",
+   "category": "hold",
+   "active": true,
+   "default": false
+  },
+  "20487384870939": {
+   "label": "Resolvido",
+   "end_user_label": "Resolvido",
+   "category": "solved",
+   "active": true,
+   "default": true
+  },
+  "21802712943899": {
+   "label": "Concluído",
+   "end_user_label": "Concluído",
+   "category": "solved",
+   "active": true,
+   "default": false
+  },
+  "23819380599963": {
+   "label": "Respondido cliente",
+   "end_user_label": "Respondido cliente",
+   "category": "solved",
+   "active": true,
+   "default": false
+  },
+  "51446767948059": {
+   "label": "Autenticação Pendente",
+   "end_user_label": "Autenticação Pendente",
+   "category": "solved",
+   "active": false,
+   "default": false
+  }
+ },
+ "forms": {
+  "Atendimento": 21763507779611,
+  "Formulário TI": 21791936919835,
+  "LGPD & Segurança": 23734443027227,
+  "Onboarding Checkout": 34151302943259,
+  "Onboarding": 21538201472283,
+  "Formulário de ticket padrão": 20487411595163
+ },
+ "user_fields": [
+  {
+   "key": "utiliza_sistema_de_chamados",
+   "id": 22415833167131,
+   "title": "Utiliza Sistema de chamados",
+   "attr": "zd_utiliza_sistema_de_chamados",
+   "zendesk_type": "checkbox",
+   "type": "checkbox",
+   "options": []
+  },
+  {
+   "key": "grupo_agente_",
+   "id": 23191714659099,
+   "title": "Grupo(agente)",
+   "attr": "zd_grupo_agente",
+   "zendesk_type": "dropdown",
+   "type": "list",
+   "options": [
+    [
+     "agente_cadastro",
+     "Cadastro"
+    ],
+    [
+     "agente_checkout",
+     "Checkout"
+    ],
+    [
+     "agente_cherry",
+     "Cherry"
+    ],
+    [
+     "agente_comercial_agências",
+     "Comercial Agências"
+    ],
+    [
+     "agente_comercial_checkout",
+     "Comercial Checkout"
+    ],
+    [
+     "agente_comercia_empresas",
+     "Comercia Empresas"
+    ],
+    [
+     "agente_financeiro",
+     "Financeiro"
+    ],
+    [
+     "agente_gerencia_onboarding",
+     "Gerencia Onboarding"
+    ],
+    [
+     "agente_gerencia",
+     "Gerencia"
+    ],
+    [
+     "agente_implantação",
+     "Implantação"
+    ],
+    [
+     "agente_integrações",
+     "Integrações"
+    ],
+    [
+     "agente_novos_negócios",
+     "Novos Negócios"
+    ],
+    [
+     "agente_ongoing",
+     "Ongoing"
+    ],
+    [
+     "agente_suporte",
+     "Suporte"
+    ],
+    [
+     "agente_tarifas_e_disponibilidade",
+     "Tarifas e Disponibilidade"
+    ],
+    [
+     "agente_treinamento",
+     "Treinamento"
+    ],
+    [
+     "agente_checkout_n2",
+     "Checkout N2"
+    ],
+    [
+     "onboarding_argentina",
+     "Onboarding Argentina"
+    ]
+   ]
+  },
+  {
+   "key": "cnpj",
+   "id": 56476553082139,
+   "title": "CNPJ",
+   "attr": "zd_cnpj",
+   "zendesk_type": "text",
+   "type": "text",
+   "options": []
+  },
+  {
+   "key": "jvbti_sunco_whatsappid",
+   "id": 22676785167387,
+   "title": "Sunco ConversationID",
+   "attr": "zd_sunco_conversation_id",
+   "zendesk_type": "text",
+   "type": "text",
+   "options": []
+  }
+ ],
+ "org_fields": [
+  {
+   "key": "cnpj",
+   "id": 21135552384923,
+   "title": "CNPJ",
+   "attr": "zd_cnpj",
+   "zendesk_type": "text",
+   "type": "text",
+   "options": []
+  },
+  {
+   "key": "empresa",
+   "id": 21135633894043,
+   "title": "Empresa",
+   "attr": "zd_empresa",
+   "zendesk_type": "checkbox",
+   "type": "checkbox",
+   "options": []
+  },
+  {
+   "key": "hotel",
+   "id": 21135697616283,
+   "title": "Hotel",
+   "attr": "zd_hotel",
+   "zendesk_type": "checkbox",
+   "type": "checkbox",
+   "options": []
+  },
+  {
+   "key": "agencia_de_viagem",
+   "id": 21135682669595,
+   "title": "Agência de viagem",
+   "attr": "zd_agencia_de_viagem",
+   "zendesk_type": "checkbox",
+   "type": "checkbox",
+   "options": []
+  },
+  {
+   "key": "operadora_de_turismo",
+   "id": 21135739687067,
+   "title": "Operadora de Turismo",
+   "attr": "zd_operadora_de_turismo",
+   "zendesk_type": "checkbox",
+   "type": "checkbox",
+   "options": []
+  },
+  {
+   "key": "ota",
+   "id": 21135755740315,
+   "title": "OTA",
+   "attr": "zd_ota",
+   "zendesk_type": "checkbox",
+   "type": "checkbox",
+   "options": []
+  },
+  {
+   "key": "banco",
+   "id": 21135734622491,
+   "title": "Banco",
+   "attr": "zd_banco",
+   "zendesk_type": "checkbox",
+   "type": "checkbox",
+   "options": []
+  },
+  {
+   "key": "rede_hotel",
+   "id": 21410015578011,
+   "title": "Rede Hotel",
+   "attr": "zd_rede_hotel",
+   "zendesk_type": "text",
+   "type": "text",
+   "options": []
+  },
+  {
+   "key": "razao_social",
+   "id": 21410049450395,
+   "title": "Razão social",
+   "attr": "zd_razao_social",
+   "zendesk_type": "text",
+   "type": "text",
+   "options": []
+  },
+  {
+   "key": "checkout",
+   "id": 21410091870235,
+   "title": "Checkout",
+   "attr": "zd_checkout",
+   "zendesk_type": "dropdown",
+   "type": "list",
+   "options": [
+    [
+     "auttar",
+     "AUTTAR"
+    ],
+    [
+     "zoop",
+     "ZOOP"
+    ]
+   ]
+  },
+  {
+   "key": "classificacao_",
+   "id": 21472766318235,
+   "title": "Classificação",
+   "attr": "zd_classificacao",
+   "zendesk_type": "dropdown",
+   "type": "list",
+   "options": [
+    [
+     "classificacao_agencia_a",
+     "Agência A"
+    ],
+    [
+     "classificacao_agencia_b",
+     "Agência B"
+    ],
+    [
+     "classificacao_agencia_c",
+     "Agência C"
+    ],
+    [
+     "classificacao_agencia_d",
+     "Agência D"
+    ],
+    [
+     "classificacao_independente_a",
+     "Independente A"
+    ],
+    [
+     "classificacao_independente_b",
+     "Independente B"
+    ],
+    [
+     "classificacao_independente_c",
+     "Independente C"
+    ],
+    [
+     "classificacao_independente_d",
+     "Independente D"
+    ],
+    [
+     "classificacao_rede_a",
+     "Rede A"
+    ],
+    [
+     "classificacao_rede_b",
+     "Rede B"
+    ],
+    [
+     "classificacao_rede_c",
+     "Rede C"
+    ],
+    [
+     "classificacao_rede_d",
+     "Rede D"
+    ],
+    [
+     "classificacao_empresa_a",
+     "Empresa A"
+    ],
+    [
+     "classificacao_empresa_b",
+     "Empresa B"
+    ],
+    [
+     "classificacao_empresa_c",
+     "Empresa C"
+    ],
+    [
+     "classificacao_empresa_d",
+     "Empresa D"
+    ],
+    [
+     "classificacao_hotel_a",
+     "Hotel A"
+    ],
+    [
+     "classificacao_hotel_b",
+     "Hotel B"
+    ],
+    [
+     "classificacao_hotel_c",
+     "Hotel C"
+    ],
+    [
+     "classificacao_hotel_d",
+     "Hotel D"
+    ],
+    [
+     "classificacao_sem_produção",
+     "Sem produção"
+    ],
+    [
+     "classificacao_desativada",
+     "Desativada"
+    ]
+   ]
+  },
+  {
+   "key": "estado",
+   "id": 21536530866715,
+   "title": "Estado",
+   "attr": "zd_estado",
+   "zendesk_type": "dropdown",
+   "type": "list",
+   "options": [
+    [
+     "estado_ac",
+     "AC"
+    ],
+    [
+     "estado_al",
+     "AL"
+    ],
+    [
+     "estado_am",
+     "AM"
+    ],
+    [
+     "estado_ap",
+     "AP"
+    ],
+    [
+     "estado_ba",
+     "BA"
+    ],
+    [
+     "estado_ce",
+     "CE"
+    ],
+    [
+     "estado_df",
+     "DF"
+    ],
+    [
+     "estado_es",
+     "ES"
+    ],
+    [
+     "estado_go",
+     "GO"
+    ],
+    [
+     "estado_ma",
+     "MA"
+    ],
+    [
+     "estado_mg",
+     "MG"
+    ],
+    [
+     "estado_ms",
+     "MS"
+    ],
+    [
+     "estado_mt",
+     "MT"
+    ],
+    [
+     "estado_pa",
+     "PA"
+    ],
+    [
+     "estado_pb",
+     "PB"
+    ],
+    [
+     "estado_pe",
+     "PE"
+    ],
+    [
+     "estado_pi",
+     "PI"
+    ],
+    [
+     "estado_pr",
+     "PR"
+    ],
+    [
+     "estado_rj",
+     "RJ"
+    ],
+    [
+     "estado_rn",
+     "RN"
+    ],
+    [
+     "estado_ro",
+     "RO"
+    ],
+    [
+     "estado_rr",
+     "RR"
+    ],
+    [
+     "estado_rs",
+     "RS"
+    ],
+    [
+     "estado_sc",
+     "SC"
+    ],
+    [
+     "estado_se",
+     "SE"
+    ],
+    [
+     "estado_sp",
+     "SP"
+    ],
+    [
+     "estado_to",
+     "TO"
+    ]
+   ]
+  },
+  {
+   "key": "municipio",
+   "id": 21556123223323,
+   "title": "Município",
+   "attr": "zd_municipio",
+   "zendesk_type": "text",
+   "type": "text",
+   "options": []
+  },
+  {
+   "key": "cep",
+   "id": 21557241504411,
+   "title": "CEP",
+   "attr": "zd_cep",
+   "zendesk_type": "text",
+   "type": "text",
+   "options": []
+  },
+  {
+   "key": "utiliza_sistema_de_chamados",
+   "id": 22415749461659,
+   "title": "Utiliza Sistema de chamados",
+   "attr": "zd_utiliza_sistema_de_chamados",
+   "zendesk_type": "checkbox",
+   "type": "checkbox",
+   "options": []
+  },
+  {
+   "key": "e_mail_de_contato",
+   "id": 21281951014299,
+   "title": "E-mail de contato",
+   "attr": null,
+   "zendesk_type": "text",
+   "type": "text",
+   "options": []
+  },
+  {
+   "key": "nome_fantasia",
+   "id": 21392765972891,
+   "title": "Nome Fantasia",
+   "attr": null,
+   "zendesk_type": "text",
+   "type": "text",
+   "options": []
+  },
+  {
+   "key": "telefone",
+   "id": 21281960961179,
+   "title": "Telefone",
+   "attr": null,
+   "zendesk_type": "integer",
+   "type": "number",
+   "options": []
+  },
+  {
+   "key": "a",
+   "id": 21464947842331,
+   "title": "Independente A",
+   "attr": null,
+   "zendesk_type": "text",
+   "type": "text",
+   "options": []
+  },
+  {
+   "key": "b",
+   "id": 21465223979675,
+   "title": "Independente B",
+   "attr": null,
+   "zendesk_type": "text",
+   "type": "text",
+   "options": []
+  },
+  {
+   "key": "c",
+   "id": 21465192060699,
+   "title": "Independente C",
+   "attr": null,
+   "zendesk_type": "text",
+   "type": "text",
+   "options": []
+  },
+  {
+   "key": "d",
+   "id": 21465214670491,
+   "title": "Independente D",
+   "attr": null,
+   "zendesk_type": "text",
+   "type": "text",
+   "options": []
+  },
+  {
+   "key": "cancelamento_banco_de_dados",
+   "id": 50218259016987,
+   "title": "Cancelamento Banco de Dados",
+   "attr": null,
+   "zendesk_type": "text",
+   "type": "text",
+   "options": []
+  },
+  {
+   "key": "rede_a_",
+   "id": 21470422001819,
+   "title": "Rede A ",
+   "attr": null,
+   "zendesk_type": "text",
+   "type": "text",
+   "options": []
+  },
+  {
+   "key": "rede_b",
+   "id": 21470411167259,
+   "title": "Rede B",
+   "attr": null,
+   "zendesk_type": "text",
+   "type": "text",
+   "options": []
+  },
+  {
+   "key": "rede_c",
+   "id": 21470437872667,
+   "title": "Rede C",
+   "attr": null,
+   "zendesk_type": "text",
+   "type": "text",
+   "options": []
+  },
+  {
+   "key": "rede_d",
+   "id": 21470415186459,
+   "title": "Rede D",
+   "attr": null,
+   "zendesk_type": "text",
+   "type": "text",
+   "options": []
+  },
+  {
+   "key": "desativada",
+   "id": 21470474950171,
+   "title": "Desativada",
+   "attr": null,
+   "zendesk_type": "text",
+   "type": "text",
+   "options": []
+  },
+  {
+   "key": "sem_producao",
+   "id": 21470518724891,
+   "title": "Sem Produção",
+   "attr": null,
+   "zendesk_type": "text",
+   "type": "text",
+   "options": []
+  }
+ ]
+}
