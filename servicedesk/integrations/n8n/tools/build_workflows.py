@@ -208,8 +208,9 @@ return [{ json: out }];
 
 
 def js_dedupe(chave_expr, dias=30):
-    """Envio no máximo 1 vez por chave: guarda a chave no static data do workflow (persistido nas execuções de
-    produção). O sd-ops registra o envio em /notifications/log (auditoria), mas esse endpoint não é idempotente."""
+    """Alerta INTERNO no máximo 1 vez por chave (static data do workflow; hoje só o WF10, aviso de SLA em risco).
+    Envios ao CLIENTE (WF05/WF06/WF07) não usam isto: a garantia "1 vez por ticket" é do sd-ops
+    (POST /notifications/log idempotente por dedupe_key, 200 + Idempotent-Replay na repetição)."""
     return """
 const sd = $getWorkflowStaticData('global');
 sd.enviados = sd.enviados || {};
@@ -446,6 +447,9 @@ return [{ json: { enviar: motivo.length === 0, motivo: motivo.join(', '), ticket
 """
 
 
+KEY_WA = ("'%s:' + $('politica_envio').first().json.ticket_id + ($('config').first().json.dry_run ? ':simulado' : '')")
+
+
 def _whatsapp_wf(code, title, desc, path, kind, filtro_extra, espera_min, template_padrao):
     w = WF(code, title, desc)
     a = w.sd_webhook(path, (0, 0))
@@ -486,18 +490,20 @@ return ['resolvido', 'encerrado'].includes(t.status) ? [{ json: t }] : [];
     nao = w.noop("nao_envia_registra_motivo", (x + 220, 180))
     w.link(i, nao, 1)
     x += 220
-    dd = w.code("ja_enviado", js_dedupe("'%s:' + it.json.ticket_id" % kind, 30), (x, -40))
-    w.link(i, dd, 0)
-    x += 220
+    # reserva no sd-ops ANTES do envio: dedupe_key única por ticket (idempotente e permanente no sd-ops; a 2ª vez
+    # volta 200 + Idempotent-Replay e o envio não acontece). dry_run usa outra chave (":simulado") para não
+    # bloquear o envio real depois que o dry_run for desligado.
+    chave = KEY_WA % kind
     log = w.sdops("registra_envio", "POST", "/notifications/log",
                   "={{ JSON.stringify({ channel: 'whatsapp', ticket_id: $('politica_envio').first().json.ticket_id, "
+                  "dedupe_key: %s, "
                   "template: $('config').first().json.template_nome, status: $('config').first().json.dry_run ? 'simulado' : 'enviando', "
-                  "detail: { tipo: '%s', workflow: '%s' } }) }}" % (kind, code),
+                  "detail: { tipo: '%s', workflow: '%s' } }) }}" % (chave, kind, code),
                   (x, -40), never_error=True)
     for hp in w.nodes[-1]["parameters"]["headerParameters"]["parameters"]:
         if hp["name"] == "Idempotency-Key":
-            hp["value"] = "=%s:{{ $('politica_envio').first().json.ticket_id }}" % kind
-    w.link(dd, log)
+            hp["value"] = "={{ %s }}" % chave
+    w.link(i, log, 0)
     x += 220
     dup = w.if_true("primeiro_envio", "={{ $json.statusCode < 300 && String(($json.headers || {})['idempotent-replay']) !== 'true' "
                     "&& !$('config').first().json.dry_run }}", (x, -40))
@@ -569,14 +575,15 @@ const rota = (String(t.channel) === 'email' && convPrimaria) ? 'mesma_thread' : 
 return [{ json: { rota, ticket_id: t.id, protocolo: t.protocol, contact_id: ct.id, email: ct.email,
   conversation_id: convPrimaria, texto: cfg.texto.replace('{protocolo}', t.protocol) } }];
 """, (1100, 0))
-    dd = w.code("ja_enviado", js_dedupe("'email_protocolo:' + it.json.ticket_id", 30), (1320, 0))
+    # 1 e-mail por ticket garantido pelo sd-ops (dedupe_key em /notifications/log), sem static data no n8n
+    chave = "'email_protocolo:' + $('decide').first().json.ticket_id + ($('config').first().json.dry_run ? ':simulado' : '')"
     log = w.sdops("registra_envio", "POST", "/notifications/log",
-                  "={{ JSON.stringify({ channel: 'email', ticket_id: $json.ticket_id, template: 'protocolo', "
-                  "status: $('config').first().json.dry_run ? 'simulado' : 'enviando', detail: { tipo: 'email_protocolo', workflow: 'WF06' } }) }}",
+                  "={{ JSON.stringify({ channel: 'email', ticket_id: $json.ticket_id, dedupe_key: %s, template: 'protocolo', "
+                  "status: $('config').first().json.dry_run ? 'simulado' : 'enviando', detail: { tipo: 'email_protocolo', workflow: 'WF06' } }) }}" % chave,
                   (1540, 0), never_error=True)
     for hp in w.nodes[-1]["parameters"]["headerParameters"]["parameters"]:
         if hp["name"] == "Idempotency-Key":
-            hp["value"] = "=email_protocolo:{{ $('decide').first().json.ticket_id }}"
+            hp["value"] = "={{ %s }}" % chave
     ok = w.if_true("primeiro_envio", "={{ $json.statusCode < 300 && String(($json.headers || {})['idempotent-replay']) !== 'true' "
                    "&& !$('config').first().json.dry_run }}", (1760, 0))
     seco = w.noop("dry_run_ou_duplicado", (1980, 180))
@@ -597,7 +604,7 @@ return [{ json: { rota, ticket_id: t.id, protocolo: t.protocol, contact_id: ct.i
                    "content_attributes: { sd_origin: 'n8n:WF06' } }) }}", (2640, 40))
     lk = w.sdops("vincula_conversa", "POST", "/tickets/{{ $('decide').first().json.ticket_id }}/links",
                  "={{ JSON.stringify({ conversation_id: $('conversa_email').first().json.id }) }}", (2860, 40))
-    w.chain(a, v, c, g, ct, d, dd, log, ok)
+    w.chain(a, v, c, g, ct, d, log, ok)
     w.link(ok, s, 0)
     w.link(ok, seco, 1)
     w.link(s, r1, 0)

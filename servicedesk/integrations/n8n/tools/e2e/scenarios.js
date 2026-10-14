@@ -79,19 +79,21 @@ const find = (log, m, re) => log.find(c => c.m === m && re.test(c.p));
       return has(log, 'POST', /\/conversations\/99\/messages$/) || 'sem nota';
     });
 
-  await scenario('WF05 WhatsApp: opt-in -> reserva idempotente, contact_inbox, conversa, template, vínculo',
+  await scenario('WF05 WhatsApp: opt-in -> reserva idempotente no sd-ops, contact_inbox, conversa, template, vínculo',
     () => post('sd/wf05-whatsapp-pos-atendimento', env('ticket.status_changed', { ticket_id: 't1', from: 'em_atendimento', to: 'resolvido' })),
     log => {
       const lg = find(log, 'POST', /\/notifications\/log$/);
       const msg = find(log, 'POST', /\/conversations\/321\/messages$/);
       if (!lg || lg.h.idem !== 'whatsapp_pos_atendimento:t1') return 'Idempotency-Key fixa ausente: ' + (lg && lg.h.idem);
+      if (lg.body.dedupe_key !== 'whatsapp_pos_atendimento:t1') return 'dedupe_key ausente: ' + lg.body.dedupe_key;
       if (!msg || !msg.body.template_params || msg.body.template_params.processed_params['2'] !== 'B2B-2026-000123') return 'template ausente';
       return has(log, 'POST', /\/sd-ops\/api\/v1\/tickets\/t1\/links$/) || 'sem vínculo';
     }, 6000);
 
-  await scenario('WF05 repetido: bloqueado pelo static data, nada é enviado de novo',
+  await scenario('WF05 repetido: o sd-ops responde Idempotent-Replay e nada é enviado de novo (sem static data)',
     () => post('sd/wf05-whatsapp-pos-atendimento', env('ticket.status_changed', { ticket_id: 't1', to: 'resolvido' })),
-    log => (!has(log, 'POST', /\/notifications\/log$/) && !has(log, 'POST', /\/messages$/)) || 'reenviou', 6000);
+    log => (has(log, 'POST', /\/notifications\/log$/) && !has(log, 'POST', /\/messages$/) &&
+            !has(log, 'POST', /\/contact_inboxes$/)) || 'reenviou ou não consultou o sd-ops', 6000);
 
   await scenario('WF06 e-mail de protocolo (origem telefone): nova conversa de e-mail e vínculo',
     () => post('sd/wf06-email-protocolo', env('ticket.created', { ticket_id: 't1', protocol: 'B2B-2026-000123' })),

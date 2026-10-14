@@ -3,6 +3,7 @@
 const http = require('http');
 
 let log = [];
+const notif = new Map();   // dedupe_key -> registro (como ops.notification_logs, unique por tenant+chave)
 // Formas iguais às do sd-ops (views.ticket_view / views.call_view, branch feat/integracao-55pbx 2201722d35)
 const T = {
   id: 't1', protocol: 'B2B-2026-000123', protocol_numeric: '20260001237', status: 'resolvido', contact_id: 5,
@@ -23,7 +24,15 @@ function route(m, p, h, body) {
     if (m === 'GET' && r.startsWith('/calls/')) return [200, CALL];
     if (m === 'GET' && r === '/sla/at-risk') return [200, { items: [{ ticket_id: 't1', protocol: T.protocol, metric: 'first_response', due_at: '2026-10-14T12:00:00Z', breached: false }] }];
     if (m === 'GET' && (r === '/reports/summary' || r.startsWith('/metrics/'))) return [200, { recebidas: 70, atendidas: 60, tma_s: 163 }];
-    if (m === 'POST' && r === '/notifications/log') return [201, { ok: true }];   // não é idempotente no sd-ops
+    if (m === 'POST' && r === '/notifications/log') {
+      // igual ao sd-ops: 1ª vez 201; repetição 200 + Idempotent-Replay (o mesmo registro); sem chave 422
+      const key = body.dedupe_key || h['idempotency-key'];
+      if (!key) return [422, { error: 'dedupe_key_required', message: 'informe dedupe_key' }];
+      if (notif.has(key)) return [200, { ...notif.get(key), ok: true, duplicate: true }, { 'Idempotent-Replay': 'true' }];
+      const rec = { id: notif.size + 1, dedupe_key: key, status: body.status };
+      notif.set(key, rec);
+      return [201, { ok: true, duplicate: false, id: rec.id, dedupe_key: key }];
+    }
     if (m === 'POST' && r === '/reconciliations') return [202, { skipped: 'PBX_API_KEY não configurada' }];
     if (m === 'POST' && /\/tickets\/[^/]+\/reopen$/.test(r)) return [200, { ...T, status: 'em_atendimento', followup_created: false }];
     if (m === 'POST') return [200, { ok: true, id: 'x1' }];
@@ -53,7 +62,7 @@ http.createServer((req, res) => {
   req.on('end', () => {
     const p = req.url.split('?')[0];
     if (p === '/__log') { res.writeHead(200, { 'content-type': 'application/json' }); return res.end(JSON.stringify(log)); }
-    if (p === '/__reset') { log = []; res.writeHead(204); return res.end(); }
+    if (p === '/__reset') { log = []; res.writeHead(204); return res.end(); }   // o registro de envios persiste (como no sd-ops)
     let body = {};
     try { body = raw ? JSON.parse(raw) : {}; } catch (e) { body = { _raw: raw }; }
     const h = req.headers;
@@ -62,8 +71,8 @@ http.createServer((req, res) => {
       h: { origin: h['x-sd-origin'], wf: h['x-sd-workflow'], idem: h['idempotency-key'],
         auth: h.authorization ? 'bearer' : (h.api_access_token ? 'api_access_token' : 'nenhuma') },
     });
-    const [code, out] = route(req.method, p, h, body);
-    res.writeHead(code, { 'content-type': 'application/json' });
+    const [code, out, extra] = route(req.method, p, h, body);
+    res.writeHead(code, { 'content-type': 'application/json', ...(extra || {}) });
     res.end(JSON.stringify(out));
   });
 }).listen(8080, () => console.log('mock ouvindo em 8080'));

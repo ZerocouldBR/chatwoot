@@ -30,7 +30,7 @@ Mapeamento para o prompt mestre §9: WF01 "55PBX → validação → contato →
 
    | Placeholder | Nome sugerido | Header | Valor |
    |---|---|---|---|
-   | `REPLACE_CRED_SDOPS_SERVICE_TOKEN` | SD-OPS: token de serviço do n8n | `Authorization` | `Bearer sdsvc_…` (gerado no sd-ops: `python -m sd_ops new-service-token n8n`; escopos `tickets:read`, `tickets:write`, `calls:read`, `notify:send`, `reconcile:run`, `reports:read`) |
+   | `REPLACE_CRED_SDOPS_SERVICE_TOKEN` | SD-OPS: token de serviço do n8n | `Authorization` | `Bearer sdsvc_…` (gerado no sd-ops com o **perfil n8n**: `python -m sd_ops new-service-token n8n --tenants b2b` → escopos `tickets:read`, `tickets:write`, `calls:read`, `notify:send`, `reconcile:run`, `reports:read`; `CTI_AUTH.md` §3) |
    | `REPLACE_CRED_CHATWOOT_N8N` | ServiceDesk: api_access_token da Integração n8n | `api_access_token` | token do usuário "Integração n8n" (papel **agente**) |
    | `REPLACE_CRED_SDOPS_WEBHOOK_TOKEN` | SD-OPS → n8n: X-SD-Webhook-Token | `X-SD-Webhook-Token` | mesmo valor do `token_ref` da rota em `ops.automation_routes` |
 
@@ -39,7 +39,7 @@ Mapeamento para o prompt mestre §9: WF01 "55PBX → validação → contato →
 4. WF08: trocar `REPLACE_SEGREDO_LONGO` no path por um valor aleatório (`openssl rand -hex 24`) e cadastrar a URL no webhook da conta do Chatwoot (evento `message_created`).
 5. Settings de cada workflow: *Error workflow* = "SD WF00 - Erros dos workflows".
 6. Publicar (ativar) primeiro WF00, WF01–WF04, WF08–WF12; WF05–WF07 só depois da aprovação, trocando `dry_run` para `false`.
-7. No sd-ops, cadastrar as rotas (`/admin/automation-routes`) com a URL de produção de cada webhook.
+7. No sd-ops, cadastrar as rotas (`/admin/automation-routes`) com a URL de produção de cada webhook. Para o WF11: `{"name":"WF11","event_types":["qa.completed"],"url":"https://<n8n>/webhook/sd/wf11-qa-critico","token_ref":…,"secret_ref":…}` (o sd-ops repassa o `qa.completed` que o qa-pipeline entrega em `POST /analysis-results`). O `name` da rota deve ser o código do workflow (`WF01`…): é ele que o anti-loop compara com o `X-SD-Workflow`.
 
 ## 3. Regras embutidas
 
@@ -47,7 +47,7 @@ Mapeamento para o prompt mestre §9: WF01 "55PBX → validação → contato →
 |---|---|
 | Sem segredo no JSON | credenciais por referência; URLs base no nó `config`; o validador recusa valor que pareça token |
 | Anti-loop | (1) webhook recusa origem diferente de `X-SD-Origin: sd-ops`; (2) evento com `caused_by = n8n:<mesmo WF>` é ignorado; (3) toda chamada ao sd-ops leva `X-SD-Origin: n8n` + `X-SD-Workflow`, e o sd-ops marca `caused_by`; (4) toda mensagem criada no Chatwoot leva `content_attributes.sd_origin` e o WF08 ignora mensagens com essa marca ou de agente |
-| Idempotência | `Idempotency-Key` em toda chamada ao sd-ops (`<execução>:<nó>:<item>`). Envios ao cliente e alertas de SLA: **no máximo 1 vez por chave** (`whatsapp_pos_atendimento:<ticket>`, `csat:<ticket>`, `email_protocolo:<ticket>`, `sla:<ticket>:<métrica>:<prazo>`), guardada no *static data* do workflow (30 dias; 7 no SLA) **antes** do envio; o registro de auditoria vai para `POST /notifications/log` |
+| Idempotência | `Idempotency-Key` em toda chamada ao sd-ops (`<execução>:<nó>:<item>`). Envios ao cliente: **no máximo 1 vez por chave** (`whatsapp_pos_atendimento:<ticket>`, `csat:<ticket>`, `email_protocolo:<ticket>`; `:simulado` no fim em `dry_run`), garantido pelo **sd-ops**: o workflow registra em `POST /notifications/log` com `dedupe_key` **antes** do envio e só envia se a resposta for 201 (repetição = 200 + `Idempotent-Replay: true`, `WEBHOOK_CONTRACTS.md` §8.4.1). Nenhum estado no n8n: reimportar o workflow ou perder o *static data* não reenvia nada. Só o aviso **interno** de SLA em risco (WF10, `sla:<ticket>:<métrica>:<prazo>`) ainda usa *static data* (7 dias; no pior caso repete uma nota interna) |
 | Replay | eventos com `X-SD-Timestamp` a mais de 15 min são ignorados |
 | Etiquetas | `POST /labels` do Chatwoot sobrescreve: o WF03 lê as atuais e grava a união |
 | Atributos | qualquer `custom_attributes` no Chatwoot exige `merge: true` (sem ele o hash inteiro é substituído) — conferido pelo validador |
@@ -75,17 +75,17 @@ Conferido em 2026-10-13 contra o **código e o OpenAPI do sd-ops** (branch `feat
 | `GET /tickets/{ref}` | `ref` aceita UUID, protocolo (`B2B-2026-000123`) ou numérico; campos `status` (não `state`), `channel` (`phone`, `email`…), `conversations` = lista de IDs (a 1ª é a primária), `contact_id` |
 | `POST /tickets/{ref}/reopen` | corpo `TransitionIn` exige `to` → `{"to":"em_atendimento","reason":…}`; para `encerrado`/`cancelado` o próprio sd-ops cria o ticket de continuação (o WF08 não chama mais `POST /tickets`) |
 | `POST /tickets/{ref}/notes` | `{"kind":"nota_interna","body":…,"post_to_chatwoot":false}` (`kind` ∈ `registro`, `disposicao`, `nota_interna`) |
-| `POST /notifications/log` | `NotificationLogIn` = `channel` (obrigatório), `ticket_id`, `template`, `status`, `detail`; responde `201 {"ok":true}` e **não é idempotente** → a regra "1 envio por ticket" ficou no n8n (*static data* do workflow, nó `ja_enviado`), e o nó também respeita o header `Idempotent-Replay: true` caso o sd-ops passe a aplicar `Idempotency-Key` nessa rota |
+| `POST /notifications/log` | `NotificationLogIn` = `channel` (obrigatório), `ticket_id`, `template`, `status`, `detail`, `dedupe_key`. **Integração final:** idempotente e permanente por (`tenant`, `dedupe_key`) → 1ª vez `201`, repetição `200` + `Idempotent-Replay: true`. O nó `ja_enviado` (*static data*) foi **removido** do WF05/WF06/WF07; o `primeiro_envio` decide pela resposta do sd-ops |
 | `GET /sla/at-risk` | resposta `{"items":[{ticket_id, protocol, metric, due_at, breached,…}]}` sem conversa → o WF10 busca o ticket para achar `conversations[0]`; alerta 1 vez por ticket/métrica/prazo (*static data*) |
 | `POST /reconciliations` | `202 {rows, new}`, `202 {skipped}` (sem `PBX_API_KEY`) ou `502 {error}` → o WF09 alerta em erro, em "não executada" e quando `new` (ligações que o tempo real não entregou) passa de `alerta_novas_acima` |
 | `GET /calls/{id}` | `conversation_id`, `tickets[]`, `recordings[].status` (`stored`/`failed`) |
-| Escopos do token de serviço | `tickets:read`, `tickets:write`, `calls:read`, `notify:send`, `reconcile:run`, `reports:read`. **Atenção:** `CTI_AUTH.md` traz o exemplo `"n8n": {"roles": ["service_read"]}`; com só leitura o WF08/WF09/WF11 recebem 403 |
+| Escopos do token de serviço | perfil `n8n` do `new-service-token` (`tickets:read`, `tickets:write`, `calls:read`, `notify:send`, `reconcile:run`, `reports:read`); `CTI_AUTH.md` §3 atualizado. O pytest do sd-ops chama cada rota de `sdops_endpoints_used.json` com esse perfil e confere que nenhuma dá 401/403 |
 
 Pendências que dependem de outros agentes:
 
 | Item | Situação |
 |---|---|
-| `qa.completed` chegando ao WF11 | publicado pelo qa-pipeline (A3); o sd-ops não o roteia para o n8n (§8.2 do contrato). Definir quem entrega (rota do sd-ops ou dispatcher do A3) |
+| `qa.completed` chegando ao WF11 | **Resolvido na integração final:** o sd-ops repassa ao n8n (mesma ponte HMAC/outbox, anti-loop por `caused_by`) o resultado `kind=qa` recebido em `POST /analysis-results`; payload com `evaluation_id`, `score`, `alerts`, `ticket_id`, `conversation_id`, `console_url` (`WEBHOOK_CONTRACTS.md` §8.3) |
 | Tarefa formal de revisão de QA | não existe endpoint; o WF11 usa nota no ticket + supervisor como participante |
 | Prioridade | o WF03/WF04 mudam a prioridade **da conversa** no Chatwoot (`urgent/high/…`); a prioridade do ticket no sd-ops (`baixa/normal/alta/urgente`) é do sd-ops (`/escalate`, classificação de perdida). Se o sd-ops passar a sincronizar a prioridade, retirar esses nós |
 

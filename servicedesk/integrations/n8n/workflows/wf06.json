@@ -197,19 +197,6 @@
     },
     {
       "parameters": {
-        "jsCode": "const sd = $getWorkflowStaticData('global');\nsd.enviados = sd.enviados || {};\nconst agora = Date.now();\nfor (const [k, t] of Object.entries(sd.enviados)) if (agora - t > 30 * 86400000) delete sd.enviados[k];\nconst out = [];\nfor (const it of $input.all()) {\n  const chave = 'email_protocolo:' + it.json.ticket_id;\n  if (sd.enviados[chave]) continue;          // já enviado/alertado: não repete\n  sd.enviados[chave] = agora;                // reserva antes do envio (no máximo uma vez)\n  out.push({ json: { ...it.json, chave } });\n}\nreturn out;\n"
-      },
-      "id": "60a9c0cb-477d-50b1-9180-005be853bc37",
-      "name": "ja_enviado",
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        1320,
-        0
-      ]
-    },
-    {
-      "parameters": {
         "method": "POST",
         "url": "={{ $('config').first().json.sdops_base_url }}/notifications/log",
         "authentication": "genericCredentialType",
@@ -227,7 +214,7 @@
             },
             {
               "name": "Idempotency-Key",
-              "value": "=email_protocolo:{{ $('decide').first().json.ticket_id }}"
+              "value": "={{ 'email_protocolo:' + $('decide').first().json.ticket_id + ($('config').first().json.dry_run ? ':simulado' : '') }}"
             }
           ]
         },
@@ -242,7 +229,7 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={{ JSON.stringify({ channel: 'email', ticket_id: $json.ticket_id, template: 'protocolo', status: $('config').first().json.dry_run ? 'simulado' : 'enviando', detail: { tipo: 'email_protocolo', workflow: 'WF06' } }) }}"
+        "jsonBody": "={{ JSON.stringify({ channel: 'email', ticket_id: $json.ticket_id, dedupe_key: 'email_protocolo:' + $('decide').first().json.ticket_id + ($('config').first().json.dry_run ? ':simulado' : ''), template: 'protocolo', status: $('config').first().json.dry_run ? 'simulado' : 'enviando', detail: { tipo: 'email_protocolo', workflow: 'WF06' } }) }}"
       },
       "id": "fc26c964-552f-57a1-9b72-cad33850e3e7",
       "name": "registra_envio",
@@ -638,17 +625,6 @@
       ]
     },
     "decide": {
-      "main": [
-        [
-          {
-            "node": "ja_enviado",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "ja_enviado": {
       "main": [
         [
           {

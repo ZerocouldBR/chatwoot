@@ -291,19 +291,6 @@
     },
     {
       "parameters": {
-        "jsCode": "const sd = $getWorkflowStaticData('global');\nsd.enviados = sd.enviados || {};\nconst agora = Date.now();\nfor (const [k, t] of Object.entries(sd.enviados)) if (agora - t > 30 * 86400000) delete sd.enviados[k];\nconst out = [];\nfor (const it of $input.all()) {\n  const chave = 'whatsapp_pos_atendimento:' + it.json.ticket_id;\n  if (sd.enviados[chave]) continue;          // já enviado/alertado: não repete\n  sd.enviados[chave] = agora;                // reserva antes do envio (no máximo uma vez)\n  out.push({ json: { ...it.json, chave } });\n}\nreturn out;\n"
-      },
-      "id": "7d16bc23-3c7e-59f3-baa5-7dff80076c30",
-      "name": "ja_enviado",
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        1760,
-        -40
-      ]
-    },
-    {
-      "parameters": {
         "method": "POST",
         "url": "={{ $('config').first().json.sdops_base_url }}/notifications/log",
         "authentication": "genericCredentialType",
@@ -321,7 +308,7 @@
             },
             {
               "name": "Idempotency-Key",
-              "value": "=whatsapp_pos_atendimento:{{ $('politica_envio').first().json.ticket_id }}"
+              "value": "={{ 'whatsapp_pos_atendimento:' + $('politica_envio').first().json.ticket_id + ($('config').first().json.dry_run ? ':simulado' : '') }}"
             }
           ]
         },
@@ -336,14 +323,14 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={{ JSON.stringify({ channel: 'whatsapp', ticket_id: $('politica_envio').first().json.ticket_id, template: $('config').first().json.template_nome, status: $('config').first().json.dry_run ? 'simulado' : 'enviando', detail: { tipo: 'whatsapp_pos_atendimento', workflow: 'WF05' } }) }}"
+        "jsonBody": "={{ JSON.stringify({ channel: 'whatsapp', ticket_id: $('politica_envio').first().json.ticket_id, dedupe_key: 'whatsapp_pos_atendimento:' + $('politica_envio').first().json.ticket_id + ($('config').first().json.dry_run ? ':simulado' : ''), template: $('config').first().json.template_nome, status: $('config').first().json.dry_run ? 'simulado' : 'enviando', detail: { tipo: 'whatsapp_pos_atendimento', workflow: 'WF05' } }) }}"
       },
       "id": "5c388e22-85a2-59e9-85bb-b4698d8fcc27",
       "name": "registra_envio",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        1980,
+        1760,
         -40
       ],
       "credentials": {
@@ -386,7 +373,7 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        2200,
+        1980,
         -40
       ]
     },
@@ -397,7 +384,7 @@
       "type": "n8n-nodes-base.noOp",
       "typeVersion": 1,
       "position": [
-        2420,
+        2200,
         120
       ]
     },
@@ -428,7 +415,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        2420,
+        2200,
         -60
       ],
       "credentials": {
@@ -468,7 +455,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        2640,
+        2420,
         -60
       ],
       "credentials": {
@@ -508,7 +495,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        2860,
+        2640,
         -60
       ],
       "credentials": {
@@ -556,7 +543,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        3080,
+        2860,
         -60
       ],
       "credentials": {
@@ -630,7 +617,7 @@
       "main": [
         [
           {
-            "node": "ja_enviado",
+            "node": "registra_envio",
             "type": "main",
             "index": 0
           }
@@ -638,17 +625,6 @@
         [
           {
             "node": "nao_envia_registra_motivo",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "ja_enviado": {
-      "main": [
-        [
-          {
-            "node": "registra_envio",
             "type": "main",
             "index": 0
           }

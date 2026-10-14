@@ -13,7 +13,8 @@ Verifica, por arquivo:
   5. segurança: credenciais só por placeholder REPLACE_*, nenhum valor que pareça segredo, webhook do sd-ops
      com headerAuth, path de webhook único entre arquivos;
   6. contrato: chamadas ao sd-ops com X-SD-Origin, X-SD-Workflow e Idempotency-Key; escritas no Chatwoot com
-     sd_origin (mensagens); POST custom_attributes com merge=true;
+     sd_origin (mensagens); POST custom_attributes com merge=true; POST /notifications/log com dedupe_key
+     (idempotência do sd-ops) e envio ao cliente sem static data (getWorkflowStaticData) no n8n;
   7. --node-check: compila o JavaScript de cada nó Code com `node --check` (se o Node.js existir);
   8. --openapi: confere os caminhos do sd-ops usados com o OpenAPI do A2 (relatório, não falha).
 """
@@ -146,6 +147,8 @@ def validate_file(path, rep, paths_seen, sdops_used):
                     if h not in hdrs:
                         rep.err(f, "chamada ao sd-ops sem header %s (%s)" % (h, name))
                 path_ = re.sub(r"\{\{[^}]*\}\}", "{x}", url.split("sdops_base_url }}", 1)[-1])
+                if method == "POST" and path_.endswith("/notifications/log") and "dedupe_key" not in p.get("jsonBody", ""):
+                    rep.err(f, "POST /notifications/log sem dedupe_key (o sd-ops garante 1 envio por chave) (%s)" % name)
                 sdops_used.add("%s %s" % (method, path_))
             if "chatwoot_base_url" in url and method == "POST":
                 body = p.get("jsonBody", "")

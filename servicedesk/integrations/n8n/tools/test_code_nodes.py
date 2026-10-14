@@ -171,10 +171,6 @@ def main():
          [{"ticket_id": "a", "metric": "m", "due_at": "1"}, {"ticket_id": "b", "metric": "m", "due_at": "1"}], {},
          lambda r: r["ok"] and [x["ticket_id"] for x in r["out"]] == ["b"],
          static={"enviados": {"sla:a:m:1": int(time.time() * 1000)}})
-    case("WhatsApp: segundo envio do mesmo ticket é bloqueado", "wf05", "ja_enviado",
-         [{"ticket_id": "t1"}], {}, none, static={"enviados": {"whatsapp_pos_atendimento:t1": int(time.time() * 1000)}})
-    case("WhatsApp: primeiro envio passa e reserva a chave", "wf05", "ja_enviado",
-         [{"ticket_id": "t9"}], {}, lambda r: one(r) and "whatsapp_pos_atendimento:t9" in r["static"]["enviados"])
     case("SLA: junta a conversa primária do ticket", "wf10", "com_conversa",
          [{"conversations": [99, 100]}, {"conversations": []}],
          {"so_novos": [{"ticket_id": "a"}, {"ticket_id": "b"}]},
