@@ -1,0 +1,760 @@
+{
+  "name": "SD WF06 - E-mail de protocolo na abertura",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "sd/wf06-email-protocolo",
+        "authentication": "headerAuth",
+        "options": {}
+      },
+      "id": "82261b13-5a1d-5e17-9b5b-49ffb3ac76a5",
+      "name": "webhook_sd_ops",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        0
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "REPLACE_CRED_SDOPS_WEBHOOK_TOKEN",
+          "name": "SD-OPS -> n8n: X-SD-Webhook-Token"
+        }
+      },
+      "webhookId": "e4d1c7ab-b796-5dc4-8873-d82ce4d557d4"
+    },
+    {
+      "parameters": {
+        "jsCode": "// WF06: valida o envelope do sd-ops (WEBHOOK_CONTRACTS.md §8.2/§8.3) e aplica o anti-loop.\n// O token do header X-SD-Webhook-Token já foi conferido pelo nó Webhook (credencial Header Auth).\nconst WF = 'WF06';\nconst ACEITOS = [\"ticket.created\"];\nconst entrada = $input.first().json;\nconst h = entrada.headers || {};\nconst ev = entrada.body || {};\nif ((h['x-sd-origin'] || '') !== 'sd-ops') {\n  throw new Error('Origem inesperada no header X-SD-Origin: ' + (h['x-sd-origin'] || '(vazio)'));\n}\nif (!ev.id || !ev.type) throw new Error('Envelope sem id/type');\nif (!ACEITOS.includes(ev.type)) return [];           // outro tipo: ignora sem erro\nconst ts = parseInt(h['x-sd-timestamp'] || '0', 10);\nif (ts && Math.abs(Date.now() / 1000 - ts) > 900) return [];  // fora da janela (reenvio antigo)\nif (String(ev.caused_by || '').startsWith('n8n:' + WF)) return [];  // causado por este workflow\nconst p = ev.payload || {};\nconst s = ev.subject || {};\nconst out = {\n  event_id: ev.id, type: ev.type, tenant_id: ev.tenant_id, correlation_id: ev.correlation_id || null,\n  payload: p,\n  call_id: p.call_id || s.call_id || null,\n  ticket_id: p.ticket_id || s.ticket_id || null,\n  conversation_id: p.conversation_id || s.conversation_id || null,\n};\n\nreturn [{ json: out }];\n"
+      },
+      "id": "9aca2971-9e1a-5514-b54c-5ed8912c2c8d",
+      "name": "valida_evento",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "341f0630-110d-5e61-beb9-115e7a974e7d",
+              "name": "sdops_base_url",
+              "type": "string",
+              "value": "https://SERVICEDESK.EXEMPLO/sd-ops/api/v1"
+            },
+            {
+              "id": "7350ded5-2efd-5e50-b255-4e95bcc47bc6",
+              "name": "chatwoot_base_url",
+              "type": "string",
+              "value": "https://SERVICEDESK.EXEMPLO"
+            },
+            {
+              "id": "829cb159-b099-5099-bdd9-a4c72a482c20",
+              "name": "chatwoot_account_id",
+              "type": "number",
+              "value": 1
+            },
+            {
+              "id": "2de6fa3a-eace-520f-8819-68aa82380fee",
+              "name": "ops_alert_conversation_id",
+              "type": "number",
+              "value": 0
+            },
+            {
+              "id": "0ae45ec3-f9dd-5e63-a410-77a99ed1d352",
+              "name": "console_base_url",
+              "type": "string",
+              "value": "https://SERVICEDESK.EXEMPLO/sd-console"
+            },
+            {
+              "id": "a49707c8-23bd-5755-81a4-31807a6a7e67",
+              "name": "dry_run",
+              "type": "boolean",
+              "value": true
+            },
+            {
+              "id": "ebb9aad7-6b8d-50eb-ac97-d03c426cd0a0",
+              "name": "email_inbox_id",
+              "type": "number",
+              "value": 0
+            },
+            {
+              "id": "61943389-754e-5e16-8987-ac4f0cb73443",
+              "name": "texto",
+              "type": "string",
+              "value": "Recebemos sua solicitação. Seu protocolo é {protocolo}. Responda este e-mail para complementar o atendimento."
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "aa362e17-6a24-5ead-a67f-a1c90937f563",
+      "name": "config",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        440,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "url": "={{ $('config').first().json.sdops_base_url }}/tickets/{{ $('valida_evento').first().json.ticket_id }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-SD-Origin",
+              "value": "n8n"
+            },
+            {
+              "name": "X-SD-Workflow",
+              "value": "WF06"
+            },
+            {
+              "name": "Idempotency-Key",
+              "value": "={{ $execution.id }}:consulta_ticket:{{ $itemIndex }}"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 15000
+        }
+      },
+      "id": "aacb1def-ff9c-56d3-a503-3ab0da0cb397",
+      "name": "consulta_ticket",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        660,
+        0
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "REPLACE_CRED_SDOPS_SERVICE_TOKEN",
+          "name": "SD-OPS: token de serviço do n8n (Authorization: Bearer)"
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 2000
+    },
+    {
+      "parameters": {
+        "url": "={{ $('config').first().json.chatwoot_base_url }}/api/v1/accounts/{{ $('config').first().json.chatwoot_account_id }}/contacts/{{ $('consulta_ticket').first().json.contact_id }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-SD-Origin",
+              "value": "n8n"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 15000
+        }
+      },
+      "id": "d5e73832-039a-575c-8567-ba72ee408f9f",
+      "name": "consulta_contato",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        880,
+        0
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "REPLACE_CRED_CHATWOOT_N8N",
+          "name": "ServiceDesk/Chatwoot: api_access_token da Integração n8n"
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 2000
+    },
+    {
+      "parameters": {
+        "jsCode": "const cfg = $('config').first().json;\nconst t = $('consulta_ticket').first().json;\nconst ct = $('consulta_contato').first().json.payload || $('consulta_contato').first().json;\nif (!ct.email) return [];                       // sem e-mail: nada a fazer\nconst convPrimaria = (t.conversations || [])[0] || null;     // sd-ops: conversations = [ids], a 1ª é a primária\nconst rota = (String(t.channel) === 'email' && convPrimaria) ? 'mesma_thread' : 'nova_conversa';\nreturn [{ json: { rota, ticket_id: t.id, protocolo: t.protocol, contact_id: ct.id, email: ct.email,\n  conversation_id: convPrimaria, texto: cfg.texto.replace('{protocolo}', t.protocol) } }];\n"
+      },
+      "id": "714263f1-206e-5e8a-ae37-8b367fb891a9",
+      "name": "decide",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1100,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const sd = $getWorkflowStaticData('global');\nsd.enviados = sd.enviados || {};\nconst agora = Date.now();\nfor (const [k, t] of Object.entries(sd.enviados)) if (agora - t > 30 * 86400000) delete sd.enviados[k];\nconst out = [];\nfor (const it of $input.all()) {\n  const chave = 'email_protocolo:' + it.json.ticket_id;\n  if (sd.enviados[chave]) continue;          // já enviado/alertado: não repete\n  sd.enviados[chave] = agora;                // reserva antes do envio (no máximo uma vez)\n  out.push({ json: { ...it.json, chave } });\n}\nreturn out;\n"
+      },
+      "id": "60a9c0cb-477d-50b1-9180-005be853bc37",
+      "name": "ja_enviado",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1320,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $('config').first().json.sdops_base_url }}/notifications/log",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-SD-Origin",
+              "value": "n8n"
+            },
+            {
+              "name": "X-SD-Workflow",
+              "value": "WF06"
+            },
+            {
+              "name": "Idempotency-Key",
+              "value": "=email_protocolo:{{ $('decide').first().json.ticket_id }}"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 15000,
+          "response": {
+            "response": {
+              "neverError": true,
+              "fullResponse": true
+            }
+          }
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ channel: 'email', ticket_id: $json.ticket_id, template: 'protocolo', status: $('config').first().json.dry_run ? 'simulado' : 'enviando', detail: { tipo: 'email_protocolo', workflow: 'WF06' } }) }}"
+      },
+      "id": "fc26c964-552f-57a1-9b72-cad33850e3e7",
+      "name": "registra_envio",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1540,
+        0
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "REPLACE_CRED_SDOPS_SERVICE_TOKEN",
+          "name": "SD-OPS: token de serviço do n8n (Authorization: Bearer)"
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 2000
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "fb35e11d-3d20-58d7-92eb-a6e9b68d8e3a",
+              "leftValue": "={{ $json.statusCode < 300 && String(($json.headers || {})['idempotent-replay']) !== 'true' && !$('config').first().json.dry_run }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "355fb4e0-3ef3-5c1b-920c-543cc92c64af",
+      "name": "primeiro_envio",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1760,
+        0
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "00e94a41-7b51-51ff-9c2e-f449884ae6d4",
+      "name": "dry_run_ou_duplicado",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        1980,
+        180
+      ]
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "d90ccaf2-1b72-5023-9291-0217ba16c171",
+                    "leftValue": "={{ $('decide').first().json.rota }}",
+                    "rightValue": "mesma_thread",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "mesma_thread"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "4253c824-7905-59f5-8316-c0db31e0112e",
+                    "leftValue": "={{ $('decide').first().json.rota }}",
+                    "rightValue": "nova_conversa",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "nova_conversa"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "fad637ff-0f73-57d6-8c02-b2dc80f104f3",
+      "name": "rota",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        1980,
+        -40
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $('config').first().json.chatwoot_base_url }}/api/v1/accounts/{{ $('config').first().json.chatwoot_account_id }}/conversations/{{ $('decide').first().json.conversation_id }}/messages",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-SD-Origin",
+              "value": "n8n"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 15000
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ content: $('decide').first().json.texto, message_type: 'outgoing', private: false, content_attributes: { sd_origin: 'n8n:WF06' } }) }}"
+      },
+      "id": "4e6d5980-bdc2-502a-bed8-8436a442282d",
+      "name": "responde_thread",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2200,
+        -140
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "REPLACE_CRED_CHATWOOT_N8N",
+          "name": "ServiceDesk/Chatwoot: api_access_token da Integração n8n"
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 2000
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $('config').first().json.chatwoot_base_url }}/api/v1/accounts/{{ $('config').first().json.chatwoot_account_id }}/contacts/{{ $('decide').first().json.contact_id }}/contact_inboxes",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-SD-Origin",
+              "value": "n8n"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 15000
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ inbox_id: $('config').first().json.email_inbox_id, source_id: $('decide').first().json.email }) }}"
+      },
+      "id": "7c2dbee7-566b-539b-ba64-6a9c202a34a4",
+      "name": "contact_inbox_email",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2200,
+        40
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "REPLACE_CRED_CHATWOOT_N8N",
+          "name": "ServiceDesk/Chatwoot: api_access_token da Integração n8n"
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 2000
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $('config').first().json.chatwoot_base_url }}/api/v1/accounts/{{ $('config').first().json.chatwoot_account_id }}/conversations",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-SD-Origin",
+              "value": "n8n"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 15000
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ source_id: $json.source_id, inbox_id: $('config').first().json.email_inbox_id, contact_id: $('decide').first().json.contact_id, additional_attributes: { mail_subject: 'Protocolo ' + $('decide').first().json.protocolo }, custom_attributes: { sd_protocolo: $('decide').first().json.protocolo } }) }}"
+      },
+      "id": "364be926-b540-5a5d-ad4d-dd9b887b41ce",
+      "name": "conversa_email",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2420,
+        40
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "REPLACE_CRED_CHATWOOT_N8N",
+          "name": "ServiceDesk/Chatwoot: api_access_token da Integração n8n"
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 2000
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $('config').first().json.chatwoot_base_url }}/api/v1/accounts/{{ $('config').first().json.chatwoot_account_id }}/conversations/{{ $json.id }}/messages",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-SD-Origin",
+              "value": "n8n"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 15000
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ content: $('decide').first().json.texto, message_type: 'outgoing', private: false, content_attributes: { sd_origin: 'n8n:WF06' } }) }}"
+      },
+      "id": "38ba3c04-9077-595b-aa9a-387bb2206fc7",
+      "name": "envia_email",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2640,
+        40
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "REPLACE_CRED_CHATWOOT_N8N",
+          "name": "ServiceDesk/Chatwoot: api_access_token da Integração n8n"
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 2000
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $('config').first().json.sdops_base_url }}/tickets/{{ $('decide').first().json.ticket_id }}/links",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-SD-Origin",
+              "value": "n8n"
+            },
+            {
+              "name": "X-SD-Workflow",
+              "value": "WF06"
+            },
+            {
+              "name": "Idempotency-Key",
+              "value": "={{ $execution.id }}:vincula_conversa:{{ $itemIndex }}"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 15000
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ conversation_id: $('conversa_email').first().json.id }) }}"
+      },
+      "id": "353da856-f633-517a-862b-e32ec848d5be",
+      "name": "vincula_conversa",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2860,
+        40
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "REPLACE_CRED_SDOPS_SERVICE_TOKEN",
+          "name": "SD-OPS: token de serviço do n8n (Authorization: Bearer)"
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 2000
+    }
+  ],
+  "connections": {
+    "webhook_sd_ops": {
+      "main": [
+        [
+          {
+            "node": "valida_evento",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "valida_evento": {
+      "main": [
+        [
+          {
+            "node": "config",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "config": {
+      "main": [
+        [
+          {
+            "node": "consulta_ticket",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "consulta_ticket": {
+      "main": [
+        [
+          {
+            "node": "consulta_contato",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "consulta_contato": {
+      "main": [
+        [
+          {
+            "node": "decide",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "decide": {
+      "main": [
+        [
+          {
+            "node": "ja_enviado",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "ja_enviado": {
+      "main": [
+        [
+          {
+            "node": "registra_envio",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "registra_envio": {
+      "main": [
+        [
+          {
+            "node": "primeiro_envio",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "primeiro_envio": {
+      "main": [
+        [
+          {
+            "node": "rota",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "dry_run_ou_duplicado",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "rota": {
+      "main": [
+        [
+          {
+            "node": "responde_thread",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "contact_inbox_email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "contact_inbox_email": {
+      "main": [
+        [
+          {
+            "node": "conversa_email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "conversa_email": {
+      "main": [
+        [
+          {
+            "node": "envia_email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "envia_email": {
+      "main": [
+        [
+          {
+            "node": "vincula_conversa",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "America/Sao_Paulo",
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "none"
+  },
+  "pinData": {},
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "servicedesk": {
+      "workflow": "WF06",
+      "description": "ticket.created -> se o contato tem e-mail: responde na própria conversa de e-mail (mesma thread) ou abre conversa na inbox de e-mail configurada e vincula ao ticket. Uma vez por ticket. Começa em dry_run=true.",
+      "generator": "servicedesk/integrations/n8n/tools/build_workflows.py",
+      "format_version": 1
+    }
+  }
+}

@@ -1,0 +1,574 @@
+{
+  "name": "SD WF08 - Reabertura pelo protocolo citado pelo cliente",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "sd/wf08-chatwoot-REPLACE_SEGREDO_LONGO",
+        "options": {}
+      },
+      "id": "2fb111d4-7aed-5b14-a4c0-943a81e3fae0",
+      "name": "webhook_chatwoot",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        0
+      ],
+      "webhookId": "2fb111d4-7aed-5b14-a4c0-943a81e3fae0"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Chatwoot não envia header customizado: a URL contém um segredo longo (troque REPLACE_SEGREDO_LONGO)\n// e o sd-ops/Traefik pode restringir a origem. Anti-loop: só mensagens de CONTATO, nunca de agente/integração.\nconst b = $input.first().json.body || {};\nif (b.event !== 'message_created') return [];\nif (b.message_type !== 'incoming' && b.message_type !== 0) return [];\nif (b.private) return [];\nconst ca = b.content_attributes || {};\nif (ca.sd_origin) return [];\nconst sender = b.sender || {};\nif (sender.type && sender.type !== 'contact') return [];\nconst txt = String(b.content || '');\nconst m = txt.match(/\\b([A-Z][A-Z0-9]{1,5}-\\d{4}-\\d{6})\\b/) || txt.match(/\\b(20\\d{9})\\b/);\nif (!m) return [];\nconst conv = b.conversation || {};\nconst contactId = (conv.meta && conv.meta.sender && conv.meta.sender.id) || sender.id || null;\nreturn [{ json: { protocolo: m[1], conversation_id: conv.id || conv.display_id, contact_id: contactId } }];\n"
+      },
+      "id": "5c70cb6e-0f71-5a36-b252-680f973ab47b",
+      "name": "filtra_mensagem",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "70deca2c-69d4-5495-8003-dc9d5293b942",
+              "name": "sdops_base_url",
+              "type": "string",
+              "value": "https://SERVICEDESK.EXEMPLO/sd-ops/api/v1"
+            },
+            {
+              "id": "cfc5b066-ff5e-502f-9079-d406c6bccdbb",
+              "name": "chatwoot_base_url",
+              "type": "string",
+              "value": "https://SERVICEDESK.EXEMPLO"
+            },
+            {
+              "id": "0d9d8853-0cc3-5a51-ad79-d98d7a2fe48b",
+              "name": "chatwoot_account_id",
+              "type": "number",
+              "value": 1
+            },
+            {
+              "id": "e5777fef-f731-5183-8e77-74a64630ff34",
+              "name": "ops_alert_conversation_id",
+              "type": "number",
+              "value": 0
+            },
+            {
+              "id": "f91c0e31-312a-5ff1-8d6f-2bd2b9035032",
+              "name": "console_base_url",
+              "type": "string",
+              "value": "https://SERVICEDESK.EXEMPLO/sd-console"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "779a19be-36a2-5b8a-bb98-789c29ff0d19",
+      "name": "config",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        440,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "url": "={{ $('config').first().json.sdops_base_url }}/tickets/{{ encodeURIComponent($('filtra_mensagem').first().json.protocolo) }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-SD-Origin",
+              "value": "n8n"
+            },
+            {
+              "name": "X-SD-Workflow",
+              "value": "WF08"
+            },
+            {
+              "name": "Idempotency-Key",
+              "value": "={{ $execution.id }}:busca_ticket:{{ $itemIndex }}"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 15000,
+          "response": {
+            "response": {
+              "neverError": true,
+              "fullResponse": true
+            }
+          }
+        }
+      },
+      "id": "8af10a4e-2acd-5d60-8d3f-beffc2ff0d79",
+      "name": "busca_ticket",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        660,
+        0
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "REPLACE_CRED_SDOPS_SERVICE_TOKEN",
+          "name": "SD-OPS: token de serviço do n8n (Authorization: Bearer)"
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 2000
+    },
+    {
+      "parameters": {
+        "jsCode": "const m = $('filtra_mensagem').first().json;\nconst r = $('busca_ticket').first().json;\nif (r.statusCode === 404) return [{ json: { acao: 'nao_encontrado', ...m } }];\nif (r.statusCode >= 300) throw new Error('sd-ops respondeu ' + r.statusCode + ' ao buscar o protocolo');\nconst t = r.body || {};\nconst mesmoContato = String(t.contact_id) === String(m.contact_id);\nconst base = { ...m, ticket_id: t.id, estado: t.status, protocolo_ticket: t.protocol };\nif (!mesmoContato) return [{ json: { acao: 'identidade', ...base } }];   // nunca relaciona sem identidade\n// sd-ops /reopen: resolvido -> em_atendimento; encerrado/cancelado -> cria ticket de continuação (followup)\nif (['resolvido', 'encerrado', 'cancelado'].includes(base.estado)) return [{ json: { acao: 'reabrir', ...base } }];\nreturn [{ json: { acao: 'vincular', ...base } }];\n"
+      },
+      "id": "1e16eda0-10c9-59f6-b65a-cff416b06163",
+      "name": "decide",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        880,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "cd8afefc-6229-5564-9d51-8b5185978cec",
+                    "leftValue": "={{ $json.acao }}",
+                    "rightValue": "reabrir",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "reabrir"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "fe4c2b5b-0d1d-5eb3-ac2f-b92fe27d2ac3",
+                    "leftValue": "={{ $json.acao }}",
+                    "rightValue": "vincular",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "vincular"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "0332a945-840a-51de-b89c-006764f45918",
+                    "leftValue": "={{ $json.acao }}",
+                    "rightValue": "identidade",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "identidade"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "8cd109d7-4893-588d-82bf-f86a4c44a5ef",
+                    "leftValue": "={{ $json.acao }}",
+                    "rightValue": "nao_encontrado",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "nao_encontrado"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "c7995f16-a08e-51c1-ac44-74d086718e97",
+      "name": "acao",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        1100,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $('config').first().json.sdops_base_url }}/tickets/{{ $('decide').first().json.ticket_id }}/reopen",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-SD-Origin",
+              "value": "n8n"
+            },
+            {
+              "name": "X-SD-Workflow",
+              "value": "WF08"
+            },
+            {
+              "name": "Idempotency-Key",
+              "value": "={{ $execution.id }}:reabre:{{ $itemIndex }}"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 15000
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ to: 'em_atendimento', reason: 'Cliente citou o protocolo em nova mensagem (conversa ' + $('decide').first().json.conversation_id + ')' }) }}"
+      },
+      "id": "8dee465d-3419-5282-a5d7-cbfe8702df56",
+      "name": "reabre",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1320,
+        -200
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "REPLACE_CRED_SDOPS_SERVICE_TOKEN",
+          "name": "SD-OPS: token de serviço do n8n (Authorization: Bearer)"
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 2000
+    },
+    {
+      "parameters": {
+        "jsCode": "// Depois do /reopen o sd-ops devolve o ticket (o de continuação, se criou um: followup_created).\nconst d = $('decide').first().json;\nconst r = $('reabre').isExecuted ? $('reabre').first().json : {};\nreturn [{ json: { ticket_id: (r && r.id) || d.ticket_id, conversation_id: d.conversation_id } }];\n"
+      },
+      "id": "6945d69b-11d3-5450-ad25-d22b848abea2",
+      "name": "ticket_alvo",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1540,
+        -200
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $('config').first().json.sdops_base_url }}/tickets/{{ $json.ticket_id }}/links",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-SD-Origin",
+              "value": "n8n"
+            },
+            {
+              "name": "X-SD-Workflow",
+              "value": "WF08"
+            },
+            {
+              "name": "Idempotency-Key",
+              "value": "={{ $execution.id }}:vincula:{{ $itemIndex }}"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 15000
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ conversation_id: $json.conversation_id }) }}"
+      },
+      "id": "5dafcff2-ba8b-5c13-b95f-4b494fd562ae",
+      "name": "vincula",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1760,
+        -120
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "REPLACE_CRED_SDOPS_SERVICE_TOKEN",
+          "name": "SD-OPS: token de serviço do n8n (Authorization: Bearer)"
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 2000
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $('config').first().json.chatwoot_base_url }}/api/v1/accounts/{{ $('config').first().json.chatwoot_account_id }}/conversations/{{ $('decide').first().json.conversation_id }}/messages",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-SD-Origin",
+              "value": "n8n"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 15000
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ content: 'O cliente citou o protocolo ' + $('decide').first().json.protocolo + ', que pertence a OUTRO contato. Verifique a identidade antes de relacionar (nada foi alterado).', message_type: 'outgoing', private: true, source_id: 'n8n:WF08:' + $execution.id + ':nota_identidade:' + $itemIndex, content_attributes: { sd_origin: 'n8n:WF08' } }) }}"
+      },
+      "id": "b3879b51-48f6-5841-99d7-03ef9b43132f",
+      "name": "nota_identidade",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1320,
+        160
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "REPLACE_CRED_CHATWOOT_N8N",
+          "name": "ServiceDesk/Chatwoot: api_access_token da Integração n8n"
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 2000
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $('config').first().json.chatwoot_base_url }}/api/v1/accounts/{{ $('config').first().json.chatwoot_account_id }}/conversations/{{ $('decide').first().json.conversation_id }}/messages",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-SD-Origin",
+              "value": "n8n"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 15000
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ content: 'O cliente citou o protocolo ' + $('decide').first().json.protocolo + ', que não foi encontrado.', message_type: 'outgoing', private: true, source_id: 'n8n:WF08:' + $execution.id + ':nota_nao_encontrado:' + $itemIndex, content_attributes: { sd_origin: 'n8n:WF08' } }) }}"
+      },
+      "id": "4040e7a7-ecc3-5d16-bb48-730d6e23c4d0",
+      "name": "nota_nao_encontrado",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1320,
+        320
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "REPLACE_CRED_CHATWOOT_N8N",
+          "name": "ServiceDesk/Chatwoot: api_access_token da Integração n8n"
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 2000
+    }
+  ],
+  "connections": {
+    "webhook_chatwoot": {
+      "main": [
+        [
+          {
+            "node": "filtra_mensagem",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "filtra_mensagem": {
+      "main": [
+        [
+          {
+            "node": "config",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "config": {
+      "main": [
+        [
+          {
+            "node": "busca_ticket",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "busca_ticket": {
+      "main": [
+        [
+          {
+            "node": "decide",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "decide": {
+      "main": [
+        [
+          {
+            "node": "acao",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "acao": {
+      "main": [
+        [
+          {
+            "node": "reabre",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "ticket_alvo",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "nota_identidade",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "nota_nao_encontrado",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "reabre": {
+      "main": [
+        [
+          {
+            "node": "ticket_alvo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "ticket_alvo": {
+      "main": [
+        [
+          {
+            "node": "vincula",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "America/Sao_Paulo",
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "none"
+  },
+  "pinData": {},
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "servicedesk": {
+      "workflow": "WF08",
+      "description": "Webhook do Chatwoot (message_created): mensagem do cliente que cita um protocolo -> verifica a identidade (mesmo contato) -> reabre (resolvido) ou pede ao sd-ops o ticket de continuação (encerrado/cancelado) e vincula a conversa; ticket aberto: só vincula. Protocolo de outro contato: só nota interna para o agente verificar.",
+      "generator": "servicedesk/integrations/n8n/tools/build_workflows.py",
+      "format_version": 1
+    }
+  }
+}

@@ -1,0 +1,600 @@
+{
+  "name": "SD WF11 - QA crítico (revisão do supervisor)",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "sd/wf11-qa-critico",
+        "authentication": "headerAuth",
+        "options": {}
+      },
+      "id": "216ce99b-0826-51ce-bb8c-0991a06125e9",
+      "name": "webhook_sd_ops",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        0
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "REPLACE_CRED_SDOPS_WEBHOOK_TOKEN",
+          "name": "SD-OPS -> n8n: X-SD-Webhook-Token"
+        }
+      },
+      "webhookId": "e675cb94-5128-5ce6-816b-44440d2a55ee"
+    },
+    {
+      "parameters": {
+        "jsCode": "// WF11: valida o envelope do sd-ops (WEBHOOK_CONTRACTS.md §8.2/§8.3) e aplica o anti-loop.\n// O token do header X-SD-Webhook-Token já foi conferido pelo nó Webhook (credencial Header Auth).\nconst WF = 'WF11';\nconst ACEITOS = [\"qa.completed\"];\nconst entrada = $input.first().json;\nconst h = entrada.headers || {};\nconst ev = entrada.body || {};\nif ((h['x-sd-origin'] || '') !== 'sd-ops') {\n  throw new Error('Origem inesperada no header X-SD-Origin: ' + (h['x-sd-origin'] || '(vazio)'));\n}\nif (!ev.id || !ev.type) throw new Error('Envelope sem id/type');\nif (!ACEITOS.includes(ev.type)) return [];           // outro tipo: ignora sem erro\nconst ts = parseInt(h['x-sd-timestamp'] || '0', 10);\nif (ts && Math.abs(Date.now() / 1000 - ts) > 900) return [];  // fora da janela (reenvio antigo)\nif (String(ev.caused_by || '').startsWith('n8n:' + WF)) return [];  // causado por este workflow\nconst p = ev.payload || {};\nconst s = ev.subject || {};\nconst out = {\n  event_id: ev.id, type: ev.type, tenant_id: ev.tenant_id, correlation_id: ev.correlation_id || null,\n  payload: p,\n  call_id: p.call_id || s.call_id || null,\n  ticket_id: p.ticket_id || s.ticket_id || null,\n  conversation_id: p.conversation_id || s.conversation_id || null,\n};\n\nreturn [{ json: out }];\n"
+      },
+      "id": "7f885e9b-344a-5304-8a5a-432ac9dc8ec5",
+      "name": "valida_evento",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "74f3c775-08b7-5ef4-b671-f37f915f59f3",
+              "name": "sdops_base_url",
+              "type": "string",
+              "value": "https://SERVICEDESK.EXEMPLO/sd-ops/api/v1"
+            },
+            {
+              "id": "99b230fd-4256-599b-a68d-a658bcc9b739",
+              "name": "chatwoot_base_url",
+              "type": "string",
+              "value": "https://SERVICEDESK.EXEMPLO"
+            },
+            {
+              "id": "0ecd2627-d6dd-50c9-8923-eed7e3a29524",
+              "name": "chatwoot_account_id",
+              "type": "number",
+              "value": 1
+            },
+            {
+              "id": "0dc60b10-8d18-5844-abeb-c9b0bf84b95d",
+              "name": "ops_alert_conversation_id",
+              "type": "number",
+              "value": 0
+            },
+            {
+              "id": "d1ed6fec-fc91-5f21-bfd7-e652816f88ca",
+              "name": "console_base_url",
+              "type": "string",
+              "value": "https://SERVICEDESK.EXEMPLO/sd-console"
+            },
+            {
+              "id": "ed5d289c-735c-56aa-8d7b-f1c45b1ea384",
+              "name": "nota_minima",
+              "type": "number",
+              "value": 60
+            },
+            {
+              "id": "97514a4a-1763-51b3-bc58-d091416e0f0b",
+              "name": "supervisores_por_time",
+              "type": "string",
+              "value": "{\"*\": []}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "651b7e8a-0f87-5095-ab4b-7941cdc42708",
+      "name": "config",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        440,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const ev = $('valida_evento').first().json;\nconst p = ev.payload || {};\nconst min = $('config').first().json.nota_minima;\nconst alertas = p.critical_alerts || p.alerts || [];\nconst nota = (p.score === null || p.score === undefined) ? null : Number(p.score);\nif (!(alertas.length > 0 || (nota !== null && nota < min))) return [];\nreturn [{ json: { evaluation_id: p.evaluation_id || p.id, nota, alertas: alertas.map(a => a.type || a).slice(0, 5),\n  call_id: ev.call_id, ticket_id: ev.ticket_id, conversation_id: ev.conversation_id } }];\n"
+      },
+      "id": "52338cae-6456-58c8-b573-a2cf19184cec",
+      "name": "e_critico",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        660,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "url": "={{ $('config').first().json.sdops_base_url }}/calls/{{ $json.call_id }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-SD-Origin",
+              "value": "n8n"
+            },
+            {
+              "name": "X-SD-Workflow",
+              "value": "WF11"
+            },
+            {
+              "name": "Idempotency-Key",
+              "value": "={{ $execution.id }}:consulta_chamada:{{ $itemIndex }}"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 15000,
+          "response": {
+            "response": {
+              "neverError": true,
+              "fullResponse": true
+            }
+          }
+        }
+      },
+      "id": "3570293c-1922-5d8c-b2db-19220474d1e3",
+      "name": "consulta_chamada",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        880,
+        0
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "REPLACE_CRED_SDOPS_SERVICE_TOKEN",
+          "name": "SD-OPS: token de serviço do n8n (Authorization: Bearer)"
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 2000
+    },
+    {
+      "parameters": {
+        "jsCode": "const q = $('e_critico').first().json;\nconst r = $('consulta_chamada').first().json;\nconst call = (r && r.body) || {};\nlet mapa = {};\ntry { mapa = JSON.parse($('config').first().json.supervisores_por_time || '{}'); } catch (e) { mapa = {}; }\nconst conv = q.conversation_id || call.conversation_id || null;\nconst ticket = q.ticket_id || ((call.tickets || [])[0] || {}).id || null;\nconst sup = (mapa[String(call.team_id)] || mapa['*'] || []).map(Number).filter(Boolean);\nconst link = $('config').first().json.console_base_url + '/qa/avaliacoes/' + q.evaluation_id;\nconst texto = 'QA crítico: nota ' + (q.nota === null ? 'n/d' : q.nota) + (q.alertas.length ? ('; alertas: ' + q.alertas.join(', ')) : '') +\n  '. Revisão do supervisor necessária: ' + link + ' (a nota da IA é recomendação).';\nreturn [{ json: { conversation_id: conv, ticket_id: ticket, supervisores: sup, texto } }];\n"
+      },
+      "id": "ed705cbc-df72-53a9-9f32-3f90ff4efb3b",
+      "name": "prepara",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1100,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "5908c89d-5a6a-59b9-a0ed-6f81eb25ad91",
+              "leftValue": "={{ !!$json.conversation_id }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "3f62cfaf-7bed-51ac-b2dc-15ac8f4108ca",
+      "name": "tem_conversa",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1320,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "c8701974-a3cc-5974-864f-9492cbc10941",
+              "leftValue": "={{ $('prepara').first().json.supervisores.length > 0 }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "9c566ac1-3942-5c25-b05e-9b9b8f1529cf",
+      "name": "tem_supervisor",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1540,
+        -80
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $('config').first().json.chatwoot_base_url }}/api/v1/accounts/{{ $('config').first().json.chatwoot_account_id }}/conversations/{{ $('prepara').first().json.conversation_id }}/participants",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-SD-Origin",
+              "value": "n8n"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 15000
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ user_ids: $('prepara').first().json.supervisores }) }}"
+      },
+      "id": "8906f8c9-c33e-53a7-becd-c2a0ff975d81",
+      "name": "adiciona_supervisores",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1760,
+        -160
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "REPLACE_CRED_CHATWOOT_N8N",
+          "name": "ServiceDesk/Chatwoot: api_access_token da Integração n8n"
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 2000
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $('config').first().json.chatwoot_base_url }}/api/v1/accounts/{{ $('config').first().json.chatwoot_account_id }}/conversations/{{ $('prepara').first().json.conversation_id }}/messages",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-SD-Origin",
+              "value": "n8n"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 15000
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ content: $('prepara').first().json.texto, message_type: 'outgoing', private: true, source_id: 'n8n:WF11:' + $execution.id + ':nota_qa:' + $itemIndex, content_attributes: { sd_origin: 'n8n:WF11' } }) }}"
+      },
+      "id": "d861d369-c5fb-5d2c-80e7-a1ce4a10735d",
+      "name": "nota_qa",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1980,
+        -80
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "REPLACE_CRED_CHATWOOT_N8N",
+          "name": "ServiceDesk/Chatwoot: api_access_token da Integração n8n"
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 2000
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "eebb9ffb-308b-5317-b841-096a92e9049a",
+              "leftValue": "={{ !!$('prepara').first().json.ticket_id }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "ac4ed7f0-6005-517c-a1ad-2b3018aa37dc",
+      "name": "tem_ticket",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        2200,
+        -80
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $('config').first().json.sdops_base_url }}/tickets/{{ $('prepara').first().json.ticket_id }}/notes",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-SD-Origin",
+              "value": "n8n"
+            },
+            {
+              "name": "X-SD-Workflow",
+              "value": "WF11"
+            },
+            {
+              "name": "Idempotency-Key",
+              "value": "={{ $execution.id }}:registra_no_ticket:{{ $itemIndex }}"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 15000
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ kind: 'nota_interna', body: $('prepara').first().json.texto, post_to_chatwoot: false }) }}"
+      },
+      "id": "4bef71e4-7351-5be9-8b5c-71dd217efe01",
+      "name": "registra_no_ticket",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2420,
+        -120
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "REPLACE_CRED_SDOPS_SERVICE_TOKEN",
+          "name": "SD-OPS: token de serviço do n8n (Authorization: Bearer)"
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 2000
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $('config').first().json.chatwoot_base_url }}/api/v1/accounts/{{ $('config').first().json.chatwoot_account_id }}/conversations/{{ $('config').first().json.ops_alert_conversation_id }}/messages",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-SD-Origin",
+              "value": "n8n"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 15000
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ content: '[WF11] ' + $('prepara').first().json.texto, message_type: 'outgoing', private: true, source_id: 'n8n:WF11:' + $execution.id + ':alerta_qa:' + $itemIndex, content_attributes: { sd_origin: 'n8n:WF11' } }) }}"
+      },
+      "id": "39cca8eb-053c-5a91-a350-6902ed50db06",
+      "name": "alerta_qa",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1540,
+        140
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "REPLACE_CRED_CHATWOOT_N8N",
+          "name": "ServiceDesk/Chatwoot: api_access_token da Integração n8n"
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 2000
+    }
+  ],
+  "connections": {
+    "webhook_sd_ops": {
+      "main": [
+        [
+          {
+            "node": "valida_evento",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "valida_evento": {
+      "main": [
+        [
+          {
+            "node": "config",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "config": {
+      "main": [
+        [
+          {
+            "node": "e_critico",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "e_critico": {
+      "main": [
+        [
+          {
+            "node": "consulta_chamada",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "consulta_chamada": {
+      "main": [
+        [
+          {
+            "node": "prepara",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "prepara": {
+      "main": [
+        [
+          {
+            "node": "tem_conversa",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "tem_conversa": {
+      "main": [
+        [
+          {
+            "node": "tem_supervisor",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "alerta_qa",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "tem_supervisor": {
+      "main": [
+        [
+          {
+            "node": "adiciona_supervisores",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "nota_qa",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "adiciona_supervisores": {
+      "main": [
+        [
+          {
+            "node": "nota_qa",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "nota_qa": {
+      "main": [
+        [
+          {
+            "node": "tem_ticket",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "tem_ticket": {
+      "main": [
+        [
+          {
+            "node": "registra_no_ticket",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "America/Sao_Paulo",
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "none"
+  },
+  "pinData": {},
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "servicedesk": {
+      "workflow": "WF11",
+      "description": "qa.completed (publicado pelo qa-pipeline do A3) com nota abaixo do mínimo ou alerta crítico -> supervisor como participante, nota interna com o link do console de QA e registro no ticket. A nota da IA é recomendação; a decisão é humana.",
+      "generator": "servicedesk/integrations/n8n/tools/build_workflows.py",
+      "format_version": 1
+    }
+  }
+}
