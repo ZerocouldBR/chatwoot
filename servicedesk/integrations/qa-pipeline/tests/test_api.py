@@ -15,8 +15,11 @@ from .conftest import BAD, GOOD, recording_event, xadd
 from qa_pipeline.runner import consume_once
 
 SDOPS = "http://sd-ops.test/sd-ops/api/v1"
+# tok-ana usa o formato REAL do GET /sd-ops/api/v1/auth/me (plano, tenant_id, papéis em pt-BR);
+# os demais, a variante aninhada (tolerada).
 USERS = {
-    "tok-ana": {"user": {"id": 1, "email": "ana@exemplo.test", "name": "Ana Teste"}, "tenant": "t1", "roles": ["agent"]},
+    "tok-ana": {"kind": "user", "tenant_id": "t1", "user_id": 1, "email": "ana@exemplo.test", "name": "Ana Teste",
+                "roles": ["agente"], "scopes": [], "service": None},
     "tok-bruno": {"user": {"id": 2, "email": "bruno@exemplo.test", "name": "Bruno"}, "tenant": "t1", "roles": ["agent"]},
     "tok-sup": {"user": {"id": 3, "email": "sup@exemplo.test", "name": "Sup"}, "tenant": "t1", "roles": ["supervisor"]},
     "tok-qa": {"user": {"id": 4, "email": "qa@exemplo.test", "name": "QA"}, "tenant": "t1", "roles": ["qa"]},

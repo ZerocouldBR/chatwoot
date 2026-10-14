@@ -26,5 +26,6 @@ export function mockFetch(routes: Record<string, Handler | { status?: number; js
   return calls;
 }
 
-export const ME = { user: { id: 1, email: 'ana@exemplo.test', name: 'Ana Teste' }, tenant: 'dev55', roles: ['agent'] };
-export const SUP = { user: { id: 3, email: 'sup@exemplo.test', name: 'Sup Teste' }, tenant: 'dev55', roles: ['supervisor', 'qa'] };
+// Formato real do GET /sd-ops/api/v1/auth/me
+export const ME = { kind: 'user', tenant_id: 'dev55', user_id: 1, email: 'ana@exemplo.test', name: 'Ana Teste', roles: ['agente'], scopes: [] };
+export const SUP = { kind: 'user', tenant_id: 'dev55', user_id: 3, email: 'sup@exemplo.test', name: 'Sup Teste', roles: ['qa', 'supervisor'], scopes: [] };

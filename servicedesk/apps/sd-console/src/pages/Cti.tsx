@@ -42,7 +42,7 @@ export function CtiInner({ ctx, embedded }: { ctx: AppContext | null; embedded: 
 
   const [caps, setCaps] = useState<sdops.Capabilities | null | undefined>(undefined);
   const [health, setHealth] = useState<sdops.Health | null>(null);
-  const [data, setData] = useState<sdops.Context | null>(null);
+  const [data, setData] = useState<(sdops.Context & { dial?: sdops.Capability }) | null>(null);
   const [calls, setCalls] = useState<sdops.CallRef[]>([]);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -66,9 +66,23 @@ export function CtiInner({ ctx, embedded }: { ctx: AppContext | null; embedded: 
   }, [conversationId, contactId, phone]);
 
   useEffect(() => {
-    sdops.capabilities().then(setCaps).catch(() => setCaps(null));
     sdops.health().then(setHealth).catch(() => setHealth(null));
   }, []);
+  // Capacidades: /capabilities (se existir) + o que o sd-ops reporta no /context (dial) + sondagem de
+  // /callbacks. O que ninguém reportar fica desabilitado com explicação.
+  useEffect(() => {
+    let alive = true;
+    Promise.all([sdops.capabilities().catch(() => null), sdops.callbacksAvailable()]).then(([c, cb]) => {
+      if (!alive) return;
+      const merged: sdops.Capabilities = { ...(c || {}) };
+      if (!merged.callbacks) merged.callbacks = cb;
+      if (data?.dial && !merged.dial) merged.dial = data.dial;
+      setCaps(c || data?.dial ? merged : null);
+    });
+    return () => {
+      alive = false;
+    };
+  }, [data]);
   useEffect(() => {
     load();
   }, [load]);
@@ -183,19 +197,20 @@ function CtiHeader({
         </CapButton>
       </div>
       {dialMsg ? <Notice kind={dialMsg.kind}>{dialMsg.text}</Notice> : null}
-      {cbOpen ? <CallbackForm ticketId={ticket?.id} phone={target} conversationId={conversationId} onDone={() => { setCbOpen(false); onChanged(); }} /> : null}
+      {cbOpen ? <CallbackForm ticketId={ticket?.id} phone={target} callId={call?.id || data?.last_calls?.[0]?.id} onDone={() => { setCbOpen(false); onChanged(); }} /> : null}
     </section>
   );
 }
 
-function CallbackForm({ ticketId, phone, conversationId, onDone }: { ticketId?: string; phone?: string; conversationId?: number; onDone: () => void }) {
+function CallbackForm({ ticketId, phone, callId, onDone }: { ticketId?: string; phone?: string; callId?: string; onDone: () => void }) {
   const [due, setDue] = useState('');
   const [reason, setReason] = useState('');
   const [msg, setMsg] = useState<{ ok: boolean; text: string } | null>(null);
   async function save(e: React.FormEvent) {
     e.preventDefault();
     try {
-      await sdops.createCallback({ ticket_id: ticketId, conversation_id: conversationId, phone, due_at: new Date(due).toISOString(), reason });
+      if (!phone) throw new Error('sem telefone');
+      await sdops.createCallback({ number_e164: phone, ticket_id: ticketId, call_id: callId, due_at: new Date(due).toISOString(), reason });
       setMsg({ ok: true, text: 'Retorno registrado no sd-ops.' });
       setTimeout(onDone, 800);
     } catch (err) {
@@ -297,10 +312,25 @@ function RegisterCard({ data, caps, conversationId, onSaved }: { data: sdops.Con
     setBusy(true);
     setMsg(null);
     try {
-      const { close, schedule_at, ...rest } = f;
-      await sdops.ticketNote(ticket.id, { kind: 'registro', ...rest, schedule_at: schedule_at ? new Date(schedule_at).toISOString() : null, conversation_id: conversationId, call_id: data?.active_call?.id || data?.last_calls?.[0]?.id, mirror_to_chatwoot: true });
-      if (close) await sdops.ticketTransition(ticket.id, 'resolvido', f.disposition || 'registro do atendimento');
-      setMsg({ ok: true, text: close ? 'Registro salvo e ticket marcado como resolvido.' : 'Registro salvo no ticket.' });
+      // NoteIn do sd-ops: kind (registro|disposicao|nota_interna), body, disposition{...}, call_id, post_to_chatwoot
+      await sdops.ticketNote(ticket.id, {
+        kind: 'registro',
+        body: [f.description, f.internal_note ? `Nota interna: ${f.internal_note}` : ''].filter(Boolean).join(' / ') || null,
+        disposition: {
+          categoria: f.category,
+          motivo: f.reason,
+          disposicao: f.disposition,
+          acoes: f.actions,
+          resultado: f.result,
+          pendencias: f.pending,
+          agendamento: f.schedule_at ? new Date(f.schedule_at).toISOString() : null,
+          conversation_id: conversationId,
+        },
+        call_id: data?.active_call?.id || data?.last_calls?.[0]?.id,
+        post_to_chatwoot: true,
+      });
+      if (f.close) await sdops.ticketTransition(ticket.id, 'resolvido', f.disposition || 'registro do atendimento');
+      setMsg({ ok: true, text: f.close ? 'Registro salvo e ticket marcado como resolvido.' : 'Registro salvo no ticket.' });
       onSaved();
     } catch (err) {
       setMsg({ ok: false, text: `Não salvo: ${errorText(err)}` });

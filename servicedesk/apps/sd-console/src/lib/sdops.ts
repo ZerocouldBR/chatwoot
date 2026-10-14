@@ -24,7 +24,7 @@ function unwrap<T = Record<string, unknown>>(d: unknown): T {
 export function parseMe(raw: unknown): Me {
   const d = unwrap<Record<string, any>>(raw) || {};
   const u = (d.user && typeof d.user === 'object' ? d.user : d) as Record<string, any>;
-  const t = d.tenant;
+  const t = d.tenant_id ?? d.tenant;
   return {
     email: String(u.email || ''),
     name: String(u.name || u.email || ''),
@@ -124,23 +124,53 @@ export interface Context {
   owner?: string;
 }
 
-export async function context(q: Query): Promise<Context> {
+/** Estado de SLA a partir de sd-ops ticket.sla = [{metric, status, breached, due_at}]. */
+export function slaState(sla: unknown): string | undefined {
+  if (!Array.isArray(sla) || !sla.length) return undefined;
+  if (sla.some((x: any) => x.breached)) return 'violado';
+  const soon = sla.some((x: any) => x.status !== 'stopped' && x.due_at && new Date(x.due_at).getTime() - Date.now() < 3600_000);
+  return soon ? 'em_risco' : 'no_prazo';
+}
+
+function normTicket(t: any): TicketRef {
+  return { ...t, id: String(t.id), sla_state: t.sla_state || slaState(t.sla), assignee: t.assignee || t.assignee_name };
+}
+
+function normCall(c: any): CallRef {
+  const ura = c.ura && typeof c.ura === 'object' ? c.ura : c.ura ? { URA: String(c.ura) } : undefined;
+  return { ...c, id: String(c.id), status: c.status || c.state, ura };
+}
+
+/** GET /context (sd-ops): open_tickets, recent_calls, active_call, callbacks_pending, dial{available,reason}. */
+export async function context(q: Query): Promise<Context & { dial?: Capability }> {
   const d = unwrap<Record<string, any>>(await http(`${SDOPS}/context${qs(q)}`)) || {};
+  const contact = d.contact ? { ...d.contact, phone: d.contact.phone_number || d.phone_e164 } : d.phone_e164 ? { phone: d.phone_e164 } : undefined;
   return {
-    contact: d.contact || undefined,
+    contact,
     identification: d.identification,
-    tickets: d.tickets || d.open_tickets || [],
-    last_calls: d.last_calls || d.calls || [],
-    callbacks: d.callbacks || d.pending_callbacks || [],
-    active_call: d.active_call || null,
+    tickets: (d.open_tickets || d.tickets || []).map(normTicket),
+    last_calls: (d.recent_calls || d.last_calls || []).map(normCall),
+    callbacks: d.callbacks_pending || d.callbacks || [],
+    active_call: d.active_call ? normCall(d.active_call) : null,
     recurring_subjects: d.recurring_subjects || [],
     owner: d.owner || d.assignee,
+    dial: d.dial ? { enabled: !!d.dial.available, reason: d.dial.reason || undefined } : undefined,
   };
+}
+
+/** Sonda o endpoint de retornos: 200 = disponível para este usuário (o sd-ops reportou). */
+export async function callbacksAvailable(): Promise<Capability> {
+  try {
+    await http(`${SDOPS}/callbacks${qs({ status: 'pending' })}`);
+    return { enabled: true };
+  } catch (e) {
+    return { enabled: false, reason: e instanceof ApiError && e.status === 403 ? 'Sem permissão para retornos.' : 'Retornos indisponíveis no sd-ops.' };
+  }
 }
 
 export async function calls(q: Query): Promise<CallRef[]> {
   const d = unwrap<any>(await http(`${SDOPS}/calls${qs(q)}`));
-  return Array.isArray(d) ? d : d?.items || [];
+  return (Array.isArray(d) ? d : d?.items || []).map(normCall);
 }
 
 export async function recordingUrl(id: string): Promise<{ url: string; expires_at?: string; expires_in?: number }> {
@@ -170,8 +200,28 @@ export async function ticketTransition(ticketId: string, to: string, reason: str
   return unwrap(await http(`${SDOPS}/tickets/${encodeURIComponent(ticketId)}/transitions`, { method: 'POST', json: { to, reason } }));
 }
 
+/** /metrics/telephony devolve {groups: {total, "queue=X", "day=AAAA-MM-DD", ...}, callbacks}. Busca por fila,
+ *  por dia e por ramal (3 chamadas com group_by; todas trazem o total) e junta num objeto só. */
 export async function metricsTelephony(q: Query): Promise<Record<string, any>> {
-  return unwrap(await http(`${SDOPS}/metrics/telephony${qs(q)}`));
+  const [byQueue, byDay, byBranch] = await Promise.all(
+    ['queue', 'day', 'branch'].map((g) =>
+      http<Record<string, any>>(`${SDOPS}/metrics/telephony${qs({ ...q, group_by: g })}`).then((x) => unwrap<Record<string, any>>(x)),
+    ),
+  );
+  const groups = (d: Record<string, any>, prefix: string) =>
+    Object.entries(d?.groups || {})
+      .filter(([k]) => k.startsWith(prefix + '='))
+      .map(([k, v]) => ({ key: k.slice(prefix.length + 1), ...(v as object) }) as Record<string, any>);
+  return {
+    ...(byQueue?.groups?.total || byQueue || {}),
+    retornos: byQueue?.callbacks || {},
+    por_fila: groups(byQueue, 'queue').map((r) => ({ ...r, fila: r.key, tma_s: r.tma_receptivo_s })),
+    serie_diaria: groups(byDay, 'day')
+      .map((r) => ({ ...r, dia: r.key }))
+      .sort((a, b) => (a.dia < b.dia ? -1 : 1)),
+    por_ramal: groups(byBranch, 'branch').map((r) => ({ ...r, ramal: r.key, tma_s: r.tma_receptivo_s ?? r.tma_ativo_s })),
+    fonte: byQueue?.fonte,
+  };
 }
 export async function metricsTickets(q: Query): Promise<Record<string, any>> {
   return unwrap(await http(`${SDOPS}/metrics/tickets${qs(q)}`));

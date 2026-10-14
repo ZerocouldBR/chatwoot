@@ -70,7 +70,7 @@ describe('Player', () => {
   });
 });
 
-function withSession(ui: React.ReactNode, me = ME) {
+function withSession(ui: React.ReactNode) {
   return (
     <MemoryRouter initialEntries={['/qa/avaliacoes/5']}>
       <SessionGate accountId={1}>
@@ -83,12 +83,19 @@ function withSession(ui: React.ReactNode, me = ME) {
   );
 }
 
+// Formato REAL do GET /sd-ops/api/v1/context (sd_ops/api.py, commit a0f8e93717)
 const CTX = {
-  contact: { id: 55, name: 'Roberto Fictício', phone: '+5511900000001' },
-  tickets: [{ id: 'tk1', protocol: 'DEV-2026-000123', status: 'em_atendimento', sla_state: 'em_risco' }],
-  last_calls: [],
-  callbacks: [],
-  active_call: { id: 'c1', branch: '5005', queue: 'FILA_SUPORTE_1', status: 'em andamento', answered_at: new Date().toISOString() },
+  contact: { id: 55, name: 'Roberto Fictício', phone_number: '+5511900000001', email: null, identifier: null },
+  phone_e164: '+5511900000001',
+  identification: 'unique',
+  open_tickets: [
+    { id: 'tk1', protocol: 'DEV-2026-000123', status: 'em_atendimento', subject: 'Voucher',
+      sla: [{ metric: 'resolution', status: 'running', breached: false, due_at: new Date(Date.now() + 600000).toISOString() }] },
+  ],
+  recent_calls: [],
+  active_call: { id: 'c1', state: 'active', branch: '5005', queue: 'FILA_SUPORTE_1', answered_at: new Date().toISOString(), recordings: [] },
+  callbacks_pending: [],
+  dial: { available: false, reason: 'discagem desligada (PBX_DIAL_MODE=disabled)' },
 };
 
 describe('CTI', () => {
@@ -106,25 +113,27 @@ describe('CTI', () => {
     expect(window.localStorage.length).toBe(0);
   });
 
-  it('sem capacidades: discar/webphone/retorno desabilitados com explicação', async () => {
-    mockFetch({ 'GET /auth/me': { json: ME }, 'GET /context': { json: CTX }, 'GET /calls': { json: [] }, 'GET /health': { json: { status: 'ok' } } });
+  it('sd-ops reporta discagem indisponível: botões desabilitados com o motivo real', async () => {
+    mockFetch({ 'GET /auth/me': { json: ME }, 'GET /context': { json: CTX }, 'GET /calls': { json: { items: [] } }, 'GET /health': { json: { status: 'ok' } } });
     render(withSession(<CtiInner ctx={{ conversation: { id: 101, account_id: 1 }, contact: { id: 55, name: 'Roberto Fictício', phone_number: '+5511900000001' } }} embedded />));
     expect(await screen.findByText('DEV-2026-000123', { selector: 'dd' })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Discar' })).toBeDisabled();
+    expect(await screen.findByText('discagem desligada (PBX_DIAL_MODE=disabled)')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Abrir webphone' })).toBeDisabled();
+    expect(screen.getByText(/não informou a capacidade "webphone"/)).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Registrar retorno' })).toBeDisabled();
-    expect(screen.getByText(/não informou as capacidades/)).toBeInTheDocument();
     expect(screen.getByText('FILA_SUPORTE_1')).toBeInTheDocument();
+    expect(screen.getByText('SLA em risco')).toBeInTheDocument();
   });
 
   it('discagem em modo mock aparece como MOCK, nunca como sucesso; erro da 55PBX aparece', async () => {
     let n = 0;
     mockFetch({
       'GET /auth/me': { json: ME },
-      'GET /context': { json: CTX },
-      'GET /calls': { json: [] },
+      'GET /context': { json: { ...CTX, dial: { available: true, reason: null } } },
+      'GET /calls': { json: { items: [] } },
+      'GET /callbacks': { json: { items: [] } },
       'GET /health': { json: { status: 'ok', mock: true } },
-      'GET /capabilities': { json: { dial: { enabled: true, mode: 'mock' } } },
       'POST /dial': () =>
         ++n === 1
           ? { json: { status: 'mock', simulated: true, message: 'MODO MOCK (DEV): nenhuma ligação foi feita' } }
@@ -165,7 +174,7 @@ describe('Console de QA', () => {
       'GET /recordings/r1/marks': { json: { items: [] } },
       'POST /evaluations/5/review': { json: { human_evaluation_id: 6, score: 40 } },
     });
-    render(withSession(<QaEvaluation />, SUP));
+    render(withSession(<QaEvaluation />));
     expect(await screen.findByText(/Rubrica padrão \(v1\)/)).toBeInTheDocument();
     expect(screen.getAllByText(/“Alô.”/).length).toBeGreaterThan(0);
     expect(screen.getAllByText(/Reclamação/).length).toBeGreaterThan(0);
@@ -183,7 +192,7 @@ describe('Console de QA', () => {
 
   it('agente pode contestar a própria avaliação', async () => {
     const calls = mockFetch({
-      'GET /auth/me': { json: { ...ME, user: { ...ME.user, email: 'bruno@exemplo.test' } } },
+      'GET /auth/me': { json: { ...ME, email: 'bruno@exemplo.test' } },
       'GET /evaluations/5': { json: DETAIL },
       'GET /recordings/r1/url': { json: { url: '/a.mp3' } },
       'GET /recordings/r1/marks': { json: { items: [] } },

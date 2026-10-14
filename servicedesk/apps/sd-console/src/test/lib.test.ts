@@ -40,6 +40,11 @@ describe('http + sd-ops', () => {
     vi.stubGlobal('fetch', vi.fn(async () => { throw new TypeError('down'); }));
     await expect(http('/y')).rejects.toBeInstanceOf(ApiError);
   });
+  it('parseMe lê o /auth/me real (plano, tenant_id)', () => {
+    expect(sdops.parseMe({ kind: 'user', tenant_id: 'dev55', user_id: 1, email: 'a@b', name: 'A', roles: ['agente'], scopes: [] })).toEqual({
+      email: 'a@b', name: 'A', tenant: 'dev55', roles: ['agente'],
+    });
+  });
   it('parseMe converte papéis do Chatwoot', () => {
     expect(sdops.parseMe({ data: { user: { email: 'a@b', name: 'A' }, tenant: { slug: 'b2b' }, roles: ['agent', 'administrator'] } })).toEqual({
       email: 'a@b', name: 'A', tenant: 'b2b', roles: ['agente', 'admin'],
@@ -50,6 +55,37 @@ describe('http + sd-ops', () => {
     expect(await sdops.capabilities()).toBeNull();
     mockFetch({ 'GET /capabilities': { json: { dial: { enabled: false, reason: 'sem credenciais' }, webphone: true } } });
     expect(await sdops.capabilities()).toEqual({ dial: { enabled: false, reason: 'sem credenciais', mode: undefined, url: undefined }, webphone: { enabled: true } });
+  });
+});
+
+describe('métricas do sd-ops (formato real: groups + group_by)', () => {
+  it('junta total, por fila, por dia e por ramal', async () => {
+    const total = { recebidas: 10, atendidas: 8, tma_receptivo_s: 150, por_resultado: { answered: 8, abandoned_queue: 2 } };
+    mockFetch({
+      'GET /metrics/telephony': (url) => {
+        const g = new URL('http://x' + url).searchParams.get('group_by');
+        const extra = g === 'queue' ? { 'queue=FILA_SUPORTE_1': { recebidas: 10, tma_receptivo_s: 150 } }
+          : g === 'day' ? { 'day=2026-10-13': { recebidas: 6 }, 'day=2026-10-12': { recebidas: 4 } }
+          : { 'branch=5005': { atendidas: 8, tma_receptivo_s: 150 } };
+        return { json: { groups: { total, ...extra }, callbacks: { pendentes: 1 } } };
+      },
+    });
+    const t = normTelephony(await sdops.metricsTelephony({ from: '2026-10-01' }));
+    expect(t.recebidas).toBe(10);
+    expect(t.tma_s).toBe(150);
+    expect(t.por_fila[0]).toMatchObject({ fila: 'FILA_SUPORTE_1', tma_s: 150 });
+    expect(t.serie.map((s: any) => s.dia)).toEqual(['2026-10-12', '2026-10-13']);
+    expect(t.por_ramal[0]).toMatchObject({ ramal: '5005' });
+    expect(t.motivos).toContainEqual({ motivo: 'abandoned_queue', total: 2 });
+    expect(t.retornos.pendentes).toBe(1);
+  });
+  it('tickets: dicionários viram listas e segundos viram horas', () => {
+    const k = normTickets({ backlog_agora: 4, tempo_resolucao_medio_s: 7200, fcr: 0.5, sla: { resolution: { cumprimento: 0.9, vencidas: 1 }, first_response: { cumprimento: 1, vencidas: 0 } }, por_canal: { telefone: 3 } });
+    expect(k.backlog).toBe(4);
+    expect(k.tempo_resolucao_h).toBe(2);
+    expect(k.sla_cumprido).toBe(0.9);
+    expect(k.vencidos).toBe(1);
+    expect(k.por_canal).toEqual([{ canal: 'telefone', criados: 3 }]);
   });
 });
 

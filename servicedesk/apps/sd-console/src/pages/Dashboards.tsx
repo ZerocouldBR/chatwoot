@@ -30,7 +30,8 @@ const n = (v: unknown): number | null => (typeof v === 'number' && isFinite(v) ?
 
 /** Normaliza /metrics/telephony (chaves de §8.7; aceita variações de nome). */
 export function normTelephony(d: Record<string, any> = {}) {
-  const tma = d.tma_s ?? d.tma?.receptivo ?? d.tma;
+  const tma = d.tma_s ?? d.tma_receptivo_s ?? d.tma?.receptivo ?? d.tma;
+  const motivos = d.motivos_desconexao || d.motivos || (d.por_resultado ? Object.entries(d.por_resultado).map(([motivo, total]) => ({ motivo, total })) : []);
   return {
     recebidas: n(d.recebidas),
     atendidas: n(d.atendidas),
@@ -49,26 +50,35 @@ export function normTelephony(d: Record<string, any> = {}) {
     retornos: d.retornos || {},
     por_fila: (d.por_fila || d.by_queue || []) as any[],
     por_ramal: (d.por_ramal || d.by_branch || []) as any[],
-    motivos: (d.motivos_desconexao || d.motivos || []) as any[],
+    motivos: motivos as any[],
     serie: (d.serie_diaria || d.series || []) as any[],
     custo: d.custo ?? null,
   };
 }
 
+const asList = (v: unknown, key: string, val = 'total') =>
+  Array.isArray(v) ? v : v && typeof v === 'object' ? Object.entries(v as object).map(([k, x]) => ({ [key]: k, [val]: x })) : [];
+const hours = (s: unknown) => (n(s) === null ? null : (n(s) as number) / 3600);
+
+/** /metrics/tickets do sd-ops (§8.7): backlog_agora, tempo_resolucao_*_s, sla.{first_response,resolution}, fcr, por_* (dicionários). */
 export function normTickets(d: Record<string, any> = {}) {
+  const sla = d.sla || {};
+  const vencidos =
+    n(d.vencidos) ?? (sla.resolution || sla.first_response ? (n(sla.resolution?.vencidas) || 0) + (n(sla.first_response?.vencidas) || 0) : null);
   return {
     criados: n(d.criados),
     resolvidos: n(d.resolvidos),
-    backlog: n(d.backlog),
-    vencidos: n(d.vencidos),
-    tempo_resolucao_h: n(d.tempo_resolucao_h ?? d.tempo_resolucao?.media_h),
-    tempo_resolucao_mediana_h: n(d.tempo_resolucao_mediana_h ?? d.tempo_resolucao?.mediana_h),
-    sla_cumprido: n(d.sla_cumprido),
+    backlog: n(d.backlog ?? d.backlog_agora),
+    vencidos,
+    tempo_resolucao_h: n(d.tempo_resolucao_h ?? d.tempo_resolucao?.media_h) ?? hours(d.tempo_resolucao_medio_s),
+    tempo_resolucao_mediana_h: n(d.tempo_resolucao_mediana_h ?? d.tempo_resolucao?.mediana_h) ?? hours(d.tempo_resolucao_mediana_s),
+    sla_cumprido: n(d.sla_cumprido) ?? n(sla.resolution?.cumprimento),
+    sla_primeira_resposta: n(sla.first_response?.cumprimento),
     reaberturas: n(d.reaberturas),
     fcr: n(d.fcr),
-    por_canal: (d.por_canal || []) as any[],
-    por_equipe: (d.por_equipe || []) as any[],
-    motivos: (d.motivos || d.por_categoria || []) as any[],
+    por_canal: asList(d.por_canal, 'canal', 'criados') as any[],
+    por_equipe: asList(d.por_equipe, 'equipe', 'criados') as any[],
+    motivos: (d.motivos ? asList(d.motivos, 'motivo') : asList(d.por_categoria, 'categoria')) as any[],
   };
 }
 
@@ -172,7 +182,10 @@ export default function Dashboards() {
           <button type="button" onClick={() => { const d = defaultFilters(); setF(d); setApplied(d); }}>
             Limpar
           </button>
-          <span className="small muted">Período em UTC por data de início. Clientes/empresa: filtro por equipe e categoria nesta versão.</span>
+          <span className="small muted">
+            Período em UTC. Hoje o sd-ops aceita fila, ramal e agente na telefonia e só o período em tickets; equipe e agente
+            filtram a qualidade. Os demais filtros são enviados e passam a valer quando a API os aceitar.
+          </span>
         </div>
       </form>
       {view === 'operador' ? (
@@ -356,14 +369,14 @@ function Tickets({ q }: { q: Filters }) {
     <section className="card" aria-label="Tickets">
       <div className="card-head">
         <h2>Tickets</h2>
-        <CsvButton name="tickets_por_equipe.csv" rows={t.por_equipe} cols={['equipe', 'criados', 'resolvidos', 'backlog', 'vencidos', 'sla_cumprido'].map((k) => ({ key: k, label: k }))} />
+        <CsvButton name="tickets_por_equipe.csv" rows={t.por_equipe} cols={['equipe', 'criados'].map((k) => ({ key: k, label: k }))} />
       </div>
       <div className="grid cols-4">
         <Kpi label="Criados" value={fmtNum(t.criados)} />
         <Kpi label="Resolvidos" value={fmtNum(t.resolvidos)} />
         <Kpi label="Backlog (agora)" value={fmtNum(t.backlog)} hint={`${fmtNum(t.vencidos)} vencidos`} />
         <Kpi label="Tempo de resolução" value={t.tempo_resolucao_h !== null ? `${fmtNum(t.tempo_resolucao_h, 1)} h` : '-'} hint={`mediana ${fmtNum(t.tempo_resolucao_mediana_h, 1)} h (corridas)`} />
-        <Kpi label="SLA cumprido" value={fmtPct(t.sla_cumprido)} hint="paradas sem violação ÷ paradas" />
+        <Kpi label="SLA de resolução" value={fmtPct(t.sla_cumprido)} hint={`1ª resposta ${fmtPct(t.sla_primeira_resposta)} · paradas sem violação ÷ paradas`} />
         <Kpi label="Reaberturas" value={fmtNum(t.reaberturas)} />
         <Kpi label="FCR" value={fmtPct(t.fcr)} hint="resolvidos sem reabertura e com ≤ 1 contato ÷ resolvidos" />
       </div>

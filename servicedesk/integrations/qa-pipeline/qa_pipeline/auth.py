@@ -54,15 +54,17 @@ def _hash(tok: str) -> str:
 def _parse_me(data: dict, fallback_tenant: str) -> Principal:
     data = data.get("data", data) if isinstance(data, dict) else {}
     user = data.get("user") if isinstance(data.get("user"), dict) else data
-    tenant = data.get("tenant")
+    # sd-ops real (sd_ops/api.py): {"kind","tenant_id","user_id","email","name","roles","scopes","service"}
+    tenant = data.get("tenant_id") or data.get("tenant")
     if isinstance(tenant, dict):
         tenant = tenant.get("slug") or tenant.get("id")
     roles = {ROLE_ALIASES.get(str(r).lower(), str(r).lower()) for r in (data.get("roles") or user.get("roles") or [])}
     email = user.get("email") or user.get("uid")
     if not email:
         raise HTTPException(401, detail={"error": "invalid_session", "message": "sessão sem usuário"})
+    uid = user.get("id", data.get("user_id"))
     return Principal(ref=str(email).lower(), name=user.get("name") or email, tenant=str(tenant or fallback_tenant),
-                     roles=roles, user_id=str(user.get("id")) if user.get("id") is not None else None)
+                     roles=roles, user_id=str(uid) if uid is not None else None)
 
 
 class Authenticator:
