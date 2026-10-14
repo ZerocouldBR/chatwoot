@@ -50,6 +50,13 @@ describe('DashboardAppFrame', () => {
     document.body.classList.remove('dark');
   });
 
+  it('allows microphone and autoplay so softphone apps (e.g. 55PBX) can work', async () => {
+    await wrapper.setProps({ isVisible: true });
+    const frame = wrapper.find('iframe');
+    expect(frame.attributes('allow')).toContain('microphone');
+    expect(frame.attributes('allow')).toContain('autoplay');
+  });
+
   it('sends custom attribute definitions and the resolved theme', async () => {
     const customAttributes = [
       {

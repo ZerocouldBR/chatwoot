@@ -142,6 +142,7 @@ export default {
         v-if="configItem.type === 'frame' && configItem.url"
         :id="getFrameId(index)"
         :src="configItem.url"
+        allow="microphone; autoplay; clipboard-write"
         @load="() => sendContext(index)"
       />
     </div>
