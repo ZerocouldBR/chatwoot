@@ -1,4 +1,5 @@
 <script setup>
+import Select from 'dashboard/components-next/select/Select.vue';
 import { computed, watch } from 'vue';
 import Input from './Input.vue';
 import { useI18n } from 'vue-i18n';
@@ -79,19 +80,14 @@ watch(unit, () => {
     @blur="normalizeDuration"
     @keydown.enter="normalizeDuration"
   />
-  <select
+  <Select
     v-model="unit"
     :disabled="disabled"
     class="mb-0 text-sm disabled:outline-n-weak disabled:opacity-40"
-  >
-    <option :value="DURATION_UNITS.MINUTES">
-      {{ t('DURATION_INPUT.MINUTES') }}
-    </option>
-    <option :value="DURATION_UNITS.HOURS">
-      {{ t('DURATION_INPUT.HOURS') }}
-    </option>
-    <option :value="DURATION_UNITS.DAYS">
-      {{ t('DURATION_INPUT.DAYS') }}
-    </option>
-  </select>
+    :options="[
+      { value: DURATION_UNITS.MINUTES, label: t('DURATION_INPUT.MINUTES') },
+      { value: DURATION_UNITS.HOURS, label: t('DURATION_INPUT.HOURS') },
+      { value: DURATION_UNITS.DAYS, label: t('DURATION_INPUT.DAYS') },
+    ]"
+  />
 </template>

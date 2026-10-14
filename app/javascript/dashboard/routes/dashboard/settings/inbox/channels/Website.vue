@@ -1,4 +1,5 @@
 <script>
+import NextSelect from 'dashboard/components-next/select/Select.vue';
 import { mapGetters } from 'vuex';
 import { useAlert } from 'dashboard/composables';
 import router from '../../../../index';
@@ -9,6 +10,7 @@ import Editor from 'dashboard/components-next/Editor/Editor.vue';
 
 export default {
   components: {
+    NextSelect,
     PageHeader,
     GreetingsEditor,
     NextButton,
@@ -151,22 +153,24 @@ export default {
 
       <label class="w-full">
         {{ $t('INBOX_MGMT.ADD.WEBSITE_CHANNEL.CHANNEL_GREETING_TOGGLE.LABEL') }}
-        <select v-model="greetingEnabled">
-          <option :value="true">
-            {{
-              $t(
+        <NextSelect
+          v-model="greetingEnabled"
+          class="!w-full"
+          :options="[
+            {
+              value: true,
+              label: $t(
                 'INBOX_MGMT.ADD.WEBSITE_CHANNEL.CHANNEL_GREETING_TOGGLE.ENABLED'
-              )
-            }}
-          </option>
-          <option :value="false">
-            {{
-              $t(
+              ),
+            },
+            {
+              value: false,
+              label: $t(
                 'INBOX_MGMT.ADD.WEBSITE_CHANNEL.CHANNEL_GREETING_TOGGLE.DISABLED'
-              )
-            }}
-          </option>
-        </select>
+              ),
+            },
+          ]"
+        />
         <p class="help-text">
           {{
             $t(

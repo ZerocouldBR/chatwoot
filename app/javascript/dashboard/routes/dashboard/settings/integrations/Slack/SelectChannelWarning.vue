@@ -1,4 +1,5 @@
 <script setup>
+import Select from 'dashboard/components-next/select/Select.vue';
 import { ref, computed } from 'vue';
 import { useStore } from 'vuex';
 import { useI18n } from 'vue-i18n';
@@ -89,21 +90,22 @@ const updateIntegration = async () => {
         {{ $t('INTEGRATION_SETTINGS.SLACK.SELECT_CHANNEL.BUTTON_TEXT') }}
       </Button>
       <div v-else class="inline-flex">
-        <select
+        <Select
           v-model="selectedChannelId"
           class="h-8 py-1 mr-4 text-xs leading-4 border border-n-amber-10"
-        >
-          <option value="">
-            {{ $t('INTEGRATION_SETTINGS.SLACK.SELECT_CHANNEL.OPTION_LABEL') }}
-          </option>
-          <option
-            v-for="channel in availableChannels"
-            :key="channel.id"
-            :value="channel.id"
-          >
-            #{{ channel.name }}
-          </option>
-        </select>
+          :options="[
+            {
+              value: '',
+              label: $t(
+                'INTEGRATION_SETTINGS.SLACK.SELECT_CHANNEL.OPTION_LABEL'
+              ),
+            },
+            ...availableChannels.map(channel => ({
+              value: channel.id,
+              label: `#${channel.name}`,
+            })),
+          ]"
+        />
         <Button
           teal
           sm

@@ -1,5 +1,6 @@
 <script setup>
-import { computed, onMounted, ref } from 'vue';
+import Select from 'dashboard/components-next/select/Select.vue';
+import { computed, onMounted, ref, toRaw } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useAlert } from 'dashboard/composables';
 import { useMapGetter, useStore } from 'dashboard/composables/store';
@@ -86,7 +87,7 @@ const loadGrid = policy => {
 
 const edit = policy => {
   editing.value = {
-    ...structuredClone(policy),
+    ...structuredClone(toRaw(policy)),
     filter: { all: [], any: [], ...policy.filter },
   };
   loadGrid(policy);
@@ -286,37 +287,37 @@ onMounted(() => {
                 :key="index"
                 class="flex flex-wrap items-center gap-2"
               >
-                <select
+                <Select
                   v-model="condition.field"
                   :aria-label="$t('TICKET_SLA.CONDITIONS')"
-                  @change="onFieldChange(condition)"
-                >
-                  <option v-for="field in FIELDS" :key="field" :value="field">
-                    {{ $t(`TICKET_SLA.FIELDS.${field}`) }}
-                  </option>
-                </select>
-                <select v-model="condition.operator">
-                  <option
-                    v-for="operator in operatorsFor(condition.field)"
-                    :key="operator"
-                    :value="operator"
-                  >
-                    {{ $t(`TICKET_SLA.OPERATORS.${operator}`) }}
-                  </option>
-                </select>
-                <select
+                  :options="
+                    FIELDS.map(field => ({
+                      value: field,
+                      label: $t(`TICKET_SLA.FIELDS.${field}`),
+                    }))
+                  "
+                  @update:model-value="onFieldChange(condition)"
+                />
+                <Select
+                  v-model="condition.operator"
+                  :options="
+                    operatorsFor(condition.field).map(operator => ({
+                      value: operator,
+                      label: $t(`TICKET_SLA.OPERATORS.${operator}`),
+                    }))
+                  "
+                />
+                <Select
                   v-if="valueOptions(condition.field)"
                   v-model="condition.value"
                   :aria-label="$t('TICKET_SLA.VALUE')"
-                >
-                  <option
-                    v-for="option in valueOptions(condition.field)"
-                    :key="option.id"
-                    :value="option.id"
-                  >
-                    {{ option.name }}
-                  </option>
-                </select>
+                  :options="
+                    valueOptions(condition.field).map(option => ({
+                      value: option.id,
+                      label: option.name,
+                    }))
+                  "
+                />
                 <input
                   v-else
                   v-model="condition.value"

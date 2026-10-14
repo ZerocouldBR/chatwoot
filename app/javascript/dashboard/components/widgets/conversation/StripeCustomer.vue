@@ -1,4 +1,5 @@
 <script setup>
+import Select from 'dashboard/components-next/select/Select.vue';
 import { ref, watch } from 'vue';
 import { dateFormat } from 'shared/helpers/timeHelper';
 import { useAbortableRequest } from 'dashboard/composables/useAbortableRequest';
@@ -64,23 +65,21 @@ watch(
       <template v-else>
         <label v-if="summary.customers.length > 1" class="flex flex-col gap-2">
           {{ $t('STRIPE_INTEGRATION.SELECT') }}
-          <select v-model="customerId" class="!mb-0" @change="load">
-            <option value="" disabled>
-              {{ $t('STRIPE_INTEGRATION.SELECT') }}
-            </option>
-            <option
-              v-for="customer in summary.customers"
-              :key="customer.id"
-              :value="customer.id"
-            >
-              {{
-                $t('STRIPE_INTEGRATION.CUSTOMER_OPTION', {
+          <Select
+            v-model="customerId"
+            class="!w-full"
+            :placeholder="$t('STRIPE_INTEGRATION.SELECT')"
+            :options="
+              summary.customers.map(customer => ({
+                value: customer.id,
+                label: $t('STRIPE_INTEGRATION.CUSTOMER_OPTION', {
                   name: customer.name || customer.email,
                   id: customer.id,
-                })
-              }}
-            </option>
-          </select>
+                }),
+              }))
+            "
+            @update:model-value="load"
+          />
         </label>
         <p
           v-if="summary.has_more_customers"

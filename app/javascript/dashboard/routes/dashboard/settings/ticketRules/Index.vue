@@ -1,5 +1,6 @@
 <script setup>
-import { computed, onMounted, ref, watch } from 'vue';
+import Select from 'dashboard/components-next/select/Select.vue';
+import { computed, onMounted, ref, toRaw, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useAlert } from 'dashboard/composables';
 import { useStore } from 'dashboard/composables/store';
@@ -60,7 +61,7 @@ const load = async () => {
 
 const edit = rule => {
   editing.value = {
-    ...structuredClone(rule),
+    ...structuredClone(toRaw(rule)),
     conditions: { all: [], any: [], ...rule.conditions },
   };
 };
@@ -281,32 +282,28 @@ onMounted(() => {
               class="flex flex-wrap items-center gap-2"
               data-testid="rule-condition"
             >
-              <select
+              <Select
                 v-model="condition.field"
                 data-testid="rule-condition-field"
                 :aria-label="$t('TICKET_RULES.FIELDS.status')"
-                @change="onConditionFieldChange(condition)"
-              >
-                <option
-                  v-for="field in conditionFields"
-                  :key="field"
-                  :value="field"
-                >
-                  {{ $t(`TICKET_RULES.FIELDS.${field}`) }}
-                </option>
-              </select>
-              <select
+                :options="
+                  conditionFields.map(field => ({
+                    value: field,
+                    label: $t(`TICKET_RULES.FIELDS.${field}`),
+                  }))
+                "
+                @update:model-value="onConditionFieldChange(condition)"
+              />
+              <Select
                 v-model="condition.operator"
                 data-testid="rule-condition-operator"
-              >
-                <option
-                  v-for="operator in conditions[condition.field].operators"
-                  :key="operator"
-                  :value="operator"
-                >
-                  {{ $t(`TICKET_RULES.OPERATORS.${operator}`) }}
-                </option>
-              </select>
+                :options="
+                  conditions[condition.field].operators.map(operator => ({
+                    value: operator,
+                    label: $t(`TICKET_RULES.OPERATORS.${operator}`),
+                  }))
+                "
+              />
               <RuleValueInput
                 v-if="!OPERATORS_WITHOUT_VALUE.includes(condition.operator)"
                 v-model="condition.value"
@@ -354,20 +351,18 @@ onMounted(() => {
               data-testid="rule-action"
             >
               <div class="flex flex-wrap items-center gap-2">
-                <select
+                <Select
                   v-model="action.field"
                   data-testid="rule-action-field"
                   :aria-label="$t('TICKET_RULES.ACTIONS')"
-                  @change="onActionFieldChange(action)"
-                >
-                  <option
-                    v-for="field in actionFields"
-                    :key="field"
-                    :value="field"
-                  >
-                    {{ $t(`TICKET_RULES.ACTION_FIELDS.${field}`) }}
-                  </option>
-                </select>
+                  :options="
+                    actionFields.map(field => ({
+                      value: field,
+                      label: $t(`TICKET_RULES.ACTION_FIELDS.${field}`),
+                    }))
+                  "
+                  @update:model-value="onActionFieldChange(action)"
+                />
                 <RuleValueInput
                   v-if="ACTIONS[action.field].input !== 'email'"
                   v-model="action.value"

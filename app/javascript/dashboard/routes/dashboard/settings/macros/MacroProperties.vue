@@ -1,10 +1,12 @@
 <script>
+import NextSelect from 'dashboard/components-next/select/Select.vue';
 import NextButton from 'dashboard/components-next/button/Button.vue';
 import Icon from 'dashboard/components-next/icon/Icon.vue';
 import { mapGetters } from 'vuex';
 
 export default {
   components: {
+    NextSelect,
     NextButton,
     Icon,
   },
@@ -166,19 +168,16 @@ export default {
           {{ $t('MACROS.EDITOR.VISIBILITY.TEAM.DESCRIPTION') }}
         </p>
       </button>
-      <select
+      <NextSelect
         v-if="macroVisibility === 'team'"
         data-testid="macro-team"
-        class="mt-2"
-        :value="macroTeamId"
+        class="mt-2 !w-full"
+        :model-value="macroTeamId"
         :disabled="readOnly"
         :aria-label="$t('MACROS.EDITOR.VISIBILITY.TEAM.LABEL')"
-        @change="$emit('update:teamId', Number($event.target.value))"
-      >
-        <option v-for="team in teams" :key="team.id" :value="team.id">
-          {{ team.name }}
-        </option>
-      </select>
+        :options="teams.map(team => ({ value: team.id, label: team.name }))"
+        @update:model-value="$emit('update:teamId', $event)"
+      />
       <div
         class="mt-2 flex items-start p-2 bg-n-alpha-1 gap-2 dark:bg-n-solid-3 rounded-md"
       >

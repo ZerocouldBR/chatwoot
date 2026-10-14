@@ -1,45 +1,40 @@
-<script>
-export default {
-  props: {
-    label: {
-      type: String,
-      default: '',
-    },
-    options: {
-      type: Array,
-      default: () => [],
-    },
-    selected: {
-      type: String,
-      default: '',
-    },
-    action: {
-      type: Function,
-      default: () => {},
-    },
+<script setup>
+import { ref } from 'vue';
+import Select from 'dashboard/components-next/select/Select.vue';
+
+const props = defineProps({
+  label: {
+    type: String,
+    default: '',
   },
-  data() {
-    return {
-      value: this.selected,
-    };
+  options: {
+    type: Array,
+    default: () => [],
   },
-};
+  selected: {
+    type: String,
+    default: '',
+  },
+  action: {
+    type: Function,
+    default: () => {},
+  },
+});
+
+const value = ref(props.selected);
 </script>
 
 <template>
-  <div>
-    <label for="dropdown-select">
-      {{ label }}
-    </label>
-    <select
-      id="dropdown-select"
+  <div class="flex flex-col gap-1">
+    <span class="text-sm font-medium text-n-slate-12">{{ label }}</span>
+    <Select
       v-model="value"
-      name="dropdown-select"
-      @change="action(value)"
-    >
-      <option v-for="option in options" :key="option.key">
-        {{ option.value }}
-      </option>
-    </select>
+      class="!w-full"
+      :aria-label="label"
+      :options="
+        options.map(option => ({ value: option.value, label: option.value }))
+      "
+      @update:model-value="action"
+    />
   </div>
 </template>

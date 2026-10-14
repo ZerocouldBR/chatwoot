@@ -1,4 +1,5 @@
 <script setup>
+import Select from 'dashboard/components-next/select/Select.vue';
 import { ref, computed } from 'vue';
 import { useVuelidate } from '@vuelidate/core';
 import { required, minLength } from '@vuelidate/validators';
@@ -172,11 +173,14 @@ const resetPassword = async () => {
       <div class="w-full">
         <label :class="{ error: v$.selectedRoleId.$error }">
           {{ $t('AGENT_MGMT.EDIT.FORM.AGENT_TYPE.LABEL') }}
-          <select v-model="selectedRoleId" @change="v$.selectedRoleId.$touch">
-            <option v-for="role in roles" :key="role.id" :value="role.id">
-              {{ role.label }}
-            </option>
-          </select>
+          <Select
+            v-model="selectedRoleId"
+            class="!w-full"
+            :options="
+              roles.map(role => ({ value: role.id, label: role.label }))
+            "
+            @update:model-value="v$.selectedRoleId.$touch"
+          />
           <span v-if="v$.selectedRoleId.$error" class="message">
             {{ $t('AGENT_MGMT.EDIT.FORM.AGENT_TYPE.ERROR') }}
           </span>
@@ -186,18 +190,17 @@ const resetPassword = async () => {
       <div class="w-full">
         <label :class="{ error: v$.agentAvailability.$error }">
           {{ $t('PROFILE_SETTINGS.FORM.AVAILABILITY.LABEL') }}
-          <select
+          <Select
             v-model="agentAvailability"
-            @change="v$.agentAvailability.$touch"
-          >
-            <option
-              v-for="status in availabilityStatuses"
-              :key="status.value"
-              :value="status.value"
-            >
-              {{ status.label }}
-            </option>
-          </select>
+            class="!w-full"
+            :options="
+              availabilityStatuses.map(status => ({
+                value: status.value,
+                label: status.label,
+              }))
+            "
+            @update:model-value="v$.agentAvailability.$touch"
+          />
           <span v-if="v$.agentAvailability.$error" class="message">
             {{ $t('AGENT_MGMT.EDIT.FORM.AGENT_AVAILABILITY.ERROR') }}
           </span>

@@ -1,5 +1,6 @@
 <script setup>
-import { computed, onMounted, ref } from 'vue';
+import Select from 'dashboard/components-next/select/Select.vue';
+import { computed, onMounted, ref, toRaw } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useAlert } from 'dashboard/composables';
 import BusinessSchedulesAPI from 'dashboard/api/businessSchedules';
@@ -38,13 +39,13 @@ const load = async () => {
   schedules.value = data.payload;
   if (!editing.value) {
     editing.value = schedules.value[0]
-      ? structuredClone(schedules.value[0])
+      ? structuredClone(toRaw(schedules.value[0]))
       : blankSchedule();
   }
 };
 
 const edit = schedule => {
-  editing.value = structuredClone(schedule);
+  editing.value = structuredClone(toRaw(schedule));
 };
 
 const startNew = () => {
@@ -173,15 +174,17 @@ onMounted(load);
             </label>
             <label class="flex flex-col gap-1 text-sm text-n-slate-12">
               {{ $t('BUSINESS_HOURS.TIME_ZONE') }}
-              <select v-model="editing.time_zone" data-testid="schedule-tz">
-                <option
-                  v-for="zone in timeZones"
-                  :key="zone.label"
-                  :value="zone.value"
-                >
-                  {{ zone.label }}
-                </option>
-              </select>
+              <Select
+                v-model="editing.time_zone"
+                class="!w-full"
+                data-testid="schedule-tz"
+                :options="
+                  timeZones.map(zone => ({
+                    value: zone.value,
+                    label: zone.label,
+                  }))
+                "
+              />
             </label>
           </div>
           <label class="flex items-center gap-2 text-sm text-n-slate-12">

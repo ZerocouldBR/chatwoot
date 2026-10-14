@@ -2,6 +2,7 @@ import { test, expect } from '@playwright/test';
 import { ApiClient } from '@helpers/api';
 import { E2E_PASSWORD, loadE2EEnv } from '@helpers/e2e-env';
 import { railsRunner } from '@helpers/rails';
+import { chooseOption } from '@helpers/select';
 
 type Rule = { id: number; title: string };
 type TicketEvent = { via: string; field_name: string | null; value: unknown; author: { name: string | null } };
@@ -32,11 +33,11 @@ test.describe('triggers and automations', () => {
     const form = page.getByTestId('ticket-rule-form');
     await form.getByTestId('rule-title').fill(title);
     const condition = form.getByTestId('rule-condition').first();
-    await condition.getByTestId('rule-condition-field').selectOption('labels');
+    await chooseOption(condition.getByTestId('rule-condition-field'), 'labels');
     await condition.getByTestId('rule-value').fill(tag);
     const action = form.getByTestId('rule-action').first();
-    await action.getByTestId('rule-action-field').selectOption('priority');
-    await action.getByTestId('rule-value').selectOption('urgent');
+    await chooseOption(action.getByTestId('rule-action-field'), 'priority');
+    await chooseOption(action.getByTestId('rule-value'), 'urgent');
     await form.getByRole('button', { name: 'Salvar' }).click();
     await expect(page.getByText('Salvo')).toBeVisible();
 
@@ -68,10 +69,10 @@ test.describe('triggers and automations', () => {
     const form = page.getByTestId('ticket-rule-form');
     await form.getByTestId('rule-title').fill(title);
     const condition = form.getByTestId('rule-condition').first();
-    await condition.getByTestId('rule-condition-field').selectOption('labels');
+    await chooseOption(condition.getByTestId('rule-condition-field'), 'labels');
     await condition.getByTestId('rule-value').fill(tag);
     const action = form.getByTestId('rule-action').first();
-    await action.getByTestId('rule-action-field').selectOption('send_message');
+    await chooseOption(action.getByTestId('rule-action-field'), 'send_message');
     await action.getByTestId('rule-value').fill('Recebemos o ticket #{{ticket.id}}, já vamos responder.');
     await form.getByRole('button', { name: 'Salvar' }).click();
     await expect(page.getByText('Salvo')).toBeVisible();

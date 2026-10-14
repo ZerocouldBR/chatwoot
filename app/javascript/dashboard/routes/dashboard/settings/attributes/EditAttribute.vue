@@ -1,4 +1,5 @@
 <script>
+import NextSelect from 'dashboard/components-next/select/Select.vue';
 import { useVuelidate } from '@vuelidate/core';
 import { useAlert } from 'dashboard/composables';
 import { required, minLength } from '@vuelidate/validators';
@@ -9,6 +10,7 @@ import TagInput from 'dashboard/components-next/taginput/TagInput.vue';
 
 export default {
   components: {
+    NextSelect,
     NextButton,
     TagInput,
   },
@@ -200,11 +202,14 @@ export default {
         </label>
         <label :class="{ error: v$.attributeType.$error }">
           {{ $t('ATTRIBUTES_MGMT.ADD.FORM.TYPE.LABEL') }}
-          <select v-model="attributeType" disabled>
-            <option v-for="type in types" :key="type.id" :value="type.id">
-              {{ type.option }}
-            </option>
-          </select>
+          <NextSelect
+            v-model="attributeType"
+            class="!w-full"
+            disabled
+            :options="
+              types.map(type => ({ value: type.id, label: type.option }))
+            "
+          />
           <span v-if="v$.attributeType.$error" class="message">
             {{ $t('ATTRIBUTES_MGMT.ADD.FORM.TYPE.ERROR') }}
           </span>

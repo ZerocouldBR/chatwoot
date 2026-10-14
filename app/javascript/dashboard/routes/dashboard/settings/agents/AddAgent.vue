@@ -1,4 +1,5 @@
 <script setup>
+import Select from 'dashboard/components-next/select/Select.vue';
 import { ref, computed } from 'vue';
 import { useStore, useMapGetter } from 'dashboard/composables/store';
 import { useI18n } from 'vue-i18n';
@@ -124,11 +125,14 @@ const addAgent = async () => {
       <div class="w-full">
         <label :class="{ error: v$.selectedRoleId.$error }">
           {{ $t('AGENT_MGMT.ADD.FORM.AGENT_TYPE.LABEL') }}
-          <select v-model="selectedRoleId" @change="v$.selectedRoleId.$touch">
-            <option v-for="role in roles" :key="role.id" :value="role.id">
-              {{ role.label }}
-            </option>
-          </select>
+          <Select
+            v-model="selectedRoleId"
+            class="!w-full"
+            :options="
+              roles.map(role => ({ value: role.id, label: role.label }))
+            "
+            @update:model-value="v$.selectedRoleId.$touch"
+          />
           <span v-if="v$.selectedRoleId.$error" class="message">
             {{ $t('AGENT_MGMT.ADD.FORM.AGENT_TYPE.ERROR') }}
           </span>

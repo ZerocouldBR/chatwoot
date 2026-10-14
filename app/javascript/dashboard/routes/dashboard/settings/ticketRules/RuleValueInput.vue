@@ -1,4 +1,5 @@
 <script setup>
+import Select from 'dashboard/components-next/select/Select.vue';
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useMapGetter } from 'dashboard/composables/store';
@@ -98,19 +99,18 @@ const options = computed(() => {
     class="flex-1 min-w-64"
     :aria-label="$t('TICKET_RULES.VALUE')"
   />
-  <select
+  <Select
     v-else-if="options"
     v-model="value"
     data-testid="rule-value"
     :aria-label="$t('TICKET_RULES.VALUE')"
-  >
-    <option v-if="allowNone" value="">
-      {{ noneLabel || $t('TICKET_RULES.VALUES.NONE') }}
-    </option>
-    <option v-for="option in options" :key="option.id" :value="option.id">
-      {{ option.name }}
-    </option>
-  </select>
+    :options="[
+      ...(allowNone
+        ? [{ value: '', label: noneLabel || $t('TICKET_RULES.VALUES.NONE') }]
+        : []),
+      ...options.map(option => ({ value: option.id, label: option.name })),
+    ]"
+  />
   <input
     v-else
     v-model="value"

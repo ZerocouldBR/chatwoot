@@ -1,4 +1,5 @@
 <script>
+import NextSelect from 'dashboard/components-next/select/Select.vue';
 import { useVuelidate } from '@vuelidate/core';
 import { required, minLength } from '@vuelidate/validators';
 import { mapGetters } from 'vuex';
@@ -13,6 +14,7 @@ import TagInput from 'dashboard/components-next/taginput/TagInput.vue';
 
 export default {
   components: {
+    NextSelect,
     NextButton,
     TagInput,
   },
@@ -178,11 +180,13 @@ export default {
         <div class="w-full">
           <label :class="{ error: v$.attributeModel.$error }">
             {{ $t('ATTRIBUTES_MGMT.ADD.FORM.MODEL.LABEL') }}
-            <select v-model="attributeModel">
-              <option v-for="model in models" :key="model.id" :value="model.id">
-                {{ model.option }}
-              </option>
-            </select>
+            <NextSelect
+              v-model="attributeModel"
+              class="!w-full"
+              :options="
+                models.map(model => ({ value: model.id, label: model.option }))
+              "
+            />
             <span v-if="v$.attributeModel.$error" class="message">
               {{ $t('ATTRIBUTES_MGMT.ADD.FORM.MODEL.ERROR') }}
             </span>
@@ -225,11 +229,13 @@ export default {
           </label>
           <label :class="{ error: v$.attributeType.$error }">
             {{ $t('ATTRIBUTES_MGMT.ADD.FORM.TYPE.LABEL') }}
-            <select v-model="attributeType">
-              <option v-for="type in types" :key="type.id" :value="type.id">
-                {{ type.option }}
-              </option>
-            </select>
+            <NextSelect
+              v-model="attributeType"
+              class="!w-full"
+              :options="
+                types.map(type => ({ value: type.id, label: type.option }))
+              "
+            />
             <span v-if="v$.attributeType.$error" class="message">
               {{ $t('ATTRIBUTES_MGMT.ADD.FORM.TYPE.ERROR') }}
             </span>

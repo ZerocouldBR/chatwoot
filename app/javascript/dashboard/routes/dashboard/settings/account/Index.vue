@@ -1,4 +1,5 @@
 <script>
+import NextSelect from 'dashboard/components-next/select/Select.vue';
 import { useVuelidate } from '@vuelidate/core';
 import { required } from '@vuelidate/validators';
 import { mapGetters } from 'vuex';
@@ -19,6 +20,7 @@ import SectionLayout from './components/SectionLayout.vue';
 
 export default {
   components: {
+    NextSelect,
     BaseSettingsHeader,
     NextButton,
     AccountId,
@@ -190,15 +192,16 @@ export default {
             :label="$t('GENERAL_SETTINGS.FORM.LANGUAGE.LABEL')"
             :error-message="$t('GENERAL_SETTINGS.FORM.LANGUAGE.ERROR')"
           >
-            <select v-model="locale" class="!mb-0 text-sm">
-              <option
-                v-for="lang in languagesSortedByCode"
-                :key="lang.iso_639_1_code"
-                :value="lang.iso_639_1_code"
-              >
-                {{ lang.name }}
-              </option>
-            </select>
+            <NextSelect
+              v-model="locale"
+              class="text-sm !w-full"
+              :options="
+                languagesSortedByCode.map(lang => ({
+                  value: lang.iso_639_1_code,
+                  label: lang.name,
+                }))
+              "
+            />
           </WithLabel>
           <WithLabel
             v-if="featureCustomReplyDomainEnabled"
