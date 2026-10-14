@@ -7,7 +7,7 @@ RSpec.describe 'SLA policies API', type: :request do
   let(:url) { "/api/v1/accounts/#{account.id}/sla_policies" }
   let(:params) do
     { sla_policy: { name: 'Urgentes',
-                    filter: { all: [{ field: 'priority', operator: 'equal_to', values: ['urgent'] }] },
+                    filter: { all: [{ field: 'priority', operator: 'is', value: 'urgent' }] },
                     targets: [{ metric: 'first_reply_time', priority: 'urgent', minutes: 30, business_hours: false }] } }
   end
 

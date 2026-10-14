@@ -76,6 +76,10 @@
         "PERSONAL": {
           "LABEL": "Privada",
           "DESCRIPTION": "Esta macro será privada para você e não estará disponível para outras pessoas."
+        },
+        "TEAM": {
+          "LABEL": "Grupo",
+          "DESCRIPTION": "Disponível para os agentes de um grupo."
         }
       }
     },

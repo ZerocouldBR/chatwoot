@@ -40,4 +40,7 @@ if ENV['MAIL_SUPPORT_ADDRESS'].present?
   email_inbox_id = email_inbox.id
 end
 
+# Default triggers and automations, as a new account gets them.
+Tickets::Rules::Defaults.new(account).seed
+
 puts "E2E_JSON:#{{ account_id: account.id, users: users, api_inbox_id: api_inbox.id, email_inbox_id: email_inbox_id }.to_json}"

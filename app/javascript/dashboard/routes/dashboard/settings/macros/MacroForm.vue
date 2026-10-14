@@ -135,10 +135,12 @@ export default {
       <MacroProperties
         :macro-name="macro.name"
         :macro-visibility="macro.visibility"
+        :macro-team-id="macro.team_id"
         :can-manage-public-macros="canManagePublicMacros"
         :read-only="readOnly"
         @update:name="updateName"
         @update:visibility="updateVisibility"
+        @update:team-id="macro.team_id = $event"
         @submit="submit"
       />
     </div>

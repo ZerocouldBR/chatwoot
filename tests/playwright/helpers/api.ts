@@ -44,7 +44,7 @@ export class ApiClient {
     if (!res.ok()) throw new Error(`PUT /api/v1/profile -> ${res.status()}: ${await res.text()}`);
   }
 
-  async createContact(name: string, email: string) {
+  async createContact(name: string, email?: string) {
     const res = await this.call<{ payload: { contact: { id: number } } }>('post', '/contacts', { name, email });
     return res.payload.contact;
   }

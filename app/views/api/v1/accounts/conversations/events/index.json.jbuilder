@@ -13,7 +13,7 @@ json.payload @events do |event|
   json.author do
     json.type event.author_type
     json.id event.author_id
-    json.name event.author.try(:available_name) || event.author.try(:name)
+    json.name event.author.try(:available_name) || event.author.try(:name) || event.author.try(:title)
   end
   json.created_at event.created_at.to_i
 end

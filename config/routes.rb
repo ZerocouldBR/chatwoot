@@ -159,6 +159,9 @@ Rails.application.routes.draw do
           resources :sla_policies, only: [:index, :show, :create, :update, :destroy] do
             post :reorder, on: :collection
           end
+          resources :ticket_rules, only: [:index, :show, :create, :update, :destroy] do
+            post :reorder, on: :collection
+          end
           resources :applied_slas, only: [:index] do
             collection do
               get :metrics

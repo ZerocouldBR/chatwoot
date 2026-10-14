@@ -4,8 +4,8 @@
 #
 #  id                     :integer          not null, primary key
 #  additional_attributes  :jsonb
-#  ai_assignee_type       :string
 #  agent_last_seen_at     :datetime
+#  ai_assignee_type       :string
 #  assignee_last_seen_at  :datetime
 #  cached_label_list      :text
 #  contact_last_seen_at   :datetime
@@ -21,6 +21,7 @@
 #  status_changed_at      :datetime
 #  subject                :string(150)
 #  ticket_type            :integer
+#  triggers_event_cursor  :bigint
 #  uuid                   :uuid             not null
 #  waiting_since          :datetime
 #  created_at             :datetime         not null
@@ -41,28 +42,30 @@
 #
 # Indexes
 #
-#  conv_acid_inbid_stat_asgnid_idx                    (account_id,inbox_id,status,assignee_id)
-#  index_conversations_on_account_id                  (account_id)
-#  index_conversations_on_account_id_and_display_id   (account_id,display_id) UNIQUE
-#  index_conversations_on_account_id_and_due_at       (account_id,due_at)
-#  index_conversations_on_account_status_changed_at   (account_id,status,status_changed_at)
-#  index_conversations_on_assignee_id_and_account_id  (assignee_id,account_id)
-#  index_conversations_on_campaign_id                 (campaign_id)
-#  index_conversations_on_company_id                  (company_id)
-#  index_conversations_on_contact_id                  (contact_id)
-#  index_conversations_on_contact_inbox_id            (contact_inbox_id)
-#  index_conversations_on_created_at                  (created_at)
-#  index_conversations_on_first_reply_created_at      (first_reply_created_at)
-#  index_conversations_on_followup_source_id          (followup_source_id)
-#  index_conversations_on_id_and_account_id           (account_id,id)
-#  index_conversations_on_identifier_and_account_id   (identifier,account_id)
-#  index_conversations_on_inbox_id                    (inbox_id)
-#  index_conversations_on_priority                    (priority)
-#  index_conversations_on_status_and_account_id       (status,account_id)
-#  index_conversations_on_status_and_priority         (status,priority)
-#  index_conversations_on_team_id                     (team_id)
-#  index_conversations_on_uuid                        (uuid) UNIQUE
-#  index_conversations_on_waiting_since               (waiting_since)
+#  conv_acid_inbid_stat_asgnid_idx                           (account_id,inbox_id,status,assignee_id)
+#  index_conversations_on_account_id                         (account_id)
+#  index_conversations_on_account_id_and_display_id          (account_id,display_id) UNIQUE
+#  index_conversations_on_account_id_and_due_at              (account_id,due_at)
+#  index_conversations_on_account_id_and_next_sla_breach_at  (account_id,next_sla_breach_at)
+#  index_conversations_on_account_id_status_created_at       (account_id,status,created_at)
+#  index_conversations_on_account_status_changed_at          (account_id,status,status_changed_at)
+#  index_conversations_on_assignee_id_and_account_id         (assignee_id,account_id)
+#  index_conversations_on_campaign_id                        (campaign_id)
+#  index_conversations_on_company_id                         (company_id)
+#  index_conversations_on_contact_id                         (contact_id)
+#  index_conversations_on_contact_inbox_id                   (contact_inbox_id)
+#  index_conversations_on_created_at                         (created_at)
+#  index_conversations_on_first_reply_created_at             (first_reply_created_at)
+#  index_conversations_on_followup_source_id                 (followup_source_id)
+#  index_conversations_on_id_and_account_id                  (account_id,id)
+#  index_conversations_on_identifier_and_account_id          (identifier,account_id)
+#  index_conversations_on_inbox_id                           (inbox_id)
+#  index_conversations_on_priority                           (priority)
+#  index_conversations_on_status_and_account_id              (status,account_id)
+#  index_conversations_on_status_and_priority                (status,priority)
+#  index_conversations_on_team_id                            (team_id)
+#  index_conversations_on_uuid                               (uuid) UNIQUE
+#  index_conversations_on_waiting_since                      (waiting_since)
 #
 
 class Conversation < ApplicationRecord

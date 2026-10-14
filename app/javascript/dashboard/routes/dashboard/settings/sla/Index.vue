@@ -28,7 +28,8 @@ const FIELDS = [
   'inbox_id',
   'labels',
 ];
-const OPERATORS = ['equal_to', 'not_equal_to'];
+const OPERATORS = ['is', 'is_not'];
+const LABEL_OPERATORS = ['includes', 'not_includes'];
 
 const { t } = useI18n();
 const store = useStore();
@@ -102,9 +103,17 @@ const load = async () => {
 const addCondition = group => {
   editing.value.filter[group].push({
     field: 'priority',
-    operator: 'equal_to',
-    values: ['urgent'],
+    operator: 'is',
+    value: 'urgent',
   });
+};
+
+const operatorsFor = field =>
+  field === 'labels' ? LABEL_OPERATORS : OPERATORS;
+
+const onFieldChange = condition => {
+  condition.operator = operatorsFor(condition.field)[0];
+  condition.value = '';
 };
 
 const removeCondition = (group, condition) => {
@@ -280,7 +289,7 @@ onMounted(() => {
                 <select
                   v-model="condition.field"
                   :aria-label="$t('TICKET_SLA.CONDITIONS')"
-                  @change="condition.values = []"
+                  @change="onFieldChange(condition)"
                 >
                   <option v-for="field in FIELDS" :key="field" :value="field">
                     {{ $t(`TICKET_SLA.FIELDS.${field}`) }}
@@ -288,7 +297,7 @@ onMounted(() => {
                 </select>
                 <select v-model="condition.operator">
                   <option
-                    v-for="operator in OPERATORS"
+                    v-for="operator in operatorsFor(condition.field)"
                     :key="operator"
                     :value="operator"
                   >
@@ -297,7 +306,7 @@ onMounted(() => {
                 </select>
                 <select
                   v-if="valueOptions(condition.field)"
-                  v-model="condition.values[0]"
+                  v-model="condition.value"
                   :aria-label="$t('TICKET_SLA.VALUE')"
                 >
                   <option
@@ -310,7 +319,7 @@ onMounted(() => {
                 </select>
                 <input
                   v-else
-                  v-model="condition.values[0]"
+                  v-model="condition.value"
                   type="text"
                   :aria-label="$t('TICKET_SLA.VALUE')"
                 />

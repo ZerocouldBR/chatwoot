@@ -42,7 +42,7 @@ class Api::V1::Accounts::SlaPoliciesController < Api::V1::Accounts::BaseControll
   def policy_params
     params.require(:sla_policy).permit(
       :name, :description,
-      filter: { all: [:field, :operator, { values: [] }], any: [:field, :operator, { values: [] }] },
+      filter: { all: [:field, :operator, :value], any: [:field, :operator, :value] },
       targets: %i[metric priority minutes business_hours]
     )
   end

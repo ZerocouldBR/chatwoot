@@ -100,6 +100,11 @@ pt_BR:
       invalid_view: 'Visão desconhecida. Use mine, ccs, following ou solved'
     sla:
       business_hours_need_schedule: 'precisam de um horário comercial padrão (Configurações > Horário comercial) para metas em horas úteis'
+    ticket_rules:
+      invalid_kind: 'o tipo deve ser trigger ou automation'
+      needs_time_condition: 'precisam de pelo menos uma condição de "horas desde"'
+      needs_nullifying_action: 'devem mudar algo que uma das condições verifica (ou usar uma condição de horas com "é"), para que a automação rode só uma vez por ticket'
+      business_hours_need_schedule: 'precisam de um horário comercial padrão (Configurações > Horário comercial) para condições em horas úteis'
     conversations:
       resolved: O ticket está resolvido e não aceita novas mensagens
       invalid_cc: Informe um e-mail válido para copiar no ticket
@@ -668,3 +673,43 @@ pt_BR:
         button: 'Reenviar e-mail de confirmação'
         sent: 'E-mail de confirmação enviado.'
         already_confirmed: 'O usuário já está confirmado.'
+  tickets:
+    statuses:
+      new_ticket: 'Novo'
+      open: 'Aberto'
+      waiting_on_customer: 'Pendente'
+      on_hold: 'Em espera'
+      resolved: 'Resolvido'
+      closed: 'Fechado'
+      pending: 'Com o bot'
+    priorities:
+      low: 'Baixa'
+      medium: 'Normal'
+      high: 'Alta'
+      urgent: 'Urgente'
+    types:
+      question: 'Pergunta'
+      incident: 'Incidente'
+      problem: 'Problema'
+      task: 'Tarefa'
+    rules:
+      open_ticket: 'Abrir o ticket #%{id}'
+      defaults:
+        request_received:
+          title: 'Notificar solicitante e CCs sobre pedido recebido'
+          subject: '[Pedido recebido] {{ticket.title}}'
+          body: "Sua solicitação ({{ticket.id}}) foi recebida e está sendo analisada pela nossa equipe de suporte.\n\nPara adicionar comentários, responda a este e-mail."
+        group_assignment:
+          title: 'Notificar grupo sobre atribuição'
+          subject: '[{{ticket.group}}] Atribuição: {{ticket.title}}'
+          body: "O ticket #{{ticket.id}} foi atribuído ao grupo {{ticket.group}}.\n\n{{ticket.url}}"
+        default_priority:
+          title: 'Definir prioridade Normal quando vazia'
+        pending_reminder_24h:
+          title: 'Lembrete de pendente após 24 horas'
+          subject: '[Lembrete] {{ticket.title}}'
+          body: "Estamos aguardando sua resposta na solicitação #{{ticket.id}}. Responda a este e-mail para continuar."
+        pending_reminder_5d:
+          title: 'Lembrete de pendente após 5 dias'
+          subject: '[Lembrete] {{ticket.title}}'
+          body: "Ainda estamos aguardando sua resposta na solicitação #{{ticket.id}}. Responda a este e-mail para continuar."

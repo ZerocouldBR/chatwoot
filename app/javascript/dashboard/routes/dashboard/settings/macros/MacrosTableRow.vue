@@ -29,16 +29,12 @@ const updatedByName = computed(() => {
   return updatedBy.available_name ?? updatedBy.email ?? '';
 });
 
-const visibilityLabel = computed(() => {
-  const i18nKey =
-    props.macro.visibility === 'global'
-      ? 'MACROS.EDITOR.VISIBILITY.GLOBAL.LABEL'
-      : 'MACROS.EDITOR.VISIBILITY.PERSONAL.LABEL';
-  return t(i18nKey);
-});
+const visibilityLabel = computed(() =>
+  t(`MACROS.EDITOR.VISIBILITY.${props.macro.visibility.toUpperCase()}.LABEL`)
+);
 
 const canManageMacro = computed(
-  () => props.canManagePublicMacros || props.macro.visibility !== 'global'
+  () => props.canManagePublicMacros || props.macro.visibility === 'personal'
 );
 
 const editTooltip = computed(() =>

@@ -27,6 +27,7 @@ import profile from './profile/profile.routes';
 import security from './security/security.routes';
 import conversationWorkflow from './conversationWorkflow/conversationWorkflow.routes';
 import businessHours from './businessHours/businessHours.routes';
+import ticketRules from './ticketRules/ticketRules.routes';
 import captain from './captain/captain.routes';
 import data from './data/data.routes';
 
@@ -72,6 +73,7 @@ export default {
     ...security.routes,
     ...conversationWorkflow.routes,
     ...businessHours.routes,
+    ...ticketRules.routes,
     ...captain.routes,
   ],
 };

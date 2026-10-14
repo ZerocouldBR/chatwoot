@@ -11,7 +11,7 @@ RSpec.describe Sla::Applier do
 
   it 'applies the first matching policy by position' do
     policy('Geral', 2)
-    vip = policy('VIP', 1, { 'all' => [{ 'field' => 'labels', 'operator' => 'equal_to', 'values' => ['vip'] }] })
+    vip = policy('VIP', 1, { 'all' => [{ 'field' => 'labels', 'operator' => 'includes', 'value' => 'vip' }] })
 
     described_class.new(conversation).perform
 
@@ -50,7 +50,7 @@ RSpec.describe Sla::Applier do
   end
 
   it 'removes the SLA when no policy matches anymore' do
-    policy('VIP', 1, { 'all' => [{ 'field' => 'labels', 'operator' => 'equal_to', 'values' => ['vip'] }] })
+    policy('VIP', 1, { 'all' => [{ 'field' => 'labels', 'operator' => 'includes', 'value' => 'vip' }] })
     described_class.new(conversation).perform
 
     conversation.update!(label_list: [])

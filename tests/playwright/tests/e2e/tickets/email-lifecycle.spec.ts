@@ -33,6 +33,10 @@ test.describe('e-mail tickets', () => {
     const ticket = await api.waitForConversation(env.email_inbox_id!, c => c.subject === subject);
     expect(ticket.status).toBe('new_ticket');
 
+    // Default triggers: the requester is told the request was received and the empty priority becomes Normal.
+    await waitForMail(customer, mail => (mail.subject || '') === `[Pedido recebido] ${subject}`, { since });
+    expect((await api.getConversation(Number(ticket.id))).priority).toBe('medium');
+
     await api.call('post', `/conversations/${ticket.id}/messages`, {
       content: `Pode nos enviar o localizador? Ref ${stamp}`,
       ticket_status: 'waiting_on_customer',

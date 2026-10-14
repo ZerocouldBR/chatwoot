@@ -38,7 +38,7 @@ provide('macroActionTypes', macroActionTypes);
 const uiFlags = computed(() => getters['macros/getUIFlags'].value);
 const macroId = computed(() => route.params.macroId);
 const isPublicMacroReadOnly = computed(
-  () => macro.value?.visibility === 'global' && !isAdmin.value
+  () => ['global', 'team'].includes(macro.value?.visibility) && !isAdmin.value
 );
 
 const fetchDropdownData = () =>

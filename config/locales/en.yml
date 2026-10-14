@@ -117,6 +117,11 @@ en:
       invalid_view: 'Unknown home view. Use mine, ccs, following or solved'
     sla:
       business_hours_need_schedule: 'need a default business schedule (Settings > Business hours) for business-hours targets'
+    ticket_rules:
+      invalid_kind: 'kind must be trigger or automation'
+      needs_time_condition: 'need at least one "hours since" condition'
+      needs_nullifying_action: 'must change something one of the conditions checks (or use an "is" hours condition), so the automation runs only once per ticket'
+      business_hours_need_schedule: 'need a default schedule (Settings > Business hours) for business-hours conditions'
     conversations:
       resolved: Ticket is resolved and does not accept new messages
       invalid_cc: Enter a valid e-mail address to copy on the ticket
@@ -1044,3 +1049,43 @@ en:
         test_email:
           queued: 'Test email on its way to %{email}. Ask the user to check their inbox and spam folder.'
           subject: 'Test email from %{brand_name} support'
+  tickets:
+    statuses:
+      new_ticket: 'New'
+      open: 'Open'
+      waiting_on_customer: 'Pending'
+      on_hold: 'On-hold'
+      resolved: 'Solved'
+      closed: 'Closed'
+      pending: 'With the bot'
+    priorities:
+      low: 'Low'
+      medium: 'Normal'
+      high: 'High'
+      urgent: 'Urgent'
+    types:
+      question: 'Question'
+      incident: 'Incident'
+      problem: 'Problem'
+      task: 'Task'
+    rules:
+      open_ticket: 'Open ticket #%{id}'
+      defaults:
+        request_received:
+          title: 'Notify requester and CCs of received request'
+          subject: '[Request received] {{ticket.title}}'
+          body: "Your request ({{ticket.id}}) has been received and is being reviewed by our support staff.\n\nTo add additional comments, reply to this email."
+        group_assignment:
+          title: 'Notify group of assignment'
+          subject: '[{{ticket.group}}] Assignment: {{ticket.title}}'
+          body: "Ticket #{{ticket.id}} was assigned to the group {{ticket.group}}.\n\n{{ticket.url}}"
+        default_priority:
+          title: 'Set priority to Normal when it is empty'
+        pending_reminder_24h:
+          title: 'Pending notification 24 hours'
+          subject: '[Reminder] {{ticket.title}}'
+          body: "We are waiting for your reply on request #{{ticket.id}}. Reply to this email to continue."
+        pending_reminder_5d:
+          title: 'Pending notification 5 days'
+          subject: '[Reminder] {{ticket.title}}'
+          body: "We are still waiting for your reply on request #{{ticket.id}}. Reply to this email to continue."

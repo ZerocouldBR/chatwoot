@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2026_10_14_110327) do
+ActiveRecord::Schema[7.1].define(version: 2026_10_14_152126) do
   # These extensions should be enabled to support this database
   enable_extension "pg_stat_statements"
   enable_extension "pg_trgm"
@@ -1055,6 +1055,7 @@ ActiveRecord::Schema[7.1].define(version: 2026_10_14_110327) do
     t.bigint "followup_source_id"
     t.datetime "next_sla_breach_at"
     t.boolean "sla_breached", default: false, null: false
+    t.bigint "triggers_event_cursor"
     t.index ["account_id", "display_id"], name: "index_conversations_on_account_id_and_display_id", unique: true
     t.index ["account_id", "due_at"], name: "index_conversations_on_account_id_and_due_at"
     t.index ["account_id", "id"], name: "index_conversations_on_id_and_account_id"
@@ -1395,7 +1396,9 @@ ActiveRecord::Schema[7.1].define(version: 2026_10_14_110327) do
     t.jsonb "actions", default: {}, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "team_id"
     t.index ["account_id"], name: "index_macros_on_account_id"
+    t.index ["team_id"], name: "index_macros_on_team_id"
   end
 
   create_table "mentions", force: :cascade do |t|
@@ -1678,6 +1681,21 @@ ActiveRecord::Schema[7.1].define(version: 2026_10_14_110327) do
     t.string "icon_color", default: ""
     t.index ["account_id"], name: "index_teams_on_account_id"
     t.index ["name", "account_id"], name: "index_teams_on_name_and_account_id", unique: true
+  end
+
+  create_table "ticket_rules", force: :cascade do |t|
+    t.bigint "account_id", null: false
+    t.integer "kind", null: false
+    t.string "title", null: false
+    t.string "description"
+    t.boolean "active", default: true, null: false
+    t.integer "position", default: 0, null: false
+    t.jsonb "conditions", default: {"all" => [], "any" => []}, null: false
+    t.jsonb "actions", default: [], null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["account_id", "kind", "position"], name: "index_ticket_rules_on_account_id_and_kind_and_position"
+    t.index ["account_id"], name: "index_ticket_rules_on_account_id"
   end
 
   create_table "user_sessions", force: :cascade do |t|

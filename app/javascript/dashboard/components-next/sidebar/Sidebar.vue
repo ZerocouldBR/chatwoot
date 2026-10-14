@@ -890,6 +890,18 @@ const menuItems = computed(() => {
           to: accountScopedRoute('attributes_list'),
         },
         {
+          name: 'Settings Ticket Triggers',
+          label: t('SIDEBAR.TICKET_TRIGGERS'),
+          icon: 'i-lucide-zap',
+          to: accountScopedRoute('ticket_triggers_index'),
+        },
+        {
+          name: 'Settings Ticket Automations',
+          label: t('SIDEBAR.TICKET_AUTOMATIONS'),
+          icon: 'i-lucide-timer-reset',
+          to: accountScopedRoute('ticket_automations_index'),
+        },
+        {
           name: 'Settings Automation',
           label: t('SIDEBAR.AUTOMATION'),
           icon: 'i-lucide-repeat',

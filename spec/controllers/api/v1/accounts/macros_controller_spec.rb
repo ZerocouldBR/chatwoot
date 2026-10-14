@@ -51,6 +51,21 @@ RSpec.describe 'Api::V1::Accounts::MacrosController', type: :request do
       end
     end
 
+    context 'when a macro is restricted to a group' do
+      let(:team) { create(:team, account: account) }
+      let!(:group_macro) { create(:macro, account: account, created_by: administrator, visibility: :team, team: team) }
+
+      it 'lists it only for the agents of the group' do
+        create(:team_member, team: team, user: agent)
+
+        get "/api/v1/accounts/#{account.id}/macros", headers: agent.create_new_auth_token
+        expect(response.parsed_body['payload'].pluck('id')).to include(group_macro.id)
+
+        get "/api/v1/accounts/#{account.id}/macros", headers: agent_1.create_new_auth_token
+        expect(response.parsed_body['payload'].pluck('id')).not_to include(group_macro.id)
+      end
+    end
+
     context 'when it is an unauthenticated user' do
       it 'returns unauthorized' do
         post "/api/v1/accounts/#{account.id}/macros"
