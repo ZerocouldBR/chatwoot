@@ -229,10 +229,12 @@ ActiveRecord::Schema[7.1].define(version: 2026_10_14_190000) do
     t.string "locale", default: "en", null: false
     t.string "draft_title"
     t.text "draft_content"
+    t.bigint "portal_user_segment_id"
     t.index ["account_id"], name: "index_articles_on_account_id"
     t.index ["associated_article_id"], name: "index_articles_on_associated_article_id"
     t.index ["author_id"], name: "index_articles_on_author_id"
     t.index ["portal_id"], name: "index_articles_on_portal_id"
+    t.index ["portal_user_segment_id"], name: "index_articles_on_portal_user_segment_id"
     t.index ["slug"], name: "index_articles_on_slug", unique: true
     t.index ["status"], name: "index_articles_on_status"
     t.index ["views"], name: "index_articles_on_views"
@@ -1542,6 +1544,23 @@ ActiveRecord::Schema[7.1].define(version: 2026_10_14_190000) do
     t.datetime "updated_at", null: false
     t.string "title"
     t.string "video_url"
+  end
+
+  create_table "portal_user_segments", force: :cascade do |t|
+    t.bigint "account_id", null: false
+    t.bigint "portal_id", null: false
+    t.string "name", null: false
+    t.integer "user_type", default: 0, null: false
+    t.bigint "company_ids", default: [], null: false, array: true
+    t.string "tags", default: [], null: false, array: true
+    t.string "or_tags", default: [], null: false, array: true
+    t.bigint "contact_ids", default: [], null: false, array: true
+    t.string "external_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["account_id"], name: "index_portal_user_segments_on_account_id"
+    t.index ["portal_id", "external_id"], name: "index_portal_user_segments_on_portal_id_and_external_id", unique: true, where: "(external_id IS NOT NULL)"
+    t.index ["portal_id"], name: "index_portal_user_segments_on_portal_id"
   end
 
   create_table "portals", force: :cascade do |t|

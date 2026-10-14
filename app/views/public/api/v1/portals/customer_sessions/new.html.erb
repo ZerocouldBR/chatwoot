@@ -1,0 +1,33 @@
+<%# ServiceDesk B2B: acesso do usuário final. No Zendesk da B2B o "Entrar" leva ao HUB (SSO JWT); aqui o padrão é o
+    link de acesso por e-mail e, com customer_portal.sso_login_url, o login volta a ser pelo HUB. %>
+<% content_for :head do %>
+  <title><%= I18n.t('public_portal.sd.login.title') %> | <%= @portal.display_title(@locale) %></title>
+  <meta name="robots" content="noindex">
+<% end %>
+<div class="container" id="main-content">
+  <div class="sign-in-box">
+    <% if @link_requested %>
+      <h1><%= I18n.t('public_portal.sd.login.sent_title') %></h1>
+      <p><%= I18n.t('public_portal.sd.login.sent_body', email: @email, minutes: PortalCustomers::MagicLinkService::TOKEN_TTL.in_minutes.to_i) %></p>
+      <% if @email_dormant %>
+        <div class="notification notification-notice" data-testid="sd-login-dormant"><%= I18n.t('public_portal.sd.login.dormant') %></div>
+      <% end %>
+      <a class="button" href="<%= portal_customer_login_path(@portal.slug, @locale, return_to: @return_to, local: 1) %>"><%= I18n.t('public_portal.sd.login.new_link') %></a>
+    <% else %>
+      <h1><%= I18n.t('public_portal.sd.login.title') %></h1>
+      <p><%= I18n.t('public_portal.sd.login.subtitle') %></p>
+      <% if @sso_error %>
+        <div class="notification notification-error"><%= I18n.t('public_portal.sd.login.sso_error') %></div>
+      <% end %>
+      <%= form_tag(portal_customer_login_path(@portal.slug, @locale), method: :post, data: { turbo: false, sd_submit_once: true }) do %>
+        <%= hidden_field_tag :return_to, @return_to %>
+        <div class="form-field required">
+          <label for="sd-login-email"><%= I18n.t('public_portal.sd.login.email_label') %></label>
+          <input id="sd-login-email" type="email" name="email" required maxlength="254" autocomplete="email" autofocus
+                 placeholder="<%= I18n.t('public_portal.sd.login.email_placeholder') %>">
+        </div>
+        <input type="submit" value="<%= I18n.t('public_portal.sd.login.submit') %>">
+      <% end %>
+    <% end %>
+  </div>
+</div>

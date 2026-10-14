@@ -4,11 +4,12 @@ class Public::Api::V1::Portals::SearchController < Public::Api::V1::Portals::Bas
   before_action :set_portal_layout
   before_action :set_view_variant
   before_action :ensure_portal_feature_enabled
+  before_action :enforce_portal_sign_in
   layout 'portal'
 
   def index
     @query = params[:query].to_s.strip
-    @articles = @portal.articles.published.includes(:category).where(locale: params[:locale])
+    @articles = @portal.articles.published.visible_to_segments(portal_visible_segment_ids).includes(:category).where(locale: params[:locale])
 
     search_articles
 

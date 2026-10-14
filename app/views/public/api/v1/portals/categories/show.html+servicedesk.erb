@@ -1,0 +1,54 @@
+<%# ServiceDesk B2B: página de categoria e de seção do Copenhagen. Categoria do Zendesk = categoria de topo
+    (lista as seções com até 6 artigos e "Ver todos os N artigos"); seção do Zendesk = subcategoria (lista os artigos). %>
+<% content_for :head do %>
+  <title><%= @category.name %> | <%= @portal.display_title(@locale) %></title>
+<% end %>
+<% sections = sd_sections(@category) %>
+<% own_articles = sd_category_articles(@category) %>
+<div class="container">
+  <nav class="sub-nav">
+    <%= render 'public/api/v1/portals/servicedesk/breadcrumbs', items: sd_category_trail(@category.parent_category) %>
+    <div class="search-container">
+      <%= render 'public/api/v1/portals/servicedesk/search' %>
+    </div>
+  </nav>
+
+  <div class="page-header" id="main-content">
+    <h1><%= @category.name %></h1>
+    <% if @category.description.present? %>
+      <p class="page-header-description"><%= @category.description %></p>
+    <% end %>
+  </div>
+
+  <% if sections.any? %>
+    <div class="section-tree">
+      <% sections.each do |section| %>
+        <% section_articles = sd_category_articles(section) %>
+        <section class="section">
+          <h2 class="section-tree-title"><a href="<%= sd_category_link(section) %>"><%= section.name %></a></h2>
+          <ul class="article-list">
+            <% section_articles.limit(6).each do |article| %>
+              <li class="article-list-item"><a href="<%= sd_article_link(article) %>" class="article-list-link"><%= article.title %></a></li>
+            <% end %>
+          </ul>
+          <% total = section_articles.count %>
+          <% if total > 6 %>
+            <a href="<%= sd_category_link(section) %>" class="see-all-articles"><%= I18n.t('public_portal.sd.category.see_all', count: total) %></a>
+          <% end %>
+        </section>
+      <% end %>
+    </div>
+  <% end %>
+
+  <% if own_articles.any? %>
+    <section class="section">
+      <ul class="article-list">
+        <% own_articles.each do |article| %>
+          <li class="article-list-item"><a href="<%= sd_article_link(article) %>" class="article-list-link"><%= article.title %></a></li>
+        <% end %>
+      </ul>
+    </section>
+  <% elsif sections.empty? %>
+    <p class="no-activities"><%= I18n.t('public_portal.common.no_articles') %></p>
+  <% end %>
+</div>

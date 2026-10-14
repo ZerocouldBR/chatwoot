@@ -1,0 +1,7 @@
+<%# ServiceDesk B2B: trilha "B2B > Categoria > Seção" do Copenhagen. items: [[rótulo, caminho ou nil], ...] %>
+<ol class="breadcrumbs">
+  <li title="<%= I18n.t('public_portal.sd.footer.brand') %>"><a href="<%= public_portal_locale_path(@portal.slug, portal_customer_locale) %>"><%= I18n.t('public_portal.sd.footer.brand') %></a></li>
+  <% Array(local_assigns[:items]).each do |label, path| %>
+    <li title="<%= label %>"><% if path %><a href="<%= path %>"><%= label %></a><% else %><%= label %><% end %></li>
+  <% end %>
+</ol>

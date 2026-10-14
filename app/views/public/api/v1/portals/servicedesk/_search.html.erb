@@ -1,0 +1,10 @@
+<%# ServiceDesk B2B: caixa de pesquisa do Copenhagen ("Pesquisa"), GET para a busca do portal. %>
+<% css = local_assigns[:full] ? 'search search-full' : 'search' %>
+<form role="search" class="<%= css %>" action="<%= portal_search_path(@portal.slug, portal_customer_locale) %>" method="get" data-turbo="false">
+  <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" focusable="false" viewBox="0 0 12 12" class="search-icon" aria-hidden="true">
+    <circle cx="4.5" cy="4.5" r="4" fill="none" stroke="currentColor"/>
+    <path stroke="currentColor" stroke-linecap="round" d="M11 11L7.5 7.5"/>
+  </svg>
+  <input type="search" name="query" value="<%= local_assigns[:query] %>" placeholder="<%= I18n.t('public_portal.sd.hero.search_placeholder') %>"
+         aria-label="<%= I18n.t('public_portal.sd.hero.search_placeholder') %>" autocomplete="off" maxlength="200">
+</form>

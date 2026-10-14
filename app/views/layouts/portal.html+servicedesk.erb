@@ -1,0 +1,21 @@
+<%# ServiceDesk B2B: layout da Central de Ajuda igual ao tema "B2B" (Copenhagen) do Zendesk Guide da B2B.reservas.
+    Usado quando o portal tem customer_portal.enabled (variante :servicedesk, ver Portals::BaseController). %>
+<!DOCTYPE html>
+<html lang="<%= html_lang_attribute(I18n.locale) %>" dir="ltr">
+  <head>
+    <%= render 'layouts/portal_head' %>
+    <%= render 'public/api/v1/portals/servicedesk/styles' %>
+  </head>
+  <body class="sd-b2b">
+    <%= render 'layouts/portal_analytics_noscript' %>
+    <a class="skip-navigation" tabindex="1" href="#main-content"><%= I18n.t('public_portal.sd.nav.skip') %></a>
+    <div id="portal" style="display: flex; flex-direction: column; min-height: 100vh;">
+      <%= render 'public/api/v1/portals/servicedesk/header' %>
+      <main role="main">
+        <%= yield %>
+      </main>
+      <%= render 'public/api/v1/portals/servicedesk/footer' %>
+    </div>
+    <%= render 'layouts/portal_scripts' %>
+  </body>
+</html>

@@ -1,0 +1,46 @@
+<%# ServiceDesk B2B: resultados da pesquisa no formato do Copenhagen. %>
+<% content_for :head do %>
+  <title><%= I18n.t('public_portal.search.results_title') %> | <%= @portal.display_title(@locale) %></title>
+  <meta name="robots" content="noindex">
+<% end %>
+<div class="container">
+  <nav class="sub-nav">
+    <%= render 'public/api/v1/portals/servicedesk/breadcrumbs', items: [[I18n.t('public_portal.search.results_title'), nil]] %>
+    <div class="search-container">
+      <%= render 'public/api/v1/portals/servicedesk/search', query: @query %>
+    </div>
+  </nav>
+
+  <div id="main-content" class="search-results">
+    <h1 class="search-results-subheading">
+      <% if @query.present? %>
+        <%= I18n.t('public_portal.sd.search.results_for', count: @articles.total_count, query: @query) %>
+      <% else %>
+        <%= I18n.t('public_portal.search.results_title') %>
+      <% end %>
+    </h1>
+    <% if @articles.any? %>
+      <ul class="search-results-list">
+        <% @articles.each do |article| %>
+          <li class="search-result">
+            <a href="<%= sd_article_link(article) %>" class="search-result-title"><%= article.title %></a>
+            <% if article.category %>
+              <ol class="search-result-breadcrumbs">
+                <% sd_category_trail(article.category).each do |label, _path| %><li><%= label %></li><% end %>
+              </ol>
+            <% end %>
+            <div class="search-result-description"><%= article.description.to_s.truncate(240) %></div>
+          </li>
+        <% end %>
+      </ul>
+      <% if @articles.total_pages > 1 %>
+        <nav class="pagination">
+          <% if @articles.prev_page %><a href="<%= portal_search_path(@portal.slug, @locale, query: @query, page: @articles.prev_page) %>"><%= I18n.t('public_portal.common.previous') %></a><% end %>
+          <% if @articles.next_page %><a href="<%= portal_search_path(@portal.slug, @locale, query: @query, page: @articles.next_page) %>"><%= I18n.t('public_portal.common.next') %></a><% end %>
+        </nav>
+      <% end %>
+    <% elsif @query.present? %>
+      <p class="no-activities"><%= I18n.t('public_portal.search.no_results', query: @query) %></p>
+    <% end %>
+  </div>
+</div>

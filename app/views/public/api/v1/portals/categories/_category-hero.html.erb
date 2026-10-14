@@ -25,7 +25,7 @@
     <div class="flex flex-row items-center gap-1">
       <%= render "public/api/v1/portals/authors", category: category, show_expanded: true %>
       <span class="text-slate-600 dark:text-slate-400">•</span>
-      <span class="flex items-center text-base text-slate-600 dark:text-slate-400 font-medium"><%= render 'public/api/v1/portals/article_count', article_count: category.articles.published.size %></span>
+      <span class="flex items-center text-base text-slate-600 dark:text-slate-400 font-medium"><%= render 'public/api/v1/portals/article_count', article_count: category.articles.published.visible_to_segments(portal_visible_segment_ids).size %></span>
     </div>
   </div>
 </div>

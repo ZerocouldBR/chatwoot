@@ -108,9 +108,8 @@ class Api::V1::Accounts::ArticlesController < Api::V1::Accounts::BaseController
   def article_params
     params.require(:article).permit(
       :title, :slug, :position, :content, :description, :category_id, :author_id, :associated_article_id, :status,
-      :locale, :draft_title, :draft_content, meta: [:title,
-                                                    :description,
-                                                    { tags: [] }]
+      :locale, :draft_title, :draft_content, :portal_user_segment_id,
+      meta: [:title, :description, { tags: [] }]
     )
   end
 

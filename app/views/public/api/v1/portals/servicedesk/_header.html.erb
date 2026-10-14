@@ -1,0 +1,45 @@
+<%# ServiceDesk B2B: cabeçalho igual ao da Central da B2B no Zendesk (Copenhagen): logo à esquerda;
+    "Enviar uma solicitação" e "Entrar" (ou o menu do usuário com "Minhas atividades" e "Sair") à direita. %>
+<% sd_locale = portal_customer_locale %>
+<% home_path = public_portal_locale_path(@portal.slug, sd_locale) %>
+<header class="header">
+  <div class="logo">
+    <a title="<%= I18n.t('public_portal.sd.nav.home') %>" href="<%= home_path %>">
+      <% if @portal.logo.present? %>
+        <img src="<%= url_for(@portal.logo) %>" alt="<%= I18n.t('public_portal.sd.nav.logo_alt') %>">
+      <% else %>
+        <img class="logo-light" src="/servicedesk/b2b-reservas-logo-dark.svg" alt="<%= I18n.t('public_portal.sd.nav.logo_alt') %>" width="220" height="24">
+        <img class="logo-dark" src="/servicedesk/b2b-reservas-logo-white.svg" alt="" aria-hidden="true" width="220" height="24">
+      <% end %>
+    </a>
+  </div>
+
+  <nav class="user-nav" id="user-nav" aria-label="<%= I18n.t('public_portal.sd.nav.main') %>">
+    <ul class="user-nav-list">
+      <li class="submit-request-item"><a class="submit-a-request" href="<%= portal_customer_new_request_path(@portal.slug, sd_locale) %>"><%= I18n.t('public_portal.sd.nav.submit_request') %></a></li>
+      <li>
+        <% if portal_contact_signed_in? %>
+          <% contact_label = portal_contact.name.presence || portal_contact.email %>
+          <details class="user-info" data-close-on-clickaway>
+            <summary aria-label="<%= I18n.t('public_portal.sd.nav.account_menu') %>">
+              <span class="user-avatar" aria-hidden="true"><%= sd_initial(contact_label) %></span>
+              <span class="user-name"><%= contact_label %></span>
+            </summary>
+            <div class="dropdown-menu" role="menu">
+              <div class="user-email"><%= portal_contact.email %></div>
+              <a role="menuitem" class="mobile-only" href="<%= portal_customer_new_request_path(@portal.slug, sd_locale) %>"><%= I18n.t('public_portal.sd.nav.submit_request') %></a>
+              <a role="menuitem" href="<%= portal_customer_requests_path(@portal.slug, sd_locale) %>"><%= I18n.t('public_portal.sd.nav.my_activities') %></a>
+              <div class="separator" role="separator"></div>
+              <%= form_tag(portal_customer_logout_path(@portal.slug, sd_locale), method: :delete, data: { turbo: false }) do %>
+                <button type="submit" role="menuitem"><%= I18n.t('public_portal.sd.nav.sign_out') %></button>
+              <% end %>
+            </div>
+          </details>
+        <% else %>
+          <% back_to = request.path.include?('/login') ? nil : request.fullpath %>
+          <a class="sign-in" rel="nofollow" href="<%= portal_customer_login_path(@portal.slug, sd_locale, return_to: back_to) %>"><%= I18n.t('public_portal.sd.nav.sign_in') %></a>
+        <% end %>
+      </li>
+    </ul>
+  </nav>
+</header>

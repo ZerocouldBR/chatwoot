@@ -1,0 +1,62 @@
+<%# ServiceDesk B2B: página do artigo do Copenhagen: trilha, "Artigos nesta seção" ao lado, título, autor e data,
+    corpo e "Voltar ao topo". %>
+<% content_for :head do %>
+  <%= render 'public/api/v1/portals/articles/meta_head',
+             article: @article, portal: @portal, locale: @locale, og_image_url: @og_image_url %>
+<% end %>
+<% section = @article.category %>
+<% siblings = section ? sd_category_articles(section).limit(20) : [] %>
+<% author_name = @article.author&.available_name.presence || @article.author&.name %>
+<div class="container">
+  <nav class="sub-nav">
+    <%= render 'public/api/v1/portals/servicedesk/breadcrumbs', items: sd_category_trail(section) %>
+    <div class="search-container">
+      <%= render 'public/api/v1/portals/servicedesk/search' %>
+    </div>
+  </nav>
+
+  <div class="article-container" id="article-container">
+    <% if siblings.any? %>
+      <aside class="article-sidebar" aria-labelledby="section-articles-title">
+        <div class="collapsible-sidebar">
+          <h3 id="section-articles-title" class="collapsible-sidebar-title sidenav-title"><%= I18n.t('public_portal.sd.article.in_section') %></h3>
+          <ul>
+            <% siblings.each do |article| %>
+              <li><a href="<%= sd_article_link(article) %>" class="sidenav-item <%= 'current-article' if article.id == @article.id %>"><%= article.title %></a></li>
+            <% end %>
+          </ul>
+        </div>
+      </aside>
+    <% end %>
+
+    <article id="main-content" class="article">
+      <header class="article-header">
+        <h1 title="<%= @article.title %>" class="article-title"><%= @article.title %></h1>
+        <div class="article-author">
+          <% if author_name.present? %>
+            <span class="user-avatar agent" aria-hidden="true"><%= sd_initial(author_name) %></span>
+          <% end %>
+          <div class="article-meta">
+            <% if author_name.present? %><div><%= author_name %></div><% end %>
+            <div class="meta-data"><%= I18n.t('public_portal.sd.article.updated', date: sd_time(@article.updated_at, with_time: false)) %></div>
+          </div>
+        </div>
+      </header>
+
+      <section class="article-info">
+        <div class="article-content">
+          <div class="article-body" id="cw-article-content"><%= @parsed_content %></div>
+        </div>
+      </section>
+
+      <footer>
+        <div class="article-footer">
+          <a href="<%= portal_customer_new_request_path(@portal.slug, portal_customer_locale) %>"><%= I18n.t('public_portal.sd.article.still_need_help') %></a>
+        </div>
+      </footer>
+      <div class="article-return-to-top">
+        <a href="#article-container"><%= I18n.t('public_portal.sd.article.return_to_top') %></a>
+      </div>
+    </article>
+  </div>
+</div>

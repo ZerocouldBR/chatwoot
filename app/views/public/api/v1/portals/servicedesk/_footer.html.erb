@@ -1,0 +1,29 @@
+<%# ServiceDesk B2B: rodapé igual ao do Copenhagen (nome da marca com link para a página inicial). O seletor de tema
+    claro/escuro é um extra do ServiceDesk. Links extras em config.customer_portal.footer_links. %>
+<% sd_locale = portal_customer_locale %>
+<% footer_links = Array(@portal.customer_portal['footer_links']).select { |link| link.is_a?(Hash) && link['url'].to_s.start_with?('https://', 'mailto:') } %>
+<footer class="footer">
+  <div class="footer-inner">
+    <a title="<%= I18n.t('public_portal.sd.nav.home') %>" href="<%= public_portal_locale_path(@portal.slug, sd_locale) %>"><%= I18n.t('public_portal.sd.footer.brand') %></a>
+    <div class="footer-tools">
+      <% footer_links.each do |link| %>
+        <a href="<%= link['url'] %>" target="_blank" rel="noopener noreferrer"><%= link['label'] %></a>
+      <% end %>
+      <button id="toggle-appearance" type="button" aria-label="<%= I18n.t('public_portal.header.appearance.title') %>">
+        <span data-theme="system" class="theme-button hidden items-center gap-1"><%= render partial: 'icons/monitor' %><%= I18n.t('public_portal.header.appearance.system') %></span>
+        <span data-theme="light" class="theme-button hidden items-center gap-1"><%= render partial: 'icons/sun' %><%= I18n.t('public_portal.header.appearance.light') %></span>
+        <span data-theme="dark" class="theme-button hidden items-center gap-1"><%= render partial: 'icons/moon' %><%= I18n.t('public_portal.header.appearance.dark') %></span>
+      </button>
+      <div id="appearance-dropdown" data-current-theme="<%= @theme_from_params %>"
+           class="appearance-menu absolute hidden flex-col w-32 h-auto bg-white border border-solid rounded dark:bg-slate-900 border-slate-100 dark:border-slate-800 shadow-lg data-[dropdown-open=true]:flex"
+           aria-hidden="true" data-dropdown="appearance-dropdown">
+        <% { 'system' => 'monitor', 'light' => 'sun', 'dark' => 'moon' }.each do |theme, icon| %>
+          <button type="button" class="flex flex-row items-center justify-between gap-1 px-2 py-2 text-slate-800 dark:text-slate-100 stroke-slate-700 dark:stroke-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800" data-theme="<%= theme %>">
+            <span class="flex flex-row items-center gap-1"><%= render partial: "icons/#{icon}" %><span class="text-xs"><%= I18n.t("public_portal.header.appearance.#{theme}") %></span></span>
+            <span class="check-mark-icon <%= theme %>-theme"><%= render partial: 'icons/check-mark' %></span>
+          </button>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</footer>
