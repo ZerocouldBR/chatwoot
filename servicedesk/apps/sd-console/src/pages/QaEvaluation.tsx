@@ -4,7 +4,7 @@ import { Link, useParams } from 'react-router-dom';
 import { Player } from '../components/Player';
 import { useSession } from '../components/Session';
 import { Badge, ErrorBox, Loading, Notice } from '../components/ui';
-import { ALERT_LABEL, fmtClock, fmtDateTime, fmtNum, fmtPct, scoreClass, STATUS_LABEL } from '../lib/format';
+import { ALERT_LABEL, fmtClock, fmtDateTime, fmtNum, fmtPct, scoreClass, STATUS_LABEL, TASK_STATUS } from '../lib/format';
 import { errorText } from '../lib/http';
 import { qaApi, type Criterion, type CritStatus, type EvalDetail } from '../lib/qa';
 
@@ -53,7 +53,7 @@ export default function QaEvaluation() {
         <Notice kind="warn">Evidência insuficiente para nota automática. Avalie ouvindo a gravação.</Notice>
       ) : null}
       {d.transcription.status === 'partial' ? <Notice kind="warn">Transcrição parcial ({fmtPct(d.transcription.coverage_ratio, 0)} do áudio).</Notice> : null}
-      <div className="grid cols-2">
+      <div className="grid eval-layout">
         <section className="card">
           <h2>Gravação e transcrição</h2>
           <Player recordingId={d.recording_id} segments={d.segments} seekTo={seek} />
@@ -74,7 +74,7 @@ export default function QaEvaluation() {
                   <th>Critério</th>
                   <th className="num">Peso</th>
                   <th>IA</th>
-                  <th>Humano</th>
+                  <th>Revisão</th>
                 </tr>
               </thead>
               <tbody>
@@ -139,7 +139,10 @@ export default function QaEvaluation() {
             <ul className="stack" style={{ paddingLeft: 16, margin: 0 }}>
               {d.tasks.map((t) => (
                 <li key={t.id}>
-                  <Badge kind={t.severity === 'alta' ? 'danger' : 'warn'}>{t.status}</Badge> {ALERT_LABEL[t.alert_type || ''] || t.title}
+                  <Badge kind={t.status === 'done' || t.status === 'dismissed' ? 'ok' : t.severity === 'alta' ? 'danger' : 'warn'}>
+                    {TASK_STATUS[t.status] || t.status}
+                  </Badge>{' '}
+                  {ALERT_LABEL[t.alert_type || ''] || t.title}
                   {t.evidence_text ? (
                     <button className="link small" onClick={() => t.evidence_start_s !== null && setSeek({ t: t.evidence_start_s || 0, n: Date.now() })}>
                       {' '}
@@ -192,8 +195,15 @@ export default function QaEvaluation() {
 }
 
 function ReviewForm({ d, onDone }: { d: EvalDetail; onDone: () => void }) {
+  // Parte da última revisão humana, se houver; senão, da avaliação da IA.
+  const last = new Map((d.human_reviews[d.human_reviews.length - 1]?.criteria || []).map((c) => [c.key, c]));
   const [vals, setVals] = useState<Record<string, { status: CritStatus; score: string; justification: string }>>(() =>
-    Object.fromEntries(d.criteria.map((c: Criterion) => [c.key, { status: c.status, score: c.score !== null ? String(Math.round(c.score)) : '', justification: '' }])),
+    Object.fromEntries(
+      d.criteria.map((c: Criterion) => {
+        const b = last.get(c.key) || c;
+        return [c.key, { status: b.status, score: b.score !== null ? String(Math.round(b.score)) : '', justification: '' }];
+      }),
+    ),
   );
   const [comment, setComment] = useState('');
   const [msg, setMsg] = useState<{ ok: boolean; text: string } | null>(null);

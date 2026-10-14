@@ -26,6 +26,16 @@ interface Filters {
   priority: string;
 }
 
+const OUTCOME: Record<string, string> = {
+  answered: 'atendida',
+  abandoned_queue: 'abandono fila',
+  abandoned_ura: 'abandono URA',
+  missed: 'não atendida',
+  after_hours: 'fora do horário',
+  dropped: 'queda',
+  unknown: 'sem dado',
+};
+
 const n = (v: unknown): number | null => (typeof v === 'number' && isFinite(v) ? v : v === null || v === undefined || v === '' ? null : isFinite(Number(v)) ? Number(v) : null);
 
 /** Normaliza /metrics/telephony (chaves de §8.7; aceita variações de nome). */
@@ -53,6 +63,7 @@ export function normTelephony(d: Record<string, any> = {}) {
     motivos: motivos as any[],
     serie: (d.serie_diaria || d.series || []) as any[],
     custo: d.custo ?? null,
+    fonte: d.fonte as string | undefined,
   };
 }
 
@@ -96,6 +107,10 @@ export default function Dashboards() {
   if (has('admin')) views.push(['admin', 'Administração']);
   const [view, setView] = useState<View>(views.length > 1 ? (views[1][0] as View) : 'operador');
   const [f, setF] = useState<Filters>(defaultFilters);
+  const [mock, setMock] = useState(false);
+  useEffect(() => {
+    sdops.health().then((h) => setMock(!!h.mock)).catch(() => setMock(false));
+  }, []);
   const [applied, setApplied] = useState<Filters>(f);
   const q = useMemo(() => {
     const base = { ...applied, to: applied.to };
@@ -115,6 +130,9 @@ export default function Dashboards() {
           ))}
         </div>
       </div>
+      {mock ? (
+        <Notice kind="mock">sd-ops em MODO MOCK (DEV): telefonia e tickets com números FICTÍCIOS, só para validar a tela.</Notice>
+      ) : null}
       <form
         className="card"
         onSubmit={(e) => {
@@ -352,10 +370,14 @@ function Telephony({ q, compact }: { q: Filters; compact?: boolean }) {
       {!compact && t.motivos.length ? (
         <div>
           <h3>Motivos de encerramento</h3>
-          <BarChart title="Motivos de encerramento" data={t.motivos.map((m) => ({ label: String(m.motivo || m.label), value: n(m.total ?? m.count) }))} />
+          <BarChart
+            title="Motivos de encerramento"
+            data={t.motivos.map((m) => ({ label: OUTCOME[String(m.motivo || m.label)] || String(m.motivo || m.label), value: n(m.total ?? m.count) }))}
+          />
         </div>
       ) : null}
       {t.custo === null ? <span className="small muted">Custo de telefonia: não informado pelo sd-ops (depende do contrato/tarifa da 55PBX).</span> : null}
+      {t.fonte ? <span className="small muted">Fonte: {t.fonte}</span> : null}
     </section>
   );
 }

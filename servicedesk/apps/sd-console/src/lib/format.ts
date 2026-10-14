@@ -51,6 +51,13 @@ export const ALERT_LABEL: Record<string, string> = {
   oportunidade_base_conhecimento: 'Oportunidade de base de conhecimento',
 };
 
+export const TASK_STATUS: Record<string, string> = {
+  open: 'aberta',
+  in_progress: 'em andamento',
+  done: 'concluída',
+  dismissed: 'descartada',
+};
+
 export function isoDay(d: Date): string {
   return d.toISOString().slice(0, 10);
 }

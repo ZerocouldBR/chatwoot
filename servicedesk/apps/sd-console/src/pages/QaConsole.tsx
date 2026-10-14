@@ -289,7 +289,7 @@ function Rubrics() {
           <div key={r.id} className="stack" style={{ borderBottom: '1px solid var(--sd-border-soft)', paddingBottom: 8 }}>
             <div className="row" style={{ justifyContent: 'space-between' }}>
               <strong>
-                {r.name} (v{r.version})
+                {r.name.replace(/\s*\(v\d+\)$/, '')} · versão {r.version}
               </strong>
               {r.active ? (
                 <Badge kind="ok">ativa</Badge>

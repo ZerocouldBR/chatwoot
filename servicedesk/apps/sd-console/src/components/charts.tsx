@@ -9,6 +9,8 @@ interface Datum {
   value: number | null;
 }
 
+const tick = (v: number) => (Number.isInteger(v) ? String(v) : v.toLocaleString('pt-BR', { maximumFractionDigits: 1 }));
+
 function niceMax(v: number) {
   if (v <= 0) return 1;
   const p = Math.pow(10, Math.floor(Math.log10(v)));
@@ -58,7 +60,7 @@ export function BarChart({ data, title, unit = '', height = 160 }: { data: Datum
         <g className="axis">
           {[0, 0.5, 1].map((f) => (
             <text key={f} x={pad.l - 6} y={y(max * f) + 4} textAnchor="end">
-              {Math.round(max * f)}
+              {tick(max * f)}
             </text>
           ))}
           {data.map((d, i) => (
@@ -122,7 +124,7 @@ export function LineChart({ data, title, unit = '', height = 160, yMax }: { data
         <g className="axis">
           {[0, 0.5, 1].map((f) => (
             <text key={f} x={pad.l - 6} y={y(max * f) + 4} textAnchor="end">
-              {Math.round(max * f)}
+              {tick(max * f)}
             </text>
           ))}
           {data.map((d, i) =>
