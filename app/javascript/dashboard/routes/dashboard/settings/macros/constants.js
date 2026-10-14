@@ -69,6 +69,22 @@ export const MACRO_ACTION_TYPES = [
     label: 'CHANGE_PRIORITY',
     inputType: 'search_select',
   },
+  // ServiceDesk M5: status do ticket (rótulo + status canônico), campo e assunto
+  {
+    key: 'set_ticket_status',
+    label: 'SET_TICKET_STATUS',
+    inputType: 'search_select',
+  },
+  {
+    key: 'set_custom_attribute',
+    label: 'SET_CUSTOM_ATTRIBUTE',
+    inputType: 'custom_attribute',
+  },
+  {
+    key: 'change_subject',
+    label: 'CHANGE_SUBJECT',
+    inputType: 'text',
+  },
   {
     key: 'send_webhook_event',
     label: 'SEND_WEBHOOK_EVENT',

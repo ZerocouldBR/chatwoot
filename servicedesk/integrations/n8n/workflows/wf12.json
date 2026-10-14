@@ -1,0 +1,411 @@
+{
+  "name": "SD WF12 - Relatório gerencial semanal",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 8 * * 1"
+            }
+          ]
+        }
+      },
+      "id": "f34f740f-b77c-548a-8fc9-20354b92bb70",
+      "name": "segunda_08h",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "a3c07c3c-2905-5547-a070-36911095f10a",
+              "name": "sdops_base_url",
+              "type": "string",
+              "value": "https://SERVICEDESK.EXEMPLO/sd-ops/api/v1"
+            },
+            {
+              "id": "cb16adaf-80eb-5a61-920e-c8defa856f9e",
+              "name": "chatwoot_base_url",
+              "type": "string",
+              "value": "https://SERVICEDESK.EXEMPLO"
+            },
+            {
+              "id": "de6b1ee2-c351-526b-9de7-234710a92d59",
+              "name": "chatwoot_account_id",
+              "type": "number",
+              "value": 1
+            },
+            {
+              "id": "41b6aa43-67c2-5f1a-a1cc-cb7292300c9a",
+              "name": "ops_alert_conversation_id",
+              "type": "number",
+              "value": 0
+            },
+            {
+              "id": "f135f6ba-dd33-5dff-a162-a73bb703f51a",
+              "name": "console_base_url",
+              "type": "string",
+              "value": "https://SERVICEDESK.EXEMPLO/sd-console"
+            },
+            {
+              "id": "0515069c-4b70-5912-8b11-9ccf71068170",
+              "name": "dias",
+              "type": "number",
+              "value": 7
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "edd4b49a-04aa-5eca-a53e-052fcb1f65b2",
+      "name": "config",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const dias = $('config').first().json.dias || 7;\nconst to = new Date(); const from = new Date(to.getTime() - dias * 86400000);\nreturn [{ json: { from: from.toISOString(), to: to.toISOString() } }];\n"
+      },
+      "id": "b813f5de-470f-5727-a3b0-fc3312b6b532",
+      "name": "periodo",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        440,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "url": "={{ $('config').first().json.sdops_base_url }}/reports/summary",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-SD-Origin",
+              "value": "n8n"
+            },
+            {
+              "name": "X-SD-Workflow",
+              "value": "WF12"
+            },
+            {
+              "name": "Idempotency-Key",
+              "value": "={{ $execution.id }}:resumo:{{ $itemIndex }}"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 15000
+        },
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "from",
+              "value": "={{ $('periodo').first().json.from }}"
+            },
+            {
+              "name": "to",
+              "value": "={{ $('periodo').first().json.to }}"
+            }
+          ]
+        }
+      },
+      "id": "f0232164-b040-57bd-b731-08ee22f7205b",
+      "name": "resumo",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        660,
+        0
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "REPLACE_CRED_SDOPS_SERVICE_TOKEN",
+          "name": "SD-OPS: token de serviço do n8n (Authorization: Bearer)"
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 2000
+    },
+    {
+      "parameters": {
+        "url": "={{ $('config').first().json.sdops_base_url }}/metrics/telephony",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-SD-Origin",
+              "value": "n8n"
+            },
+            {
+              "name": "X-SD-Workflow",
+              "value": "WF12"
+            },
+            {
+              "name": "Idempotency-Key",
+              "value": "={{ $execution.id }}:telefonia:{{ $itemIndex }}"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 15000
+        },
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "from",
+              "value": "={{ $('periodo').first().json.from }}"
+            },
+            {
+              "name": "to",
+              "value": "={{ $('periodo').first().json.to }}"
+            }
+          ]
+        }
+      },
+      "id": "d20a7f31-8942-57b5-ba86-0e0e77cd4e05",
+      "name": "telefonia",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        880,
+        0
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "REPLACE_CRED_SDOPS_SERVICE_TOKEN",
+          "name": "SD-OPS: token de serviço do n8n (Authorization: Bearer)"
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 2000
+    },
+    {
+      "parameters": {
+        "url": "={{ $('config').first().json.sdops_base_url }}/metrics/tickets",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-SD-Origin",
+              "value": "n8n"
+            },
+            {
+              "name": "X-SD-Workflow",
+              "value": "WF12"
+            },
+            {
+              "name": "Idempotency-Key",
+              "value": "={{ $execution.id }}:tickets:{{ $itemIndex }}"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 15000
+        },
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "from",
+              "value": "={{ $('periodo').first().json.from }}"
+            },
+            {
+              "name": "to",
+              "value": "={{ $('periodo').first().json.to }}"
+            }
+          ]
+        }
+      },
+      "id": "b98e1b36-e07d-59e8-9fee-76ef75c08e5e",
+      "name": "tickets",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1100,
+        0
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "REPLACE_CRED_SDOPS_SERVICE_TOKEN",
+          "name": "SD-OPS: token de serviço do n8n (Authorization: Bearer)"
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 2000
+    },
+    {
+      "parameters": {
+        "jsCode": "// Só números agregados (sem dados pessoais).\nconst fmt = (o, pref) => Object.entries(o || {}).filter(([k, v]) => typeof v !== 'object')\n  .map(([k, v]) => '- ' + pref + k + ': ' + v).join('\\n');\nconst per = $('periodo').first().json;\nconst texto = '[WF12] Relatório ' + per.from.slice(0, 10) + ' a ' + per.to.slice(0, 10) + '\\n' +\n  'Resumo\\n' + fmt($('resumo').first().json, '') + '\\nTelefonia\\n' + fmt($('telefonia').first().json, '') +\n  '\\nTickets\\n' + fmt($('tickets').first().json, '');\nreturn [{ json: { texto: texto.slice(0, 9000) } }];\n"
+      },
+      "id": "a6a10f4c-4c07-5762-85ea-d83fae2aee8c",
+      "name": "formata",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1320,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $('config').first().json.chatwoot_base_url }}/api/v1/accounts/{{ $('config').first().json.chatwoot_account_id }}/conversations/{{ $('config').first().json.ops_alert_conversation_id }}/messages",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-SD-Origin",
+              "value": "n8n"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 15000
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ content: $json.texto, message_type: 'outgoing', private: true, source_id: 'n8n:WF12:' + $execution.id + ':publica_relatorio:' + $itemIndex, content_attributes: { sd_origin: 'n8n:WF12' } }) }}"
+      },
+      "id": "63d58bc0-a6ac-5fed-80c1-68a4b78b125a",
+      "name": "publica_relatorio",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1540,
+        0
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "REPLACE_CRED_CHATWOOT_N8N",
+          "name": "ServiceDesk/Chatwoot: api_access_token da Integração n8n"
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 2000
+    }
+  ],
+  "connections": {
+    "segunda_08h": {
+      "main": [
+        [
+          {
+            "node": "config",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "config": {
+      "main": [
+        [
+          {
+            "node": "periodo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "periodo": {
+      "main": [
+        [
+          {
+            "node": "resumo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "resumo": {
+      "main": [
+        [
+          {
+            "node": "telefonia",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "telefonia": {
+      "main": [
+        [
+          {
+            "node": "tickets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "tickets": {
+      "main": [
+        [
+          {
+            "node": "formata",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "formata": {
+      "main": [
+        [
+          {
+            "node": "publica_relatorio",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "America/Sao_Paulo",
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "none"
+  },
+  "pinData": {},
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "servicedesk": {
+      "workflow": "WF12",
+      "description": "Segunda 08:00 -> resumo dos últimos 7 dias (tickets, telefonia, SLA, QA) publicado como nota no ticket interno de operações. Números e fórmulas vêm do sd-ops (WEBHOOK_CONTRACTS.md §8.7).",
+      "generator": "servicedesk/integrations/n8n/tools/build_workflows.py",
+      "format_version": 1
+    }
+  }
+}

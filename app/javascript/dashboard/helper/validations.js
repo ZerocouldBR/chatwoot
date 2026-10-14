@@ -117,6 +117,14 @@ const validateSingleAction = action => {
     return ACTION_PARAMETERS_REQUIRED;
   }
 
+  // ServiceDesk: set_custom_attribute precisa do atributo (valor vazio limpa o campo)
+  if (
+    action.action_name === 'set_custom_attribute' &&
+    (!Array.isArray(action.action_params) || !action.action_params[0])
+  ) {
+    return ACTION_PARAMETERS_REQUIRED;
+  }
+
   return null;
 };
 

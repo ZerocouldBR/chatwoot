@@ -6,7 +6,7 @@
     "DESCRIPTION": "Logs de Auditoria mantêm um registro de atividades em sua conta, permitindo que você acompanhe e auditore sua conta, grupo ou serviços.",
     "LEARN_MORE": "Saiba mais sobre os logs de auditoria",
     "SEARCH_404": "Não existem itens correspondentes a esta consulta",
-    "SIDEBAR_TXT": "<p><b>Logs de Auditoria</b> </p><p> Os Logs de Auditoria são rastros para eventos e ações em um Sistema Chatwoot. </p>",
+    "SIDEBAR_TXT": "<p><b>Logs de Auditoria</b> </p><p> Os Logs de Auditoria são rastros para eventos e ações em um Sistema ServiceDesk. </p>",
     "COUNT": "{n} evento | {n} eventos",
     "FILTERS": {
       "SEARCH_PLACEHOLDER": "Pesquisar por nome ou e-mail",
@@ -41,7 +41,7 @@
     "LIST": {
       "404": "Não há Logs de Auditoria disponíveis nesta conta.",
       "TITLE": "Gerenciar Logs de Auditoria",
-      "DESC": "Logs de auditoria são rastros para eventos e ações em um Sistema de Chatwoot.",
+      "DESC": "Logs de auditoria são rastros para eventos e ações em um Sistema de ServiceDesk.",
       "TABLE_HEADER": {
         "ACTIVITY": "Usuário",
         "TIME": "Ação",

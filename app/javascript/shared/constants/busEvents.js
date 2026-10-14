@@ -14,4 +14,6 @@ export const BUS_EVENTS = {
   INSERT_INTO_RICH_EDITOR: 'insertIntoRichEditor',
   MFA_STATE_CHANGED: 'MFA_STATE_CHANGED',
   CAPTAIN_PLAYGROUND_RESPONSE: 'CAPTAIN_PLAYGROUND_RESPONSE',
+  // ServiceDesk M5.1: a macro preenche o editor de resposta (useMacroExecution -> ReplyBox)
+  SD_MACRO_FILL_EDITOR: 'sdMacroFillEditor',
 };

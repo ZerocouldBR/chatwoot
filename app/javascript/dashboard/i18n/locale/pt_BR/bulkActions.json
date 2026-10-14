@@ -18,7 +18,8 @@
     "UPDATE": {
       "CHANGE_STATUS": "Alterar status",
       "UPDATE_SUCCESFUL": "Status do ticket atualizado com sucesso.",
-      "UPDATE_FAILED": "Falha ao atualizar tickets. Por favor, tente novamente."
+      "UPDATE_FAILED": "Falha ao atualizar tickets. Por favor, tente novamente.",
+      "SNOOZE_UNTIL": "Adiar"
     },
     "RESOLVE": {
       "ALL_MISSING_ATTRIBUTES": "Não é possível resolver o ticket devido à ausência de atributos obrigatórios",
@@ -40,6 +41,13 @@
       "UNASSIGN_TEAM_CONFIRMATION_LABEL": "Tem certeza de que deseja remover a atribuição de {n} ticket? | Tem certeza de que deseja remover a atribuição de {n} tickets?",
       "ASSIGN_SUCCESFUL": "Grupos atribuídos com sucesso.",
       "ASSIGN_FAILED": "Falha ao atribuir grupo. Por favor, tente novamente."
+    },
+    "MACROS": {
+      "EXECUTE_MACRO": "Executar macro",
+      "EXECUTE_CONFIRMATION_LABEL": "Executar {macroName} em {n} ticket? | Executar {macroName} em {n} tickets?",
+      "QUEUED": "Macro enfileirada para {count} ticket. | Macro enfileirada para {count} tickets.",
+      "QUEUED_WITH_MISSING_ATTRIBUTES": "Macro enfileirada para {count} ticket. Faltam campos obrigatórios e ele pode continuar aberto. | Macro enfileirada para {count} tickets. Ao menos um tem campos obrigatórios faltando e pode continuar aberto.",
+      "QUEUED_WITHOUT_REPLY": "Macro enfileirada para {count} ticket. A resposta da macro não foi aplicada: aplique a macro dentro do ticket para revisar e enviar. | Macro enfileirada para {count} tickets. A resposta da macro não foi aplicada: aplique a macro dentro de cada ticket para revisar e enviar."
     }
   }
 }

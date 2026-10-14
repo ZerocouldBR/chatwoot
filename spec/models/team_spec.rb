@@ -10,25 +10,63 @@ RSpec.describe Team do
   describe 'name normalization' do
     let(:account) { create(:account) }
 
-    it 'downcases the name' do
-      team = create(:team, account: account, name: 'Customer Support')
-      expect(team.name).to eq('customer support')
+    it 'keeps the name as typed (case and accents)' do
+      team = create(:team, account: account, name: 'Alterações Cadastrais')
+      expect(team.reload.name).to eq('Alterações Cadastrais')
     end
 
     it 'strips control characters and surrounding whitespace' do
       team = create(:team, account: account, name: "  Sales\n")
-      expect(team.name).to eq('sales')
+      expect(team.name).to eq('Sales')
     end
 
     it 'removes control characters embedded within the name' do
-      team = create(:team, account: account, name: "su\npport")
-      expect(team.name).to eq('support')
+      team = create(:team, account: account, name: "Su\npport")
+      expect(team.name).to eq('Support')
+    end
+
+    it 'keeps inner spacing as typed' do
+      team = create(:team, account: account, name: 'Gestor  Comercial Empresas')
+      expect(team.name).to eq('Gestor  Comercial Empresas')
     end
 
     it 'is invalid when the name reduces to blank after sanitization' do
       team = build(:team, account: account, name: "\t\n  ")
       expect(team).not_to be_valid
       expect(team.errors[:name]).to include(I18n.t('errors.validations.presence'))
+    end
+  end
+
+  describe 'case-insensitive uniqueness' do
+    let(:account) { create(:account) }
+    let!(:team) { create(:team, account: account, name: 'Integrações - N3') }
+
+    it 'rejects the same name with different case in the same account' do
+      duplicate = build(:team, account: account, name: 'INTEGRAÇÕES - n3')
+      expect(duplicate).not_to be_valid
+      expect(duplicate.errors[:name]).to be_present
+    end
+
+    it 'allows the same name in another account' do
+      expect(build(:team, name: 'Integrações - N3')).to be_valid
+    end
+
+    it 'allows renaming a team to another case of its own name' do
+      team.update!(name: 'INTEGRAÇÕES - N3')
+      expect(team.reload.name).to eq('INTEGRAÇÕES - N3')
+    end
+
+    it 'is enforced by the database index on lower(name)' do
+      now = Time.current
+      expect do
+        # rubocop:disable Rails/SkipsModelValidations
+        described_class.insert_all!([{ name: 'integrações - n3', account_id: account.id, created_at: now, updated_at: now }])
+        # rubocop:enable Rails/SkipsModelValidations
+      end.to raise_error(ActiveRecord::RecordNotUnique)
+    end
+
+    it 'is still found by the legacy lowercase name' do
+      expect(account.teams.where('LOWER(name) = ?', 'integrações - n3')).to contain_exactly(team)
     end
   end
 

@@ -421,7 +421,9 @@
     "SUSPENDED_TICKETS": "Suspensos",
     "DELETED_TICKETS": "Excluídos",
     "COLLAPSE": "Recolher menu",
-    "EXPAND": "Expandir menu"
+    "EXPAND": "Expandir menu",
+    "AUTOMATION": "Automação",
+    "SD_TELEPHONY": "Telefonia 55PBX"
   },
   "DATA_IMPORTS": {
     "HEADER": "Dados",

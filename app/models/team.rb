@@ -14,8 +14,8 @@
 #
 # Indexes
 #
-#  index_teams_on_account_id           (account_id)
-#  index_teams_on_name_and_account_id  (name,account_id) UNIQUE
+#  index_teams_on_account_id                 (account_id)
+#  index_teams_on_account_id_and_lower_name  (account_id, lower((name)::text)) UNIQUE
 #
 class Team < ApplicationRecord
   include AccountCacheRevalidator
@@ -30,10 +30,13 @@ class Team < ApplicationRecord
 
   validates :name,
             presence: { message: I18n.t('errors.validations.presence') },
-            uniqueness: { scope: :account_id }
+            uniqueness: { scope: :account_id, case_sensitive: false }
 
+  # ServiceDesk: o nome fica como foi digitado (maiúsculas e acentos, como os
+  # grupos do sistema anterior). A unicidade continua sem diferenciar maiúsculas,
+  # pela validação acima e pelo índice único em lower(name).
   before_validation do
-    self.name = name.gsub(/[[:cntrl:]]/, '').strip.downcase if attribute_present?('name')
+    self.name = name.gsub(/[[:cntrl:]]/, '').strip if attribute_present?('name')
   end
 
   # Adds multiple members to the team

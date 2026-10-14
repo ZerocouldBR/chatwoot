@@ -107,6 +107,9 @@ const ACTION_ICONS = {
   resolve_conversation: 'i-lucide-circle-check',
   change_priority: 'i-lucide-signal-high',
   add_sla: 'i-lucide-gauge',
+  set_ticket_status: 'i-lucide-circle-dot-dashed',
+  set_custom_attribute: 'i-lucide-text-cursor-input',
+  change_subject: 'i-lucide-heading',
 };
 
 const DEFAULT_ACTION_ICON = 'i-lucide-zap';
@@ -153,6 +156,7 @@ export const getActionOptions = ({
   type,
   addNoneToListFn,
   priorityOptions,
+  ticketStatusOptions,
 }) => {
   const actionsMap = {
     assign_agent: addNoneToListFn ? addNoneToListFn(agents) : agents,
@@ -164,6 +168,7 @@ export const getActionOptions = ({
     remove_label: generateLabelOptions(labels),
     change_priority: priorityOptions,
     add_sla: slaPolicies,
+    set_ticket_status: ticketStatusOptions,
   };
   return actionsMap[type];
 };

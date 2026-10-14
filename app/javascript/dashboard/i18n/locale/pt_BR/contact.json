@@ -29,7 +29,8 @@
     },
     "CONVERSATIONS": {
       "NO_RECORDS_FOUND": "Não há tickets anteriores associados a este contato.",
-      "TITLE": "Tickets anteriores"
+      "TITLE": "Tickets anteriores",
+      "VIEW_ALL": "Ver todos os tickets"
     },
     "LABELS": {
       "CONTACT": {

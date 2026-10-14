@@ -14,6 +14,8 @@ RSpec.describe Macros::ExecutionService, type: :service do
   describe '#perform' do
     context 'when actions are present' do
       before do
+        # ServiceDesk: comportamento original; o modo macro_fill_editor está em execution_service_servicedesk_spec.rb
+        account.update!(macro_fill_editor: false)
         allow(macro).to receive(:actions).and_return([
                                                        { action_name: 'assign_agent', action_params: ['self'] },
                                                        { action_name: 'add_private_note', action_params: ['Test note'] },

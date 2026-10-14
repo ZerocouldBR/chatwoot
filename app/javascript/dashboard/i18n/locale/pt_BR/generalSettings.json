@@ -193,7 +193,8 @@
       "SETTINGS": "Configurações",
       "AI_ASSIST": "Assistente IA",
       "APPEARANCE": "Tema",
-      "SNOOZE_NOTIFICATION": "Adiar Notificação"
+      "SNOOZE_NOTIFICATION": "Adiar Notificação",
+      "SNOOZE_CONVERSATION": "Adiar Ticket"
     },
     "COMMANDS": {
       "GO_TO_MY_INBOX": "Ir para Minha Caixa de Entrada",
@@ -250,7 +251,8 @@
       "LIGHT_MODE": "Claro",
       "DARK_MODE": "Escuro",
       "SYSTEM_MODE": "Sistema",
-      "SNOOZE_NOTIFICATION": "Adiar Notificação"
+      "SNOOZE_NOTIFICATION": "Adiar Notificação",
+      "SNOOZE_CONVERSATION": "Adiar Ticket"
     }
   },
   "DASHBOARD_APPS": {

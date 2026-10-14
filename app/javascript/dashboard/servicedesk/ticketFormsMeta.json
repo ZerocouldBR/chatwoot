@@ -1,0 +1,447 @@
+{
+  "_source": "zendesk-config: ticket_forms.json, ticket_fields.json, custom_statuses.json",
+  "default_form": "Atendimento",
+  "forms": {
+    "Atendimento": {
+      "id": 21763507779611,
+      "position": 0,
+      "active": true,
+      "default": true
+    },
+    "Formulário TI": {
+      "id": 21791936919835,
+      "position": 1,
+      "active": true,
+      "default": false
+    },
+    "LGPD & Segurança": {
+      "id": 23734443027227,
+      "position": 2,
+      "active": true,
+      "default": false
+    },
+    "Onboarding Checkout": {
+      "id": 34151302943259,
+      "position": 3,
+      "active": false,
+      "default": false
+    },
+    "Onboarding": {
+      "id": 21538201472283,
+      "position": 4,
+      "active": false,
+      "default": false
+    },
+    "Formulário de ticket padrão": {
+      "id": 20487411595163,
+      "position": 5,
+      "active": false,
+      "default": false
+    }
+  },
+  "conditions": {
+    "Atendimento": [
+      {
+        "parent_field_id": 21587135564955,
+        "value": "Suporte",
+        "value_tag": "suporte",
+        "child_fields": [
+          {
+            "id": 21537600796443,
+            "is_required": false
+          },
+          {
+            "id": 21583294863643,
+            "is_required": false
+          }
+        ]
+      },
+      {
+        "parent_field_id": 21587135564955,
+        "value": "Financeiro",
+        "value_tag": "financeiro",
+        "child_fields": [
+          {
+            "id": 21537516749211,
+            "is_required": false
+          }
+        ]
+      },
+      {
+        "parent_field_id": 21587135564955,
+        "value": "Hospitality",
+        "value_tag": "hospitality",
+        "child_fields": [
+          {
+            "id": 21538028391067,
+            "is_required": true
+          }
+        ]
+      },
+      {
+        "parent_field_id": 21587135564955,
+        "value": "Novos negócios",
+        "value_tag": "novos_negócios",
+        "child_fields": [
+          {
+            "id": 21538153888667,
+            "is_required": false
+          }
+        ]
+      },
+      {
+        "parent_field_id": 21587135564955,
+        "value": "Integrações",
+        "value_tag": "area_integrações",
+        "child_fields": [
+          {
+            "id": 26749132765339,
+            "is_required": true
+          }
+        ]
+      },
+      {
+        "parent_field_id": 21587135564955,
+        "value": "Checkout",
+        "value_tag": "checkout",
+        "child_fields": [
+          {
+            "id": 27073292749723,
+            "is_required": true
+          }
+        ]
+      },
+      {
+        "parent_field_id": 21587135564955,
+        "value": "Cadastro",
+        "value_tag": "cadastro_",
+        "child_fields": [
+          {
+            "id": 21538097335195,
+            "is_required": true
+          }
+        ]
+      },
+      {
+        "parent_field_id": 21587135564955,
+        "value": "Relacionamento Onboarding",
+        "value_tag": "relacionamento_onboarding",
+        "child_fields": [
+          {
+            "id": 33963552988443,
+            "is_required": false
+          }
+        ]
+      }
+    ],
+    "Formulário TI": [
+      {
+        "parent_field_id": 21797736040987,
+        "value": "Dúvidas",
+        "value_tag": "dúvidas",
+        "child_fields": [
+          {
+            "id": 21797784572187,
+            "is_required": true
+          }
+        ]
+      },
+      {
+        "parent_field_id": 21797736040987,
+        "value": "Integrações",
+        "value_tag": "integrações",
+        "child_fields": [
+          {
+            "id": 21797784572187,
+            "is_required": true
+          }
+        ]
+      },
+      {
+        "parent_field_id": 21797736040987,
+        "value": "Manutenção de Hardware",
+        "value_tag": "manutenção_de_hardware",
+        "child_fields": [
+          {
+            "id": 21799571288603,
+            "is_required": false
+          },
+          {
+            "id": 21799568297883,
+            "is_required": false
+          },
+          {
+            "id": 21799577941147,
+            "is_required": false
+          }
+        ]
+      },
+      {
+        "parent_field_id": 21797736040987,
+        "value": "Solicitação de uso, Aquisição ou Liberação de software",
+        "value_tag": "solicitação_de_uso__aquisição_ou_liberação_de_software",
+        "child_fields": [
+          {
+            "id": 21799568297883,
+            "is_required": false
+          },
+          {
+            "id": 21799649122203,
+            "is_required": false
+          }
+        ]
+      },
+      {
+        "parent_field_id": 21797736040987,
+        "value": "Desativação ou Ativação de Hotel",
+        "value_tag": "desativação_ou_ativação_de_hotel",
+        "child_fields": [
+          {
+            "id": 21800303695643,
+            "is_required": true
+          },
+          {
+            "id": 21797784572187,
+            "is_required": true
+          },
+          {
+            "id": 21583294863643,
+            "is_required": true
+          }
+        ]
+      },
+      {
+        "parent_field_id": 21797736040987,
+        "value": "Análise log Geral",
+        "value_tag": "análise_log_geral",
+        "child_fields": [
+          {
+            "id": 21797784572187,
+            "is_required": true
+          }
+        ]
+      },
+      {
+        "parent_field_id": 21797736040987,
+        "value": "Sistema",
+        "value_tag": "sistema",
+        "child_fields": [
+          {
+            "id": 21797784572187,
+            "is_required": true
+          }
+        ]
+      },
+      {
+        "parent_field_id": 21799649122203,
+        "value": "Baixar software para window",
+        "value_tag": "baixar_software_para_window",
+        "child_fields": [
+          {
+            "id": 21799651549851,
+            "is_required": false
+          },
+          {
+            "id": 21799568297883,
+            "is_required": false
+          }
+        ]
+      },
+      {
+        "parent_field_id": 21799649122203,
+        "value": "Acessar Site",
+        "value_tag": "acessar_site",
+        "child_fields": [
+          {
+            "id": 21799654784539,
+            "is_required": false
+          },
+          {
+            "id": 21799568297883,
+            "is_required": false
+          },
+          {
+            "id": 21800119856283,
+            "is_required": false
+          }
+        ]
+      }
+    ],
+    "LGPD & Segurança": [],
+    "Onboarding Checkout": [],
+    "Onboarding": [],
+    "Formulário de ticket padrão": [
+      {
+        "parent_field_id": 21587135564955,
+        "value": "Suporte",
+        "value_tag": "suporte",
+        "child_fields": [
+          {
+            "id": 21537600796443,
+            "is_required": false
+          },
+          {
+            "id": 21583294863643,
+            "is_required": false
+          }
+        ]
+      },
+      {
+        "parent_field_id": 21587135564955,
+        "value": "Financeiro",
+        "value_tag": "financeiro",
+        "child_fields": [
+          {
+            "id": 21537516749211,
+            "is_required": false
+          },
+          {
+            "id": 21583294863643,
+            "is_required": false
+          }
+        ]
+      },
+      {
+        "parent_field_id": 21587135564955,
+        "value": "Hospitality",
+        "value_tag": "hospitality",
+        "child_fields": [
+          {
+            "id": 21538028391067,
+            "is_required": false
+          },
+          {
+            "id": 21583294863643,
+            "is_required": false
+          }
+        ]
+      },
+      {
+        "parent_field_id": 21587135564955,
+        "value": "Novos negócios",
+        "value_tag": "novos_negócios",
+        "child_fields": [
+          {
+            "id": 21583294863643,
+            "is_required": false
+          },
+          {
+            "id": 21538153888667,
+            "is_required": false
+          }
+        ]
+      }
+    ]
+  },
+  "required_field_ids": [21587135564955, 23735231881243, 27073292749723],
+  "statuses": {
+    "Novo": {
+      "id": 20487430798747,
+      "category": "new",
+      "native": "open",
+      "active": true
+    },
+    "Aberto": {
+      "id": 20487400901659,
+      "category": "open",
+      "native": "open",
+      "active": true
+    },
+    "Em andamento": {
+      "id": 21790194164379,
+      "category": "open",
+      "native": "open",
+      "active": true
+    },
+    "Devolvido Cliente": {
+      "id": 26469791141275,
+      "category": "open",
+      "native": "open",
+      "active": false
+    },
+    "Reaberto": {
+      "id": 26915958510619,
+      "category": "open",
+      "native": "open",
+      "active": true
+    },
+    "Pendente": {
+      "id": 20487412004251,
+      "category": "pending",
+      "native": "waiting_on_customer",
+      "active": true
+    },
+    "Pendente Autenticação": {
+      "id": 51446269872667,
+      "category": "pending",
+      "native": "waiting_on_customer",
+      "active": false
+    },
+    "Aguardando Desenvolvimento": {
+      "id": 20487430857883,
+      "category": "hold",
+      "native": "on_hold",
+      "active": false
+    },
+    "Escalonado": {
+      "id": 21790215283483,
+      "category": "hold",
+      "native": "on_hold",
+      "active": false
+    },
+    "Desenvolvimento": {
+      "id": 21790243451291,
+      "category": "hold",
+      "native": "on_hold",
+      "active": true
+    },
+    "Retorno Integrações": {
+      "id": 22412122152347,
+      "category": "hold",
+      "native": "on_hold",
+      "active": false
+    },
+    "Devolvido": {
+      "id": 26904974432923,
+      "category": "hold",
+      "native": "on_hold",
+      "active": true
+    },
+    "Desenvolvimento Concluído": {
+      "id": 26950275108635,
+      "category": "hold",
+      "native": "on_hold",
+      "active": true
+    },
+    "Resolvido": {
+      "id": 20487384870939,
+      "category": "solved",
+      "native": "resolved",
+      "active": true
+    },
+    "Concluído": {
+      "id": 21802712943899,
+      "category": "solved",
+      "native": "resolved",
+      "active": true
+    },
+    "Respondido cliente": {
+      "id": 23819380599963,
+      "category": "solved",
+      "native": "resolved",
+      "active": true
+    },
+    "Autenticação Pendente": {
+      "id": 51446767948059,
+      "category": "solved",
+      "native": "resolved",
+      "active": false
+    }
+  },
+  "native_status_default": {
+    "open": "Aberto",
+    "waiting_on_customer": "Pendente",
+    "on_hold": "Em espera",
+    "resolved": "Resolvido"
+  }
+}

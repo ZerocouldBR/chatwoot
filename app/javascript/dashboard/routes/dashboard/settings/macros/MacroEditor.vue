@@ -46,6 +46,7 @@ const fetchDropdownData = () =>
     store.dispatch('agents/get'),
     store.dispatch('teams/get'),
     store.dispatch('labels/get'),
+    store.dispatch('attributes/get'),
   ]);
 
 const formatMacro = macroData => {

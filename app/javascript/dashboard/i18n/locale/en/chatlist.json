@@ -47,6 +47,15 @@
       },
       "all": {
         "TEXT": "All"
+      },
+      "sd_pending": {
+        "TEXT": "Pending"
+      },
+      "sd_hold": {
+        "TEXT": "On-hold"
+      },
+      "snoozed": {
+        "TEXT": "Snoozed"
       }
     },
     "VIEW_FILTER": "View",

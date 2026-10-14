@@ -1,0 +1,438 @@
+{
+  "SD_TELEPHONY": {
+    "TITLE": "Telefonia 55PBX",
+    "DESCRIPTION": "Credenciais e configurações da integração com a central 55PBX. Tudo o que é salvo aqui vale na hora no sd-ops, sem editar arquivo nem reiniciar serviço. Segredos ficam cifrados e nunca voltam para o navegador.",
+    "LOADING": "Carregando a configuração da telefonia",
+    "SAVED": "Configuração da 55PBX salva",
+    "ON": "Ligado",
+    "OFF": "Desligado",
+    "LIST_PLACEHOLDER": "Separe por vírgula",
+    "URA_ENDPOINT": "Endereço para o Menu Dinâmico da 55PBX: {url}",
+    "ACTIONS": {
+      "SAVE": "Salvar",
+      "TEST": "Testar conexão",
+      "DISCARD": "Descartar alterações",
+      "CANCEL": "Cancelar",
+      "UNDO": "Desfazer",
+      "RESET_TO_ENV": "Voltar ao valor do ambiente",
+      "ADD_ROW": "Adicionar linha",
+      "REMOVE_ROW": "Remover",
+      "RETRY": "Tentar de novo"
+    },
+    "ERRORS": {
+      "NETWORK": "Não foi possível falar com o sd-ops (falha de rede).",
+      "SESSION": "Não foi possível validar sua sessão no sd-ops. Recarregue a página.",
+      "FORBIDDEN": "Somente o administrador da conta pode ver e alterar a configuração da 55PBX.",
+      "UNAVAILABLE": "O serviço de telefonia (sd-ops) não está disponível neste ambiente.",
+      "CONFLICT": "Outra pessoa alterou a configuração enquanto você editava. Recarregue a página e refaça as alterações.",
+      "GENERIC": "Não foi possível concluir a operação.",
+      "VALIDATION": "Corrija os campos abaixo e salve de novo:"
+    },
+    "SOURCE": {
+      "PANEL": "Valor desta tela",
+      "ENV": "Valor do ambiente (.env)",
+      "DEFAULT": "Valor padrão",
+      "NONE": "Não definido",
+      "SEED": "Hash no banco"
+    },
+    "SECRET": {
+      "WILL_CLEAR": "Será apagado ao salvar (volta ao ambiente)",
+      "NOT_DEFINED": "Não definido",
+      "DEFINED": "Definido",
+      "DEFINED_LAST4": "Definido, termina em {last4}",
+      "REPLACE": "Substituir",
+      "SET": "Definir",
+      "CLEAR": "Apagar",
+      "PLACEHOLDER": "Novo valor (deixe vazio para manter o atual)",
+      "VAULT_MISSING": "Segredos não podem ser salvos: o sd-ops está sem a chave SDOPS_SETTINGS_KEY."
+    },
+    "CHOICES": {
+      "DISABLED": "Desativado",
+      "LIVE": "Ativo (API real da 55PBX)",
+      "MOCK": "Simulado (só DEV)",
+      "LOCAL": "Volume local do servidor",
+      "S3": "S3 / MinIO",
+      "TOKEN": "Token em header",
+      "BEARER": "Bearer token",
+      "BASIC": "Usuário e senha (Basic)"
+    },
+    "INFO": {
+      "TENANT": "Conta: {name} (ID {account}) · Caixa de entrada da 55PBX: {inbox} · Versão da configuração: {version}",
+      "UPDATED_BY": "última alteração por {email} em {at}",
+      "VAULT_MISSING": "O sd-ops está sem a chave SDOPS_SETTINGS_KEY: campos comuns podem ser salvos, mas segredos (chaves e senhas) não.",
+      "FORCE_DISABLED": "A integração está desligada pelo operador no servidor (SDOPS_FORCE_DISABLED). Nada desta tela é processado até isso ser removido."
+    },
+    "SECTIONS": {
+      "STATUS": {
+        "TITLE": "Status e ativação",
+        "DESCRIPTION": "Liga ou desliga a integração desta conta. Desligada, o webhook responde 503 e a reconciliação para. Para ativar é preciso o token do usuário de integração e o segredo do webhook."
+      },
+      "API": {
+        "TITLE": "Credenciais da API (Webservice)",
+        "DESCRIPTION": "Chave criada no painel da 55PBX em Integrações > Webservice (API). É usada no Report02, que reconcilia as ligações a cada poucos minutos."
+      },
+      "WEBHOOK": {
+        "TITLE": "Webhook em tempo real",
+        "DESCRIPTION": "Cadastre a URL abaixo no painel da 55PBX em \"Tempo real por URL\", método POST. Por ela chegam as ligações na hora."
+      },
+      "RECORDINGS": {
+        "TITLE": "Gravações",
+        "DESCRIPTION": "Download das gravações da 55PBX, onde guardar a cópia e por quanto tempo manter o payload bruto. A 55PBX precisa liberar o IP do servidor no host de gravações."
+      },
+      "DIAL": {
+        "TITLE": "Discagem (click-to-call)",
+        "DESCRIPTION": "API \"Discagem automática para ramal\". As credenciais (client_code, api_key e JWT) e a URL correta são fornecidas pelo suporte da 55PBX. Sem elas, o botão de discar fica desabilitado com o motivo."
+      },
+      "URA": {
+        "TITLE": "URA (Menu Dinâmico)",
+        "DESCRIPTION": "Credencial que a URA da 55PBX usa para consultar o andamento de um protocolo."
+      },
+      "MAPS": {
+        "TITLE": "Mapeamentos",
+        "DESCRIPTION": "Ramal para agente (responsável da ligação e ramal do click-to-call), fila para time e time para área interna."
+      },
+      "TICKETS": {
+        "TITLE": "Política de abertura de ticket",
+        "DESCRIPTION": "Quando cada ligação abre ticket e quando reaproveita um ticket aberto do mesmo cliente. Vale a primeira regra ativa, na ordem, que combina direção e fila."
+      },
+      "HOURS": {
+        "TITLE": "Horário comercial e SLA",
+        "DESCRIPTION": "Horário usado para contar os prazos de SLA e o vencimento das tarefas de retorno."
+      },
+      "N8N": {
+        "TITLE": "n8n",
+        "DESCRIPTION": "Para onde o sd-ops envia os eventos das automações e com qual assinatura HMAC. Rotas com caminho relativo usam a URL base daqui."
+      }
+    },
+    "FIELDS": {
+      "ENABLED": {
+        "LABEL": "Integração ativa",
+        "HELP": "Ativa ou desativa a integração só desta conta, na hora."
+      },
+      "CHATWOOT_API_TOKEN": {
+        "LABEL": "Token do usuário de integração",
+        "HELP": "Token de acesso do usuário \"Integração 55PBX\" criado pelo provisionamento. É usado para criar as conversas e as notas."
+      },
+      "PBX_API_KEY": {
+        "LABEL": "Chave Webservice (API)",
+        "HELP": "Chave gerada no painel da 55PBX (Integrações > Webservice)."
+      },
+      "PBX_API_KEY_HEADER": {
+        "LABEL": "Nome do header da chave",
+        "HELP": "Assumido como \"key\". Confirme com o suporte da 55PBX."
+      },
+      "PBX_API_URL": {
+        "LABEL": "URL do Report02",
+        "HELP": "Padrão: https://reportapi02.55pbx.com:50500/api/pbx/reports/metrics"
+      },
+      "PBX_TZ_OFFSET": {
+        "LABEL": "Fuso das datas da API (horas)",
+        "HELP": "-3 para o horário de Brasília."
+      },
+      "POLL_INTERVAL_MIN": {
+        "LABEL": "Intervalo da reconciliação (min)"
+      },
+      "POLL_LOOKBACK_MIN": {
+        "LABEL": "Janela consultada (min)",
+        "HELP": "Quantos minutos para trás cada reconciliação consulta no Report02."
+      },
+      "PUBLIC_BASE_URL": {
+        "LABEL": "Endereço público do ServiceDesk",
+        "HELP": "Usado para montar a URL do webhook. Vazio: o endereço desta página."
+      },
+      "WEBHOOK_SECRET": {
+        "LABEL": "Segredo do webhook"
+      },
+      "WEBHOOK_TOKEN": {
+        "LABEL": "Token do header (opcional)",
+        "HELP": "Se a chave for cadastrada no \"Tempo real por URL\", a 55PBX a envia no header \"token\" e o sd-ops passa a exigir."
+      },
+      "ALLOWED_IPS": {
+        "LABEL": "IPs permitidos",
+        "HELP": "IPs ou faixas (CIDR) de origem dos webhooks da 55PBX. Vazio: aceita de qualquer IP (o segredo na URL continua obrigatório)."
+      },
+      "CHATWOOT_WEBHOOK_HMAC_SECRET": {
+        "LABEL": "Segredo dos eventos do ServiceDesk",
+        "HELP": "Segredo da caixa de entrada da 55PBX, que assina os eventos usados no gatilho de atribuição."
+      },
+      "DOWNLOAD_RECORDINGS": {
+        "LABEL": "Baixar gravações",
+        "HELP": "Desligado: a nota mantém só o link da gravação."
+      },
+      "RECORDINGS_HOST": {
+        "LABEL": "Host de gravações",
+        "HELP": "Servidor de onde a 55PBX serve os áudios (o da conta é vsa19.55pbx.com). Usado no teste de conexão."
+      },
+      "AUDIO_ALLOWED_HOSTS": {
+        "LABEL": "Hosts permitidos para download",
+        "HELP": "Proteção contra SSRF: só baixa destes hosts. Ex.: *.55pbx.com, *.55pbx.com.br"
+      },
+      "AUDIO_SEND_API_KEY": {
+        "LABEL": "Enviar a chave da API no download",
+        "HELP": "Ligue se a 55PBX exigir autenticação para baixar a gravação."
+      },
+      "AUDIO_MAX_MB": {
+        "LABEL": "Tamanho máximo da gravação (MB)"
+      },
+      "AUDIO_BITRATE": {
+        "LABEL": "Qualidade do MP3 na conversa",
+        "HELP": "32k é o padrão. Se os originais forem WAV49/GSM, use 16k."
+      },
+      "CHATWOOT_ATTACH_RECORDING": {
+        "LABEL": "Anexar o MP3 na conversa"
+      },
+      "STORAGE_BACKEND": {
+        "LABEL": "Onde guardar as gravações",
+        "HELP": "As gravações já guardadas no volume local continuam acessíveis depois de trocar para S3."
+      },
+      "S3_ENDPOINT_URL": {
+        "LABEL": "Endpoint S3/MinIO"
+      },
+      "S3_BUCKET": {
+        "LABEL": "Bucket"
+      },
+      "S3_REGION": {
+        "LABEL": "Região"
+      },
+      "S3_ACCESS_KEY_ID": {
+        "LABEL": "Access key ID"
+      },
+      "S3_SECRET_ACCESS_KEY": {
+        "LABEL": "Secret access key"
+      },
+      "RAW_RETENTION_DAYS": {
+        "LABEL": "Retenção do payload bruto (dias)",
+        "HELP": "LGPD: depois disso o conteúdo bruto recebido da 55PBX é apagado (os dados tratados permanecem)."
+      },
+      "DIAL_MODE": {
+        "LABEL": "Modo da discagem"
+      },
+      "DIAL_URL": {
+        "LABEL": "URL da discagem",
+        "HELP": "O manual traz duas (com e sem /pbx). Padrão: https://ws.55pbx.com:20500/api/webphone/dial"
+      },
+      "DIAL_CLIENT_CODE": {
+        "LABEL": "client_code"
+      },
+      "DIAL_API_KEY": {
+        "LABEL": "api_key"
+      },
+      "DIAL_JWT": {
+        "LABEL": "JWT (Authorization: Bearer)",
+        "HELP": "A documentação não diz como obter o JWT: peça ao suporte da 55PBX junto com o client_code e a api_key."
+      },
+      "DIAL_TIMEOUT_S": {
+        "LABEL": "Tempo limite da discagem (s)"
+      },
+      "WEBPHONE_URL": {
+        "LABEL": "Webphone da 55PBX",
+        "HELP": "Ex.: https://fone.55pbx.com. Vazio: o CTI não mostra o atalho do webphone."
+      },
+      "URA_AUTH_TYPE": {
+        "LABEL": "Autenticação"
+      },
+      "URA_HEADER": {
+        "LABEL": "Nome do header"
+      },
+      "URA_TOKEN": {
+        "LABEL": "Token",
+        "HELP": "Mínimo de 16 caracteres. Cadastre o mesmo valor no Menu Dinâmico da 55PBX."
+      },
+      "URA_USER": {
+        "LABEL": "Usuário"
+      },
+      "URA_PASSWORD": {
+        "LABEL": "Senha"
+      },
+      "URA_REQUIRE_CALLER_MATCH": {
+        "LABEL": "Exigir que o telefone seja o do ticket",
+        "HELP": "Ligado: a situação só é falada se o número de quem liga for o do cliente do ticket."
+      },
+      "URA_RATE_LIMIT_PER_MIN": {
+        "LABEL": "Consultas por minuto (por número)"
+      },
+      "QUEUE_TEAM_MAP": {
+        "LABEL": "Fila para time",
+        "HELP": "Ligação receptiva que chega por uma fila conhecida vai para o time indicado."
+      },
+      "BRANCH_TEAM_MAP": {
+        "LABEL": "Ramal para time",
+        "HELP": "Usado quando a fila não define o time."
+      },
+      "TEAM_AREA_MAP": {
+        "LABEL": "Time para área interna",
+        "HELP": "Preenche o campo \"Área interna\" do ticket pelo time."
+      },
+      "DEFAULT_TEAM": {
+        "LABEL": "Time padrão"
+      },
+      "AGENT_MATCH_BY_NAME": {
+        "LABEL": "Responsável pelo nome do agente",
+        "HELP": "Sem ramal mapeado, usa o agente do ServiceDesk com o mesmo nome do agente da 55PBX."
+      },
+      "N8N_BASE_URL": {
+        "LABEL": "URL base do n8n",
+        "HELP": "Ex.: https://n8n.exemplo/webhook. Rotas cadastradas com caminho relativo (/sd/wf01) usam esta base."
+      },
+      "N8N_HMAC_SECRET": {
+        "LABEL": "Segredo HMAC",
+        "HELP": "Assina cada evento (X-SD-Signature). Vale mais que o segredo configurado no ambiente para as rotas."
+      },
+      "N8N_WEBHOOK_TOKEN": {
+        "LABEL": "Token do webhook",
+        "HELP": "Enviado no header X-SD-Webhook-Token."
+      }
+    },
+    "MAPS": {
+      "BRANCH": "Ramal",
+      "AGENT": "Agente",
+      "PICK_AGENT": "Escolha o agente",
+      "PBX_EMAIL": "E-mail do ramal na 55PBX",
+      "PBX_EMAIL_PLACEHOLDER": "Só se for diferente do e-mail do agente",
+      "ADD_BRANCH": "Adicionar ramal",
+      "QUEUE_TEAM_MAP": {
+        "KEY": "Fila",
+        "VALUE": "Time"
+      },
+      "BRANCH_TEAM_MAP": {
+        "KEY": "Ramal",
+        "VALUE": "Time"
+      },
+      "TEAM_AREA_MAP": {
+        "KEY": "Time",
+        "VALUE": "Área interna"
+      }
+    },
+    "RULES": {
+      "NAME": "Nome da regra",
+      "SORT": "Ordem",
+      "ACTIVE": "Ativa",
+      "DIRECTION": "Direção",
+      "QUEUE_PATTERN": "Fila (padrão)",
+      "QUEUE_PATTERN_PLACEHOLDER": "Ex.: fila_suporte_*",
+      "MODE": "Abre ticket para",
+      "REUSE": "Ticket aberto do mesmo cliente",
+      "WINDOW": "Janela de reaproveitamento (h)",
+      "PRIORITY": "Prioridade",
+      "ADD": "Adicionar regra",
+      "DIRECTIONS": {
+        "ANY": "Qualquer",
+        "RECEPTIVO": "Receptiva",
+        "ATIVO": "Ativa",
+        "INTERNO": "Interna"
+      },
+      "MODES": {
+        "ALL": "Todas as ligações",
+        "ANSWERED": "Só atendidas",
+        "MISSED": "Só perdidas",
+        "NONE": "Nenhuma"
+      },
+      "REUSES": {
+        "REUSE_OPEN": "Reaproveitar",
+        "NEW": "Abrir outro",
+        "ASK": "Perguntar ao agente"
+      },
+      "PRIORITIES": {
+        "URGENTE": "Urgente",
+        "ALTA": "Alta",
+        "NORMAL": "Normal",
+        "BAIXA": "Baixa"
+      }
+    },
+    "HOURS": {
+      "TIMEZONE": "Fuso horário",
+      "DAYS": {
+        "D0": "Segunda",
+        "D1": "Terça",
+        "D2": "Quarta",
+        "D3": "Quinta",
+        "D4": "Sexta",
+        "D5": "Sábado",
+        "D6": "Domingo"
+      },
+      "TO": "às",
+      "CLOSED": "Fechado",
+      "HOLIDAYS": "Feriados",
+      "HOLIDAYS_PLACEHOLDER": "AAAA-MM-DD, separados por vírgula",
+      "SLA_TITLE": "Prazos de SLA (minutos úteis)",
+      "POLICY": "Política",
+      "FIRST_RESPONSE": "1ª resposta",
+      "RESOLUTION": "Resolução",
+      "SLA_HELP": "Contados só dentro do horário comercial acima."
+    },
+    "CHECKLIST": {
+      "TITLE": "O que falta para ativar",
+      "DESCRIPTION": "Dependências da 55PBX (D1 a D4 do cronograma) e da configuração desta conta.",
+      "D1": {
+        "LABEL": "Chave Webservice (API)",
+        "HELP": "Cadastrada nesta tela (seção Credenciais da API).",
+        "LAST_POLL": "Última reconciliação: {at}"
+      },
+      "D2": {
+        "LABEL": "Tempo real por URL",
+        "HELP": "URL gerada aqui e cadastrada no painel da 55PBX; concluído quando o primeiro evento chega.",
+        "NO_SECRET": "Gere a URL na seção Webhook.",
+        "LAST_WEBHOOK": "Último evento recebido: {at}",
+        "WAITING": "Aguardando o primeiro evento da 55PBX."
+      },
+      "D3": {
+        "LABEL": "Acesso às gravações",
+        "HELP": "A 55PBX libera o IP do servidor no host de gravações.",
+        "STORED": "Gravações guardadas: {n}"
+      },
+      "D4": {
+        "LABEL": "Discagem (click-to-call)",
+        "HELP": "client_code, api_key, JWT e modo ativo.",
+        "MODE": "Credenciais cadastradas; modo: {mode}",
+        "NO_CREDENTIALS": "Faltam as credenciais da 55PBX."
+      },
+      "MAPS": {
+        "LABEL": "Ramais mapeados",
+        "HELP": "Ramal para agente, na seção Mapeamentos.",
+        "COUNT": "{n} ramal(is)"
+      },
+      "ENABLED": {
+        "LABEL": "Integração ativa",
+        "HELP": "Chave em Status e ativação.",
+        "FORCED": "Desligada pelo operador no servidor."
+      }
+    },
+    "TEST": {
+      "TITLE": "Resultado do teste",
+      "HINT": "Use \"Testar conexão\" para conferir a chave no Report02, o acesso às gravações, a discagem (só com credenciais), o token do Chatwoot e o n8n. Com alterações não salvas, o teste usa os valores do formulário sem gravar nada.",
+      "TESTED_AT": "Testado em {at}",
+      "ITEMS": {
+        "REPORT02": "Report02 (chave)",
+        "WEBHOOK": "Webhook",
+        "RECORDINGS": "Gravações",
+        "DIAL": "Discagem",
+        "URA": "URA",
+        "CHATWOOT": "Usuário de integração",
+        "N8N": "n8n",
+        "STORAGE": "Storage"
+      },
+      "STATUS": {
+        "OK": "OK",
+        "ERROR": "Erro",
+        "WARNING": "Atenção",
+        "MISSING": "Falta configurar",
+        "SKIPPED": "Não testado"
+      }
+    },
+    "WEBHOOK": {
+      "URL_LABEL": "URL para o painel da 55PBX (método POST)",
+      "COPY": "Copiar",
+      "COPIED": "URL copiada",
+      "ONLY_ONCE": "Copie agora: por segurança, a URL completa só aparece desta vez. O segredo anterior já não é aceito.",
+      "NOT_DEFINED": "Nenhuma URL gerada ainda.",
+      "SOURCE_PANEL": "Segredo gerado nesta tela",
+      "SOURCE_SEED": "Segredo cadastrado na instalação (só o hash fica no banco)",
+      "SOURCE_ENV": "Segredo do ambiente (.env)",
+      "SOURCE_NONE": "Sem segredo",
+      "ROTATED_AT": "gerado em {at}",
+      "ROTATE": "Gerar novo segredo",
+      "ROTATE_CONFIRM": "O segredo atual deixa de valer na hora. Continuar?",
+      "ROTATE_YES": "Gerar agora"
+    }
+  }
+}

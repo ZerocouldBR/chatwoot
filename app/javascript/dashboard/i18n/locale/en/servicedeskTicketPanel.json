@@ -1,0 +1,49 @@
+{
+  "SERVICEDESK_TICKET_PANEL": {
+    "TICKET_NUMBER": "#{number}",
+    "TITLE": "Ticket properties",
+    "REQUESTER": "Requester",
+    "ORGANIZATION": "Organization",
+    "CC": "CC",
+    "FOLLOWERS": "Followers",
+    "TYPE": "Type",
+    "STATUS": "Status",
+    "GROUP": "Group",
+    "ASSIGNEE": "Assignee",
+    "TAGS": "Tags",
+    "SELECT": "Select",
+    "EMPTY": "-",
+    "NONE": "(empty)",
+    "SEARCH": "Search",
+    "NO_RESULTS": "No results",
+    "YES": "Yes",
+    "NO": "No",
+    "FORM": {
+      "LABEL": "Form",
+      "DEFAULT": "Default form (ticket has no saved form)",
+      "CHANGED": "Form changed to {form}"
+    },
+    "NATIVE_STATUS": {
+      "LABEL": "Ticket state",
+      "OPEN": "Open",
+      "PENDING": "With bot",
+      "RESOLVED": "Resolved",
+      "SNOOZED": "Pending"
+    },
+    "FIELDS": {
+      "TITLE": "Ticket fields",
+      "TITLE_WITH_FORM": "Fields · {form}",
+      "EMPTY": "No fields for this form.",
+      "SHOW_CONDITIONAL": "Show conditional fields ({count})",
+      "HIDE_CONDITIONAL": "Hide conditional fields"
+    },
+    "OTHER_FIELDS": "Other filled fields ({count})",
+    "META_FIELDS": "Imported data",
+    "WORKSPACE": {
+      "PROPERTIES": "Properties",
+      "CONTEXT": "Context",
+      "COLLAPSE": "Collapse properties",
+      "EXPAND": "Show properties"
+    }
+  }
+}

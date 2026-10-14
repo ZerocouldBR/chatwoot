@@ -29,6 +29,7 @@ import businessHours from './businessHours/businessHours.routes';
 import ticketRules from './ticketRules/ticketRules.routes';
 import captain from './captain/captain.routes';
 import data from './data/data.routes';
+import telephony from './telephony/telephony.routes';
 
 export default {
   routes: [
@@ -73,5 +74,6 @@ export default {
     ...businessHours.routes,
     ...ticketRules.routes,
     ...captain.routes,
+    ...telephony.routes,
   ],
 };

@@ -162,7 +162,10 @@
       "TEAM_DROPDOWN_PLACEHOLDER": "Select groups",
       "EMAIL_INPUT_PLACEHOLDER": "Enter email",
       "URL_INPUT_PLACEHOLDER": "Enter URL",
-      "INSERT_CONTACT_EMAIL": "Use contact's email"
+      "INSERT_CONTACT_EMAIL": "Use contact's email",
+      "SUBJECT_INPUT_PLACEHOLDER": "Enter the new subject",
+      "ATTRIBUTE_PLACEHOLDER": "Select a field",
+      "ATTRIBUTE_VALUE_PLACEHOLDER": "Value"
     },
     "TOGGLE": {
       "ACTIVATION_TITLE": "Activate Automation Rule",
@@ -221,7 +224,10 @@
       "CHANGE_PRIORITY": "Change Priority",
       "ADD_SLA": "Add SLA",
       "OPEN_CONVERSATION": "Open ticket",
-      "PENDING_CONVERSATION": "Mark ticket as pending"
+      "PENDING_CONVERSATION": "Mark ticket as pending",
+      "SET_TICKET_STATUS": "Set ticket status",
+      "SET_CUSTOM_ATTRIBUTE": "Set a field",
+      "CHANGE_SUBJECT": "Change subject"
     },
     "MESSAGE_TYPES": {
       "INCOMING": "Incoming Message",
