@@ -51,6 +51,22 @@ export const ALERT_LABEL: Record<string, string> = {
   oportunidade_base_conhecimento: 'Oportunidade de base de conhecimento',
 };
 
+export const CALL_STATE: Record<string, string> = {
+  active: 'em andamento',
+  ringing: 'tocando',
+  ended: 'encerrada',
+  merged: 'unificada',
+};
+
+export const CALL_OUTCOME: Record<string, string> = {
+  answered: 'atendida',
+  abandoned_queue: 'abandono na fila',
+  abandoned_ura: 'abandono na URA',
+  missed: 'não atendida',
+  after_hours: 'fora do horário',
+  dropped: 'queda',
+};
+
 export const TASK_STATUS: Record<string, string> = {
   open: 'aberta',
   in_progress: 'em andamento',

@@ -62,8 +62,12 @@ export function Player({ recordingId, segments, seekTo, allowMarks = true }: Pla
 
   useEffect(() => {
     if (current < 0 || !list.current) return;
-    const el = list.current.querySelector<HTMLElement>(`[data-idx="${segments[current]?.idx}"]`);
-    el?.scrollIntoView?.({ block: 'nearest' });
+    // Rola só a caixa da transcrição (scrollIntoView rolaria também a página/iframe inteira).
+    const box = list.current;
+    const el = box.querySelector<HTMLElement>(`[data-idx="${segments[current]?.idx}"]`);
+    if (el && (el.offsetTop < box.scrollTop || el.offsetTop + el.offsetHeight > box.scrollTop + box.clientHeight)) {
+      box.scrollTop = Math.max(0, el.offsetTop - box.clientHeight / 3);
+    }
   }, [current, segments]);
 
   async function toggle() {

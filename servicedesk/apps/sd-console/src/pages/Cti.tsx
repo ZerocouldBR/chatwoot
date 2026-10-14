@@ -8,7 +8,7 @@ import { Player } from '../components/Player';
 import { SessionGate, useSession } from '../components/Session';
 import { Badge, CapButton, Empty, ErrorBox, Loading, Notice } from '../components/ui';
 import { useAppContext, type AppContext } from '../lib/chatwoot';
-import { ALERT_LABEL, fmtClock, fmtDateTime, scoreClass, STATUS_LABEL } from '../lib/format';
+import { ALERT_LABEL, CALL_OUTCOME, CALL_STATE, fmtClock, fmtDateTime, scoreClass, STATUS_LABEL } from '../lib/format';
 import { errorText } from '../lib/http';
 import { qaApi, type RecordingAnalysis, type SummaryItem } from '../lib/qa';
 import * as sdops from '../lib/sdops';
@@ -178,7 +178,7 @@ function CtiHeader({
           <dt>Fila</dt>
           <dd>{call?.queue || '-'}</dd>
           <dt>Estado</dt>
-          <dd>{call ? <Badge kind={call.ended_at ? '' : 'ok'}>{call.ended_at ? 'encerrada' : call.status || 'em andamento'}</Badge> : 'sem chamada ativa'}</dd>
+          <dd>{call ? <Badge kind={call.ended_at ? '' : 'ok'}>{call.ended_at ? 'encerrada' : CALL_STATE[call.status || ''] || call.status || 'em andamento'}</Badge> : 'sem chamada ativa'}</dd>
           <dt>Tempo</dt>
           <dd className="mono">{elapsed !== null ? fmtClock(elapsed) : '-'}</dd>
           <dt>Protocolo</dt>
@@ -265,7 +265,7 @@ function ContextCard({ data, loading }: { data: sdops.Context | null; loading: b
           </div>
           <dl className="kv">
             <dt>Último atendimento</dt>
-            <dd>{last ? `${fmtDateTime(last.started_at)} · ${last.direction || ''} · ${last.outcome || ''}` : '-'}</dd>
+            <dd>{last ? `${fmtDateTime(last.started_at)} · ${last.direction || ''} · ${CALL_OUTCOME[last.outcome || ''] || last.outcome || ''}` : '-'}</dd>
             <dt>Responsável</dt>
             <dd>{data.owner || data.tickets[0]?.assignee || '-'}</dd>
             <dt>Canal preferido</dt>
@@ -299,7 +299,9 @@ const DISPOSITIONS = ['resolvido_na_ligacao', 'encaminhado', 'aguardando_cliente
 
 function RegisterCard({ data, caps, conversationId, onSaved }: { data: sdops.Context | null; caps: sdops.Capabilities | null | undefined; conversationId?: number; onSaved: () => void }) {
   const ticket = data?.tickets?.[0];
-  const cap = caps?.tickets_write ?? caps?.tickets;
+  // Sem capacidade explícita, o ticket aberto devolvido pelo /context do sd-ops indica que o módulo de tickets
+  // está ativo; a autorização continua no servidor (tickets:write / papel agente).
+  const cap = caps?.tickets_write ?? caps?.tickets ?? (ticket ? { enabled: true } : undefined);
   const [f, setF] = useState({ category: '', reason: '', description: '', actions: '', result: '', disposition: '', pending: '', schedule_at: '', internal_note: '', close: false });
   const [msg, setMsg] = useState<{ ok: boolean; text: string } | null>(null);
   const [busy, setBusy] = useState(false);

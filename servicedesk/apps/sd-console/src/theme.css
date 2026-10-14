@@ -175,7 +175,7 @@ td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
 .player { display: flex; flex-direction: column; gap: 8px; }
 .player .controls { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
 .player input[type="range"] { flex: 1; min-width: 140px; accent-color: var(--sd-brand); }
-.transcript { max-height: 320px; overflow-y: auto; border: 1px solid var(--sd-border-soft); border-radius: var(--sd-radius); }
+.transcript { max-height: 320px; overflow-y: auto; position: relative; border: 1px solid var(--sd-border-soft); border-radius: var(--sd-radius); }
 .transcript button.seg {
   display: grid; grid-template-columns: 52px 72px 1fr; gap: 8px; width: 100%; height: auto; text-align: left;
   border: 0; border-bottom: 1px solid var(--sd-border-soft); border-radius: 0; padding: 6px 8px; font-weight: 400;
