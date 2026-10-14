@@ -1,0 +1,44 @@
+{
+  "WF02": [
+    "GET /calls/{id}"
+  ],
+  "WF04": [
+    "GET /tickets/{id}"
+  ],
+  "WF05": [
+    "GET /tickets/{id}",
+    "POST /notifications/log",
+    "POST /tickets/{id}/links"
+  ],
+  "WF06": [
+    "GET /tickets/{id}",
+    "POST /notifications/log",
+    "POST /tickets/{id}/links"
+  ],
+  "WF07": [
+    "GET /tickets/{id}",
+    "POST /notifications/log",
+    "POST /tickets/{id}/links"
+  ],
+  "WF08": [
+    "GET /tickets/{id}",
+    "POST /tickets/{id}/links",
+    "POST /tickets/{id}/reopen"
+  ],
+  "WF09": [
+    "POST /reconciliations"
+  ],
+  "WF10": [
+    "GET /sla/at-risk",
+    "GET /tickets/{id}"
+  ],
+  "WF11": [
+    "GET /calls/{id}",
+    "POST /tickets/{id}/notes"
+  ],
+  "WF12": [
+    "GET /metrics/telephony",
+    "GET /metrics/tickets",
+    "GET /reports/summary"
+  ]
+}
