@@ -3,7 +3,7 @@
 # additional_tags, remove_tags, custom_fields/fields, email_ccs, collaborator_ids, external_id, due_at, comment
 # (body/html_body, public, author_id, uploads) e safe_update/updated_stamp. Tudo numa transação; o comentário entra
 # depois das mudanças, como no Zendesk. Erros de validação -> ZendeskCompat::Error::RecordInvalid (422 no formato do Zendesk).
-# rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity
+# Status, assunto, tipo, vencimento e CCs são gravados pelo modelo de ticket do fork (ZendeskCompat::TicketModel).
 class ZendeskCompat::TicketUpdater
   attr_reader :conversation, :message
 
@@ -21,6 +21,7 @@ class ZendeskCompat::TicketUpdater
         assign_attributes
         raise_errors!
         @conversation.save! if @conversation.changed? || @labels_changed
+        ZendeskCompat::TicketModel.write_cc_emails(@conversation, @cc_list) if @cc_list && ZendeskCompat::TicketModel.native?
         @message = ZendeskCompat::CommentCreator.new(@context, @conversation, @params[:comment]).perform if @params[:comment].present?
       end
     end
@@ -45,7 +46,8 @@ class ZendeskCompat::TicketUpdater
     assign_group
     assign_priority
     assign_custom_attributes
-    assign_subject
+    assign_ticket_fields
+    assign_ccs
     assign_tags
   end
 
@@ -56,7 +58,7 @@ class ZendeskCompat::TicketUpdater
     return add_error(:status, "Status: #{@params[:status] || @params[:custom_status_id]} não é um status válido") if result.nil?
 
     @conversation.status = result[:native]
-    @custom_attributes = custom_attributes.merge(Servicedesk::TicketStatuses.attribute_key => result[:label])
+    @custom_attributes = custom_attributes.merge(ZendeskCompat::StatusTranslator::LABEL_ATTRIBUTE => result[:label]) if result[:label]
     @custom_attributes[ZendeskCompat::StatusTranslator::SYSTEM_ATTRIBUTE] = result[:system_label] if result[:system_label]
   end
 
@@ -114,29 +116,30 @@ class ZendeskCompat::TicketUpdater
     attrs = custom_attributes.dup
     attrs.merge!(@context.fields.attributes_from(@params[:custom_fields])) if @params.key?(:custom_fields)
     attrs.merge!(@context.fields.attributes_from(@params[:fields])) if @params.key?(:fields)
-    attrs['zd_tipo'] = ZendeskCompat::Config.types[@params[:type].to_s] if @params.key?(:type)
     attrs['zd_id_externo'] = @params[:external_id] if @params.key?(:external_id)
-    attrs['zd_vencimento'] = @params[:due_at] if @params.key?(:due_at)
-    assign_ccs(attrs)
     attrs.compact!
     @conversation.custom_attributes = attrs if attrs != (@conversation.custom_attributes || {})
   end
 
-  def assign_ccs(attrs)
+  def assign_ccs
     changes = Array(@params[:email_ccs])
     changes += Array(@params[:collaborator_ids]).map { |id| { user_id: id, action: 'put' } }
     changes += Array(@params[:collaborators]).map { |email| { user_email: email.is_a?(Hash) ? email['email'] : email, action: 'put' } }
     return if changes.empty?
 
-    list = ZendeskCompat::CcList.apply(attrs[ZendeskCompat::CcList::ATTRIBUTE], changes, @context.directory)
-    attrs[ZendeskCompat::CcList::ATTRIBUTE] = ZendeskCompat::CcList.dump(list)
+    @cc_list = ZendeskCompat::CcList.apply(ZendeskCompat::TicketModel.cc_emails(@conversation), changes, @context.directory)
+    ZendeskCompat::TicketModel.write_cc_emails(@conversation, @cc_list) unless ZendeskCompat::TicketModel.native?
   end
 
-  def assign_subject
-    return unless @params.key?(:subject)
-
-    @conversation.additional_attributes = (@conversation.additional_attributes || {}).merge('mail_subject' => @params[:subject].to_s)
-    @conversation.custom_attributes = (@conversation.custom_attributes || {}).merge('zd_assunto' => @params[:subject].to_s)
+  # assunto, tipo e vencimento: colunas no modelo nativo, atributos zd_* no legado
+  def assign_ticket_fields
+    model = ZendeskCompat::TicketModel
+    model.assign_subject(@conversation, @params[:subject]) if @params.key?(:subject)
+    invalid_type = @params.key?(:type) && model.assign_type(@conversation, @params[:type]) == :invalid
+    add_error(:type, "Type: #{@params[:type]} não é um tipo válido") if invalid_type
+    model.assign_due_at(@conversation, @params[:due_at]) if @params.key?(:due_at)
+  rescue ArgumentError
+    add_error(:due_at, "Due at: #{@params[:due_at]} não é uma data válida")
   end
 
   def assign_tags
@@ -162,4 +165,3 @@ class ZendeskCompat::TicketUpdater
     raise ZendeskCompat::Error::RecordInvalid, @errors if @errors.any?
   end
 end
-# rubocop:enable Metrics/AbcSize, Metrics/CyclomaticComplexity

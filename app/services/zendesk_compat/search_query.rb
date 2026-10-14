@@ -24,7 +24,7 @@ class ZendeskCompat::SearchQuery
   def tickets
     scope = @context.account.conversations.includes(:contact, :assignee, :team, :inbox)
     @conditions.each { |condition| scope = condition.call(scope) }
-    @text.each { |word| scope = scope.where("conversations.additional_attributes->>'mail_subject' ILIKE ?", "%#{sanitize(word)}%") }
+    @text.each { |word| scope = scope.where("#{ZendeskCompat::TicketModel.subject_sql} ILIKE ?", "%#{sanitize(word)}%") }
     scope
   end
 
@@ -126,7 +126,7 @@ class ZendeskCompat::SearchQuery
     else
       add { |s| s.where("#{column} #{sql_operator} ?", time) }
     end
-    add { |s| s.where(status: :resolved) } if key == 'solved'
+    add { |s| s.where(status: ZendeskCompat::TicketModel.solved_statuses) } if key == 'solved'
   end
 
   def parse_time(value)

@@ -15,13 +15,13 @@ class ZendeskCompat::TicketPresenter
 
   def present(conversation)
     attrs = conversation.custom_attributes || {}
-    ids = people_ids(conversation, attrs)
+    ids = people_ids(conversation)
     fields = @context.fields.custom_fields(conversation)
     channel = channel(conversation)
     identity(conversation, attrs).merge(ids).merge(
       via: via(conversation, channel), status: ZendeskCompat::StatusTranslator.category(conversation),
       custom_status_id: ZendeskCompat::StatusTranslator.custom_status_id(conversation), priority: PRIORITIES[conversation.priority],
-      type: type_value(attrs['zd_tipo']),
+      type: ZendeskCompat::TicketModel.ticket_type(conversation),
       tags: conversation.label_list.sort, custom_fields: fields, fields: fields, recipient: recipient(conversation),
       from_messaging_channel: MESSAGING_CHANNELS.include?(channel), satisfaction_rating: satisfaction(attrs)
     )
@@ -39,25 +39,28 @@ class ZendeskCompat::TicketPresenter
   private
 
   def identity(conversation, attrs)
-    subject = conversation.additional_attributes&.dig('mail_subject').presence || attrs['zd_assunto']
+    subject = ZendeskCompat::TicketModel.subject(conversation)
     {
       url: @context.api_url("tickets/#{conversation.display_id}.json"), id: conversation.display_id,
       external_id: attrs['zd_id_externo'], created_at: @context.time(conversation.created_at),
       updated_at: @context.time(conversation.updated_at), generated_timestamp: conversation.updated_at.to_i,
       subject: subject, raw_subject: conversation.additional_attributes&.dig('zendesk', 'raw_subject') || subject,
       description: description(conversation), problem_id: ZendeskCompat::Ids.integer(attrs['zd_problema_id']),
-      has_incidents: attrs['zd_incidentes'].present?, is_public: attrs['zd_publico'] != false, due_at: attrs['zd_vencimento'],
+      has_incidents: attrs['zd_incidentes'].present?, is_public: attrs['zd_publico'] != false,
+      due_at: ZendeskCompat::TicketModel.due_at(conversation),
       forum_topic_id: nil, sharing_agreement_ids: [], followup_ids: [], brand_id: nil, allow_channelback: false,
       allow_attachments: true, ticket_form_id: form_id(attrs['zd_formulario']), encoded_id: attrs['zd_encoded_id']
     }
   end
 
-  def people_ids(conversation, attrs)
+  def people_ids(conversation)
     requester_id = ZendeskCompat::Ids.contact_id(conversation.contact) if conversation.contact
-    email_cc_ids = cc_emails(attrs).filter_map { |email| @context.directory.actor_by_email(email) }.map { |a| ZendeskCompat::Ids.user_id(a) }
+    submitter = ZendeskCompat::TicketModel.submitter(conversation)
+    email_cc_ids = cc_emails(conversation).filter_map { |email| @context.directory.actor_by_email(email) }.map { |a| ZendeskCompat::Ids.user_id(a) }
     follower_ids = conversation.conversation_participants.includes(:user).filter_map { |p| p.user && ZendeskCompat::Ids.user_id(p.user) }
     {
-      requester_id: requester_id, submitter_id: requester_id, assignee_id: assignee_id(conversation),
+      requester_id: requester_id, submitter_id: submitter ? ZendeskCompat::Ids.user_id(submitter) : requester_id,
+      assignee_id: assignee_id(conversation),
       organization_id: organization_id(conversation), group_id: @context.directory.group_id(conversation.team),
       email_cc_ids: email_cc_ids.uniq, follower_ids: follower_ids.uniq, collaborator_ids: (email_cc_ids + follower_ids).uniq
     }
@@ -71,7 +74,7 @@ class ZendeskCompat::TicketPresenter
   end
 
   def organization_id(conversation)
-    ZendeskCompat::Ids.organization_id(@context.company(conversation.contact)) ||
+    ZendeskCompat::Ids.organization_id(ZendeskCompat::TicketModel.company(conversation, @context)) ||
       ZendeskCompat::Ids.integer(conversation.additional_attributes&.dig('zendesk', 'organization_id'))
   end
 
@@ -97,12 +100,8 @@ class ZendeskCompat::TicketPresenter
     first&.content.to_s
   end
 
-  def cc_emails(attrs)
-    ZendeskCompat::CcList.parse(attrs[ZendeskCompat::CcList::ATTRIBUTE])
-  end
-
-  def type_value(label)
-    ZendeskCompat::Config.types.key(label)
+  def cc_emails(conversation)
+    ZendeskCompat::TicketModel.cc_emails(conversation)
   end
 
   def form_id(name)

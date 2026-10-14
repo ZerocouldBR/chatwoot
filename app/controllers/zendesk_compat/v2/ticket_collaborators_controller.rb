@@ -1,9 +1,9 @@
-# GET /api/v2/tickets/:ticket_id/email_ccs(.json) e /followers(.json): usuários em CC (zd_cc) e seguidores
+# GET /api/v2/tickets/:ticket_id/email_ccs(.json) e /followers(.json): usuários em CC (ZendeskCompat::TicketModel) e seguidores
 # (participantes da conversa), no formato {users: [...]} do Zendesk.
 class ZendeskCompat::V2::TicketCollaboratorsController < ZendeskCompat::BaseController
   def email_ccs
     conversation = find_ticket!
-    emails = ZendeskCompat::CcList.parse((conversation.custom_attributes || {})[ZendeskCompat::CcList::ATTRIBUTE])
+    emails = ZendeskCompat::TicketModel.cc_emails(conversation)
     records = emails.map { |email| context.directory.actor_by_email(email) || placeholder(email) }
     render json: { users: records.map { |record| present(record) } }
   end

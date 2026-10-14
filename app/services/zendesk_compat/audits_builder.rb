@@ -1,9 +1,9 @@
 # Audits do ticket no formato do Zendesk (GET /api/v2/tickets/:id/audits), em ordem cronológica:
 #   1º audit = criação: eventos Create (status, responsável, grupo, prioridade, etiquetas) + o 1º comentário
 #   um audit por comentário (mensagem pública ou nota interna), id = id da mensagem
-#   um audit por alteração gravada em sd_ticket_audits (Servicedesk::TicketAuditTrail), id = AUDIT_BASE + id
-# Tickets importados não têm o histórico de alterações do Zendesk: o Create usa os valores de antes da 1ª
-# alteração registrada (ou os atuais).
+#   um audit por alteração registrada (ZendeskCompat::AuditSource: sd_ticket_audits ou conversation_events), id = AUDIT_BASE + id
+# Sem registro da criação (modelo legado, tickets importados), o Create usa os valores de antes da 1ª alteração
+# registrada (ou os atuais).
 class ZendeskCompat::AuditsBuilder
   CREATE_BASE = 6_000_000_000_000_000
   CREATE_FIELDS = %w[status custom_status_id assignee_id group_id priority tags].freeze
@@ -12,21 +12,26 @@ class ZendeskCompat::AuditsBuilder
     @context = context
     @conversation = conversation
     @comments = ZendeskCompat::CommentPresenter.new(context)
+    @source = ZendeskCompat::AuditSource.for(conversation)
   end
 
   def audits
     messages = ZendeskCompat::CommentPresenter.comment_scope(@conversation).order(:created_at, :id).to_a
-    changes = Servicedesk::TicketAudit.where(conversation_id: @conversation.id).includes(:author).order(:id).to_a
-    list = comment_audits(messages) + changes.map { |audit| change_audit(audit) }
-    attach_create_events(list, messages.first, changes)
+    rows = @source.rows
+    list = comment_audits(messages) + rows.map { |row| change_audit(row) }
+    attach_create_events(list, messages.first, rows)
     list.sort_by { |audit| [audit[:created_at].to_s, audit[:id]] }
   end
 
-  # Audit da requisição (resposta de PUT/POST de ticket): alterações gravadas depois de after_change_id + o comentário,
+  # Id da última alteração registrada (para o request_audit de um PUT).
+  def last_change_id
+    @source.last_id
+  end
+
+  # Audit da requisição (resposta de PUT/POST de ticket): alterações registradas depois de after_change_id + o comentário,
   # num audit só, como o Zendesk devolve.
   def request_audit(after_change_id:, message: nil)
-    changes = Servicedesk::TicketAudit.where(conversation_id: @conversation.id).where('id > ?', after_change_id.to_i).order(:id)
-    parts = changes.includes(:author).map { |audit| change_audit(audit) }
+    parts = @source.rows(after_id: after_change_id.to_i).map { |row| change_audit(row) }
     parts += comment_audits([message]) if message
     return base(nil, Time.current, ZendeskCompat::Ids.user_id(@context.user), 'api') if parts.empty?
 
@@ -50,16 +55,16 @@ class ZendeskCompat::AuditsBuilder
     end
   end
 
-  def change_audit(audit)
-    author_id = audit.author ? ZendeskCompat::Ids.user_id(audit.author) : -1
-    events = audit.events.each_with_index.map do |event, index|
-      event.symbolize_keys.merge(id: (audit.id * 100) + index + 1, type: event['type'] || 'Change')
+  def change_audit(row)
+    author_id = row[:author] ? ZendeskCompat::Ids.user_id(row[:author]) : -1
+    events = row[:events].each_with_index.map do |event, index|
+      event.symbolize_keys.merge(id: (row[:id] * 100) + index + 1, type: event['type'] || 'Change')
     end
-    base(ZendeskCompat::Ids::AUDIT_BASE + audit.id, audit.created_at, author_id, audit.via).merge(events: events)
+    base(ZendeskCompat::Ids::AUDIT_BASE + row[:id], row[:created_at], author_id, row[:via]).merge(events: events)
   end
 
-  def attach_create_events(list, first_message, changes)
-    events = create_events(changes)
+  def attach_create_events(list, first_message, rows)
+    events = create_events(rows)
     first_audit = first_message && list.find { |audit| audit[:id] == first_message.id }
     if first_audit
       first_audit[:events] = events + first_audit[:events]
@@ -69,15 +74,22 @@ class ZendeskCompat::AuditsBuilder
     end
   end
 
-  def create_events(changes)
+  def create_events(rows)
+    recorded = @source.create_values
     current = current_values
     CREATE_FIELDS.each_with_index.filter_map do |field, index|
-      first_change = changes.flat_map(&:events).find { |event| event['field_name'] == field }
-      value = first_change ? first_change['previous_value'] : current[field]
+      value = create_value(field, recorded, rows, current)
       next if value.nil? || value == []
 
       { id: (@conversation.id * 100) + index + 1, type: 'Create', field_name: field, value: value }
     end
+  end
+
+  def create_value(field, recorded, rows, current)
+    return recorded[field] if recorded&.key?(field)
+
+    first_change = rows.flat_map { |row| row[:events] }.find { |event| event['field_name'] == field }
+    first_change ? first_change['previous_value'] : current[field]
   end
 
   def current_values

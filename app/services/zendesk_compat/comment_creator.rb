@@ -60,9 +60,15 @@ class ZendeskCompat::CommentCreator
       params[:sender_type] = 'AgentBot'
       params[:sender_id] = author.id
     end
-    cc_emails = ZendeskCompat::CcList.parse((@conversation.custom_attributes || {})[ZendeskCompat::CcList::ATTRIBUTE])
     params[:cc_emails] = cc_emails.join(',') if public? && @conversation.inbox.email? && cc_emails.any?
     params.with_indifferent_access
+  end
+
+  # Legado: os CCs (zd_cc) vão em cc_emails. Modelo nativo: o próprio fork copia conversation_ccs em toda resposta pública.
+  def cc_emails
+    return [] if ZendeskCompat::TicketModel.ccs_sent_by_mailer?
+
+    ZendeskCompat::TicketModel.cc_emails(@conversation)
   end
 
   def create_contact_message(contact)

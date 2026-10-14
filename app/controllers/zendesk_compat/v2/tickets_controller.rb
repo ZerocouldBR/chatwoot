@@ -21,7 +21,7 @@ class ZendeskCompat::V2::TicketsController < ZendeskCompat::BaseController
 
   def update
     conversation = find_ticket!(params[:id])
-    last_change_id = Servicedesk::TicketAudit.where(conversation_id: conversation.id).maximum(:id)
+    last_change_id = ZendeskCompat::AuditsBuilder.new(context, conversation).last_change_id
     updater = ZendeskCompat::TicketUpdater.new(context, conversation, ticket_param)
     conversation = updater.perform
     audit = ZendeskCompat::AuditsBuilder.new(context, conversation).request_audit(after_change_id: last_change_id, message: updater.message)

@@ -1,7 +1,7 @@
 # GET /api/v2/custom_statuses(.json) e /custom_statuses/:id: status personalizados (config/servicedesk/ticket_statuses.yml).
 class ZendeskCompat::V2::CustomStatusesController < ZendeskCompat::BaseController
   def index
-    statuses = Servicedesk::TicketStatuses.statuses
+    statuses = ZendeskCompat::StatusTranslator.statuses
     statuses = statuses.select { |status| status['active'] } if params[:active].to_s == 'true'
     render json: { custom_statuses: statuses.map { |status| status_json(status) } }
   end

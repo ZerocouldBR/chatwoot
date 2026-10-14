@@ -15,7 +15,7 @@ class ZendeskCompat::TicketCreator
     ActiveRecord::Base.transaction do
       contact_inbox = ContactInboxBuilder.new(contact: contact, inbox: inbox, source_id: nil).perform
       conversation = Conversation.create!(account: @context.account, inbox: inbox, contact: contact, contact_inbox: contact_inbox,
-                                          status: :open, additional_attributes: initial_additional_attributes)
+                                          additional_attributes: initial_additional_attributes)
       ZendeskCompat::TicketUpdater.new(@context, conversation, update_params).perform
     end
     conversation.reload
@@ -25,7 +25,10 @@ class ZendeskCompat::TicketCreator
 
   def update_params
     params = @params.except(:requester, :requester_id, :recipient, :via, :brand_id, :ticket_form_id)
-    params[:status] ||= 'open' unless params.key?(:custom_status_id)
+    unless params.key?(:custom_status_id) # como o Zendesk: "new" sem responsável, "open" com responsável
+      assigned = params[:assignee_id].present? || params[:assignee_email].present?
+      params[:status] ||= assigned ? 'open' : 'new'
+    end
     params
   end
 
