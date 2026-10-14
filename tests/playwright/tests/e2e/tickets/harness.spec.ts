@@ -27,3 +27,22 @@ test('old conversation links still open the ticket', async ({ page, baseURL }) =
   await expect(page.getByRole('link', { name: 'Tickets' }).first()).toBeVisible();
   await api.ctx.dispose();
 });
+
+// Regression: the "Unsolved" default filter once made the list refetch forever.
+test('the ticket list loads once with the unsolved filter', async ({ page, baseURL }) => {
+  const env = loadE2EEnv();
+  const api = await ApiClient.login(baseURL!, env.users.admin.email, E2E_PASSWORD, env.account_id);
+  const stamp = Date.now();
+  const contact = await api.createContact(`Lista ${stamp}`, `lista-${stamp}@example.test`);
+  await api.createConversation(env.api_inbox_id, contact.id, `Lista ${stamp}`);
+
+  let listRequests = 0;
+  page.on('request', request => {
+    if (/\/api\/v1\/accounts\/\d+\/conversations\?/.test(request.url())) listRequests += 1;
+  });
+  await page.goto(`/app/accounts/${env.account_id}/dashboard`);
+  await expect(page.getByRole('heading', { level: 4 }).first()).toBeVisible();
+  await page.waitForTimeout(5000);
+  expect(listRequests).toBeLessThan(5);
+  await api.ctx.dispose();
+});

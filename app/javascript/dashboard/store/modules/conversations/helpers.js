@@ -1,4 +1,5 @@
 import { CONVERSATION_PRIORITY_ORDER } from 'shared/constants/messages';
+import { UNSOLVED_STATUSES } from 'dashboard/constants/ticketStatuses';
 
 export const findPendingMessageIndex = (chat, message) => {
   const { echo_id: tempMessageId } = message;
@@ -7,8 +8,13 @@ export const findPendingMessageIndex = (chat, message) => {
   );
 };
 
-export const filterByStatus = (chatStatus, filterStatus) =>
-  filterStatus === 'all' ? true : chatStatus === filterStatus;
+// 'unsolved' groups New, Open, Pending and On-hold, mirroring the API filter.
+export const filterByStatus = (chatStatus, filterStatus) => {
+  if (filterStatus === 'all') return true;
+  if (filterStatus === 'unsolved')
+    return UNSOLVED_STATUSES.includes(chatStatus);
+  return chatStatus === filterStatus;
+};
 
 export const filterByInbox = (shouldFilter, inboxId, chatInboxId) => {
   const isOnInbox = Number(inboxId) === chatInboxId;
