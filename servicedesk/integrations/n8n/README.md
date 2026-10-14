@@ -99,6 +99,6 @@ Pendências que dependem de outros agentes:
 | Teste negativo do validador (conexão quebrada, segredo, versão inexistente, credencial real, nó solto, JS inválido) | **6/6 detectados** |
 | `test_code_nodes.py` | **32/32 casos**; achou 1 bug (regex do protocolo não aceitava `B2B-…`), corrigido |
 | Importação no n8n **2.43.4** descartável | **13/13 importados e publicados** |
-| e2e `run_e2e.sh` (n8n 2.43.4 + mock com as respostas do sd-ops real) | 1ª rodada: 14/15 — o WF01 revelou bug real (resposta em array vira vários itens no nó HTTP), corrigido no WF01 e no WF10. Rodada final: ver `docs/ACCEPTANCE_REPORT.md` |
+| e2e `run_e2e.sh` (n8n 2.43.4 + mock com as respostas do sd-ops real) | 1ª rodada: 14/15 — o WF01 revelou bug real (resposta em array vira vários itens no nó HTTP), corrigido no WF01 e no WF10. **Rodada final: 15/15** (WF01–WF06, WF08–WF11, anti-loop, token errado = 403, envio único por ticket) |
 
 **Nada foi criado ou alterado no n8n do cliente** (só leitura via API: `GET /healthz`, `GET /api/v1/workflows?limit=1`).
