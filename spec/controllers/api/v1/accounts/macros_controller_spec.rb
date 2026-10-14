@@ -416,7 +416,7 @@ RSpec.describe 'Api::V1::Accounts::MacrosController', type: :request do
 
           expect(conversation.reload.messages.outgoing.where(private: false)).to be_empty
           expect(conversation.messages.outgoing.where(private: true).pluck(:content)).to eq(['We are sending greeting message to customer.'])
-          expect(conversation.status).to eq('snoozed')
+          expect(conversation.status).to eq('on_hold')
           expect(conversation.team_id).to eq(team.id)
         end
 

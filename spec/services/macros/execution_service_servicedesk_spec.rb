@@ -37,7 +37,7 @@ RSpec.describe Macros::ExecutionService do
 
         expect(conversation.team).to eq(team)
         expect(conversation.custom_attributes).to include('zd_tabulacao' => 'Chargeback', 'zd_status' => 'Desenvolvimento')
-        expect(conversation.status).to eq('snoozed')
+        expect(conversation.status).to eq('on_hold')
       end
 
       it 'keeps posting the private note when the macro also has a public reply' do
