@@ -5,6 +5,7 @@ class Api::V1::Accounts::BaseController < Api::BaseController
   before_action :current_account
   before_action :validate_token_api_access, if: :authenticate_by_access_token?
   before_action :check_account_mfa_enforcement, if: :authenticate_by_access_token?
+  include Servicedesk::RoleEnforcement # ServiceDesk M13: papéis; depois de current_account (usa Current.account_user)
   around_action :switch_locale_using_account_locale
 
   private

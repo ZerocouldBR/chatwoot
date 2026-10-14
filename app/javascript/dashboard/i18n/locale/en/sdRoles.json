@@ -1,0 +1,122 @@
+{
+  "SD_ROLES": {
+    "MENU": "Roles",
+    "HEADER": "Roles",
+    "DESCRIPTION": "Roles define what each agent can see and do, as in Zendesk: ticket access, public reply or internal note only, editing, reports, macros and views.",
+    "LOADING": "Loading roles...",
+    "EMPTY": "No roles in this account.",
+    "NEW": "New role",
+    "EDIT": "Edit",
+    "SYSTEM_BADGE": "default",
+    "TABLE": {
+      "NAME": "Role",
+      "BASE": "Type",
+      "MEMBERS": "Agents",
+      "ACTIONS": "Actions"
+    },
+    "BASE": {
+      "AGENT": "Agent",
+      "ADMINISTRATOR": "Administrator"
+    },
+    "DELETE": {
+      "BUTTON": "Delete",
+      "CONFIRM": "Delete role {name}?",
+      "SUCCESS": "Role deleted",
+      "ERROR": "Could not delete the role"
+    },
+    "API": {
+      "LOAD_ERROR": "Could not load roles"
+    },
+    "FORM": {
+      "NEW_TITLE": "New role",
+      "EDIT_TITLE": "Edit role",
+      "NAME": "Name",
+      "DESCRIPTION": "Description",
+      "BASE": "Role type",
+      "ADMIN_ALL": "Administrators have every permission and access to settings.",
+      "PENDING": "(depends on another module)",
+      "NAME_REQUIRED": "Enter the role name",
+      "SAVED": "Role saved",
+      "ERROR": "Could not save the role",
+      "CANCEL": "Cancel",
+      "SAVE": "Save"
+    },
+    "GROUPS": {
+      "TICKETS": "Tickets",
+      "PEOPLE": "People",
+      "TOOLS": "Tools"
+    },
+    "PERMISSIONS": {
+      "TICKET_ACCESS": "Ticket access",
+      "TICKET_COMMENT_PUBLIC": "Can reply to the customer (public comment)",
+      "TICKET_EDIT": "Can edit ticket properties (status, priority, assignee, fields)",
+      "TICKET_EDIT_TAGS": "Can edit tags",
+      "TICKET_ASSIGNABLE": "Can be assigned tickets",
+      "TICKET_ASSIGN_ANY_TEAM": "Can assign to any group",
+      "TICKET_MERGE": "Can merge tickets",
+      "TICKET_DELETE": "Can delete tickets",
+      "TICKET_REDACT": "Can delete messages",
+      "TICKET_MODIFY_CLOSED": "Can modify closed tickets",
+      "TICKET_VIEW_DELETED": "Can view deleted tickets",
+      "SUSPENDED_TICKETS_MANAGE": "Can manage suspended tickets",
+      "CONTACTS_LIST": "End-user list",
+      "CONTACTS_EDIT": "End-user profile",
+      "ORGANIZATIONS_EDIT": "Can edit organizations",
+      "TEAM_DIRECTORY": "Team members",
+      "PROFILE_EDIT_OWN": "Can change own name, alias, signature and photo",
+      "MACROS": "Macros",
+      "VIEWS": "Views",
+      "VIEWS_EXPORT": "Can export views",
+      "REPORTS": "Reports",
+      "KB": "Help center"
+    },
+    "LEVELS": {
+      "TICKET_ACCESS": {
+        "ALL": "All",
+        "GROUPS": "Own groups only",
+        "ASSIGNED": "Assigned to them only",
+        "REQUESTED": "Requested by them only"
+      },
+      "CONTACTS_LIST": {
+        "NONE": "No access",
+        "FULL": "Can view"
+      },
+      "CONTACTS_EDIT": {
+        "READONLY": "Read only",
+        "FULL": "Can edit"
+      },
+      "MACROS": {
+        "READONLY": "Use only",
+        "PERSONAL": "Manage personal",
+        "FULL": "Manage personal and shared"
+      },
+      "VIEWS": {
+        "READONLY": "Use only",
+        "PERSONAL": "Manage personal",
+        "FULL": "Manage personal and shared"
+      },
+      "REPORTS": {
+        "NONE": "No access",
+        "READONLY": "View only",
+        "FULL": "View and manage"
+      },
+      "KB": {
+        "READONLY": "Read only",
+        "FULL": "Manage"
+      },
+      "TEAM_DIRECTORY": {
+        "NONE": "No access",
+        "READONLY": "View only",
+        "ALL": "Manage"
+      }
+    },
+    "REPLY": {
+      "NOTE_ONLY": "Your role only allows internal notes on this ticket."
+    },
+    "AGENT": {
+      "ROLE_LABEL": "Role",
+      "ROLE_NONE": "No role (system default)",
+      "ROLE_HINT": "The role defines ticket access, public reply and menus, as in Zendesk."
+    }
+  }
+}

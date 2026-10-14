@@ -28,6 +28,8 @@ import WhatsappTemplates from './WhatsappTemplates/Modal.vue';
 import ContentTemplates from './ContentTemplates/ContentTemplatesModal.vue';
 import { MESSAGE_MAX_LENGTH } from 'shared/helpers/MessageTypeHelper';
 import { isComposing } from 'shared/helpers/KeyboardHelpers';
+import { getUserPermissions } from 'dashboard/helper/permissionsHelper';
+import { canReplyPublicly } from 'dashboard/servicedesk/roles/permissions';
 import inboxMixin, { INBOX_FEATURES } from 'shared/mixins/inboxMixin';
 import { trimContent, debounce, getRecipients } from '@chatwoot/utils';
 import wootConstants from 'dashboard/constants/globals';
@@ -252,8 +254,15 @@ export default {
         this.isAPIInbox
       );
     },
+    // ServiceDesk M13: papel sem resposta pública (Agente light, Colaborador) só grava nota interna
+    isSdNoteOnly() {
+      return !canReplyPublicly(
+        getUserPermissions(this.currentUser, this.accountId)
+      );
+    },
     canSendPublicReply() {
       return (
+        !this.isSdNoteOnly &&
         this.isWithinMessagingWindow &&
         !this.isAIOwnedPendingConversation &&
         !this.isInstagramReplyRestricted
@@ -268,7 +277,7 @@ export default {
       );
     },
     isOnPrivateNote() {
-      if (this.isInstagramReplyRestricted) {
+      if (this.isInstagramReplyRestricted || this.isSdNoteOnly) {
         return true;
       }
 
@@ -553,7 +562,7 @@ export default {
         this.copilot.reset();
       }
 
-      if (this.isInstagramReplyRestricted) {
+      if (this.isInstagramReplyRestricted || this.isSdNoteOnly) {
         this.replyType = REPLY_EDITOR_MODES.NOTE;
         return;
       }
@@ -606,7 +615,7 @@ export default {
   },
 
   mounted() {
-    if (this.isInstagramReplyRestricted) {
+    if (this.isInstagramReplyRestricted || this.isSdNoteOnly) {
       this.replyType = REPLY_EDITOR_MODES.NOTE;
     }
 

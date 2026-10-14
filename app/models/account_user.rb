@@ -12,20 +12,29 @@
 #  account_id               :bigint
 #  agent_capacity_policy_id :bigint
 #  custom_role_id           :bigint
+#  default_team_id          :bigint
 #  inviter_id               :bigint
+#  only_private_comments    :boolean          default(FALSE), not null
+#  sd_role_id               :bigint
+#  suspended_at             :datetime
+#  ticket_access_override   :string
 #  user_id                  :bigint
+#  zendesk_user_id          :bigint
 #
 # Indexes
 #
 #  index_account_users_on_account_id                (account_id)
 #  index_account_users_on_agent_capacity_policy_id  (agent_capacity_policy_id)
 #  index_account_users_on_custom_role_id            (custom_role_id)
+#  index_account_users_on_sd_role_id                (sd_role_id)
 #  index_account_users_on_user_id                   (user_id)
+#  index_account_users_on_zendesk_user_id           (zendesk_user_id)
 #  uniq_user_id_per_account_id                      (account_id,user_id) UNIQUE
 #
 
 class AccountUser < ApplicationRecord
   include AvailabilityStatusable
+  include Servicedesk::AccountUserRoles
 
   belongs_to :account
   belongs_to :user
@@ -55,8 +64,9 @@ class AccountUser < ApplicationRecord
     ::Agents::DestroyJob.perform_later(account, user)
   end
 
+  # ServiceDesk M13: além do papel base, as permissões efetivas do papel SD ('sd:<chave>', ver Servicedesk::Roles::Access)
   def permissions
-    administrator? ? ['administrator'] : ['agent']
+    (administrator? ? ['administrator'] : ['agent']) + sd_access.permission_strings
   end
 
   def push_event_data
@@ -83,7 +93,7 @@ class AccountUser < ApplicationRecord
   end
 
   def filtered_unread_count_visibility_changed?
-    previous_changes.key?('role') || previous_changes.key?('custom_role_id')
+    previous_changes.key?('role') || previous_changes.key?('custom_role_id') || sd_visibility_changed?
   end
 
   def invalidate_filtered_unread_count_visibility

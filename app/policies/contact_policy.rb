@@ -1,10 +1,11 @@
+# ServiceDesk M13: lista de usuários finais (contacts.list) e edição (contacts.edit), como no Zendesk.
 class ContactPolicy < ApplicationPolicy
   def index?
-    true
+    sd_access.can?('contacts.list')
   end
 
   def active?
-    true
+    sd_access.can?('contacts.list')
   end
 
   def import?
@@ -16,15 +17,15 @@ class ContactPolicy < ApplicationPolicy
   end
 
   def search?
-    true
+    sd_access.can?('contacts.list')
   end
 
   def filter?
-    true
+    sd_access.can?('contacts.list')
   end
 
   def update?
-    true
+    sd_access.can?('contacts.edit')
   end
 
   def contactable_inboxes?
@@ -32,7 +33,7 @@ class ContactPolicy < ApplicationPolicy
   end
 
   def destroy_custom_attributes?
-    true
+    sd_access.can?('contacts.edit')
   end
 
   def show?
@@ -40,11 +41,11 @@ class ContactPolicy < ApplicationPolicy
   end
 
   def create?
-    true
+    sd_access.can?('contacts.edit')
   end
 
   def avatar?
-    true
+    sd_access.can?('contacts.edit')
   end
 
   def destroy?

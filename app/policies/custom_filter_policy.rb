@@ -1,6 +1,7 @@
+# ServiceDesk M13: views (filtros salvos). 'readonly' só usa as views; 'personal'/'full' criam e editam as suas.
 class CustomFilterPolicy < ApplicationPolicy
   def create?
-    @account_user.administrator? || @account_user.agent?
+    @account_user.administrator? || (@account_user.agent? && sd_access.can?('views'))
   end
 
   def show?
@@ -12,10 +13,10 @@ class CustomFilterPolicy < ApplicationPolicy
   end
 
   def update?
-    @account_user.administrator? || @account_user.agent?
+    @account_user.administrator? || (@account_user.agent? && sd_access.can?('views'))
   end
 
   def destroy?
-    @account_user.administrator? || @account_user.agent?
+    @account_user.administrator? || (@account_user.agent? && sd_access.can?('views'))
   end
 end

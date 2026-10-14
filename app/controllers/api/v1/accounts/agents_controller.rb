@@ -1,4 +1,6 @@
 class Api::V1::Accounts::AgentsController < Api::V1::Accounts::BaseController
+  SD_ROLE_ATTRIBUTES = %i[sd_role_id ticket_access_override only_private_comments default_team_id suspended].freeze
+
   before_action :fetch_agent, except: [:create, :index, :bulk_create]
   before_action :check_authorization
 
@@ -18,6 +20,7 @@ class Api::V1::Accounts::AgentsController < Api::V1::Accounts::BaseController
     )
 
     @agent = builder.perform
+    sd_update_role_attributes(@agent)
   rescue AgentBuilder::LimitExceededError => e
     render_payment_required(e.message)
   end
@@ -25,6 +28,7 @@ class Api::V1::Accounts::AgentsController < Api::V1::Accounts::BaseController
   def update
     @agent.update!(agent_params.slice(:name).compact)
     @agent.current_account_user.update!(agent_params.slice(*account_user_attributes).compact)
+    sd_update_role_attributes(@agent)
   end
 
   def destroy
@@ -63,6 +67,12 @@ class Api::V1::Accounts::AgentsController < Api::V1::Accounts::BaseController
     [:name, :email, :role, :availability, :auto_offline]
   end
 
+  # ServiceDesk M13: papel SD e restrições do agente. Campos ausentes não mudam; null limpa.
+  def sd_update_role_attributes(agent)
+    attrs = params.require(:agent).permit(*SD_ROLE_ATTRIBUTES).to_h
+    agent.current_account_user.apply_sd_role_params!(attrs) if attrs.any?
+  end
+
   def agent_params
     params.require(:agent).permit(allowed_agent_params)
   end
@@ -72,7 +82,7 @@ class Api::V1::Accounts::AgentsController < Api::V1::Accounts::BaseController
   end
 
   def agents
-    @agents ||= Current.account.users.order_by_full_name.includes(:account_users, { avatar_attachment: [:blob] })
+    @agents ||= Current.account.users.order_by_full_name.includes({ account_users: :sd_role }, { avatar_attachment: [:blob] })
   end
 
   def bulk_create_agents(emails)

@@ -33,6 +33,7 @@ class Account < ApplicationRecord
   include AccountEmailRateLimitable
   include AccountSettingsSchema
   include Servicedesk::AccountMacroSettings
+  include Servicedesk::AccountRoles # M13: papéis (sd_roles) semeados na criação da conta
 
   DEFAULT_QUERY_SETTING = {
     flag_query_mode: :bit_operator,

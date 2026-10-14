@@ -33,6 +33,7 @@ import mfa from './mfa.json';
 import onboarding from './onboarding.json';
 import report from './report.json';
 import resetPassword from './resetPassword.json';
+import sdRoles from './sdRoles.json';
 import sdTelephony from './sdTelephony.json';
 import search from './search.json';
 import setNewPassword from './setNewPassword.json';
@@ -83,6 +84,7 @@ export default {
   ...onboarding,
   ...report,
   ...resetPassword,
+  ...sdRoles,
   ...sdTelephony,
   ...search,
   ...setNewPassword,

@@ -52,11 +52,19 @@ ActiveRecord::Schema[7.1].define(version: 2026_10_14_190000) do
     t.boolean "auto_offline", default: true, null: false
     t.bigint "custom_role_id"
     t.bigint "agent_capacity_policy_id"
+    t.bigint "sd_role_id"
+    t.string "ticket_access_override"
+    t.boolean "only_private_comments", default: false, null: false
+    t.bigint "default_team_id"
+    t.datetime "suspended_at"
+    t.bigint "zendesk_user_id"
     t.index ["account_id", "user_id"], name: "uniq_user_id_per_account_id", unique: true
     t.index ["account_id"], name: "index_account_users_on_account_id"
     t.index ["agent_capacity_policy_id"], name: "index_account_users_on_agent_capacity_policy_id"
     t.index ["custom_role_id"], name: "index_account_users_on_custom_role_id"
+    t.index ["sd_role_id"], name: "index_account_users_on_sd_role_id"
     t.index ["user_id"], name: "index_account_users_on_user_id"
+    t.index ["zendesk_user_id"], name: "index_account_users_on_zendesk_user_id"
   end
 
   create_table "accounts", id: :serial, force: :cascade do |t|
@@ -1609,6 +1617,24 @@ ActiveRecord::Schema[7.1].define(version: 2026_10_14_190000) do
     t.index ["account_id", "date", "dimension_type", "dimension_id", "metric"], name: "index_rollup_unique_key", unique: true
     t.index ["account_id", "dimension_type", "date"], name: "index_rollup_summary"
     t.index ["account_id", "metric", "date"], name: "index_rollup_timeseries"
+  end
+
+  create_table "sd_roles", force: :cascade do |t|
+    t.bigint "account_id", null: false
+    t.string "key", null: false
+    t.string "name", null: false
+    t.text "description"
+    t.integer "base_role", default: 0, null: false
+    t.jsonb "permissions", default: {}, null: false
+    t.bigint "zendesk_custom_role_id"
+    t.boolean "system", default: false, null: false
+    t.integer "position", default: 0, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.jsonb "zendesk_configuration", default: {}, null: false
+    t.index ["account_id", "key"], name: "index_sd_roles_on_account_id_and_key", unique: true
+    t.index ["account_id", "name"], name: "index_sd_roles_on_account_id_and_name", unique: true
+    t.index ["account_id"], name: "index_sd_roles_on_account_id"
   end
 
   create_table "sd_ticket_audits", force: :cascade do |t|

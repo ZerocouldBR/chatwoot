@@ -186,6 +186,9 @@ Rails.application.routes.draw do
           resources :macros, only: [:index, :create, :show, :update, :destroy] do
             post :execute, on: :member
           end
+          resources :sd_roles, only: [:index, :create, :show, :update, :destroy] do # ServiceDesk M13: papéis (CE)
+            get :me, on: :collection
+          end
           resources :campaigns, only: [:index, :create, :show, :update, :destroy] do
             if ChatwootApp.enterprise?
               get 'analytics/metrics', to: 'campaigns/analytics#metrics'

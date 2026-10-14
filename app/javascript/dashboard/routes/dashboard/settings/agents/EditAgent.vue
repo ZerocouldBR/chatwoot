@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import { useVuelidate } from '@vuelidate/core';
 import { required, minLength } from '@vuelidate/validators';
 import { useStore, useMapGetter } from 'dashboard/composables/store';
@@ -8,6 +8,7 @@ import { useAlert } from 'dashboard/composables';
 import Button from 'dashboard/components-next/button/Button.vue';
 import Auth from '../../../../api/auth';
 import wootConstants from 'dashboard/constants/globals';
+import SdRolesAPI from 'dashboard/api/sdRoles';
 
 const props = defineProps({
   id: {
@@ -38,6 +39,10 @@ const props = defineProps({
     type: Number,
     default: null,
   },
+  sdRoleId: {
+    type: Number,
+    default: null,
+  },
 });
 
 const emit = defineEmits(['close']);
@@ -49,7 +54,19 @@ const { t } = useI18n();
 
 const agentName = ref(props.name);
 const agentAvailability = ref(props.availability);
-const selectedRoleId = ref(props.customRoleId || props.type);
+// ServiceDesk M13: o papel SD (sd_<id>) tem prioridade sobre o tipo administrador/agente
+const selectedRoleId = ref(
+  props.sdRoleId ? `sd_${props.sdRoleId}` : props.customRoleId || props.type
+);
+const sdRoles = ref([]);
+onMounted(async () => {
+  try {
+    const { data } = await SdRolesAPI.get();
+    sdRoles.value = data.payload || [];
+  } catch (error) {
+    sdRoles.value = [];
+  }
+});
 const agentCredentials = ref({ email: props.email });
 
 const rules = {
@@ -91,6 +108,15 @@ const roles = computed(() => {
     label: role.name,
   }));
 
+  const servicedeskRoles = sdRoles.value.map(role => ({
+    id: `sd_${role.id}`,
+    name: `sd_${role.id}`,
+    label: role.name,
+    sdRoleId: role.id,
+  }));
+
+  // Com papéis SD na conta, a escolha é só pelo papel (como no Zendesk); sem eles, o padrão do CE
+  if (servicedeskRoles.length) return servicedeskRoles;
   return [...defaultRoles, ...customRoles];
 });
 
@@ -128,10 +154,12 @@ const editAgent = async () => {
       availability: agentAvailability.value,
     };
 
-    if (selectedRole.value.name.startsWith('custom_')) {
+    if (selectedRole.value?.sdRoleId) {
+      payload.sd_role_id = selectedRole.value.sdRoleId;
+    } else if (selectedRole.value?.name.startsWith('custom_')) {
       payload.custom_role_id = selectedRole.value.id;
     } else {
-      payload.role = selectedRole.value.name;
+      payload.role = selectedRole.value?.name || selectedRoleId.value;
       payload.custom_role_id = null;
     }
 

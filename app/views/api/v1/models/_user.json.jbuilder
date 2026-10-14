@@ -1,5 +1,5 @@
 # loaded once here; per-row lookups below would otherwise cost a query per membership
-account_users = resource.account_users.includes(:account)
+account_users = resource.account_users.includes(:account, :sd_role)
 account_users = account_users.includes(:custom_role) if ChatwootApp.enterprise?
 # full-precision timestamps, nils last, matching ORDER BY active_at DESC NULLS LAST
 active_account_user = account_users.max_by { |account_user| [account_user.active_at ? 1 : 0, account_user.active_at || Time.at(0).utc] }
@@ -41,6 +41,7 @@ json.accounts do
     json.active_at account_user.active_at
     json.role account_user.role
     json.permissions account_user.permissions
+    json.servicedesk_role { json.partial! 'api/v1/models/servicedesk_role', account_user: account_user }
     # the actual availability user has configured
     json.availability account_user.availability
     # availability derived from presence
