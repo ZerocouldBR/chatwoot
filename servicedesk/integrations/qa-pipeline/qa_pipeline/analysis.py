@@ -77,9 +77,16 @@ def verify_evidence(ev, segs: List[Seg]) -> Tuple[Optional[Seg], Optional[str]]:
         return None, None
     quote = str(ev.get("quote") or "").strip()
     nq = _norm(quote)
-    if len(nq.split()) < 2:
-        return None, None
     by_idx = {s.idx: s for s in segs}
+    if not nq:
+        return None, None
+    if len(nq.split()) < 2:
+        # Citação de uma palavra só vale se for o segmento INTEIRO (ex.: "Tchau."), nunca um pedaço solto.
+        try:
+            s = by_idx.get(int(ev.get("segment_idx")))
+        except (TypeError, ValueError):
+            s = None
+        return (s, quote) if s is not None and _norm(s.text) == nq else (None, None)
     cand = []
     try:
         i = int(ev.get("segment_idx"))

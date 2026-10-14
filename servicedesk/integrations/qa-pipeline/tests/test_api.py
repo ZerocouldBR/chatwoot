@@ -158,6 +158,7 @@ def test_rubric_versions(client):
 def test_metrics_and_csv(client):
     q = client.get("/sd-qa/api/v1/metrics/quality", headers=H("tok-sup")).json()
     assert q["gravacoes_recebidas"] == 2 and q["transcritas"] == 2 and q["taxa_sucesso"] == 1.0
+    assert q["tempo_proc_por_min_audio_s"] is not None and q["minutos_audio"] > 0
     assert q["avaliacoes"] == 2 and q["reclamacoes"] == 1 and sum(q["distribuicao"].values()) == 2
     assert q["criterios"][0]["taxa_falha"] >= q["criterios"][-1]["taxa_falha"]
     own = client.get("/sd-qa/api/v1/metrics/quality", headers=H("tok-ana")).json()

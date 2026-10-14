@@ -23,7 +23,7 @@ from typing import Dict, List, Optional
 DEFAULT_RUBRIC = {
     "code": "padrao",
     "version": 1,
-    "name": "Rubrica padrão de atendimento telefônico (v1)",
+    "name": "Rubrica padrão de atendimento telefônico",
     "criteria": [
         {"key": "saudacao", "label": "Saudação e identificação", "weight": 10, "window": "inicio",
          "description": "Cumprimenta, identifica a empresa e a si mesmo e pergunta com quem fala.",

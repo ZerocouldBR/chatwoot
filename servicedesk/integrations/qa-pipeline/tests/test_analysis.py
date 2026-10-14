@@ -112,3 +112,11 @@ def test_verify_evidence_tolerates_wrong_index():
     seg, _ = verify_evidence({"segment_idx": 7, "quote": "já corrigi o e-mail e reenviei o voucher"}, ss)
     assert seg.idx == 9
     assert verify_evidence({"segment_idx": 0, "quote": "ok"}, ss) == (None, None)
+
+
+def test_one_word_evidence_only_when_whole_segment():
+    """Achado no e2e real: o Whisper separou "Tchau." num segmento próprio e o encerramento ficou sem evidência."""
+    ss = segs([(0.0, 1.0, "Tá bom."), (1.2, 1.8, "Tchau.")])
+    seg, _ = verify_evidence({"segment_idx": 1, "quote": "Tchau."}, ss)
+    assert seg is not None and seg.idx == 1
+    assert verify_evidence({"segment_idx": 0, "quote": "bom"}, ss) == (None, None)

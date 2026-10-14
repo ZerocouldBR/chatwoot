@@ -684,8 +684,9 @@ def create_app(settings: Optional[Settings] = None, authenticator: Optional[Auth
         done = [j for j in first_runs if j.status == "done"]
         failed = [j for j in first_runs if j.status == "failed"]
         in_progress = [j for j in first_runs if j.status in ("pending", "running", "waiting_audio")]
-        rtfs = [tr.rtf for tr in trs if tr.rtf]
+        # Tempo de STT ponderado: segundos de STT ÷ minutos de áudio (não a média dos RTF por arquivo).
         audio_min = sum((tr.audio_duration_s or 0) for tr in trs) / 60
+        stt_s = sum((tr.processing_ms or 0) for tr in trs) / 1000
         scores = [float(e.score) for e in evs if e.score is not None]
         finals = [float(humans[e.id].score) if e.id in humans and humans[e.id].score is not None else
                   (float(e.score) if e.score is not None else None) for e in evs]
@@ -726,7 +727,7 @@ def create_app(settings: Optional[Settings] = None, authenticator: Optional[Auth
             "taxa_sucesso": round(len(done) / (len(done) + len(failed)), 3) if (done or failed) else None,
             "transcricoes_parciais": sum(1 for tr in trs if tr.status == "partial"),
             "minutos_audio": round(audio_min, 1),
-            "tempo_proc_por_min_audio_s": round(60 * statistics.mean(rtfs), 1) if rtfs else None,
+            "tempo_proc_por_min_audio_s": round(stt_s / audio_min, 1) if audio_min else None,
             "avaliacoes": len(evs), "sem_evidencia_suficiente": sum(1 for e in evs if e.status == "insufficient_evidence"),
             "qa_medio_ia": round(statistics.mean(scores), 1) if scores else None,
             "qa_medio_final": round(statistics.mean(finals), 1) if finals else None,
