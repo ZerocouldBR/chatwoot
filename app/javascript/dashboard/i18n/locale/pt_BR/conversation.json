@@ -417,7 +417,12 @@
         "incident": "Incidente",
         "problem": "Problema",
         "task": "Tarefa"
-      }
+      },
+      "CC": "Em cópia (CC)",
+      "CC_PLACEHOLDER": "Adicione um e-mail para copiar",
+      "CC_ADD": "Adicionar",
+      "CC_REMOVE": "Remover {email}",
+      "CC_EMPTY": "Ninguém em cópia"
     },
     "TICKET_EVENTS": {
       "TITLE": "Eventos do ticket",
@@ -446,7 +451,8 @@
         "due_at": "Vencimento",
         "company_id": "Empresa",
         "contact_id": "Solicitante",
-        "cached_label_list": "Tags"
+        "cached_label_list": "Tags",
+        "ccs": "Em cópia (CC)"
       },
       "CHANGE_VALUES": "{from} → {to}",
       "META": "{via} · {time}"
@@ -583,17 +589,17 @@
     "EXPAND": "Expandir e-mail"
   },
   "CONVERSATION_PARTICIPANTS": {
-    "SIDEBAR_MENU_TITLE": "Participantes",
-    "SIDEBAR_TITLE": "Participantes do ticket",
+    "SIDEBAR_MENU_TITLE": "Seguindo",
+    "SIDEBAR_TITLE": "Seguidores do ticket",
     "NO_RECORDS_FOUND": "Nenhum resultado encontrado",
-    "ADD_PARTICIPANTS": "Selecionar participantes",
-    "REMANING_PARTICIPANTS_TEXT": "+{count} participantes",
-    "REMANING_PARTICIPANT_TEXT": "+{count} participante",
-    "TOTAL_PARTICIPANTS_TEXT": "{count} pessoas estão participando.",
-    "TOTAL_PARTICIPANT_TEXT": "{count} pessoa está participando.",
-    "NO_PARTICIPANTS_TEXT": "Ninguém está participando!",
-    "WATCH_CONVERSATION": "Participar do ticket",
-    "YOU_ARE_WATCHING": "Você está participando",
+    "ADD_PARTICIPANTS": "Selecionar seguidores",
+    "REMANING_PARTICIPANTS_TEXT": "+{count} seguidores",
+    "REMANING_PARTICIPANT_TEXT": "+{count} seguidor",
+    "TOTAL_PARTICIPANTS_TEXT": "{count} pessoas estão seguindo.",
+    "TOTAL_PARTICIPANT_TEXT": "{count} pessoa está seguindo.",
+    "NO_PARTICIPANTS_TEXT": "Ninguém está seguindo este ticket",
+    "WATCH_CONVERSATION": "Seguir ticket",
+    "YOU_ARE_WATCHING": "Você está seguindo",
     "API": {
       "ERROR_MESSAGE": "Não foi possível atualizar, tente novamente!",
       "SUCCESS_MESSAGE": "Participantes atualizados!"
@@ -616,5 +622,39 @@
   },
   "GALLERY_VIEW": {
     "ERROR_DOWNLOADING": "Não foi possível baixar o anexo. Por favor, tente novamente"
+  },
+  "TICKET_HOME": {
+    "TITLE": "Página inicial",
+    "YOUR_WORK": "Seu trabalho",
+    "SHARED_WORK": "Trabalho compartilhado",
+    "DONE_WORK": "Trabalho concluído",
+    "VIEWS": {
+      "mine": "Tickets",
+      "ccs": "Em cópia (CC)",
+      "following": "Seguindo",
+      "solved": "Últimos 30 dias"
+    },
+    "TICKETS_COUNT": "{count} tickets",
+    "EMPTY": "Nenhum ticket aqui",
+    "LOAD_MORE": "Carregar mais",
+    "STATS": {
+      "TICKET_TITLE": "Estatísticas do ticket",
+      "THIS_WEEK": "Esta semana",
+      "GOOD": "Bom",
+      "BAD": "Ruim",
+      "SOLVED": "Resolvido",
+      "SATISFACTION_TITLE": "Estatísticas de satisfação",
+      "LAST_60_DAYS": "60 dias",
+      "YOU": "Você",
+      "SUPPORT": "Central de suporte",
+      "NO_RATINGS": "-",
+      "OPEN_TITLE": "Tickets abertos",
+      "YOUR_GROUPS": "Seus grupos",
+      "UPDATES_TITLE": "Atualizações",
+      "NO_UPDATES": "Nenhuma atualização recente",
+      "COMMENTED": "{author} comentou em {subject}",
+      "CHANGED": "{author} atualizou {subject}",
+      "SOMEONE": "Alguém"
+    }
   }
 }

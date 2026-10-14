@@ -204,6 +204,25 @@ describe Messages::MessageBuilder do
         expect(message.content_attributes[:bcc_emails]).to eq [params[:bcc_emails]]
       end
 
+      it 'copies the ticket CCs on public replies and remembers new CCs' do
+        Tickets::CcList.new(conversation).add(['gerente@example.com'], author: nil, via: 'agent')
+        params = ActionController::Parameters.new({ content: 'Resposta', cc_emails: 'diretor@example.com' })
+
+        message = described_class.new(user, conversation, params).perform
+
+        expect(message.content_attributes[:cc_emails]).to contain_exactly('diretor@example.com', 'gerente@example.com')
+        expect(Tickets::CcList.new(conversation).emails).to contain_exactly('gerente@example.com', 'diretor@example.com')
+      end
+
+      it 'does not copy the ticket CCs on internal notes' do
+        Tickets::CcList.new(conversation).add(['gerente@example.com'], author: nil, via: 'agent')
+        params = ActionController::Parameters.new({ content: 'Nota', private: true })
+
+        message = described_class.new(user, conversation, params).perform
+
+        expect(message.content_attributes[:cc_emails]).to eq([])
+      end
+
       it 'does not create message with wrong cc and bcc email addresses' do
         params = ActionController::Parameters.new({ cc_emails: 'test.com', bcc_emails: 'test_bcc.com' })
         expect { described_class.new(user, conversation, params).perform }.to raise_error 'Invalid email address'

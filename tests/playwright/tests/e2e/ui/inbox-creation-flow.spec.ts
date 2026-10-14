@@ -52,7 +52,7 @@ test.describe('Inbox Creation - UI Flow', () => {
     const loginComponent = new Login(page);
     await loginComponent.navigate();
     await loginComponent.login(TEST_EMAIL, TEST_PASSWORD);
-    await page.waitForURL(/\/app\/accounts\/\d+\/dashboard/);
+    await page.waitForURL(/\/app\/accounts\/\d+\/home/);
 
     accountId = Number(page.url().match(/\/app\/accounts\/(\d+)\//)![1]);
     const settingsInboxPage = new SettingsInboxPage(page);

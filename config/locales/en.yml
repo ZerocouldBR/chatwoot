@@ -113,8 +113,11 @@ en:
       feature_not_enabled: SAML feature not enabled for this account
       sso_not_enabled: SAML SSO is not enabled for this installation
       multi_account_invitation_not_allowed: Users associated with another account cannot be added while SAML is enabled
+    ticket_home:
+      invalid_view: 'Unknown home view. Use mine, ccs, following or solved'
     conversations:
       resolved: Ticket is resolved and does not accept new messages
+      invalid_cc: Enter a valid e-mail address to copy on the ticket
       closed: Ticket is closed. Replies open a follow-up ticket
       invalid_status: Invalid ticket status. New and Closed are set by the system
       unread_counts:

@@ -6,7 +6,7 @@ module MailboxSanitizer
   def sanitized_message_attributes(source_id)
     {
       account_id: @conversation.account_id,
-      sender: @conversation.contact,
+      sender: message_sender,
       content: sanitize_mailbox_value(mail_content)&.truncate(150_000),
       inbox_id: @conversation.inbox_id,
       message_type: 'incoming',

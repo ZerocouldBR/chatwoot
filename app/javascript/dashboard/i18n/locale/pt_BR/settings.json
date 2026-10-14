@@ -316,7 +316,7 @@
     "INBOX": "Caixa de Entrada",
     "ALL_CONVERSATIONS": "Todos os tickets",
     "MENTIONED_CONVERSATIONS": "Menções",
-    "PARTICIPATING_CONVERSATIONS": "Participantes",
+    "PARTICIPATING_CONVERSATIONS": "Seguindo",
     "UNATTENDED_CONVERSATIONS": "Aguardando resposta",
     "REPORTS": "Relatórios",
     "SETTINGS": "Configurações",
@@ -414,7 +414,8 @@
     "DOCS": "Ler documentos",
     "SECURITY": "Segurança",
     "CAPTAIN_AI": "Capitão",
-    "CONVERSATION_WORKFLOW": "Fluxo de Conversa"
+    "CONVERSATION_WORKFLOW": "Fluxo de Conversa",
+    "TICKET_HOME": "Página inicial"
   },
   "DATA_IMPORTS": {
     "HEADER": "Dados",

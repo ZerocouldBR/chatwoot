@@ -32,3 +32,22 @@ test('agent edits subject, type and due date of a ticket', async ({ page, baseUR
     .toEqual([`Cancelamento ${stamp}`, 'task', '2030-05-20']);
   await api.ctx.dispose();
 });
+
+test('agent copies and uncopies people on a ticket', async ({ page, baseURL }) => {
+  const env = loadE2EEnv();
+  const api = await ApiClient.login(baseURL!, env.users.admin.email, E2E_PASSWORD, env.account_id);
+  const stamp = Date.now();
+  const contact = await api.createContact(`Agência ${stamp}`, `agencia-cc-${stamp}@example.test`);
+  const ticket = await api.createConversation(env.api_inbox_id, contact.id, `CC ${stamp}`);
+
+  await page.goto(`/app/accounts/${env.account_id}/tickets/${ticket.id}`);
+  const ccs = page.getByTestId('ticket-ccs');
+  await page.getByTestId('ticket-cc-input').fill(`gerente-${stamp}@example.test`);
+  await ccs.getByRole('button', { name: 'Adicionar' }).click();
+  await expect(ccs.getByText(`gerente-${stamp}@example.test`)).toBeVisible();
+  expect((await api.getConversation(ticket.id)).cc_emails).toEqual([`gerente-${stamp}@example.test`]);
+
+  await ccs.getByRole('button', { name: `Remover gerente-${stamp}@example.test` }).click();
+  await expect(ccs.getByText('Ninguém em cópia')).toBeVisible();
+  await api.ctx.dispose();
+});

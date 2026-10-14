@@ -96,8 +96,11 @@ pt_BR:
       feature_not_enabled: SAML não está habilitado para esta conta
       sso_not_enabled: O SSO via SAML não está habilitado para esta instalação
       multi_account_invitation_not_allowed: Usuários associados a outra conta não podem ser adicionados enquanto o SAML estiver habilitado
+    ticket_home:
+      invalid_view: 'Visão desconhecida. Use mine, ccs, following ou solved'
     conversations:
       resolved: O ticket está resolvido e não aceita novas mensagens
+      invalid_cc: Informe um e-mail válido para copiar no ticket
       closed: O ticket está fechado. Respostas abrem um ticket de acompanhamento
       invalid_status: Status de ticket inválido. Novo e Fechado são definidos pelo sistema
       unread_counts:

@@ -61,6 +61,7 @@ json.submitter_id conversation.submitter_id
 json.company_id conversation.company_id
 json.company_name conversation.company&.name
 json.followup_source_id conversation.followup_source&.display_id
+json.cc_emails conversation.conversation_ccs.map(&:email)
 json.created_at conversation.created_at.to_i
 json.updated_at conversation.updated_at.to_f
 json.timestamp conversation.last_activity_at.to_i

@@ -47,7 +47,8 @@ class Conversations::EventDataPresenter < SimpleDelegator
       submitter_id: submitter_id,
       company_id: company_id,
       company_name: company&.name,
-      followup_source_id: followup_source&.display_id
+      followup_source_id: followup_source&.display_id,
+      cc_emails: conversation_ccs.map(&:email)
     }
   end
 

@@ -447,7 +447,12 @@
         "incident": "Incident",
         "problem": "Problem",
         "task": "Task"
-      }
+      },
+      "CC": "CC",
+      "CC_PLACEHOLDER": "Add an e-mail to copy",
+      "CC_ADD": "Add",
+      "CC_REMOVE": "Remove {email}",
+      "CC_EMPTY": "No one copied"
     },
     "TICKET_EVENTS": {
       "TITLE": "Ticket events",
@@ -476,7 +481,8 @@
         "due_at": "Due date",
         "company_id": "Company",
         "contact_id": "Requester",
-        "cached_label_list": "Tags"
+        "cached_label_list": "Tags",
+        "ccs": "CC"
       },
       "CHANGE_VALUES": "{from} → {to}",
       "META": "{via} · {time}"
@@ -622,17 +628,17 @@
     "CONTACT_CANNOT_SEE": "{name} cannot see this"
   },
   "CONVERSATION_PARTICIPANTS": {
-    "SIDEBAR_MENU_TITLE": "Participating",
-    "SIDEBAR_TITLE": "Ticket participants",
+    "SIDEBAR_MENU_TITLE": "Following",
+    "SIDEBAR_TITLE": "Ticket followers",
     "NO_RECORDS_FOUND": "No results found",
-    "ADD_PARTICIPANTS": "Select participants",
+    "ADD_PARTICIPANTS": "Select followers",
     "REMANING_PARTICIPANTS_TEXT": "+{count} others",
     "REMANING_PARTICIPANT_TEXT": "+{count} other",
-    "TOTAL_PARTICIPANTS_TEXT": "{count} people are participating.",
-    "TOTAL_PARTICIPANT_TEXT": "{count} person is participating.",
-    "NO_PARTICIPANTS_TEXT": "No one is participating!",
-    "WATCH_CONVERSATION": "Join ticket",
-    "YOU_ARE_WATCHING": "You are participating",
+    "TOTAL_PARTICIPANTS_TEXT": "{count} people are following.",
+    "TOTAL_PARTICIPANT_TEXT": "{count} person is following.",
+    "NO_PARTICIPANTS_TEXT": "No one is following this ticket",
+    "WATCH_CONVERSATION": "Follow ticket",
+    "YOU_ARE_WATCHING": "You are following",
     "API": {
       "ERROR_MESSAGE": "Could not update, try again!",
       "SUCCESS_MESSAGE": "Participants updated!"
@@ -655,5 +661,39 @@
   },
   "GALLERY_VIEW": {
     "ERROR_DOWNLOADING": "Unable to download attachment. Please try again"
+  },
+  "TICKET_HOME": {
+    "TITLE": "Home",
+    "YOUR_WORK": "Your work",
+    "SHARED_WORK": "Shared work",
+    "DONE_WORK": "Done work",
+    "VIEWS": {
+      "mine": "Tickets",
+      "ccs": "CCs",
+      "following": "Following",
+      "solved": "Last 30 days"
+    },
+    "TICKETS_COUNT": "{count} tickets",
+    "EMPTY": "No tickets here",
+    "LOAD_MORE": "Load more",
+    "STATS": {
+      "TICKET_TITLE": "Ticket stats",
+      "THIS_WEEK": "This week",
+      "GOOD": "Good",
+      "BAD": "Bad",
+      "SOLVED": "Solved",
+      "SATISFACTION_TITLE": "Satisfaction stats",
+      "LAST_60_DAYS": "60 days",
+      "YOU": "You",
+      "SUPPORT": "Support",
+      "NO_RATINGS": "-",
+      "OPEN_TITLE": "Open tickets",
+      "YOUR_GROUPS": "Your groups",
+      "UPDATES_TITLE": "Updates",
+      "NO_UPDATES": "No recent updates",
+      "COMMENTED": "{author} commented on {subject}",
+      "CHANGED": "{author} updated {subject}",
+      "SOMEONE": "Someone"
+    }
   }
 }

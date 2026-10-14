@@ -150,6 +150,37 @@ RSpec.describe Imap::ImapMailbox do
       end
     end
 
+    context 'when the email copies other people' do
+      let(:inbound_mail) do
+        create_inbound_email_from_mail(from: 'email@gmail.com', to: [channel.email, 'diretor@example.com'], cc: 'gerente@example.com',
+                                       subject: 'Reserva com cópia')
+      end
+
+      it 'adds the copied people as ticket CCs' do
+        class_instance.process(inbound_mail.mail, channel)
+
+        expect(Tickets::CcList.new(conversation).emails).to contain_exactly('diretor@example.com', 'gerente@example.com')
+      end
+    end
+
+    context 'when a CC replies on the thread' do
+      let(:ticket) { create(:conversation, account: account, inbox: channel.inbox, contact: contact) }
+      let(:reply_mail) do
+        create_inbound_email_from_mail(from: 'gerente@example.com', to: channel.email, subject: 'Re: Reserva', in_reply_to: 'agent-reply-id')
+      end
+
+      before do
+        create(:message, message_type: 'outgoing', inbox: inbox, account: account, conversation: ticket, source_id: 'agent-reply-id')
+      end
+
+      it 'adds the reply to the same ticket as written by the CC' do
+        class_instance.process(reply_mail.mail, channel)
+
+        expect(ticket.messages.incoming.last.sender.email).to eq('gerente@example.com')
+        expect(Tickets::CcList.new(ticket).emails).to eq(['gerente@example.com'])
+      end
+    end
+
     context 'when the email was sent from the support address itself' do
       let(:inbound_mail) { create_inbound_email_from_mail(from: channel.email, to: 'cliente@example.com', subject: 'Re: Hello!') }
 

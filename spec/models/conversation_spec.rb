@@ -832,6 +832,7 @@ RSpec.describe Conversation do
         company_id: nil,
         company_name: nil,
         followup_source_id: nil,
+        cc_emails: [],
         contact_inbox: conversation.contact_inbox,
         timestamp: conversation.last_activity_at.to_i,
         can_reply: true,

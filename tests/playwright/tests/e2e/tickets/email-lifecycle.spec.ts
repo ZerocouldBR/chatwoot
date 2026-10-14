@@ -13,6 +13,7 @@ test.describe('e-mail tickets', () => {
 
   const support = mailbox('SUPPORT');
   const customer = mailbox('CUSTOMER');
+  const copied = mailbox('CUSTOMER2');
   let api: ApiClient;
 
   test.beforeEach(async ({ baseURL }) => {
@@ -56,6 +57,31 @@ test.describe('e-mail tickets', () => {
       .poll(async () => (await api.getConversation(Number(ticket.id))).status, { timeout: 240_000, intervals: [5_000] })
       .toBe('open');
     expect((await api.listConversations(env.email_inbox_id!)).filter(c => c.subject === subject)).toHaveLength(1);
+  });
+
+  test('people copied on the e-mail become CCs and receive public replies only', async () => {
+    const stamp = Date.now();
+    const subject = `[E2E ${stamp}] Reserva com cópia`;
+    const since = new Date(Date.now() - 60_000);
+    await sendMail(customer, { to: support.address, cc: [copied.address], subject, text: `Com o gerente em cópia. Ref ${stamp}` });
+
+    const ticket = await api.waitForConversation(env.email_inbox_id!, c => c.subject === subject);
+    expect(ticket.cc_emails).toEqual([copied.address]);
+
+    await api.call('post', `/conversations/${ticket.id}/messages`, { content: `Nota interna ${stamp}`, private: true });
+    await api.call('post', `/conversations/${ticket.id}/messages`, { content: `Resposta pública ${stamp}` });
+
+    const reply = await waitForMail(
+      copied,
+      mail =>
+        (mail.text || '').includes(`Resposta pública ${stamp}`) &&
+        JSON.stringify(mail.cc || '').includes(copied.address),
+      { since }
+    );
+    expect(reply.subject).toContain(String(stamp));
+    await expect(
+      waitForMail(copied, mail => (mail.text || '').includes(`Nota interna ${stamp}`), { since, timeoutMs: 30_000 })
+    ).rejects.toThrow(/no matching mail/);
   });
 
   test('a reply to a closed ticket opens a linked follow-up', async () => {

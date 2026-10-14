@@ -61,6 +61,16 @@ class ConversationApi extends ApiClient {
     });
   }
 
+  addCc({ conversationId, email }) {
+    return axios.post(`${this.url}/${conversationId}/ccs`, { email });
+  }
+
+  removeCc({ conversationId, email }) {
+    return axios.delete(`${this.url}/${conversationId}/ccs`, {
+      params: { email },
+    });
+  }
+
   getEvents({ conversationId, before }) {
     return axios.get(`${this.url}/${conversationId}/events`, {
       params: { before },

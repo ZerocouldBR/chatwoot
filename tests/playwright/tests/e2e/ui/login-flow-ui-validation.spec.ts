@@ -17,7 +17,7 @@ test.describe('Login page', () => {
     page,
   }) => {
     await loginComponent.login(TEST_EMAIL, TEST_PASSWORD);
-    await expect(page).toHaveURL(/\/app\/accounts\/\d+\/dashboard/);
+    await expect(page).toHaveURL(/\/app\/accounts\/\d+\/home/);
   });
 
   test('renders all critical components', async ({ page }) => {

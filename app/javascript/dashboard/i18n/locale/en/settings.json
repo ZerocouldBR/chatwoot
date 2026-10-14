@@ -321,7 +321,7 @@
     "INBOX": "My Inbox",
     "ALL_CONVERSATIONS": "All Tickets",
     "MENTIONED_CONVERSATIONS": "Mentions",
-    "PARTICIPATING_CONVERSATIONS": "Participating",
+    "PARTICIPATING_CONVERSATIONS": "Following",
     "UNATTENDED_CONVERSATIONS": "Awaiting reply",
     "REPORTS": "Reports",
     "SETTINGS": "Settings",
@@ -419,7 +419,8 @@
     "DOCS": "Read docs",
     "SECURITY": "Security",
     "CAPTAIN_AI": "Captain",
-    "CONVERSATION_WORKFLOW": "Ticket Workflow"
+    "CONVERSATION_WORKFLOW": "Ticket Workflow",
+    "TICKET_HOME": "Home"
   },
   "DATA_IMPORTS": {
     "HEADER": "Data",

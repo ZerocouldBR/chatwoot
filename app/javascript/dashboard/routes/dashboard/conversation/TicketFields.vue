@@ -5,6 +5,7 @@ import { useAlert } from 'dashboard/composables';
 import ConversationApi from 'dashboard/api/inbox/conversation';
 import ContactDetailsItem from './ContactDetailsItem.vue';
 import MultiselectDropdown from 'shared/components/ui/MultiselectDropdown.vue';
+import Button from 'dashboard/components-next/button/Button.vue';
 
 const props = defineProps({
   conversation: {
@@ -19,6 +20,14 @@ const SUBJECT_MAX_LENGTH = 150;
 const { t } = useI18n();
 
 const subject = ref(props.conversation.subject || '');
+const ccs = ref(props.conversation.cc_emails || []);
+const newCc = ref('');
+watch(
+  () => props.conversation.cc_emails,
+  value => {
+    ccs.value = value || [];
+  }
+);
 watch(
   () => props.conversation.subject,
   value => {
@@ -59,6 +68,32 @@ const update = async attributes => {
         t('CONVERSATION.TICKET_FIELDS.UPDATE_FAILED')
     );
   }
+};
+
+const addCc = async () => {
+  const email = newCc.value.trim();
+  if (!email) return;
+  try {
+    const { data } = await ConversationApi.addCc({
+      conversationId: props.conversation.id,
+      email,
+    });
+    ccs.value = data.payload;
+    newCc.value = '';
+  } catch (error) {
+    useAlert(
+      error?.response?.data?.error ||
+        t('CONVERSATION.TICKET_FIELDS.UPDATE_FAILED')
+    );
+  }
+};
+
+const removeCc = async email => {
+  const { data } = await ConversationApi.removeCc({
+    conversationId: props.conversation.id,
+    email,
+  });
+  ccs.value = data.payload;
 };
 
 const saveSubject = () => {
@@ -128,6 +163,42 @@ const onDueDateChange = event => {
         @change="onDueDateChange"
       />
     </template>
+    <ContactDetailsItem compact :title="$t('CONVERSATION.TICKET_FIELDS.CC')" />
+    <div data-testid="ticket-ccs" class="flex flex-col gap-1 mb-2">
+      <p v-if="!ccs.length" class="text-sm text-n-slate-11">
+        {{ $t('CONVERSATION.TICKET_FIELDS.CC_EMPTY') }}
+      </p>
+      <div
+        v-for="email in ccs"
+        :key="email"
+        class="flex items-center justify-between gap-2 text-sm text-n-slate-12"
+      >
+        <span class="truncate">{{ email }}</span>
+        <Button
+          icon="i-lucide-x"
+          ghost
+          slate
+          xs
+          :aria-label="$t('CONVERSATION.TICKET_FIELDS.CC_REMOVE', { email })"
+          @click="removeCc(email)"
+        />
+      </div>
+      <form class="flex gap-2" @submit.prevent="addCc">
+        <input
+          v-model="newCc"
+          data-testid="ticket-cc-input"
+          type="email"
+          :placeholder="$t('CONVERSATION.TICKET_FIELDS.CC_PLACEHOLDER')"
+          class="flex-1 min-w-0 text-sm"
+        />
+        <Button
+          type="submit"
+          :label="$t('CONVERSATION.TICKET_FIELDS.CC_ADD')"
+          sm
+          slate
+        />
+      </form>
+    </div>
     <ContactDetailsItem
       compact
       :title="$t('CONVERSATION.TICKET_FIELDS.COMPANY')"
