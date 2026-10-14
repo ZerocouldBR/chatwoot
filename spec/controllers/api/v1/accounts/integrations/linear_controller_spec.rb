@@ -179,7 +179,7 @@ RSpec.describe 'Linear Integration API', type: :request do
   describe 'POST /api/v1/accounts/:account_id/integrations/linear/link_issue' do
     let(:issue_id) { 'ENG-456' }
     let(:conversation) { create(:conversation, account: account) }
-    let(:link) { "#{ENV.fetch('FRONTEND_URL', nil)}/app/accounts/#{account.id}/conversations/#{conversation.display_id}" }
+    let(:link) { "#{ENV.fetch('FRONTEND_URL', nil)}/app/accounts/#{account.id}/tickets/#{conversation.display_id}" }
     let(:title) { 'Sample Issue' }
 
     context 'when it is an authenticated user' do
@@ -307,7 +307,7 @@ RSpec.describe 'Linear Integration API', type: :request do
 
   describe 'GET /api/v1/accounts/:account_id/integrations/linear/linked_issues' do
     let(:conversation) { create(:conversation, account: account) }
-    let(:link) { "#{ENV.fetch('FRONTEND_URL', nil)}/app/accounts/#{account.id}/conversations/#{conversation.display_id}" }
+    let(:link) { "#{ENV.fetch('FRONTEND_URL', nil)}/app/accounts/#{account.id}/tickets/#{conversation.display_id}" }
 
     context 'when it is an authenticated user' do
       context 'when linked issue is found' do

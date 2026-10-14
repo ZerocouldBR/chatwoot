@@ -15,14 +15,14 @@ describe('useConversationRoutePath', () => {
   describe('buildConversationPath', () => {
     it('builds the plain conversation path', () => {
       const { buildConversationPath } = useConversationRoutePath();
-      expect(buildConversationPath(5)).toBe('/app/accounts/1/conversations/5');
+      expect(buildConversationPath(5)).toBe('/app/accounts/1/tickets/5');
     });
 
     it('keeps the inbox context', () => {
       mockRoute.params = { accountId: '1', inbox_id: '3' };
       const { buildConversationPath } = useConversationRoutePath();
       expect(buildConversationPath(5)).toBe(
-        '/app/accounts/1/inbox/3/conversations/5'
+        '/app/accounts/1/inbox/3/tickets/5'
       );
     });
 
@@ -30,16 +30,14 @@ describe('useConversationRoutePath', () => {
       mockRoute.params = { accountId: '1', label: 'bug' };
       const { buildConversationPath } = useConversationRoutePath();
       expect(buildConversationPath(5)).toBe(
-        '/app/accounts/1/label/bug/conversations/5'
+        '/app/accounts/1/label/bug/tickets/5'
       );
     });
 
     it('keeps the team context', () => {
       mockRoute.params = { accountId: '1', teamId: '2' };
       const { buildConversationPath } = useConversationRoutePath();
-      expect(buildConversationPath(5)).toBe(
-        '/app/accounts/1/team/2/conversations/5'
-      );
+      expect(buildConversationPath(5)).toBe('/app/accounts/1/team/2/tickets/5');
     });
 
     it('keeps the custom view context on folder routes', () => {
@@ -47,7 +45,7 @@ describe('useConversationRoutePath', () => {
       mockRoute.params = { accountId: '1', id: '7' };
       const { buildConversationPath } = useConversationRoutePath();
       expect(buildConversationPath(5)).toBe(
-        '/app/accounts/1/custom_view/7/conversations/5'
+        '/app/accounts/1/custom_view/7/tickets/5'
       );
     });
 
@@ -56,7 +54,7 @@ describe('useConversationRoutePath', () => {
       mockRoute.params = { accountId: '1', id: '7' };
       const { buildConversationPath } = useConversationRoutePath();
       expect(buildConversationPath(5, { keepFolderScope: false })).toBe(
-        '/app/accounts/1/conversations/5'
+        '/app/accounts/1/tickets/5'
       );
     });
 
@@ -64,7 +62,7 @@ describe('useConversationRoutePath', () => {
       mockRoute.name = 'conversation_through_mentions';
       const { buildConversationPath } = useConversationRoutePath();
       expect(buildConversationPath(5)).toBe(
-        '/app/accounts/1/mentions/conversations/5'
+        '/app/accounts/1/mentions/tickets/5'
       );
     });
 
@@ -72,7 +70,7 @@ describe('useConversationRoutePath', () => {
       mockRoute.name = 'conversation_through_participating';
       const { buildConversationPath } = useConversationRoutePath();
       expect(buildConversationPath(5)).toBe(
-        '/app/accounts/1/participating/conversations/5'
+        '/app/accounts/1/participating/tickets/5'
       );
     });
 
@@ -80,7 +78,7 @@ describe('useConversationRoutePath', () => {
       mockRoute.name = 'conversation_through_unattended';
       const { buildConversationPath } = useConversationRoutePath();
       expect(buildConversationPath(5)).toBe(
-        '/app/accounts/1/unattended/conversations/5'
+        '/app/accounts/1/unattended/tickets/5'
       );
     });
   });
@@ -129,7 +127,7 @@ describe('useConversationRoutePath', () => {
       mockRoute.name = 'conversation_mentions';
       const { buildConversationListPath } = useConversationRoutePath();
       expect(buildConversationListPath()).toBe(
-        '/app/accounts/1/mentions/conversations'
+        '/app/accounts/1/mentions/tickets'
       );
     });
 
@@ -137,7 +135,7 @@ describe('useConversationRoutePath', () => {
       mockRoute.name = 'conversation_participating';
       const { buildConversationListPath } = useConversationRoutePath();
       expect(buildConversationListPath()).toBe(
-        '/app/accounts/1/participating/conversations'
+        '/app/accounts/1/participating/tickets'
       );
     });
 
@@ -145,7 +143,7 @@ describe('useConversationRoutePath', () => {
       mockRoute.name = 'conversation_unattended';
       const { buildConversationListPath } = useConversationRoutePath();
       expect(buildConversationListPath()).toBe(
-        '/app/accounts/1/unattended/conversations'
+        '/app/accounts/1/unattended/tickets'
       );
     });
   });

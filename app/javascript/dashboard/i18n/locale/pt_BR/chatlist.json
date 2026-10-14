@@ -10,7 +10,7 @@
     "FETCH_ERROR": "Não foi possível carregar os tickets. Por favor, tente novamente.",
     "TAB_HEADING": "Tickets",
     "MENTION_HEADING": "Menções",
-    "UNATTENDED_HEADING": "Não Atendidas",
+    "UNATTENDED_HEADING": "Aguardando resposta",
     "SEARCH": {
       "INPUT": "Pesquisar pessoas, tickets, respostas salvas .."
     },

@@ -47,28 +47,28 @@ describe('#URL Helpers', () => {
           accountId: 1,
           conversationType: 'participating',
         })
-      ).toBe('/app/accounts/1/participating/conversations');
+      ).toBe('/app/accounts/1/participating/tickets');
     });
   });
   describe('conversationUrl', () => {
     it('should return direct conversation URL if activeInbox is nil', () => {
       expect(conversationUrl({ accountId: 1, id: 1 })).toBe(
-        'accounts/1/conversations/1'
+        'accounts/1/tickets/1'
       );
     });
     it('should return inbox conversation URL if activeInbox is not nil', () => {
       expect(conversationUrl({ accountId: 1, id: 1, activeInbox: 2 })).toBe(
-        'accounts/1/inbox/2/conversations/1'
+        'accounts/1/inbox/2/tickets/1'
       );
     });
     it('should return correct conversation URL if label is active', () => {
       expect(
         conversationUrl({ accountId: 1, label: 'customer-support', id: 1 })
-      ).toBe('accounts/1/label/customer-support/conversations/1');
+      ).toBe('accounts/1/label/customer-support/tickets/1');
     });
     it('should return correct conversation URL if team Id is available', () => {
       expect(conversationUrl({ accountId: 1, teamId: 1, id: 1 })).toBe(
-        'accounts/1/team/1/conversations/1'
+        'accounts/1/team/1/tickets/1'
       );
     });
   });

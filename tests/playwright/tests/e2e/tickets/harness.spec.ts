@@ -10,7 +10,20 @@ test('API-created ticket shows up for the logged-in admin', async ({ page, baseU
   const contact = await api.createContact(`Cliente ${stamp}`, `cliente-${stamp}@example.test`);
   const ticket = await api.createConversation(env.api_inbox_id, contact.id, `Primeira mensagem ${stamp}`);
 
-  await page.goto(`/app/accounts/${env.account_id}/conversations/${ticket.id}`);
+  await page.goto(`/app/accounts/${env.account_id}/tickets/${ticket.id}`);
   await expect(page.getByText(`Primeira mensagem ${stamp}`)).toBeVisible();
+  await api.ctx.dispose();
+});
+
+test('old conversation links still open the ticket', async ({ page, baseURL }) => {
+  const env = loadE2EEnv();
+  const api = await ApiClient.login(baseURL!, env.users.admin.email, E2E_PASSWORD, env.account_id);
+  const stamp = Date.now();
+  const contact = await api.createContact(`Cliente ${stamp}`, `cliente-${stamp}@example.test`);
+  const ticket = await api.createConversation(env.api_inbox_id, contact.id, `Link antigo ${stamp}`);
+
+  await page.goto(`/app/accounts/${env.account_id}/conversations/${ticket.id}`);
+  await expect(page.getByText(`Link antigo ${stamp}`)).toBeVisible();
+  await expect(page.getByRole('link', { name: 'Tickets' }).first()).toBeVisible();
   await api.ctx.dispose();
 });

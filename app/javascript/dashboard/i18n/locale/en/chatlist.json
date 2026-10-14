@@ -10,7 +10,7 @@
     "FETCH_ERROR": "Couldn't load tickets. Please try again.",
     "TAB_HEADING": "Tickets",
     "MENTION_HEADING": "Mentions",
-    "UNATTENDED_HEADING": "Unattended",
+    "UNATTENDED_HEADING": "Awaiting reply",
     "SEARCH": {
       "INPUT": "Search for People, Chats, Saved Replies .."
     },

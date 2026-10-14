@@ -683,7 +683,7 @@ Rails.application.routes.draw do
   # Used in mailer templates
   resource :app, only: [:index] do
     resources :accounts do
-      resources :conversations, only: [:show]
+      resources :conversations, only: [:show], path: 'tickets'
     end
   end
 

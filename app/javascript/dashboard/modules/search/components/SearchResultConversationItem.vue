@@ -53,10 +53,7 @@ const navigateTo = computed(() => {
   if (props.messageId) {
     params.messageId = props.messageId;
   }
-  return frontendURL(
-    `accounts/${props.accountId}/conversations/${props.id}`,
-    params
-  );
+  return frontendURL(`accounts/${props.accountId}/tickets/${props.id}`, params);
 });
 
 const createdAtTime = computed(() => {

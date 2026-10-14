@@ -553,7 +553,7 @@
       "HEADER": "Tickets Abertos",
       "LOADING_MESSAGE": "Carregando métricas de ticket...",
       "OPEN": "Abertas",
-      "UNATTENDED": "Não atendidas",
+      "UNATTENDED": "Aguardando resposta",
       "UNASSIGNED": "Não atribuídas",
       "PENDING": "Pendentes"
     },
@@ -578,7 +578,7 @@
       "TABLE_HEADER": {
         "AGENT": "Agente",
         "OPEN": "Abertas",
-        "UNATTENDED": "Não atendidas",
+        "UNATTENDED": "Aguardando resposta",
         "STATUS": "Status"
       }
     },
@@ -590,7 +590,7 @@
       "TABLE_HEADER": {
         "TEAM": "Grupo",
         "OPEN": "Abrir",
-        "UNATTENDED": "Não atendidas",
+        "UNATTENDED": "Aguardando resposta",
         "STATUS": "Status"
       }
     },

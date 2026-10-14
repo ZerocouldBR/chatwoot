@@ -49,7 +49,7 @@ const routePromptMap = {
 
 const getCurrentRoute = () => {
   const path = route.path;
-  if (path.includes('/conversations')) return 'conversations';
+  if (path.includes('/tickets')) return 'conversations';
   if (path.includes('/dashboard')) return 'dashboard';
   return 'dashboard';
 };

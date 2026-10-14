@@ -322,7 +322,7 @@
     "ALL_CONVERSATIONS": "All Tickets",
     "MENTIONED_CONVERSATIONS": "Mentions",
     "PARTICIPATING_CONVERSATIONS": "Participating",
-    "UNATTENDED_CONVERSATIONS": "Unattended",
+    "UNATTENDED_CONVERSATIONS": "Awaiting reply",
     "REPORTS": "Reports",
     "SETTINGS": "Settings",
     "CONTACTS": "Contacts",

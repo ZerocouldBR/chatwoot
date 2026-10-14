@@ -56,7 +56,8 @@ export default {
       },
     },
     {
-      path: frontendURL('accounts/:accountId/conversations/:conversation_id'),
+      path: frontendURL('accounts/:accountId/tickets/:conversation_id'),
+      alias: frontendURL('accounts/:accountId/conversations/:conversation_id'),
       name: 'inbox_conversation',
       meta: {
         permissions: CONVERSATION_PERMISSIONS,
@@ -79,6 +80,9 @@ export default {
     },
     {
       path: frontendURL(
+        'accounts/:accountId/inbox/:inbox_id/tickets/:conversation_id'
+      ),
+      alias: frontendURL(
         'accounts/:accountId/inbox/:inbox_id/conversations/:conversation_id'
       ),
       name: 'conversation_through_inbox',
@@ -104,6 +108,9 @@ export default {
     },
     {
       path: frontendURL(
+        'accounts/:accountId/label/:label/tickets/:conversation_id'
+      ),
+      alias: frontendURL(
         'accounts/:accountId/label/:label/conversations/:conversation_id'
       ),
       name: 'conversations_through_label',
@@ -127,6 +134,9 @@ export default {
     },
     {
       path: frontendURL(
+        'accounts/:accountId/team/:teamId/tickets/:conversationId'
+      ),
+      alias: frontendURL(
         'accounts/:accountId/team/:teamId/conversations/:conversationId'
       ),
       name: 'conversations_through_team',
@@ -151,6 +161,9 @@ export default {
     },
     {
       path: frontendURL(
+        'accounts/:accountId/custom_view/:id/tickets/:conversation_id'
+      ),
+      alias: frontendURL(
         'accounts/:accountId/custom_view/:id/conversations/:conversation_id'
       ),
       name: 'conversations_through_folders',
@@ -165,7 +178,8 @@ export default {
       }),
     },
     {
-      path: frontendURL('accounts/:accountId/mentions/conversations'),
+      path: frontendURL('accounts/:accountId/mentions/tickets'),
+      alias: frontendURL('accounts/:accountId/mentions/conversations'),
       name: 'conversation_mentions',
       meta: {
         permissions: CONVERSATION_PERMISSIONS,
@@ -174,7 +188,8 @@ export default {
       props: () => ({ conversationType: 'mention' }),
     },
     {
-      path: frontendURL(
+      path: frontendURL('accounts/:accountId/mentions/tickets/:conversationId'),
+      alias: frontendURL(
         'accounts/:accountId/mentions/conversations/:conversationId'
       ),
       name: 'conversation_through_mentions',
@@ -188,7 +203,8 @@ export default {
       }),
     },
     {
-      path: frontendURL('accounts/:accountId/unattended/conversations'),
+      path: frontendURL('accounts/:accountId/unattended/tickets'),
+      alias: frontendURL('accounts/:accountId/unattended/conversations'),
       name: 'conversation_unattended',
       meta: {
         permissions: CONVERSATION_PERMISSIONS,
@@ -198,6 +214,9 @@ export default {
     },
     {
       path: frontendURL(
+        'accounts/:accountId/unattended/tickets/:conversationId'
+      ),
+      alias: frontendURL(
         'accounts/:accountId/unattended/conversations/:conversationId'
       ),
       name: 'conversation_through_unattended',
@@ -211,7 +230,8 @@ export default {
       }),
     },
     {
-      path: frontendURL('accounts/:accountId/participating/conversations'),
+      path: frontendURL('accounts/:accountId/participating/tickets'),
+      alias: frontendURL('accounts/:accountId/participating/conversations'),
       name: 'conversation_participating',
       meta: {
         permissions: CONVERSATION_PERMISSIONS,
@@ -221,6 +241,9 @@ export default {
     },
     {
       path: frontendURL(
+        'accounts/:accountId/participating/tickets/:conversationId'
+      ),
+      alias: frontendURL(
         'accounts/:accountId/participating/conversations/:conversationId'
       ),
       name: 'conversation_through_participating',
