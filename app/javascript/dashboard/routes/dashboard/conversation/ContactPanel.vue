@@ -12,6 +12,7 @@ import { FEATURE_FLAGS } from 'dashboard/featureFlags';
 import AccordionItem from 'dashboard/components/Accordion/AccordionItem.vue';
 import ContactConversations from './ContactConversations.vue';
 import ConversationAction from './ConversationAction.vue';
+import TicketEvents from './TicketEvents.vue';
 import ConversationParticipant from './ConversationParticipant.vue';
 import ContactInfo from './contact/ContactInfo.vue';
 import ContactNotes from './contact/ContactNotes.vue';
@@ -94,6 +95,10 @@ const conversationAdditionalAttributes = computed(
 );
 
 const channelType = computed(() => currentChat.value.meta?.channel);
+// Bumps on every ticket update and new message, so the events trail refetches.
+const currentConversationRevision = computed(
+  () => `${currentChat.value.updated_at}-${currentChat.value.messages?.length}`
+);
 
 const contactGetter = useMapGetter('contacts/getContact');
 const contactId = computed(() => currentChat.value.meta?.sender?.id);
@@ -195,6 +200,21 @@ onMounted(() => {
               <ConversationParticipant
                 :conversation-id="conversationId"
                 :inbox-id="inboxId"
+              />
+            </AccordionItem>
+          </div>
+          <div v-else-if="element.name === 'ticket_events'">
+            <AccordionItem
+              :title="$t('CONVERSATION.TICKET_EVENTS.TITLE')"
+              :is-open="isContactSidebarItemOpen('is_ticket_events_open')"
+              compact
+              @toggle="
+                value => toggleSidebarUIState('is_ticket_events_open', value)
+              "
+            >
+              <TicketEvents
+                :conversation-id="conversationId"
+                :revision="currentConversationRevision"
               />
             </AccordionItem>
           </div>

@@ -11,7 +11,7 @@ test('API-created ticket shows up for the logged-in admin', async ({ page, baseU
   const ticket = await api.createConversation(env.api_inbox_id, contact.id, `Primeira mensagem ${stamp}`);
 
   await page.goto(`/app/accounts/${env.account_id}/tickets/${ticket.id}`);
-  await expect(page.getByText(`Primeira mensagem ${stamp}`)).toBeVisible();
+  await expect(page.locator('[id^=message]').getByText(`Primeira mensagem ${stamp}`)).toBeVisible();
   await api.ctx.dispose();
 });
 
@@ -23,7 +23,7 @@ test('old conversation links still open the ticket', async ({ page, baseURL }) =
   const ticket = await api.createConversation(env.api_inbox_id, contact.id, `Link antigo ${stamp}`);
 
   await page.goto(`/app/accounts/${env.account_id}/conversations/${ticket.id}`);
-  await expect(page.getByText(`Link antigo ${stamp}`)).toBeVisible();
+  await expect(page.locator('[id^=message]').getByText(`Link antigo ${stamp}`)).toBeVisible();
   await expect(page.getByRole('link', { name: 'Tickets' }).first()).toBeVisible();
   await api.ctx.dispose();
 });

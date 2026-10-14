@@ -35,6 +35,15 @@ export class ApiClient {
     return (body ? JSON.parse(body) : undefined) as T;
   }
 
+  // Merges into the agent's saved UI settings (e.g. which sidebar sections are open).
+  async updateUISettings(settings: Record<string, unknown>) {
+    const res = await this.ctx.put('/api/v1/profile', {
+      headers: this.auth,
+      data: { profile: { ui_settings: settings } },
+    });
+    if (!res.ok()) throw new Error(`PUT /api/v1/profile -> ${res.status()}: ${await res.text()}`);
+  }
+
   async createContact(name: string, email: string) {
     const res = await this.call<{ payload: { contact: { id: number } } }>('post', '/contacts', { name, email });
     return res.payload.contact;

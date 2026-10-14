@@ -35,7 +35,7 @@ test.describe('ticket status lifecycle', () => {
     await page.locator('.ProseMirror').first().fill('Pode nos enviar o número da reserva?');
     await page.getByTestId('submit-as-menu').click();
     await page.getByRole('button', { name: 'Enviar como Pendente' }).click();
-    await expect(page.getByText('Pode nos enviar o número da reserva?')).toBeVisible();
+    await expect(page.locator('[id^=message]').getByText('Pode nos enviar o número da reserva?')).toBeVisible();
     await expect(header.getByText('Pendente')).toBeVisible();
     await expect.poll(async () => (await api.getConversation(ticketId)).status).toBe('waiting_on_customer');
 

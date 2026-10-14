@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2026_10_14_015113) do
+ActiveRecord::Schema[7.1].define(version: 2026_10_14_020630) do
   # These extensions should be enabled to support this database
   enable_extension "pg_stat_statements"
   enable_extension "pg_trgm"
@@ -822,6 +822,21 @@ ActiveRecord::Schema[7.1].define(version: 2026_10_14_015113) do
     t.index ["identifier", "account_id"], name: "uniq_identifier_per_account_contact", unique: true
     t.index ["name", "email", "phone_number", "identifier"], name: "index_contacts_on_name_email_phone_number_identifier", opclass: :gin_trgm_ops, using: :gin
     t.index ["phone_number", "account_id"], name: "index_contacts_on_phone_number_and_account_id"
+  end
+
+  create_table "conversation_events", force: :cascade do |t|
+    t.bigint "account_id", null: false
+    t.bigint "conversation_id", null: false
+    t.string "event_type", null: false
+    t.string "field_name"
+    t.jsonb "previous_value"
+    t.jsonb "value"
+    t.string "author_type"
+    t.bigint "author_id"
+    t.string "via", null: false
+    t.datetime "created_at", null: false
+    t.index ["account_id", "created_at"], name: "index_conversation_events_on_account_id_and_created_at"
+    t.index ["conversation_id", "id"], name: "index_conversation_events_on_conversation_id_and_id"
   end
 
   create_table "conversation_monitor_automation_deliveries", force: :cascade do |t|

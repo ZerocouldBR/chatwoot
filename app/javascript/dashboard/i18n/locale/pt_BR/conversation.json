@@ -418,6 +418,38 @@
         "problem": "Problema",
         "task": "Tarefa"
       }
+    },
+    "TICKET_EVENTS": {
+      "TITLE": "Eventos do ticket",
+      "EMPTY": "Nenhum evento ainda",
+      "LOAD_MORE": "Carregar eventos anteriores",
+      "CREATED": "{author} criou o ticket",
+      "CHANGED": "{author} alterou {field}",
+      "PUBLIC_COMMENT": "{author} adicionou uma resposta pública",
+      "PRIVATE_COMMENT": "{author} adicionou uma nota interna",
+      "SYSTEM": "Sistema",
+      "EMPTY_VALUE": "-",
+      "VIA": {
+        "agent": "agente",
+        "customer": "cliente",
+        "rule": "regra",
+        "bot": "robô",
+        "system": "sistema"
+      },
+      "FIELDS": {
+        "status": "Status",
+        "priority": "Prioridade",
+        "assignee_id": "Atribuído",
+        "team_id": "Grupo",
+        "subject": "Assunto",
+        "ticket_type": "Tipo",
+        "due_at": "Vencimento",
+        "company_id": "Empresa",
+        "contact_id": "Solicitante",
+        "cached_label_list": "Tags"
+      },
+      "CHANGE_VALUES": "{from} → {to}",
+      "META": "{via} · {time}"
     }
   },
   "EMAIL_TRANSCRIPT": {

@@ -39,6 +39,7 @@
 #
 
 class Message < ApplicationRecord
+  COMMENT_VIA_BY_SENDER = { 'Contact' => 'customer', 'User' => 'agent', 'AgentBot' => 'bot' }.freeze
   searchkick callbacks: false if ChatwootApp.advanced_search_allowed?
 
   include MessageFilterHelpers
@@ -330,6 +331,7 @@ class Message < ApplicationRecord
 
   def execute_after_create_commit_callbacks
     # rails issue with order of active record callbacks being executed https://github.com/rails/rails/issues/20911
+    record_ticket_comment
     reopen_conversation
     fill_conversation_subject
     mark_pending_conversation_as_open_for_human_response
@@ -338,6 +340,13 @@ class Message < ApplicationRecord
     send_reply
     execute_message_template_hooks
     update_contact_activity
+  end
+
+  def record_ticket_comment
+    return unless incoming? || outgoing?
+
+    conversation.record_ticket_event(event_type: 'comment', author: sender, via: COMMENT_VIA_BY_SENDER.fetch(sender_type, 'system'),
+                                     value: { message_id: id, public: !private? })
   end
 
   # Chat channels have no e-mail subject: the first customer or agent message names the ticket.

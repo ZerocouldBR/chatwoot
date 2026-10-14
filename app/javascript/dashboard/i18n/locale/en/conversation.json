@@ -448,6 +448,38 @@
         "problem": "Problem",
         "task": "Task"
       }
+    },
+    "TICKET_EVENTS": {
+      "TITLE": "Ticket events",
+      "EMPTY": "No events yet",
+      "LOAD_MORE": "Load older events",
+      "CREATED": "{author} created the ticket",
+      "CHANGED": "{author} changed {field}",
+      "PUBLIC_COMMENT": "{author} added a public reply",
+      "PRIVATE_COMMENT": "{author} added an internal note",
+      "SYSTEM": "System",
+      "EMPTY_VALUE": "-",
+      "VIA": {
+        "agent": "agent",
+        "customer": "customer",
+        "rule": "rule",
+        "bot": "bot",
+        "system": "system"
+      },
+      "FIELDS": {
+        "status": "Status",
+        "priority": "Priority",
+        "assignee_id": "Assignee",
+        "team_id": "Group",
+        "subject": "Subject",
+        "ticket_type": "Type",
+        "due_at": "Due date",
+        "company_id": "Company",
+        "contact_id": "Requester",
+        "cached_label_list": "Tags"
+      },
+      "CHANGE_VALUES": "{from} → {to}",
+      "META": "{via} · {time}"
     }
   },
   "EMAIL_TRANSCRIPT": {

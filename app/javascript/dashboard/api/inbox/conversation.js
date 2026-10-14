@@ -61,6 +61,12 @@ class ConversationApi extends ApiClient {
     });
   }
 
+  getEvents({ conversationId, before }) {
+    return axios.get(`${this.url}/${conversationId}/events`, {
+      params: { before },
+    });
+  }
+
   togglePriority({ conversationId, priority }) {
     return axios.post(`${this.url}/${conversationId}/toggle_priority`, {
       priority,
