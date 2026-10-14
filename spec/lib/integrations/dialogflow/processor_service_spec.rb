@@ -88,7 +88,7 @@ describe Integrations::Dialogflow::ProcessorService do
 
       it 'handsoff the conversation to agent' do
         processor.perform
-        expect(conversation.status).to eql('open')
+        expect(conversation.status).to eql('new_ticket')
       end
     end
 
@@ -101,7 +101,7 @@ describe Integrations::Dialogflow::ProcessorService do
 
       it 'handsoff the conversation to agent' do
         processor.perform
-        expect(conversation.reload.status).to eql('open')
+        expect(conversation.reload.status).to eql('new_ticket')
         expect(conversation.messages.last.content).to eql('hello payload')
       end
     end

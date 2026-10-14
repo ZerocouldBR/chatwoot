@@ -1,7 +1,6 @@
 <script setup>
 import '@chatwoot/ninja-keys';
 import { ref, toRef, computed, watch, watchEffect, onMounted } from 'vue';
-import { useStore } from 'dashboard/composables/store';
 import { useTrack } from 'dashboard/composables';
 import { useI18n } from 'vue-i18n';
 import { useLocale } from 'shared/composables/useLocale';
@@ -19,11 +18,7 @@ import {
 } from 'dashboard/helper/AnalyticsHelper/events';
 import { generateSnoozeSuggestions } from 'dashboard/helper/snoozeHelpers';
 import { ICON_SNOOZE_CONVERSATION } from 'dashboard/helper/commandbar/icons';
-import {
-  CMD_SNOOZE_CONVERSATION,
-  CMD_SNOOZE_NOTIFICATION,
-  CMD_BULK_ACTION_SNOOZE_CONVERSATION,
-} from 'dashboard/helper/commandbar/events';
+import { CMD_SNOOZE_NOTIFICATION } from 'dashboard/helper/commandbar/events';
 import { emitter } from 'shared/helpers/mitt';
 
 const props = defineProps({
@@ -33,17 +28,11 @@ const props = defineProps({
   },
 });
 
-const store = useStore();
 const { t, tm } = useI18n();
 const { resolvedLocale } = useLocale();
 
 const ninjakeys = ref(null);
 const resolveAttributesModalRef = ref(null);
-
-// Added selectedSnoozeType to track the selected snooze type
-// So if the selected snooze type is "custom snooze" then we set selectedSnoozeType with the CMD action id
-// So that we can track the selected snooze type and when we close the command bar
-const selectedSnoozeType = ref(null);
 
 const { goToAppearanceHotKeys } = useAppearanceHotKeys();
 const { inboxHotKeys } = useInboxHotKeys();
@@ -68,14 +57,8 @@ watch(pendingAttributes, pending => {
   }
 });
 
-const SNOOZE_PARENT_IDS = [
-  'snooze_conversation',
-  'snooze_notification',
-  'bulk_action_snooze_conversation',
-];
+const SNOOZE_PARENT_IDS = ['snooze_notification'];
 const DYNAMIC_SNOOZE_PREFIX = 'dynamic_snooze_';
-
-const CUSTOM_SNOOZE = wootConstants.SNOOZE_OPTIONS.UNTIL_CUSTOM_TIME;
 
 const dynamicSnoozeActions = ref([]);
 const currentCommandRoot = ref(null);
@@ -114,15 +97,11 @@ const setCommandBarData = () => {
 };
 
 const SNOOZE_EVENT_MAP = {
-  snooze_conversation: CMD_SNOOZE_CONVERSATION,
   snooze_notification: CMD_SNOOZE_NOTIFICATION,
-  bulk_action_snooze_conversation: CMD_BULK_ACTION_SNOOZE_CONVERSATION,
 };
 
 const SNOOZE_SECTION_MAP = {
-  snooze_conversation: 'COMMAND_BAR.SECTIONS.SNOOZE_CONVERSATION',
   snooze_notification: 'COMMAND_BAR.SECTIONS.SNOOZE_NOTIFICATION',
-  bulk_action_snooze_conversation: 'COMMAND_BAR.SECTIONS.BULK_ACTIONS',
 };
 
 const snoozeTranslations = computed(() => {
@@ -191,8 +170,6 @@ const onSelected = item => {
     } = {},
   } = item;
 
-  selectedSnoozeType.value = id === CUSTOM_SNOOZE ? id : null;
-
   if (Array.isArray(children) && children.length) {
     currentCommandRoot.value = id;
   }
@@ -231,9 +208,6 @@ const onCommandBarChange = item => {
 };
 
 const onClosed = () => {
-  if (selectedSnoozeType.value !== CUSTOM_SNOOZE) {
-    store.dispatch('setContextMenuChatId', null);
-  }
   resetSnoozeState();
 };
 

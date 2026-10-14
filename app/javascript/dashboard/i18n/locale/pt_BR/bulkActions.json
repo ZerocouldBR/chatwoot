@@ -17,7 +17,6 @@
     "ALL_CONVERSATIONS_SELECTED_ALERT": "Tickets visíveis nesta página só estão selecionados.",
     "UPDATE": {
       "CHANGE_STATUS": "Alterar status",
-      "SNOOZE_UNTIL": "Adiar",
       "UPDATE_SUCCESFUL": "Status do ticket atualizado com sucesso.",
       "UPDATE_FAILED": "Falha ao atualizar tickets. Por favor, tente novamente."
     },

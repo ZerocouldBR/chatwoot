@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2026_10_08_090132) do
+ActiveRecord::Schema[7.1].define(version: 2026_10_14_012321) do
   # These extensions should be enabled to support this database
   enable_extension "pg_stat_statements"
   enable_extension "pg_trgm"
@@ -982,7 +982,7 @@ ActiveRecord::Schema[7.1].define(version: 2026_10_08_090132) do
   create_table "conversations", id: :serial, force: :cascade do |t|
     t.integer "account_id", null: false
     t.integer "inbox_id", null: false
-    t.integer "status", default: 0, null: false
+    t.integer "status", default: 4, null: false
     t.integer "assignee_id"
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
@@ -997,7 +997,6 @@ ActiveRecord::Schema[7.1].define(version: 2026_10_08_090132) do
     t.datetime "last_activity_at", precision: nil, default: -> { "CURRENT_TIMESTAMP" }, null: false
     t.bigint "team_id"
     t.bigint "campaign_id"
-    t.datetime "snoozed_until", precision: nil
     t.jsonb "custom_attributes", default: {}
     t.datetime "assignee_last_seen_at", precision: nil
     t.datetime "first_reply_created_at", precision: nil

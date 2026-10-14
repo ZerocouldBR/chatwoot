@@ -22,17 +22,7 @@ class V2::Reports::ChannelSummaryBuilder
   end
 
   def build_channel_stats(status_counts)
-    open_count = status_counts['open'] || 0
-    resolved_count = status_counts['resolved'] || 0
-    pending_count = status_counts['pending'] || 0
-    snoozed_count = status_counts['snoozed'] || 0
-
-    {
-      open: open_count,
-      resolved: resolved_count,
-      pending: pending_count,
-      snoozed: snoozed_count,
-      total: open_count + resolved_count + pending_count + snoozed_count
-    }
+    stats = Conversation.statuses.keys.to_h { |status| [status.to_sym, status_counts[status] || 0] }
+    stats.merge(total: stats.values.sum)
   end
 end

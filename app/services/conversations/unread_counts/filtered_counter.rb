@@ -171,7 +171,7 @@ class Conversations::UnreadCounts::FilteredCounter
 
   def unread_open_accessible_conversations
     @unread_open_accessible_conversations ||= Conversations::PermissionFilterService.new(
-      unread_conversations.open,
+      unread_conversations.where(status: Conversation::UNSOLVED_STATUSES),
       user,
       account
     ).perform

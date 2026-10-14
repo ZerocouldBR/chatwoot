@@ -115,6 +115,7 @@ en:
       multi_account_invitation_not_allowed: Users associated with another account cannot be added while SAML is enabled
     conversations:
       resolved: Ticket is resolved and does not accept new messages
+      invalid_status: Invalid ticket status. New and Closed are set by the system
       unread_counts:
         feature_not_enabled: Ticket unread counts feature not enabled for this account
     data_import:
@@ -360,8 +361,11 @@ en:
         resolved: 'Ticket was marked resolved by %{user_name}'
         contact_resolved: 'Ticket was resolved by %{contact_name}'
         open: 'Ticket was reopened by %{user_name}'
-        pending: 'Ticket was marked as pending by %{user_name}'
-        snoozed: 'Ticket was snoozed by %{user_name}'
+        pending: 'Ticket was handed to the bot by %{user_name}'
+        new_ticket: 'Ticket was marked new by %{user_name}'
+        waiting_on_customer: 'Ticket was marked pending by %{user_name}'
+        on_hold: 'Ticket was put on hold by %{user_name}'
+        closed: 'Ticket was closed by %{user_name}'
         auto_resolved_days: 'Ticket was marked resolved by system due to %{count} days of inactivity'
         auto_resolved_hours: 'Ticket was marked resolved by system due to %{count} hours of inactivity'
         auto_resolved_minutes: 'Ticket was marked resolved by system due to %{count} minutes of inactivity'

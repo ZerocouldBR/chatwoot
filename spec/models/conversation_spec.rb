@@ -390,10 +390,52 @@ RSpec.describe Conversation do
       expect(conversation.reload.status).to eq('open')
     end
 
-    it 'toggles conversation status to open when snoozed' do
-      conversation = create(:conversation, status: 'snoozed')
+    it 'toggles conversation status to open when on hold' do
+      conversation = create(:conversation, status: 'on_hold')
       expect(conversation.toggle_status).to be(true)
       expect(conversation.reload.status).to eq('open')
+    end
+  end
+
+  describe 'ticket status rules' do
+    let(:account) { create(:account) }
+    let(:inbox) { create(:inbox, account: account) }
+    let(:contact) { create(:contact, account: account) }
+    let(:contact_inbox) { create(:contact_inbox, contact: contact, inbox: inbox) }
+    let(:agent) { create(:user, account: account, role: :agent) }
+
+    it 'creates tickets as new when no status is given' do
+      conversation = described_class.create!(account: account, inbox: inbox, contact: contact, contact_inbox: contact_inbox)
+
+      expect(conversation.status).to eq('new_ticket')
+    end
+
+    it 'opens a new ticket when it gets an assignee' do
+      conversation = described_class.create!(account: account, inbox: inbox, contact: contact, contact_inbox: contact_inbox)
+
+      conversation.update!(assignee: agent)
+
+      expect(conversation.reload.status).to eq('open')
+    end
+
+    it 'sets the group from the assignee when the ticket has none' do
+      team = create(:team, account: account)
+      create(:team_member, team: team, user: agent)
+      conversation = create(:conversation, account: account, inbox: inbox, contact: contact, contact_inbox: contact_inbox)
+
+      conversation.update!(assignee: agent)
+
+      expect(conversation.reload.team).to eq(team)
+    end
+
+    it 'keeps the existing group when assigning' do
+      team = create(:team, account: account)
+      create(:team_member, team: create(:team, account: account), user: agent)
+      conversation = create(:conversation, account: account, inbox: inbox, contact: contact, contact_inbox: contact_inbox, team: team)
+
+      conversation.update!(assignee: agent)
+
+      expect(conversation.reload.team).to eq(team)
     end
   end
 
@@ -426,7 +468,13 @@ RSpec.describe Conversation do
       end
     end
 
-    it 'changes status to open' do
+    it 'changes status to new when nobody is assigned' do
+      conversation.bot_handoff!
+      expect(conversation.reload.status).to eq('new_ticket')
+    end
+
+    it 'changes status to open when the ticket has an assignee' do
+      conversation.update!(assignee: create(:user, account: conversation.account, role: :agent), status: :pending)
       conversation.bot_handoff!
       expect(conversation.reload.status).to eq('open')
     end
@@ -460,10 +508,10 @@ RSpec.describe Conversation do
       expect(conversation.priority).to be_nil
     end
 
-    it 'toggles the priority to nil if nothing is passed' do
+    it 'does not clear a priority once set' do
       conversation = create(:conversation, status: 'open', priority: 'high')
-      expect(conversation.toggle_priority).to be(true)
-      expect(conversation.reload.priority).to be_nil
+      expect(conversation.toggle_priority).to be(false)
+      expect(conversation.reload.priority).to eq('high')
     end
 
     it 'sets the priority to low' do
@@ -492,15 +540,6 @@ RSpec.describe Conversation do
 
       expect(conversation.toggle_priority('urgent')).to be(true)
       expect(conversation.reload.priority).to eq('urgent')
-    end
-  end
-
-  describe '#ensure_snooze_until_reset' do
-    it 'resets the snoozed_until when status is toggled' do
-      conversation = create(:conversation, status: 'snoozed', snoozed_until: 2.days.from_now)
-      expect(conversation.snoozed_until).not_to be_nil
-      expect(conversation.toggle_status).to be(true)
-      expect(conversation.reload.snoozed_until).to be_nil
     end
   end
 
@@ -721,7 +760,6 @@ RSpec.describe Conversation do
         timestamp: conversation.last_activity_at.to_i,
         can_reply: true,
         channel: 'Channel::WebWidget',
-        snoozed_until: conversation.snoozed_until,
         custom_attributes: conversation.custom_attributes,
         first_reply_created_at: nil,
         contact_last_seen_at: conversation.contact_last_seen_at.to_i,

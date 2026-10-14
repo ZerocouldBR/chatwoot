@@ -72,7 +72,7 @@ const { buildConversationPath, buildConversationListPath } =
 const resolveAttributesModalRef = ref(null);
 
 const activeAssigneeTab = ref(wootConstants.ASSIGNEE_TYPE.ME);
-const activeStatus = ref(wootConstants.STATUS_TYPE.OPEN);
+const activeStatus = ref(wootConstants.STATUS_TYPE.UNSOLVED);
 const activeSortBy = ref(wootConstants.SORT_BY_TYPE.LAST_ACTIVITY_AT_DESC);
 const showAdvancedFilters = ref(false);
 // chatsOnView is to store the chats that are currently visible on the screen,
@@ -378,7 +378,7 @@ const uniqueInboxes = computed(() => {
 function setFiltersFromUISettings() {
   const { conversations_filter_by: filterBy = {} } = uiSettings.value;
   const { status, order_by: orderBy } = filterBy;
-  activeStatus.value = status || wootConstants.STATUS_TYPE.OPEN;
+  activeStatus.value = status || wootConstants.STATUS_TYPE.UNSOLVED;
   activeSortBy.value = Object.values(wootConstants.SORT_BY_TYPE).includes(
     orderBy
   )
@@ -750,13 +750,11 @@ async function onAssignTeam(team, conversationId = null) {
 function toggleConversationStatus(
   conversationId,
   status,
-  snoozedUntil,
   customAttributes = null
 ) {
   const payload = {
     conversationId,
     status,
-    snoozedUntil,
   };
 
   if (customAttributes) {
@@ -768,9 +766,9 @@ function toggleConversationStatus(
   });
 }
 
-function handleResolveConversation(conversationId, status, snoozedUntil) {
+function handleResolveConversation(conversationId, status) {
   if (status !== wootConstants.STATUS_TYPE.RESOLVED) {
-    toggleConversationStatus(conversationId, status, snoozedUntil);
+    toggleConversationStatus(conversationId, status);
     return;
   }
 
@@ -783,17 +781,14 @@ function handleResolveConversation(conversationId, status, snoozedUntil) {
 
   if (hasMissing) {
     // Pass conversation context through the modal's API
-    const conversationContext = {
-      id: conversationId,
-      snoozedUntil,
-    };
+    const conversationContext = { id: conversationId };
     resolveAttributesModalRef.value?.open(
       missing,
       currentCustomAttributes,
       conversationContext
     );
   } else {
-    toggleConversationStatus(conversationId, status, snoozedUntil);
+    toggleConversationStatus(conversationId, status);
   }
 }
 
@@ -807,17 +802,9 @@ function handleResolveWithAttributes({ attributes, context }) {
     toggleConversationStatus(
       context.id,
       wootConstants.STATUS_TYPE.RESOLVED,
-      context.snoozedUntil,
       mergedAttributes
     );
   }
-}
-
-function allSelectedConversationsStatus(status) {
-  if (!selectedConversations.value.length) return false;
-  return selectedConversations.value.every(item => {
-    return getConversationById.value(item)?.status === status;
-  });
 }
 
 function toggleSelectAll(check) {
@@ -967,9 +954,6 @@ watch(appliedFilters, () => resetBulkActions());
       :conversations="selectedConversations"
       :all-conversations-selected="allConversationsSelected"
       :selected-inboxes="uniqueInboxes"
-      :show-open-action="allSelectedConversationsStatus('open')"
-      :show-resolved-action="allSelectedConversationsStatus('resolved')"
-      :show-snoozed-action="allSelectedConversationsStatus('snoozed')"
       :class="isOnExpandedLayout && 'sm:!w-[24rem] !w-full'"
       @select-all-conversations="toggleSelectAll"
     />

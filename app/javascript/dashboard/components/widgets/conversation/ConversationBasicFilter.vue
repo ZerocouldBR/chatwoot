@@ -6,6 +6,7 @@ import { vOnClickOutside } from '@vueuse/components';
 import { useUISettings } from 'dashboard/composables/useUISettings';
 import { useMapGetter, useStore } from 'dashboard/composables/store.js';
 import wootConstants from 'dashboard/constants/globals';
+import { STATUS_FILTER_OPTIONS } from 'dashboard/constants/ticketStatuses';
 import SelectMenu from 'dashboard/components-next/selectmenu/SelectMenu.vue';
 import NextButton from 'dashboard/components-next/button/Button.vue';
 
@@ -33,7 +34,7 @@ const chatSortFilter = useMapGetter('getChatSortFilter');
 const [showActionsDropdown, toggleDropdown] = useToggle();
 
 const currentStatusFilter = computed(() => {
-  return chatStatusFilter.value || wootConstants.STATUS_TYPE.OPEN;
+  return chatStatusFilter.value || wootConstants.STATUS_TYPE.UNSOLVED;
 });
 
 const currentSortBy = computed(() => {
@@ -42,28 +43,12 @@ const currentSortBy = computed(() => {
   );
 });
 
-const chatStatusOptions = computed(() => [
-  {
-    label: t('CHAT_LIST.CHAT_STATUS_FILTER_ITEMS.open.TEXT'),
-    value: 'open',
-  },
-  {
-    label: t('CHAT_LIST.CHAT_STATUS_FILTER_ITEMS.resolved.TEXT'),
-    value: 'resolved',
-  },
-  {
-    label: t('CHAT_LIST.CHAT_STATUS_FILTER_ITEMS.pending.TEXT'),
-    value: 'pending',
-  },
-  {
-    label: t('CHAT_LIST.CHAT_STATUS_FILTER_ITEMS.snoozed.TEXT'),
-    value: 'snoozed',
-  },
-  {
-    label: t('CHAT_LIST.CHAT_STATUS_FILTER_ITEMS.all.TEXT'),
-    value: 'all',
-  },
-]);
+const chatStatusOptions = computed(() =>
+  STATUS_FILTER_OPTIONS.map(status => ({
+    label: t(`CHAT_LIST.CHAT_STATUS_FILTER_ITEMS.${status}.TEXT`),
+    value: status,
+  }))
+);
 
 const chatSortOptions = computed(() => [
   {

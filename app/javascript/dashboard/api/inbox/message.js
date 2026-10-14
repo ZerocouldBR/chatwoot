@@ -16,6 +16,7 @@ export const buildCreatePayload = ({
   isVoiceMessage = false,
   emailHtmlContent,
   forwardedAttachmentIds,
+  ticketStatus,
 }) => {
   let payload;
   if (files && files.length !== 0) {
@@ -49,6 +50,9 @@ export const buildCreatePayload = ({
     forwardedAttachmentIds?.forEach(id => {
       payload.append('forwarded_attachment_ids[]', id);
     });
+    if (ticketStatus) {
+      payload.append('ticket_status', ticketStatus);
+    }
   } else {
     payload = {
       content: message,
@@ -62,6 +66,7 @@ export const buildCreatePayload = ({
       template_params: templateParams,
       email_html_content: emailHtmlContent,
       forwarded_attachment_ids: forwardedAttachmentIds,
+      ticket_status: ticketStatus,
     };
   }
   return payload;
@@ -87,6 +92,7 @@ class MessageApi extends ApiClient {
     isVoiceMessage = false,
     emailHtmlContent,
     forwardedAttachmentIds,
+    ticketStatus,
   }) {
     return axios({
       method: 'post',
@@ -105,6 +111,7 @@ class MessageApi extends ApiClient {
         isVoiceMessage,
         emailHtmlContent,
         forwardedAttachmentIds,
+        ticketStatus,
       }),
     });
   }

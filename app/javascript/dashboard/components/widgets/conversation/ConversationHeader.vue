@@ -9,9 +9,8 @@ import MoreActions from './MoreActions.vue';
 import Avatar from 'next/avatar/Avatar.vue';
 import SLACardLabel from './components/SLACardLabel.vue';
 import ConversationCallButton from './ConversationCallButton.vue';
-import wootConstants from 'dashboard/constants/globals';
 import { conversationListPageURL } from 'dashboard/helper/URLHelper';
-import { snoozedReopenTime } from 'dashboard/helper/snoozeHelpers';
+import CardStatusIcon from 'dashboard/components-next/Conversation/ConversationCard/CardStatusIcon.vue';
 import { useInbox } from 'dashboard/composables/useInbox';
 import { useAlert } from 'dashboard/composables';
 import { useI18n } from 'vue-i18n';
@@ -77,17 +76,9 @@ const currentContact = computed(() =>
   store.getters['contacts/getContact'](props.chat.meta.sender.id)
 );
 
-const isSnoozed = computed(
-  () => currentChat.value.status === wootConstants.STATUS_TYPE.SNOOZED
+const statusLabel = computed(() =>
+  t(`CONVERSATION.TICKET_STATUS.${currentChat.value.status}`)
 );
-
-const snoozedDisplayText = computed(() => {
-  const { snoozed_until: snoozedUntil } = currentChat.value;
-  if (snoozedUntil) {
-    return `${t('CONVERSATION.HEADER.SNOOZED_UNTIL')} ${snoozedReopenTime(snoozedUntil)}`;
-  }
-  return t('CONVERSATION.HEADER.SNOOZED_UNTIL_NEXT_REPLY');
-});
 
 const inbox = computed(() => {
   const { inbox_id: inboxId } = props.chat;
@@ -168,12 +159,12 @@ const copyConversationId = async () => {
           >
             {{ mailSubject }}
           </span>
-          <span v-if="isSnoozed">•</span>
+          <span>•</span>
           <span
-            v-if="isSnoozed"
-            class="min-w-0 truncate font-medium text-n-amber-10 shrink-0"
+            class="flex items-center gap-1 min-w-0 truncate font-medium text-n-slate-12 shrink-0"
           >
-            {{ snoozedDisplayText }}
+            <CardStatusIcon :status="currentChat.status" />
+            {{ statusLabel }}
           </span>
         </div>
       </div>

@@ -20,7 +20,6 @@ const MENU = {
   MARK_AS_UNREAD: 'mark-as-unread',
   PRIORITY: 'priority',
   STATUS: 'status',
-  SNOOZE: 'snooze',
   AGENT: 'agent',
   TEAM: 'team',
   LABEL: 'label',
@@ -105,25 +104,25 @@ export default {
       statusMenuConfig: [
         {
           key: wootConstants.STATUS_TYPE.RESOLVED,
-          label: this.$t('CONVERSATION.CARD_CONTEXT_MENU.RESOLVED'),
+          label: this.$t('CONVERSATION.TICKET_STATUS.resolved'),
           icon: 'checkmark',
         },
         {
           key: wootConstants.STATUS_TYPE.OPEN,
-          label: this.$t('CONVERSATION.CARD_CONTEXT_MENU.REOPEN'),
+          label: this.$t('CONVERSATION.TICKET_STATUS.open'),
           icon: 'arrow-redo',
         },
         {
-          key: wootConstants.STATUS_TYPE.PENDING,
-          label: this.$t('CONVERSATION.CARD_CONTEXT_MENU.PENDING'),
+          key: wootConstants.STATUS_TYPE.WAITING_ON_CUSTOMER,
+          label: this.$t('CONVERSATION.TICKET_STATUS.waiting_on_customer'),
           icon: 'book-clock',
         },
+        {
+          key: wootConstants.STATUS_TYPE.ON_HOLD,
+          label: this.$t('CONVERSATION.TICKET_STATUS.on_hold'),
+          icon: 'snooze',
+        },
       ],
-      snoozeOption: {
-        key: wootConstants.STATUS_TYPE.SNOOZED,
-        label: this.$t('CONVERSATION.CARD_CONTEXT_MENU.SNOOZE.TITLE'),
-        icon: 'snooze',
-      },
       priorityConfig: {
         key: MENU.PRIORITY,
         label: this.$t('CONVERSATION.PRIORITY.TITLE'),
@@ -218,10 +217,6 @@ export default {
         ...this.filteredAgentOnAvailability,
       ];
     },
-    showSnooze() {
-      // Don't show snooze if the conversation is already snoozed/resolved/pending
-      return this.status === wootConstants.STATUS_TYPE.OPEN;
-    },
     filteredLabels() {
       const labels = this.labelSearchQuery
         ? picoSearch(this.labels, this.labelSearchQuery, ['title'])
@@ -239,13 +234,8 @@ export default {
       if (!this.allowedOptions.length) return true;
       return keys.some(key => this.allowedOptions.includes(key));
     },
-    toggleStatus(status, snoozedUntil) {
-      this.$emit('updateConversation', status, snoozedUntil);
-    },
-    async snoozeConversation() {
-      await this.$store.dispatch('setContextMenuChatId', this.chatId);
-      const ninja = document.querySelector('ninja-keys');
-      ninja.open({ parent: 'snooze_conversation' });
+    toggleStatus(status) {
+      this.$emit('updateConversation', status);
     },
     assignPriority(priority) {
       this.$emit('assignPriority', priority);
@@ -312,22 +302,16 @@ export default {
       />
       <hr class="m-1 rounded border-b border-n-weak dark:border-n-weak" />
     </template>
-    <template v-if="isAllowed([MENU.STATUS, MENU.SNOOZE])">
+    <template v-if="isAllowed([MENU.STATUS])">
       <template v-for="option in statusMenuConfig">
         <MenuItem
           v-if="show(option.key) && isAllowed([MENU.STATUS])"
           :key="option.key"
           :option="option"
           variant="icon"
-          @click.stop="toggleStatus(option.key, null)"
+          @click.stop="toggleStatus(option.key)"
         />
       </template>
-      <MenuItem
-        v-if="showSnooze && isAllowed([MENU.SNOOZE])"
-        :option="snoozeOption"
-        variant="icon"
-        @click.stop="snoozeConversation()"
-      />
       <hr class="m-1 rounded border-b border-n-weak dark:border-n-weak" />
     </template>
     <template

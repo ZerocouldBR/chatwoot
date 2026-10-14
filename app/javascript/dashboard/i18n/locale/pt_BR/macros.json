@@ -103,7 +103,7 @@
       "REMOVE_ASSIGNED_TEAM": "Remover Grupo Atribuído",
       "SEND_EMAIL_TRANSCRIPT": "Enviar uma transcrição por e-mail",
       "MUTE_CONVERSATION": "Silenciar Ticket",
-      "SNOOZE_CONVERSATION": "Adiar Ticket",
+      "SNOOZE_CONVERSATION": "Colocar Ticket em Espera",
       "RESOLVE_CONVERSATION": "Resolver Ticket",
       "CHANGE_STATUS": "Alterar Status",
       "SEND_ATTACHMENT": "Enviar Anexo",

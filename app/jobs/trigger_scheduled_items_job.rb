@@ -8,9 +8,6 @@ class TriggerScheduledItemsJob < ApplicationJob
       Campaigns::TriggerOneoffCampaignJob.perform_later(campaign)
     end
 
-    # Job to reopen snoozed conversations
-    Conversations::ReopenSnoozedConversationsJob.perform_later
-
     # Job to reopen snoozed notifications
     Notification::ReopenSnoozedNotificationsJob.perform_later
 

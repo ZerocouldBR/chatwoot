@@ -14,10 +14,13 @@ export const MESSAGE_TYPE = {
 };
 
 export const CONVERSATION_STATUS = {
+  NEW: 'new_ticket',
   OPEN: 'open',
+  WAITING_ON_CUSTOMER: 'waiting_on_customer',
+  ON_HOLD: 'on_hold',
   RESOLVED: 'resolved',
+  CLOSED: 'closed',
   PENDING: 'pending',
-  SNOOZED: 'snoozed',
 };
 
 export const CONVERSATION_PRIORITY = {

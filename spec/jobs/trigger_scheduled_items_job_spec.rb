@@ -10,11 +10,6 @@ RSpec.describe TriggerScheduledItemsJob do
       .on_queue('scheduled_jobs')
   end
 
-  it 'triggers Conversations::ReopenSnoozedConversationsJob' do
-    expect(Conversations::ReopenSnoozedConversationsJob).to receive(:perform_later).once
-    described_class.perform_now
-  end
-
   it 'triggers Notification::ReopenSnoozedNotificationsJob' do
     expect(Notification::ReopenSnoozedNotificationsJob).to receive(:perform_later).once
     described_class.perform_now

@@ -28,12 +28,11 @@ class AutoAssignment::AssignmentService
   end
 
   def assignable?(conversation)
-    conversation.status == 'open' &&
-      conversation.assignee_id.nil?
+    conversation.new_or_open? && conversation.assignee_id.nil?
   end
 
   def unassigned_conversations(limit)
-    scope = inbox.conversations.unassigned.open
+    scope = inbox.conversations.unassigned.where(status: %i[new_ticket open])
 
     # Skip stale backlog with no activity beyond the age threshold
     policy = inbox.assignment_policy

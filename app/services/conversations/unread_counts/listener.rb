@@ -2,7 +2,7 @@ class Conversations::UnreadCounts::Listener < BaseListener
   include Events::Types
 
   FILTERED_CONVERSATION_UPDATE_KEYS = %w[
-    additional_attributes cached_label_list campaign_id custom_attributes first_reply_created_at label_list last_activity_at priority snoozed_until
+    additional_attributes cached_label_list campaign_id custom_attributes first_reply_created_at label_list last_activity_at priority
     waiting_since
   ].freeze
   private_constant :FILTERED_CONVERSATION_UPDATE_KEYS

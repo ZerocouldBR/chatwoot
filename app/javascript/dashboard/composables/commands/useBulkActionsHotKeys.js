@@ -1,40 +1,18 @@
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useMapGetter } from 'dashboard/composables/store';
-import wootConstants from 'dashboard/constants/globals';
 
 import {
-  CMD_BULK_ACTION_SNOOZE_CONVERSATION,
   CMD_BULK_ACTION_REOPEN_CONVERSATION,
   CMD_BULK_ACTION_RESOLVE_CONVERSATION,
 } from 'dashboard/helper/commandbar/events';
 import {
-  ICON_SNOOZE_CONVERSATION,
   ICON_REOPEN_CONVERSATION,
   ICON_RESOLVE_CONVERSATION,
 } from 'dashboard/helper/commandbar/icons';
 import { emitter } from 'shared/helpers/mitt';
 
-import { createSnoozeHandlers } from 'dashboard/helper/commandbar/actions';
-
-const SNOOZE_OPTIONS = wootConstants.SNOOZE_OPTIONS;
-
 const createEmitHandler = event => () => emitter.emit(event);
-
-const SNOOZE_CONVERSATION_BULK_ACTIONS = [
-  {
-    id: 'bulk_action_snooze_conversation',
-    title: 'COMMAND_BAR.COMMANDS.SNOOZE_CONVERSATION',
-    section: 'COMMAND_BAR.SECTIONS.BULK_ACTIONS',
-    icon: ICON_SNOOZE_CONVERSATION,
-    children: Object.values(SNOOZE_OPTIONS),
-  },
-  ...createSnoozeHandlers(
-    CMD_BULK_ACTION_SNOOZE_CONVERSATION,
-    'bulk_action_snooze_conversation',
-    'COMMAND_BAR.SECTIONS.BULK_ACTIONS'
-  ),
-];
 
 const RESOLVED_CONVERSATION_BULK_ACTIONS = [
   {
@@ -75,7 +53,6 @@ export function useBulkActionsHotKeys() {
     let actions = [];
     if (selectedConversations.value.length > 0) {
       actions = [
-        ...SNOOZE_CONVERSATION_BULK_ACTIONS,
         ...RESOLVED_CONVERSATION_BULK_ACTIONS,
         ...OPEN_CONVERSATION_BULK_ACTIONS,
       ];

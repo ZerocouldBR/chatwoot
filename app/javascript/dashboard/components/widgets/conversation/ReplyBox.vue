@@ -163,6 +163,8 @@ export default {
   data() {
     return {
       message: '',
+      // Ticket status applied together with the next reply ("Submit as <status>").
+      submitStatus: null,
       inReplyTo: {},
       isFocused: false,
       showEmojiPicker: false,
@@ -972,12 +974,20 @@ export default {
       } else {
         this.confirmOnSendReply();
       }
+      this.submitStatus = null;
+    },
+    onSendReplyAs(status) {
+      this.submitStatus = status;
+      this.onSendReply();
     },
     async sendMessage(
       messagePayload,
       editorMessage = '',
       copilotAcceptedMessage = ''
     ) {
+      if (this.submitStatus) {
+        messagePayload.ticketStatus = this.submitStatus;
+      }
       try {
         await this.$store.dispatch(
           'createPendingMessageAndSend',
@@ -1512,6 +1522,7 @@ export default {
         :is-editor-disabled="isEditorDisabled"
         :on-file-upload="onFileUpload"
         :on-send="onSendReply"
+        :on-send-as="onSendReplyAs"
         :conversation-type="conversationType"
         :recording-audio-duration-text="recordingAudioDurationText"
         :recording-audio-state="recordingAudioState"

@@ -21,20 +21,32 @@
       "all": "Todos"
     },
     "CHAT_STATUS_FILTER_ITEMS": {
+      "unsolved": {
+        "TEXT": "Não resolvidos"
+      },
+      "new_ticket": {
+        "TEXT": "Novos"
+      },
       "open": {
-        "TEXT": "Abertas"
+        "TEXT": "Abertos"
       },
-      "resolved": {
-        "TEXT": "Resolvidas"
-      },
-      "pending": {
+      "waiting_on_customer": {
         "TEXT": "Pendentes"
       },
-      "snoozed": {
-        "TEXT": "Adiadas"
+      "on_hold": {
+        "TEXT": "Em espera"
+      },
+      "resolved": {
+        "TEXT": "Resolvidos"
+      },
+      "closed": {
+        "TEXT": "Fechados"
+      },
+      "pending": {
+        "TEXT": "Com o robô"
       },
       "all": {
-        "TEXT": "Todas"
+        "TEXT": "Todos"
       }
     },
     "VIEW_FILTER": "Visualizar",

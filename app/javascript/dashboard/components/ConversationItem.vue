@@ -134,9 +134,9 @@ const closeContextMenu = () => {
   contextMenu.value.y = null;
 };
 
-const onUpdateConversation = (status, snoozedUntil) => {
+const onUpdateConversation = status => {
   closeContextMenu();
-  updateConversationStatus(props.source.id, status, snoozedUntil);
+  updateConversationStatus(props.source.id, status);
 };
 
 const onAssignAgent = agent => {

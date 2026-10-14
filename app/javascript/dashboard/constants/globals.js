@@ -6,10 +6,15 @@ export default {
     ALL: 'all',
   },
   STATUS_TYPE: {
+    UNSOLVED: 'unsolved',
+    NEW: 'new_ticket',
     OPEN: 'open',
+    WAITING_ON_CUSTOMER: 'waiting_on_customer',
+    ON_HOLD: 'on_hold',
     RESOLVED: 'resolved',
+    CLOSED: 'closed',
+    // The bot is handling the ticket.
     PENDING: 'pending',
-    SNOOZED: 'snoozed',
     ALL: 'all',
   },
   CONVERSATION_TYPE: {

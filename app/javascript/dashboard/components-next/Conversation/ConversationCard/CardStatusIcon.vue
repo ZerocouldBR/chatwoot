@@ -1,8 +1,7 @@
 <script setup>
 import { computed } from 'vue';
-import { CONVERSATION_STATUS } from 'shared/constants/messages';
-
-import Icon from 'dashboard/components-next/icon/Icon.vue';
+import { useI18n } from 'vue-i18n';
+import { STATUS_BADGE_CLASSES } from 'dashboard/constants/ticketStatuses';
 
 const props = defineProps({
   status: {
@@ -15,28 +14,23 @@ const props = defineProps({
   },
 });
 
-const icons = {
-  [CONVERSATION_STATUS.OPEN]: 'i-woot-status-open',
-  [CONVERSATION_STATUS.RESOLVED]: 'i-woot-status-resolved',
-  [CONVERSATION_STATUS.PENDING]: 'i-woot-status-pending',
-  [CONVERSATION_STATUS.SNOOZED]: 'i-woot-status-snoozed',
-};
+const { t } = useI18n();
 
-const iconName = computed(() => {
-  if (props.status && icons[props.status]) {
-    return icons[props.status];
-  }
-  return props.showEmpty ? 'i-woot-status-empty' : '';
-});
+const badgeClass = computed(() => STATUS_BADGE_CLASSES[props.status]);
+const label = computed(() =>
+  badgeClass.value ? t(`CONVERSATION.TICKET_STATUS.${props.status}`) : ''
+);
 </script>
 
 <template>
-  <Icon
+  <span
+    v-if="badgeClass || showEmpty"
     v-tooltip.top="{
-      content: status,
+      content: label,
       delay: { show: 500, hide: 0 },
     }"
-    :icon="iconName"
-    class="size-4 flex-shrink-0"
+    :aria-label="label"
+    class="size-3 flex-shrink-0 rounded-sm"
+    :class="badgeClass || 'outline outline-1 outline-n-strong'"
   />
 </template>

@@ -413,7 +413,7 @@ class Message < ApplicationRecord
     return if conversation.muted?
     return unless incoming?
 
-    conversation.open! if conversation.snoozed?
+    conversation.open! if conversation.waiting_on_customer? || conversation.on_hold?
 
     reopen_resolved_conversation if conversation.resolved?
   end

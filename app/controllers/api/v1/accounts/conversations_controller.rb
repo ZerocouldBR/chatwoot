@@ -1,11 +1,12 @@
 class Api::V1::Accounts::ConversationsController < Api::V1::Accounts::BaseController
   include Events::Types
-  include DateRangeHelper
   include HmacConcern
   include ConversationCustomAttributesConcern
   include ConversationAssignmentTargetsConcern
+  include ConversationStatusConcern
 
   before_action :conversation, except: [:index, :meta, :search, :create, :filter]
+  before_action :validate_status_param, only: [:toggle_status]
   before_action :validate_assignment_targets, :inbox, :contact, :contact_inbox, only: [:create]
 
   ATTACHMENT_RESULTS_PER_PAGE = 100
@@ -85,7 +86,7 @@ class Api::V1::Accounts::ConversationsController < Api::V1::Accounts::BaseContro
     if bot_handoff?
       @conversation.bot_handoff!
     elsif params[:status].present?
-      set_conversation_status
+      apply_agent_status(params[:status])
       @status = @conversation.save!
     else
       @status = @conversation.toggle_status
@@ -93,15 +94,10 @@ class Api::V1::Accounts::ConversationsController < Api::V1::Accounts::BaseContro
     handle_human_open if @conversation.open? && Current.user.is_a?(User)
   end
 
-  def bot_handoff?
-    return false unless Current.user.is_a?(AgentBot)
-
-    @conversation.status == 'pending' && params[:status] == 'open'
-  end
-
   def toggle_priority
-    @conversation.toggle_priority(permitted_update_params[:priority])
-    head :ok
+    return head :ok if @conversation.toggle_priority(permitted_update_params[:priority])
+
+    render_could_not_create_error(@conversation.errors.full_messages.to_sentence)
   end
 
   def toggle_typing_status
@@ -171,19 +167,6 @@ class Api::V1::Accounts::ConversationsController < Api::V1::Accounts::BaseContro
     # For assignees, check both timestamps - update if either is old
     assignee_needs_update = @conversation.assignee_last_seen_at.blank? || @conversation.assignee_last_seen_at < 1.hour.ago
     agent_needs_update || assignee_needs_update
-  end
-
-  def set_conversation_status
-    @conversation.status = params[:status]
-    @conversation.snoozed_until = parse_date_time(params[:snoozed_until].to_s) if params[:snoozed_until]
-  end
-
-  def handle_human_open
-    @conversation.with_lock do
-      @conversation.ai_assignee = nil
-      @conversation.assignee = Current.user if Current.user.agent?
-      @conversation.save!
-    end
   end
 
   def conversation

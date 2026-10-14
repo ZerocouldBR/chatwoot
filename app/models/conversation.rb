@@ -14,8 +14,7 @@
 #  identifier             :string
 #  last_activity_at       :datetime         not null
 #  priority               :integer
-#  snoozed_until          :datetime
-#  status                 :integer          default("open"), not null
+#  status                 :integer          default("new_ticket"), not null
 #  status_changed_at      :datetime
 #  uuid                   :uuid             not null
 #  waiting_since          :datetime
@@ -68,7 +67,7 @@ class Conversation < ApplicationRecord
   CONVERSATION_UPDATED_ADDITIONAL_ATTRIBUTE_KEYS = %w[conversation_language].freeze
   FILTERED_UNREAD_COUNT_ADDITIONAL_ATTRIBUTE_KEYS = %w[browser_language conversation_language mail_subject referer].freeze
   FILTERED_UNREAD_COUNT_UPDATE_KEYS = %w[
-    cached_label_list campaign_id custom_attributes first_reply_created_at label_list last_activity_at priority snoozed_until waiting_since
+    cached_label_list campaign_id custom_attributes first_reply_created_at label_list last_activity_at priority waiting_since
   ].freeze
   private_constant :CONVERSATION_UPDATED_ADDITIONAL_ATTRIBUTE_KEYS, :FILTERED_UNREAD_COUNT_ADDITIONAL_ATTRIBUTE_KEYS,
                    :FILTERED_UNREAD_COUNT_UPDATE_KEYS
@@ -82,8 +81,14 @@ class Conversation < ApplicationRecord
   validates :custom_attributes, jsonb_attributes_length: true
   validates :uuid, uniqueness: true
   validate :validate_referer_url
+  validate :priority_cannot_be_cleared
 
-  enum status: { open: 0, resolved: 1, pending: 2, snoozed: 3 }
+  # Ticket statuses follow Zendesk: new_ticket (New), open, waiting_on_customer (Pending), on_hold, resolved (Solved), closed.
+  # `pending` is the AI agent state: the bot is handling the ticket.
+  enum status: { open: 0, resolved: 1, pending: 2, new_ticket: 4, waiting_on_customer: 5, on_hold: 6, closed: 7 }
+  UNSOLVED_STATUSES = %w[new_ticket open waiting_on_customer on_hold].freeze
+  # Statuses an agent can pick; New and Closed are only set by the system.
+  AGENT_SETTABLE_STATUSES = %w[open waiting_on_customer on_hold resolved pending].freeze
   enum priority: { low: 0, medium: 1, high: 2, urgent: 3 }
 
   scope :unassigned, -> { where(assignee_id: nil, assignee_agent_bot_id: nil) }
@@ -133,7 +138,8 @@ class Conversation < ApplicationRecord
   has_many :reporting_events, dependent: :destroy_async
   has_many :automation_rule_pending_executions, dependent: :delete_all
 
-  before_save :ensure_snooze_until_reset
+  before_save :assign_team_from_assignee
+  before_save :open_new_ticket_on_assignment
   before_save :set_status_changed_at
   before_create :determine_conversation_status
   before_create :ensure_waiting_since
@@ -170,15 +176,17 @@ class Conversation < ApplicationRecord
   end
 
   def toggle_status
-    # FIXME: implement state machine with aasm
     self.status = open? ? :resolved : :open
-    self.status = :open if pending? || snoozed?
     save
   end
 
   def toggle_priority(priority = nil)
     self.priority = priority.presence
     save
+  end
+
+  def new_or_open?
+    new_ticket? || open?
   end
 
   def bot_handoff!(dispatch_event: true)
@@ -188,7 +196,7 @@ class Conversation < ApplicationRecord
 
     update(waiting_since: Time.current) if waiting_since.blank?
     self.ai_assignee = nil
-    open!
+    assignee_id.present? ? open! : new_ticket!
     dispatch_bot_handoff_event if dispatch_event
   end
 
@@ -287,8 +295,20 @@ class Conversation < ApplicationRecord
     # rubocop:enable Rails/SkipsModelValidations
   end
 
-  def ensure_snooze_until_reset
-    self.snoozed_until = nil unless snoozed?
+  def assign_team_from_assignee
+    return unless will_save_change_to_assignee_id? && assignee_id.present? && team_id.blank?
+
+    self.team = account.teams.joins(:team_members).where(team_members: { user_id: assignee_id }).order(:id).first
+  end
+
+  def open_new_ticket_on_assignment
+    self.status = :open if new_ticket? && assignee_id.present?
+  end
+
+  def priority_cannot_be_cleared
+    return unless persisted? && will_save_change_to_priority? && priority.nil?
+
+    errors.add(:priority, :blank)
   end
 
   def set_status_changed_at
@@ -322,7 +342,10 @@ class Conversation < ApplicationRecord
   end
 
   def handle_campaign_status
-    set_active_bot_conversation if campaign.sender_id.nil? && inbox.active_bot?
+    return set_active_bot_conversation if campaign.sender_id.nil? && inbox.active_bot?
+
+    # Campaign tickets start a conversation the agent owns, so they skip New.
+    self.status = :open if new_ticket?
   end
 
   def set_active_bot_conversation
@@ -350,7 +373,7 @@ class Conversation < ApplicationRecord
   end
 
   def list_of_keys
-    %w[team_id assignee_id assignee_agent_bot_id ai_assignee_type status snoozed_until custom_attributes label_list waiting_since
+    %w[team_id assignee_id assignee_agent_bot_id ai_assignee_type status custom_attributes label_list waiting_since
        first_reply_created_at priority]
   end
 
@@ -413,7 +436,7 @@ class Conversation < ApplicationRecord
   end
 
   def conversation_status_changed_to_open?
-    return false unless open?
+    return false unless new_or_open?
     # saved_change_to_status? method only works in case of update
     return true if previous_changes.key?(:id) || saved_change_to_status?
   end

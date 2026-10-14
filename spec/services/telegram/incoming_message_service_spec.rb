@@ -776,7 +776,7 @@ describe Telegram::IncomingMessageService do
 
       expect(telegram_channel.inbox.conversations.count).to eq(2)
       expect(telegram_channel.inbox.conversations.last.messages.first.content).to eq('test')
-      expect(telegram_channel.inbox.conversations.last.status).to eq('open')
+      expect(telegram_channel.inbox.conversations.last.status).to eq('new_ticket')
     end
 
     it 'appends to last conversation if last conversation is not resolved' do

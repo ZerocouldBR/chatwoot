@@ -1,5 +1,8 @@
 class Api::V1::Accounts::Conversations::MessagesController < Api::V1::Accounts::Conversations::BaseController
+  include ConversationStatusConcern
+
   before_action :ensure_api_inbox, only: :update
+  before_action -> { validate_agent_status(params[:ticket_status]) }, only: :create
 
   def index
     @messages = message_finder.perform
@@ -9,6 +12,7 @@ class Api::V1::Accounts::Conversations::MessagesController < Api::V1::Accounts::
     user = Current.user || @resource
     mb = Messages::MessageBuilder.new(user, @conversation, params)
     @message = mb.perform
+    submit_as_status if params[:ticket_status].present?
   rescue StandardError => e
     render_could_not_create_error(e.message)
   end
@@ -57,6 +61,12 @@ class Api::V1::Accounts::Conversations::MessagesController < Api::V1::Accounts::
   end
 
   private
+
+  # "Submit as <status>": the reply and the status change land in the same request.
+  def submit_as_status
+    apply_agent_status(params[:ticket_status])
+    @conversation.save!
+  end
 
   def message
     @message ||= @conversation.messages.find(permitted_params[:id])

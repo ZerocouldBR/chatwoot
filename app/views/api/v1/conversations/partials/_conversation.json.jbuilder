@@ -53,7 +53,6 @@ json.custom_attributes conversation.custom_attributes
 json.inbox_id conversation.inbox_id
 json.labels conversation.cached_label_list_array
 json.muted conversation.muted?
-json.snoozed_until conversation.snoozed_until
 json.status conversation.status
 json.created_at conversation.created_at.to_i
 json.updated_at conversation.updated_at.to_f

@@ -152,10 +152,8 @@
       "CLOSE": "Close",
       "DETAILS": "details",
       "COPY_ID_SUCCESS": "Ticket ID copied to clipboard",
-      "SNOOZED_UNTIL": "Snoozed until",
       "SNOOZED_UNTIL_TOMORROW": "Snoozed until tomorrow",
       "SNOOZED_UNTIL_NEXT_WEEK": "Snoozed until next week",
-      "SNOOZED_UNTIL_NEXT_REPLY": "Snoozed until next reply",
       "WHATSAPP_CALL": "Start WhatsApp call",
       "WHATSAPP_CALL_FAILED": "Could not start the WhatsApp call.",
       "VOICE_CALL": "Start call",
@@ -171,8 +169,6 @@
       }
     },
     "RESOLVE_DROPDOWN": {
-      "MARK_PENDING": "Mark as pending",
-      "SNOOZE_UNTIL": "Snooze",
       "SNOOZE": {
         "TITLE": "Snooze until",
         "NEXT_REPLY": "Next reply",
@@ -250,17 +246,8 @@
       "CONFIRM": "Delete"
     },
     "CARD_CONTEXT_MENU": {
-      "PENDING": "Mark as pending",
-      "RESOLVED": "Mark as resolved",
       "MARK_AS_UNREAD": "Mark as unread",
       "MARK_AS_READ": "Mark as read",
-      "REOPEN": "Reopen ticket",
-      "SNOOZE": {
-        "TITLE": "Snooze",
-        "NEXT_REPLY": "Until next reply",
-        "TOMORROW": "Until tomorrow",
-        "NEXT_WEEK": "Until next week"
-      },
       "ASSIGN_AGENT": "Assign agent",
       "ASSIGN_LABEL": "Assign tag",
       "SEARCH_LABELS": "Search tags",
@@ -352,7 +339,9 @@
         "SHOW_TOOLTIP": "Show trimmed content",
         "HIDE_TOOLTIP": "Hide trimmed content",
         "REMOVE": "Remove quoted text"
-      }
+      },
+      "SUBMIT_AS": "Submit as {status}",
+      "SUBMIT_AS_TOOLTIP": "Send and change the ticket status"
     },
     "VISIBLE_TO_AGENTS": "Private Note: Only visible to you and your group",
     "CHANGE_STATUS": "Ticket status changed",
@@ -431,6 +420,15 @@
       "UNMUTE": "Unmute mic",
       "VIEW_CHAT_HISTORY": "View chat history",
       "GO_TO_CONVERSATION": "Go to ticket thread"
+    },
+    "TICKET_STATUS": {
+      "new_ticket": "New",
+      "open": "Open",
+      "waiting_on_customer": "Pending",
+      "on_hold": "On-hold",
+      "resolved": "Solved",
+      "closed": "Closed",
+      "pending": "With bot"
     }
   },
   "EMAIL_TRANSCRIPT": {

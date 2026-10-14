@@ -220,8 +220,8 @@ RSpec.describe '/api/v1/widget/messages', type: :request do
         expect(conversation.reload.resolved?).to be(true)
       end
 
-      it 'does not create resolved activity messages when snoozed conversation is opened' do
-        conversation.snoozed!
+      it 'does not create resolved activity messages when an on-hold conversation is opened' do
+        conversation.on_hold!
 
         message_params = { content: 'hello world', timestamp: Time.current }
         post api_v1_widget_messages_url,

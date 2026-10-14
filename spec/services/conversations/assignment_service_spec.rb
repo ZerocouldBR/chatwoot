@@ -22,11 +22,11 @@ describe Conversations::AssignmentService do
       end
 
       it 'preserves conversation status' do
-        conversation.update!(status: :snoozed, snoozed_until: 1.day.from_now)
+        conversation.update!(status: :on_hold)
 
         described_class.new(conversation: conversation, assignee_id: nil).perform
 
-        expect(conversation.reload.status).to eq('snoozed')
+        expect(conversation.reload.status).to eq('on_hold')
       end
     end
 
@@ -115,14 +115,12 @@ describe Conversations::AssignmentService do
         expect(conversation.reload.status).to eq('pending')
       end
 
-      it 'marks a snoozed conversation pending and clears the snooze timestamp' do
-        conversation.update!(status: :snoozed, snoozed_until: 1.day.from_now)
+      it 'marks an on-hold conversation pending' do
+        conversation.update!(status: :on_hold)
 
         service.perform
 
-        conversation.reload
-        expect(conversation.status).to eq('pending')
-        expect(conversation.snoozed_until).to be_nil
+        expect(conversation.reload.status).to eq('pending')
       end
     end
   end

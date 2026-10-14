@@ -354,7 +354,7 @@ const actions = {
 
   toggleStatus: async (
     { commit },
-    { conversationId, status, snoozedUntil = null, customAttributes = null }
+    { conversationId, status, customAttributes = null }
   ) => {
     try {
       // Update custom attributes first if provided
@@ -369,22 +369,11 @@ const actions = {
         });
       }
 
-      const {
-        data: {
-          payload: {
-            current_status: updatedStatus,
-            snoozed_until: updatedSnoozedUntil,
-          } = {},
-        } = {},
-      } = await ConversationApi.toggleStatus({
-        conversationId,
-        status,
-        snoozedUntil,
-      });
+      const { data: { payload: { current_status: updatedStatus } = {} } = {} } =
+        await ConversationApi.toggleStatus({ conversationId, status });
       commit(types.CHANGE_CONVERSATION_STATUS, {
         conversationId,
         status: updatedStatus,
-        snoozedUntil: updatedSnoozedUntil,
       });
     } catch (error) {
       // Handle error
@@ -689,10 +678,6 @@ const actions = {
 
   setCurrentChatPriority({ commit }, { priority, conversationId }) {
     commit(types.ASSIGN_PRIORITY, { priority, conversationId });
-  },
-
-  setContextMenuChatId({ commit }, chatId) {
-    commit(types.SET_CONTEXT_MENU_CHAT_ID, chatId);
   },
 
   getInboxCaptainAssistantById: async ({ commit }, conversationId) => {

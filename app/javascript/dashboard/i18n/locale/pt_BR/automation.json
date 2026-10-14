@@ -193,7 +193,7 @@
       "SEND_EMAIL_TO_TEAM": "Enviar um e-mail para o Grupo",
       "SEND_EMAIL_TRANSCRIPT": "Enviar uma transcrição por e-mail",
       "MUTE_CONVERSATION": "Silenciar Ticket",
-      "SNOOZE_CONVERSATION": "Adiar Ticket",
+      "SNOOZE_CONVERSATION": "Colocar Ticket em Espera",
       "RESOLVE_CONVERSATION": "Resolver Ticket",
       "SEND_WEBHOOK_EVENT": "Enviar evento de Webhook",
       "SEND_ATTACHMENT": "Enviar Anexo",

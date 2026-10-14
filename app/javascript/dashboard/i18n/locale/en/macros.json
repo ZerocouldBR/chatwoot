@@ -103,7 +103,7 @@
       "REMOVE_ASSIGNED_TEAM": "Remove Assigned Group",
       "SEND_EMAIL_TRANSCRIPT": "Send an Email Transcript",
       "MUTE_CONVERSATION": "Mute Ticket",
-      "SNOOZE_CONVERSATION": "Snooze Ticket",
+      "SNOOZE_CONVERSATION": "Put Ticket On-hold",
       "RESOLVE_CONVERSATION": "Resolve Ticket",
       "CHANGE_STATUS": "Change Status",
       "SEND_ATTACHMENT": "Send Attachment",

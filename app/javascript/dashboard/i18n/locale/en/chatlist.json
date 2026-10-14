@@ -21,17 +21,29 @@
       "all": "All"
     },
     "CHAT_STATUS_FILTER_ITEMS": {
+      "unsolved": {
+        "TEXT": "Unsolved"
+      },
+      "new_ticket": {
+        "TEXT": "New"
+      },
       "open": {
         "TEXT": "Open"
       },
-      "resolved": {
-        "TEXT": "Resolved"
-      },
-      "pending": {
+      "waiting_on_customer": {
         "TEXT": "Pending"
       },
-      "snoozed": {
-        "TEXT": "Snoozed"
+      "on_hold": {
+        "TEXT": "On-hold"
+      },
+      "resolved": {
+        "TEXT": "Solved"
+      },
+      "closed": {
+        "TEXT": "Closed"
+      },
+      "pending": {
+        "TEXT": "With bot"
       },
       "all": {
         "TEXT": "All"

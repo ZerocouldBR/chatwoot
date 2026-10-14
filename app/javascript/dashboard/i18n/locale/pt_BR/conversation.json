@@ -134,10 +134,8 @@
       "CLOSE": "Fechar",
       "DETAILS": "detalhes",
       "COPY_ID_SUCCESS": "ID do ticket copiado para área de transferência",
-      "SNOOZED_UNTIL": "Adiar até",
       "SNOOZED_UNTIL_TOMORROW": "Adiado até amanhã",
       "SNOOZED_UNTIL_NEXT_WEEK": "Adiada até a próxima semana",
-      "SNOOZED_UNTIL_NEXT_REPLY": "Adiado até a próxima resposta",
       "WHATSAPP_CALL": "Iniciar chamada no WhatsApp",
       "WHATSAPP_CALL_FAILED": "Não foi possível iniciar a chamada no WhatsApp.",
       "VOICE_CALL": "Iniciar chamada",
@@ -153,8 +151,6 @@
       }
     },
     "RESOLVE_DROPDOWN": {
-      "MARK_PENDING": "Deixar pendente",
-      "SNOOZE_UNTIL": "Adiar",
       "SNOOZE": {
         "TITLE": "Suspender até",
         "NEXT_REPLY": "Próxima resposta",
@@ -222,17 +218,8 @@
       "CONFIRM": "Excluir"
     },
     "CARD_CONTEXT_MENU": {
-      "PENDING": "Deixar pendente",
-      "RESOLVED": "Marcar como resolvida",
       "MARK_AS_UNREAD": "Marcar como não lida",
       "MARK_AS_READ": "Marcar como lida",
-      "REOPEN": "Reabrir ticket",
-      "SNOOZE": {
-        "TITLE": "Adiar",
-        "NEXT_REPLY": "Até a próxima resposta",
-        "TOMORROW": "Até amanhã",
-        "NEXT_WEEK": "Até a próxima semana"
-      },
       "ASSIGN_AGENT": "Atribuir Agente",
       "ASSIGN_LABEL": "Atribuir tag",
       "SEARCH_LABELS": "Pesquisar tags",
@@ -323,7 +310,9 @@
         "REMOVE_PREVIEW": "Remover o encadeamento de e-mails citado",
         "COLLAPSE": "Recolher a prévia",
         "EXPAND": "Expandir a prévia"
-      }
+      },
+      "SUBMIT_AS": "Enviar como {status}",
+      "SUBMIT_AS_TOOLTIP": "Enviar e mudar o status do ticket"
     },
     "VISIBLE_TO_AGENTS": "Mensagem Privada: Apenas visível para você e seu grupo",
     "CHANGE_STATUS": "Estado do ticket mudou",
@@ -401,6 +390,15 @@
       "UNMUTE": "Desilenciar microfone",
       "VIEW_CHAT_HISTORY": "Ver histórico do ticket",
       "GO_TO_CONVERSATION": "Ir para o ticket"
+    },
+    "TICKET_STATUS": {
+      "new_ticket": "Novo",
+      "open": "Aberto",
+      "waiting_on_customer": "Pendente",
+      "on_hold": "Em espera",
+      "resolved": "Resolvido",
+      "closed": "Fechado",
+      "pending": "Com o robô"
     }
   },
   "EMAIL_TRANSCRIPT": {

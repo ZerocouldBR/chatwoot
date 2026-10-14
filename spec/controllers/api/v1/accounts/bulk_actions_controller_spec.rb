@@ -54,14 +54,22 @@ RSpec.describe 'Api::V1::Accounts::BulkActionsController', type: :request do
         perform_enqueued_jobs do
           post "/api/v1/accounts/#{account.id}/bulk_actions",
                headers: agent.create_new_auth_token,
-               params: { type: 'Conversation', fields: { status: 'snoozed' }, ids: Conversation.first(3).pluck(:display_id) }
+               params: { type: 'Conversation', fields: { status: 'on_hold' }, ids: Conversation.first(3).pluck(:display_id) }
 
           expect(response).to have_http_status(:success)
         end
 
-        expect(Conversation.first.status).to eq('snoozed')
+        expect(Conversation.first.status).to eq('on_hold')
         expect(Conversation.last.status).to eq('open')
         expect(Conversation.first.assignee_id).to be_nil
+      end
+
+      it 'rejects statuses only the system can set' do
+        post "/api/v1/accounts/#{account.id}/bulk_actions",
+             headers: agent.create_new_auth_token,
+             params: { type: 'Conversation', fields: { status: 'closed' }, ids: Conversation.first(3).pluck(:display_id) }
+
+        expect(response).to have_http_status(:unprocessable_entity)
       end
 
       it 'Bulk update conversation team id to none' do
@@ -163,7 +171,7 @@ RSpec.describe 'Api::V1::Accounts::BulkActionsController', type: :request do
       end
 
       it 'Bulk update conversation status and assignee id' do
-        params = { type: 'Conversation', fields: { assignee_id: agent_1.id, status: 'snoozed' }, ids: Conversation.first(3).pluck(:display_id) }
+        params = { type: 'Conversation', fields: { assignee_id: agent_1.id, status: 'on_hold' }, ids: Conversation.first(3).pluck(:display_id) }
 
         expect(Conversation.first.status).to eq('open')
         expect(Conversation.second.assignee_id).to be_nil
@@ -178,8 +186,8 @@ RSpec.describe 'Api::V1::Accounts::BulkActionsController', type: :request do
 
         expect(Conversation.first.assignee_id).to eq(agent_1.id)
         expect(Conversation.second.assignee_id).to eq(agent_1.id)
-        expect(Conversation.first.status).to eq('snoozed')
-        expect(Conversation.second.status).to eq('snoozed')
+        expect(Conversation.first.status).to eq('on_hold')
+        expect(Conversation.second.status).to eq('on_hold')
       end
 
       it 'Bulk update conversation labels' do

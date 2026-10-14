@@ -212,7 +212,7 @@
       "SEND_EMAIL_TO_TEAM": "Send an Email to Group",
       "SEND_EMAIL_TRANSCRIPT": "Send an Email Transcript",
       "MUTE_CONVERSATION": "Mute Ticket",
-      "SNOOZE_CONVERSATION": "Snooze Ticket",
+      "SNOOZE_CONVERSATION": "Put Ticket On-hold",
       "RESOLVE_CONVERSATION": "Resolve Ticket",
       "SEND_WEBHOOK_EVENT": "Send Webhook Event",
       "SEND_ATTACHMENT": "Send Attachment",

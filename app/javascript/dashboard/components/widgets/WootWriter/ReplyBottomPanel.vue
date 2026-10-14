@@ -12,11 +12,13 @@ import RequestContactInfoButton from '../RequestContactInfoButton.vue';
 import { INBOX_TYPES } from 'dashboard/helper/inbox';
 import { mapGetters } from 'vuex';
 import NextButton from 'dashboard/components-next/button/Button.vue';
+import SubmitAsMenu from 'dashboard/components-next/Conversation/SubmitAsMenu.vue';
 
 export default {
   name: 'ReplyBottomPanel',
   components: {
     NextButton,
+    SubmitAsMenu,
     FileUpload,
     VideoCallButton,
     RequestContactInfoButton,
@@ -28,6 +30,10 @@ export default {
       default: false,
     },
     onSend: {
+      type: Function,
+      default: () => {},
+    },
+    onSendAs: {
       type: Function,
       default: () => {},
     },
@@ -391,7 +397,13 @@ export default {
         :color="isNote ? 'amber' : 'blue'"
         :disabled="isSendDisabled"
         class="flex-shrink-0"
+        :class="{ 'ltr:rounded-r-none rtl:rounded-l-none': !isNote }"
         @click="onSend"
+      />
+      <SubmitAsMenu
+        v-if="!isNote && !newConversationModalActive"
+        :disabled="isSendDisabled"
+        @submit="onSendAs"
       />
     </div>
   </div>

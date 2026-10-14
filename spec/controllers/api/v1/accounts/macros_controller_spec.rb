@@ -445,7 +445,7 @@ RSpec.describe 'Api::V1::Accounts::MacrosController', type: :request do
                  headers: administrator.create_new_auth_token
           end
 
-          expect(conversation.reload.status).to eql('snoozed')
+          expect(conversation.reload.status).to eql('on_hold')
         end
 
         it 'Remove selected label' do
