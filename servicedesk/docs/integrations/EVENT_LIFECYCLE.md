@@ -96,7 +96,7 @@ Envelope proposto (histórico da proposta A1):
 | `call.missed` | `outcome` ∈ `abandoned_queue`,`abandoned_ivr` (e `no_answer` receptiva) | `outcome`, `queue_name`, `callback_task_id` | WF03 |
 | `recording.stored` | áudio validado no storage | `recording_id`, `duration_s`, `bytes`, `sha256`, `storage_key` (sem URL) | QA (A3) |
 | `transcription.completed` | STT concluído (A3) | `transcription_id`, `language`, `confidence`, `partial` | QA (A3), WF02 |
-| `qa.completed` | avaliação gerada (A3) | `evaluation_id`, `score`, `critical_alerts[]`, `rubric_version` | WF11, sd-console |
+| `qa.completed` | avaliação gerada (A3) | `evaluation_id`, `score`, `critical_alerts[]`, `rubric_version` | WF11 (entregue pelo sd-ops a partir do `POST /analysis-results`, `WEBHOOK_CONTRACTS.md` §8.3), sd-console |
 | `ticket.created` / `ticket.status_changed` / `ticket.reopened` / `ticket.escalated` | domínio de ticket (sd-ops) | `protocolo`, `from`, `to`, `actor` | WF04, WF06, WF07, WF08 |
 | `sla.warning` / `sla.breached` | job do SLA | `policy`, `metric`, `due_at` | WF10 |
 

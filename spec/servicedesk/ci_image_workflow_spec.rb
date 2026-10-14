@@ -75,6 +75,39 @@ RSpec.describe 'ServiceDesk CI image workflow' do # rubocop:disable RSpec/Descri
     end
   end
 
+  describe 'servicedesk-image.yml, job services (sd-ops, qa-pipeline, sd-console)' do
+    let(:job) { load_workflow.call('servicedesk-image.yml')['jobs']['services'] }
+    let(:steps) { job['steps'] }
+    let(:step_index) { ->(name) { steps.index { |s| s['name'].to_s.start_with?(name) } } }
+    let(:matrix) { job['strategy']['matrix']['include'] }
+
+    it 'constrói as 3 imagens a partir dos diretórios de cada serviço (com Dockerfile)' do
+      expect(matrix.to_h { |m| [m['name'], m['context']] }).to eq(
+        'sd-ops' => 'servicedesk/integrations/pbx-bridge',
+        'qa-pipeline' => 'servicedesk/integrations/qa-pipeline',
+        'sd-console' => 'servicedesk/apps/sd-console'
+      )
+      matrix.each { |m| expect(File).to exist(File.join(root, m['context'], 'Dockerfile')) }
+      expect(job['strategy']['fail-fast']).to be(false)
+    end
+
+    it 'testa a imagem antes de logar e publicar' do
+      smoke = step_index.call('Smoke test')
+      expect(smoke).to be > step_index.call('Build')
+      expect(smoke).to be < step_index.call('Login to GHCR')
+      expect(smoke).to be < step_index.call('Push')
+    end
+
+    it 'usa as mesmas tags do Chatwoot, cache por serviço e o GITHUB_TOKEN' do
+      tags = steps[step_index.call('Docker metadata')]['with']['tags']
+      expect(tags).to include('type=sha,prefix=,format=short')
+      expect(tags).to include("type=raw,value=servicedesk-main,enable=${{ github.ref == 'refs/heads/servicedesk/main' }}")
+      expect(steps[step_index.call('Image name')]['run']).to include('${IMAGE_NAME}-${{ matrix.name }}')
+      expect(steps[step_index.call('Build')]['with']['cache-to']).to eq('type=gha,mode=max,scope=servicedesk-${{ matrix.name }}')
+      expect(steps[step_index.call('Login to GHCR')]['with']['password']).to eq('${{ secrets.GITHUB_TOKEN }}')
+    end
+  end
+
   describe 'verify-ce-image.sh' do
     let(:script) { File.read(File.join(root, 'docker/servicedesk/verify-ce-image.sh')) }
 

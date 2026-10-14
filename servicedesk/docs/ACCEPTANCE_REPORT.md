@@ -18,7 +18,7 @@ Legenda: **ACEITO-REAL** (homologado com 55PBX/Chatwoot reais) · **OK-MOCK** (p
 | 8 | Áudio consultável | BLOQUEADO | download/validação/MP3 testados com WAV sintético; `vsa19.55pbx.com` **não responde** da VPS (teste T3) | liberação de IP (D3) |
 | 9 | Transcrição processável | PENDENTE | A3 (qa-pipeline) | gravação real + provedor STT (D11) |
 | 10 | Resumo IA como nota interna revisável | PENDENTE | A3 | — |
-| 11 | QA para supervisão | PARCIAL | WF11 (nota com link do console, supervisor participante, registro no ticket) **e2e com mock: OK** | QA real (A3) e entrega do `qa.completed` ao n8n |
+| 11 | QA para supervisão | PARCIAL | WF11 (nota com link do console, supervisor participante, registro no ticket) **e2e com mock: OK** | QA real (A3). A entrega do `qa.completed` ao n8n foi fechada na integração final: o sd-ops repassa ao WF11 o resultado recebido em `POST /analysis-results` (pytest `test_contracts.py`) |
 | 12 | Click-to-call funcionando quando habilitado | BLOQUEADO | contrato do A2 (`/dial`, modo mock só em dev) | `client_code`/`api_key`/JWT (D4) |
 | 13 | Ticket atribuível, acompanhável e encerrável | PARCIAL | Chatwoot (atribuição, status) + WF01 reserva por fila (**e2e OK**); máquina de estados especificada e implementada pelo A2 (`TICKET_DOMAIN.md` §8) | sd-ops (transições, auditoria) |
 | 14 | Evento repetido não cria ticket | OK-MOCK | pbx-bridge: ligação repetida (webhook + Report02) sem duplicata; perder o estado local não duplica | sd-ops com `dedupe_key` |

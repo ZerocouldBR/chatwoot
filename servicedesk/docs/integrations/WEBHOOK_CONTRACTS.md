@@ -78,7 +78,7 @@ Header: `token: <chave do painel>`.
 | `GET /sd-ops/api/v1/qa/evaluations/{id}` | avaliação (A3) | WF11 |
 | `POST /sd-ops/api/v1/qa/evaluations/{id}/review-tasks` | tarefa de revisão humana | WF11 |
 | `GET /sd-ops/api/v1/reports/summary?from&to` | números gerenciais | WF12 |
-| `POST /sd-ops/api/v1/notifications/log` | registrar envio (WhatsApp/e-mail/CSAT) e opt-out | WF05, WF06, WF07 |
+| `POST /sd-ops/api/v1/notifications/log` | registrar envio (WhatsApp/e-mail/CSAT) e opt-out; **idempotente** por `dedupe_key` (implementado, §8.4.1) | WF05, WF06, WF07 |
 
 ## 5. Entrada: URA dinâmica (55PBX) → sd-ops (consulta de protocolo)
 
@@ -147,11 +147,25 @@ Campos 55PBX lidos, inconsistências do manual e regra de fase: `EVENT_LIFECYCLE
 
 \* comuns: `call_id`, `leg_id`, `provider_call_id`, `root_provider_call_id`, `direction` (`receptivo`, `ativo`, `interno`), `number_masked` (o número completo **nunca** vai ao stream), `contact_id`, `conversation_id`, `ticket_id`, `ticket_protocol`, `branch`, `agent_email`, `queue`, `started_at`, `answered_at`, `ended_at`.
 
-`ticket_id`/`conversation_id` podem ser `null` (política sem ticket, conversa ainda não sincronizada). O `outcome` `abandoned_ura` equivale ao `abandoned_ivr` da proposta do A1. `transcription.completed` e `qa.completed` são do A3 (o sd-ops não os publica nem consome).
+`ticket_id`/`conversation_id` podem ser `null` (política sem ticket, conversa ainda não sincronizada). O `outcome` `abandoned_ura` equivale ao `abandoned_ivr` da proposta do A1. `transcription.completed` e `qa.completed` são do A3: o qa-pipeline os publica no `sd:events` e o sd-ops não os consome do stream. **Exceção (integração final):** o `qa.completed` que chega por REST (`POST /analysis-results`, §8.8) é **repassado às rotas do n8n** pela ponte do §8.3 (não é publicado de novo no stream, para não duplicar).
 
 ### 8.3 Ponte para o n8n (implementada)
 
 Cada evento do stream também é entregue, pela outbox, às rotas ativas de `ops.automation_routes` (`event_types` aceita `*` no fim, ex. `ticket.*`): `POST <url>` com o envelope e os headers `X-SD-Webhook-Token` (valor da variável `token_ref`), `X-SD-Signature: sha256=HMAC(<segredo de secret_ref>, "<X-SD-Timestamp>.<corpo>")`, `X-SD-Timestamp`, `X-SD-Event-Id`, `X-SD-Event-Type`, `X-SD-Origin: sd-ops`, `X-Correlation-Id`. 2xx = entregue; outro código → retentativa exponencial (15 s … 1 h, `OUTBOX_MAX_ATTEMPTS`) → DLQ. Registro por entrega em `ops.automation_executions`. **Anti-loop**: evento causado por requisição com `X-SD-Origin: n8n` + `X-SD-Workflow: WFxx` leva `caused_by: "n8n:WFxx"` e não é reenviado à rota de mesmo `name`.
+
+**`qa.completed` → WF11 (integração final).** Ao receber `POST /analysis-results` com `kind=qa` e `status` `completed` ou `partial` (inédito), o sd-ops grava na outbox um item `fanout` com o envelope abaixo, na mesma transação. O worker o entrega às rotas que assinam `qa.completed` exatamente como os eventos de chamada (mesmos headers, HMAC, retentativa, DLQ, `automation_executions`, anti-loop por `caused_by`), mas **sem XADD** no `sd:events`. O `id` é determinístico (`qa.completed` + tenant + `external_id`): repetir o POST devolve `{"duplicate":true}` e não reenvia. Rota sugerida: `{"name":"WF11","event_types":["qa.completed"],"url":"https://<n8n>/webhook/sd/wf11-qa-critico",…}`.
+
+```json
+{"type":"qa.completed","id":"<uuid v5>","source":"sd-ops","caused_by":null,"occurred_at":"<completed_at>",
+ "subject":{"call_id":"…","ticket_id":"…","conversation_id":1234,"recording_id":"…"},
+ "payload":{"evaluation_id":"42","external_id":"qa.qa_evaluations:42","analysis_ref_id":7,"status":"completed",
+            "score":41.5,"alerts":["reclamacao","supervisor"],"critical_alerts":["reclamacao","supervisor"],
+            "rubric_version":3,"console_url":"https://…/sd-console/qa/avaliacoes/42","recording_id":"…","call_id":"…",
+            "ticket_id":"…","ticket_protocol":"B2B-2026-000123","conversation_id":1234,"is_recommendation":true,
+            "origin":"qa-pipeline"}}
+```
+
+`ticket_id`/`conversation_id` vêm do vínculo chamada→ticket (o ticket mais antigo da chamada) e da conversa da chamada; podem ser `null`. `critical_alerts` = `data.critical_alerts` ou, na falta, `data.alerts` (o qa-pipeline só manda alertas que pedem revisão). `transcription`/`summary` e `status=failed` não são repassados.
 
 ### 8.4 REST `/sd-ops/api/v1`
 
@@ -161,6 +175,7 @@ Autenticação: `CTI_AUTH.md` (sessão do agente ou token de serviço com `scope
 |---|---|---|
 | `GET /health`, `GET /ready`, `GET /sd-ops/metrics` (Prometheus) | livre, livre, token opcional | saúde, prontidão (banco, Redis, migration), métricas técnicas |
 | `POST /auth/session`, `GET /auth/me`, `POST /auth/logout` | — | sessão do CTI |
+| `GET /capabilities` | agente+, qualquer token de serviço | capacidades do CTI **para este usuário** (§8.10); o sd-console usa só esta rota (sem sondagem) |
 | `GET /context?conversation_id=&contact_id=&phone=` | agente+ | contato, identificação (`unique`, `ambiguous`, `none`), tickets abertos com SLA, últimas chamadas, retornos pendentes, chamada ativa |
 | `GET /calls?conversation_id=&contact_id=&ticket_id=&phone=&needs_classification=`, `GET /calls/{id}` | agente+, `calls:read` | chamadas com pernas, transferências, gravações (metadados) e tickets |
 | `POST /dial`, `GET /dial/{id}` | agente+ | click-to-call (8.5) |
@@ -172,9 +187,22 @@ Autenticação: `CTI_AUTH.md` (sessão do agente ou token de serviço com `scope
 | `GET /metrics/telephony`, `GET /metrics/tickets`, `GET /reports/summary` | supervisor, qa, admin, `reports:read` | dashboards (fórmulas em 8.7); `?detail=1` lista os IDs |
 | `GET /sla/at-risk?within=60` | supervisor+, `tickets:read` | tickets com SLA vencendo em N min |
 | `POST /reconciliations` `{"from","to"}` | admin, `reconcile:run` | reconciliação pelo Report02 |
-| `POST /notifications/log` | `notify:send` | registro de envio (WhatsApp/e-mail/CSAT) do n8n em `audit_events` |
+| `POST /notifications/log`, `GET /notifications/log?ticket_id=&dedupe_key=` | `notify:send` (GET também supervisor+) | registro **idempotente** de envio (WhatsApp/e-mail/CSAT) do n8n em `ops.notification_logs` + `audit_events` (§8.4.1) |
 | `POST /analysis-results` | `analysis:write` (A3) | 8.8 |
 | `/admin/agent-phone-mappings`, `/admin/ticket-open-rules`, `/admin/user-roles`, `/admin/automation-routes`, `/admin/dlq`, `/admin/dlq/{fila}/{id}/retry`, `/admin/sessions` | admin | operação |
+
+#### 8.4.1 `POST /notifications/log` idempotente (integração final)
+
+O n8n não guarda estado para "1 envio por ticket": a garantia é do sd-ops. Tabela `ops.notification_logs` (migration `0002`) com **único (`tenant_id`, `dedupe_key`)**, permanente (não expira como `ops.idempotency_keys`).
+
+| Item | Contrato |
+|---|---|
+| Chave | `dedupe_key` no corpo (≤ 200 caracteres) ou, na falta, o header `Idempotency-Key`. Sem nenhum dos dois: **422** `dedupe_key_required` |
+| Corpo | `{"channel","ticket_id","call_id","template","status","opt_out","detail","dedupe_key"}` |
+| 1ª chamada | **201** `{"ok":true,"duplicate":false,"id":…,"dedupe_key":"…"}`; grava `notification_logs` (com `actor` e `caused_by`) e `audit_events` (`notification.<status>`) |
+| Repetição (mesma chave, mesmo tenant) | **200** + header `Idempotent-Replay: true` e o registro **original** `{"ok":true,"duplicate":true,"id","dedupe_key","status","channel","ticket_id",…,"created_at"}`; nada é gravado. Concorrência: `INSERT … ON CONFLICT DO NOTHING` (teste com 6 requisições simultâneas → 1×201 + 5×200) |
+| Chaves usadas pelos workflows | `whatsapp_pos_atendimento:<ticket>` (WF05), `csat:<ticket>` (WF07), `email_protocolo:<ticket>` (WF06); em `dry_run` o sufixo `:simulado`, para o envio real ainda acontecer quando o `dry_run` for desligado |
+| Fluxo no n8n | registra **antes** de enviar (status `enviando`/`simulado`) e só envia se a resposta for `< 300` **sem** `Idempotent-Replay` (no máximo uma vez; falha depois do registro não reenvia sozinha) |
 
 ### 8.5 Click-to-call
 
@@ -229,7 +257,7 @@ Decisão: **REST** `POST /sd-ops/api/v1/analysis-results` com token de serviço 
  "completed_at":"2026-10-13T18:10:00Z","score":null,"data":{"language":"pt-BR","segments":84,"confidence":0.91}}
 ```
 
-`kind` ∈ `transcription`, `summary`, `qa`; `status` ∈ `completed`, `partial`, `failed`; `qa` aceita `score` (0–100) e `data.rubric_version`. É idempotente por (`kind`, `external_id`): repetir → 200 `{"duplicate":true}`. Efeito: `ops.analysis_refs`, atividade `analise` nos tickets da chamada, `audit_events`. Não cria nota no Chatwoot (a nota revisável é do A3).
+`kind` ∈ `transcription`, `summary`, `qa`; `status` ∈ `completed`, `partial`, `failed`; `qa` aceita `score` (0–100) e `data.rubric_version`. É idempotente por (`kind`, `external_id`): repetir → 200 `{"duplicate":true}`. Efeito: `ops.analysis_refs`, atividade `analise` nos tickets da chamada, `audit_events` e, para `kind=qa` com `status` `completed`/`partial`, o repasse do `qa.completed` ao n8n (§8.3; resposta `{"id":…,"duplicate":false,"forwarded":true}`). Não cria nota no Chatwoot (a nota revisável é do A3). O qa-pipeline manda em `data`: `evaluation_id`, `rubric_version`, `prompt_version`, `model`, `alerts`, `console_url`, `recommendation_only`.
 
 ### 8.9 Menu Dinâmico / URA
 
@@ -242,3 +270,27 @@ Decisão: **REST** `POST /sd-ops/api/v1/analysis-results` com token de serviço 
 | inexistente ou dígito verificador errado | `{"encontrado":"nao","proxima_acao":"repetir"}` |
 
 Nunca devolve nome, e-mail, CPF ou valores. Limite `URA_RATE_LIMIT_PER_MIN` por `ani`/IP (429 além disso). Cada consulta vai para `audit_events` (`ura.lookup`, protocolo mascarado).
+
+### 8.10 Capacidades do CTI: `GET /sd-ops/api/v1/capabilities` (integração final)
+
+Fonte única do que o sd-console oferece no CTI (antes: heurística sobre `/context.dial` e sondagem de `GET /callbacks`). Responde **por usuário** (sessão do agente; token de serviço também é aceito). Capacidade desabilitada vem com `reason` em pt-BR para a interface mostrar; nada é simulado.
+
+```json
+{"tenant_id":"b2b","env":"prod","integration_enabled":true,
+ "capabilities":{
+   "dial":{"enabled":false,"mode":"disabled","reason":"click-to-call desativado (PBX_DIAL_MODE=disabled)"},
+   "webphone":{"enabled":true,"mode":"external","url":"https://fone.55pbx.com","reason":null},
+   "callbacks":{"enabled":true,"reason":null},
+   "recordings":{"enabled":true,"mode":"local","reason":null},
+   "ura":{"enabled":false,"mode":"menu_dinamico","reason":"Menu Dinâmico (URA) sem credencial configurada para este tenant"}}}
+```
+
+| Capacidade | `enabled` quando | `mode` / extras |
+|---|---|---|
+| `dial` | `PBX_DIAL_MODE=live` com `client_code`/`api_key`/JWT (ou `mock` com `SDOPS_ENV=dev`) **e** o usuário tem papel agente/supervisor/admin **e** ramal ativo em `ops.agent_phone_mappings` (token de serviço: escopo `dial:write`) | `live`/`mock`/`disabled`; `branch` = ramal do usuário; em `mock`, `reason` = "MODO MOCK (DEV)…" |
+| `webphone` | `PBX_WEBPHONE_URL` definido (webphone oficial da 55PBX, aberto em janela própria; o áudio nunca passa pelo ServiceDesk) | `external`; `url` |
+| `callbacks` | papel agente/supervisor (token de serviço: `callbacks:write`) | — |
+| `recordings` | `RECORDING_URL_SECRET` com ≥ 32 caracteres (token de serviço: também `recordings:read`). A permissão por gravação continua no `GET /recordings/{id}/url` (§8.6) | `local`/`s3` |
+| `ura` | o tenant tem conta de integração ativa com `ura_auth` e a credencial referenciada existe no ambiente | `menu_dinamico` |
+
+Sem a rota (sd-ops antigo: 404/405), o sd-console desabilita tudo e explica. O `dial` que ainda vem no `GET /context` é mantido por compatibilidade e **não** é usado pela interface.

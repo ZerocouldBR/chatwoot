@@ -1,4 +1,5 @@
-# ServiceDesk: imagem Docker de produção do fork, sempre sem enterprise/ (edição CE).
+# ServiceDesk: imagem Docker de produção do fork, sempre sem enterprise/ (edição CE), e as imagens dos
+# serviços próprios (job "services": sd-ops, qa-pipeline e sd-console em ghcr.io/<dono>/servicedesk-<nome>).
 #
 # Publica em ghcr.io/<dono>/servicedesk com as tags:
 #   :<sha curto>         em todo build publicado
@@ -113,6 +114,97 @@ jobs:
           for t in $TAGS; do docker push "$t"; done
           {
             echo "### Imagem publicada"
+            for t in $TAGS; do echo "- \`$t\`"; done
+            echo
+            echo "Digest: \`$(docker image inspect --format '{{index .RepoDigests 0}}' "${IMAGE}:${SHORT_SHA}")\`"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+  # Serviços do ServiceDesk fora do Chatwoot (mesma estratégia: build -> smoke -> login/push, tags <sha curto> e
+  # servicedesk-main). Imagens: ghcr.io/<dono>/servicedesk-sd-ops, -qa-pipeline e -sd-console. Rodam em paralelo
+  # ao job do Chatwoot; um falhar não impede os outros (fail-fast: false).
+  services:
+    name: services (${{ matrix.name }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: sd-ops
+            context: servicedesk/integrations/pbx-bridge
+            smoke: >-
+              python -c "import sd_ops, pbx_bridge; from sd_ops.auth import SERVICE_PROFILES;
+              assert 'n8n' in SERVICE_PROFILES; print('sd-ops ok')"
+          - name: qa-pipeline
+            context: servicedesk/integrations/qa-pipeline
+            smoke: python -c "import qa_pipeline, faster_whisper; print('qa-pipeline ok')"
+          - name: sd-console
+            context: servicedesk/apps/sd-console
+            # o entrypoint do nginx renderiza o template (envsubst) antes do nginx -t
+            smoke: nginx -t
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Image name
+        run: |
+          owner="${GITHUB_REPOSITORY_OWNER,,}"
+          echo "IMAGE=${REGISTRY}/${owner}/${IMAGE_NAME}-${{ matrix.name }}" >> "$GITHUB_ENV"
+          echo "SHORT_SHA=${GITHUB_SHA::7}" >> "$GITHUB_ENV"
+
+      - name: Docker metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.IMAGE }}
+          tags: |
+            type=sha,prefix=,format=short
+            type=raw,value=servicedesk-main,enable=${{ github.ref == 'refs/heads/servicedesk/main' }}
+          labels: |
+            org.opencontainers.image.title=ServiceDesk ${{ matrix.name }}
+            org.opencontainers.image.description=ServiceDesk ${{ matrix.name }} (${{ matrix.context }})
+            org.opencontainers.image.licenses=MIT
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build
+        uses: docker/build-push-action@v6
+        with:
+          context: ${{ matrix.context }}
+          platforms: linux/amd64
+          load: true
+          push: false
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha,scope=servicedesk-${{ matrix.name }}
+          cache-to: type=gha,mode=max,scope=servicedesk-${{ matrix.name }}
+
+      - name: Smoke test
+        env:
+          SMOKE: ${{ matrix.smoke }}
+        run: |
+          # comando da matriz como argumentos do container (passa pelo ENTRYPOINT da imagem)
+          eval "docker run --rm \"\${IMAGE}:\${SHORT_SHA}\" ${SMOKE}"
+          # nenhuma das imagens roda como root
+          docker run --rm --entrypoint sh "${IMAGE}:${SHORT_SHA}" -c 'test "$(id -u)" != 0'
+
+      - name: Login to GHCR
+        if: github.event_name == 'push' || inputs.push
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Push
+        if: github.event_name == 'push' || inputs.push
+        env:
+          TAGS: ${{ steps.meta.outputs.tags }}
+        run: |
+          for t in $TAGS; do docker push "$t"; done
+          {
+            echo "### ${{ matrix.name }}"
             for t in $TAGS; do echo "- \`$t\`"; done
             echo
             echo "Digest: \`$(docker image inspect --format '{{index .RepoDigests 0}}' "${IMAGE}:${SHORT_SHA}")\`"

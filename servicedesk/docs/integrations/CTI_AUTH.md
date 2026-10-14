@@ -44,14 +44,29 @@ Confiar no `currentAgent` do `postMessage`, ou em um segredo compartilhado no if
 ```json
 {"qa-pipeline": {"sha256": "<sha256 hex do token>", "tenants": ["b2b"],
                  "scopes": ["calls:read", "recordings:read", "analysis:write", "tickets:read"]},
- "n8n": {"sha256": "...", "tenants": ["*"],
-         "scopes": ["calls:read", "tickets:read", "tickets:write", "callbacks:write", "reconcile:run",
-                    "notify:send", "reports:read"]}}
+ "n8n": {"sha256": "<sha256 hex do token>", "tenants": ["b2b"],
+         "scopes": ["calls:read", "tickets:read", "tickets:write", "notify:send", "reconcile:run", "reports:read"]}}
 ```
+
+**Perfis prontos** (`sd_ops/auth.py`, `SERVICE_PROFILES`), usados pelo `new-service-token`:
+
+| Perfil | Escopos | Por quê (rotas chamadas) |
+|---|---|---|
+| `n8n` | `tickets:write`, `notify:send`, `reconcile:run`, `reports:read` + `tickets:read`, `calls:read` | WF04–WF08/WF10/WF11 leem e escrevem ticket (`GET /tickets/{id}`, `/reopen`, `/links`, `/notes`; `GET /sla/at-risk` exige `tickets:read`); WF05–WF07 registram o envio (`POST /notifications/log`); WF09 pede a reconciliação; WF12 lê `/reports/summary` e `/metrics/*`; WF02/WF11 leem `GET /calls/{id}`. **Sem** `tickets:close` (o n8n nunca encerra/cancela), `dial:write` e `callbacks:write`. A lista de rotas de cada workflow é gerada em `servicedesk/integrations/n8n/sdops_endpoints_used.json`, e o teste `tests/sdops/test_contracts.py::test_perfil_n8n_cobre_os_endpoints_dos_workflows` confere que nenhuma delas responde 401/403 com esse perfil |
+| `qa-pipeline` | `calls:read`, `recordings:read`, `analysis:write`, `tickets:read` | A3: lê a chamada e a gravação, devolve resultados em `POST /analysis-results` |
 
 Escopos: `calls:read`, `recordings:read`, `tickets:read`, `tickets:write`, `callbacks:write`, `reconcile:run`, `notify:send`, `reports:read`, `analysis:write`, `dial:write` (discagem em nome de `agent_email`), `tickets:close`. Token de serviço nunca encerra/cancela ticket sem `tickets:close`. Requisições de serviço aceitam `Idempotency-Key`; com `X-SD-Origin: n8n` e `X-SD-Workflow`, os eventos gerados levam `caused_by` (anti-loop, `WEBHOOK_CONTRACTS.md` §8.3).
 
-Gerar: `python -m sd_ops new-service-token qa-pipeline` (imprime o token uma vez e a linha para o `.env`). Rotação: adicionar o novo, trocar no consumidor, remover o antigo.
+Gerar (imprime o token **uma vez**, os escopos e a linha para `SDOPS_SERVICE_TOKENS`; só o SHA-256 vai para o `.env`):
+
+```bash
+python -m sd_ops new-service-token n8n                       # perfil n8n (o nome igual ao perfil já o aplica)
+python -m sd_ops new-service-token qa-pipeline               # perfil qa-pipeline
+python -m sd_ops new-service-token n8n-cliente --profile n8n --tenants b2b      # outro nome, mesmo perfil
+python -m sd_ops new-service-token bi --scopes reports:read  # sem perfil: só os escopos pedidos
+```
+
+`--scopes` soma escopos ao perfil e é validado contra a lista acima (escopo desconhecido = erro, saída 2). `--tenants` padrão = `SDOPS_DEFAULT_TENANT` (`*` = todos; prefira o tenant explícito). Rotação: gerar o novo, somar a entrada ao `SDOPS_SERVICE_TOKENS`, trocar a credencial *Header Auth* no n8n, remover a entrada antiga.
 
 ## 4. Papéis (RBAC)
 

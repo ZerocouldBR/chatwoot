@@ -33,7 +33,7 @@ Versão 1, de 2026-10-13 (agente A1). Complementa os controles S1–S14 de `DESI
 |---|---|---|
 | L1 | HTTPS em todas as rotas públicas; HSTS | Traefik `websecure` + Let's Encrypt (padrão da VPS) |
 | L2 | Tokens só no backend | credenciais 55PBX, Chatwoot, STT/LLM em variáveis/secret do Swarm; n8n só por *credentials*; validador dos workflows recusa segredo no JSON (`tools/validate_workflows.py`) |
-| L3 | Rotação e revogação | tokens de serviço com hash e lista (`SDOPS_SERVICE_TOKENS`); segredo do webhook rotacionável (2 ativos durante a troca); token do usuário de integração do Chatwoot regenerável (`PBX_ROTATE_TOKEN=1`) |
+| L3 | Rotação e revogação | tokens de serviço com hash e lista (`SDOPS_SERVICE_TOKENS`); segredo do webhook rotacionável (2 ativos durante a troca); token do usuário de integração do Chatwoot regenerável (`provision_55pbx.rb --rotate-token --show-token`, mostrado só no terminal); perfis de escopo do token de serviço (`new-service-token n8n`, `CTI_AUTH.md` §3) |
 | L4 | Autenticação de entrada | 55PBX: segredo no caminho + header `token` + IP; Chatwoot: HMAC + timestamp; URA: token fixo + IP + rate limit; n8n→sd-ops: Bearer com escopo; sd-ops→n8n: Header Auth + HMAC |
 | L5 | RBAC e tenant | `integrations/CTI_AUTH.md` §4–§5; acesso cruzado devolve 404; teste do cenário 25 |
 | L6 | Gravações | storage privado; URL assinada de 300 s amarrada a usuário/tenant; registro `recording.url_issued`/`recording.accessed`; a URL da 55PBX nunca vai ao cliente nem ao n8n; agente só ouve as próprias chamadas/tickets |
