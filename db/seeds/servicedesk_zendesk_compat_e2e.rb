@@ -72,6 +72,12 @@ email_ticket = e2e_ticket(account, inbox, requester, team, cema, 426_563,
                                                    } } } })
 chat_ticket = e2e_ticket(account, inbox, requester, team, cema, 427_406, custom_attributes: { 'zd_status' => 'Aberto', 'zd_canal' => 'WhatsApp' })
 
+# Modelo de ticket nativo (feat/tickets-f10): assunto e CCs em coluna/tabela próprias.
+if ZendeskCompat::TicketModel.native?
+  email_ticket.update!(subject: 'Reserva 21429607 - cancelamento')
+  ZendeskCompat::TicketModel.write_cc_emails(email_ticket, ['agencia.e2e@agencia-exemplo.example'])
+end
+
 if email_ticket.messages.empty?
   email_ticket.messages.create!(account: account, inbox: inbox, message_type: :incoming, sender: requester,
                                 content: 'Bom dia, preciso cancelar a reserva 21429607.')
