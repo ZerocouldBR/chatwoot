@@ -6,4 +6,5 @@ psycopg[binary]==3.2.12
 alembic==1.16.5
 redis==5.2.1
 boto3==1.40.70
+cryptography==50.0.2
 tzdata==2025.2

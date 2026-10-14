@@ -11,6 +11,7 @@
                                 gera token de serviço (mostra uma vez) e a linha para SDOPS_SERVICE_TOKENS;
                                 NOME igual a um perfil (n8n, qa-pipeline) usa os escopos dele
   export-openapi [ARQ]          grava o OpenAPI (padrão: openapi.json ao lado do pacote)
+  new-settings-key              gera uma chave Fernet para SDOPS_SETTINGS_KEY (cofre da tela Telefonia 55PBX)
 """
 from __future__ import annotations
 
@@ -51,6 +52,7 @@ def main(argv=None) -> int:
     nt.add_argument("--profile", help="perfil de escopos (n8n, qa-pipeline); padrão: o NOME, se for um perfil")
     nt.add_argument("--scopes", default="", help="escopos extras separados por vírgula")
     nt.add_argument("--tenants", default="", help="tenants separados por vírgula (padrão: SDOPS_DEFAULT_TENANT; * = todos)")
+    sub.add_parser("new-settings-key")
     ex = sub.add_parser("export-openapi")
     ex.add_argument("file", nargs="?")
     a = ap.parse_args(argv)
@@ -60,6 +62,12 @@ def main(argv=None) -> int:
     s = OpsSettings.from_env()
     obs.setup_logging(s.bridge.log_level, s.log_json)
 
+    if a.cmd == "new-settings-key":
+        from .settings_store import new_key
+        print(new_key())
+        print("Guarde no sd-ops.env como SDOPS_SETTINGS_KEY (trocar a chave exige a anterior: "
+              "SDOPS_SETTINGS_KEY=nova,antiga até regravar os segredos pela tela).", file=sys.stderr)
+        return 0
     if a.cmd == "new-service-token":
         from .auth import SERVICE_PROFILES, new_service_token, service_token_entry
         profile = a.profile or (a.name if a.name in SERVICE_PROFILES else None)

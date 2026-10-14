@@ -5,7 +5,7 @@ from __future__ import annotations
 import json
 import os
 from dataclasses import dataclass, field
-from typing import Dict, List, Optional
+from typing import Any, Dict, List, Optional
 
 from pbx_bridge.config import Settings as BridgeSettings
 from pbx_bridge.config import _bool, _env, _int, _list
@@ -112,10 +112,19 @@ class OpsSettings:
     # retenção
     raw_retention_days: int = 30
     log_json: bool = True
+    # configuração pelo painel (ops.tenant_settings; ver settings_store.py)
+    force_disabled: bool = False             # SDOPS_FORCE_DISABLED: desliga TODOS os tenants, vença o que vencer
+    settings_key: str = ""                   # SDOPS_SETTINGS_KEY: chave(s) Fernet, separadas por vírgula (1ª cifra)
+    settings_ttl_s: int = 15                 # cache da configuração do painel (a gravação invalida na hora)
+    public_url: str = ""                     # SDOPS_PUBLIC_URL: base pública (ex. https://helpdesk.ia4co.com)
+    panel: Dict[str, Any] = field(default_factory=dict)   # valores só do painel (URA, n8n, host de gravações...)
+    settings_version: int = 0                # versão do ops.tenant_settings aplicada (0 = só ambiente)
 
     @property
     def enabled(self) -> bool:
-        return self.bridge.enabled
+        """Integração ativa para este tenant: valor da tela (ou ENABLED do ambiente, se a tela não definiu),
+        sempre sujeito ao teto global SDOPS_FORCE_DISABLED (kill switch do operador)."""
+        return self.bridge.enabled and not self.force_disabled
 
     @classmethod
     def from_env(cls) -> "OpsSettings":
@@ -180,6 +189,10 @@ class OpsSettings:
             ura_require_caller_match=_bool("URA_REQUIRE_CALLER_MATCH", True),
             raw_retention_days=_int("RETENTION_DAYS", 30),
             log_json=_bool("LOG_JSON", True),
+            force_disabled=_bool("SDOPS_FORCE_DISABLED", False),
+            settings_key=_env("SDOPS_SETTINGS_KEY", "") or "",
+            settings_ttl_s=_int("SDOPS_SETTINGS_TTL_S", 15),
+            public_url=(_env("SDOPS_PUBLIC_URL", "") or "").rstrip("/"),
         )
 
     def problems(self) -> List[str]:

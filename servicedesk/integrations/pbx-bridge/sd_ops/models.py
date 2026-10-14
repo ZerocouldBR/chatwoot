@@ -62,6 +62,20 @@ tenants = sa.Table(
     *stamps(),
 )
 
+# Configuração da integração feita pelo painel do Chatwoot (Configurações > Telefonia 55PBX). Fonte da verdade
+# por tenant: vale mais que o ambiente (que continua como padrão/compatibilidade). Segredos só cifrados (Fernet,
+# chave SDOPS_SETTINGS_KEY); "values" nunca guarda segredo. Ver sd_ops/settings_store.py.
+tenant_settings = sa.Table(
+    "tenant_settings", metadata,
+    sa.Column("tenant_id", sa.Text, sa.ForeignKey("ops.tenants.id"), primary_key=True),
+    sa.Column("values", JSONB, nullable=False, server_default=EMPTY_OBJ),    # {chave: valor} (sem segredos)
+    sa.Column("secrets", JSONB, nullable=False, server_default=EMPTY_OBJ),   # {chave: token Fernet}
+    sa.Column("version", sa.Integer, nullable=False, server_default="1"),
+    sa.Column("updated_by", sa.Integer),                                     # usuário do Chatwoot
+    sa.Column("updated_by_email", sa.Text),
+    *stamps(),
+)
+
 integration_credentials_refs = sa.Table(
     "integration_credentials_refs", metadata,
     sa.Column("id", sa.Integer, primary_key=True),
@@ -126,6 +140,7 @@ cti_sessions = sa.Table(
     sa.Column("email", sa.Text),
     sa.Column("name", sa.Text),
     sa.Column("roles", JSONB, nullable=False),
+    sa.Column("chatwoot_role", sa.Text),        # role da conta no Chatwoot (administrator | agent) no login
     sa.Column("ip", sa.Text),
     sa.Column("created_at", TS, nullable=False, server_default=NOW),
     sa.Column("last_seen_at", TS, nullable=False, server_default=NOW),
