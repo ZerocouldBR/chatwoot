@@ -1700,8 +1700,8 @@ ActiveRecord::Schema[7.1].define(version: 2026_10_14_165327) do
     t.datetime "updated_at", null: false
     t.string "icon", default: ""
     t.string "icon_color", default: ""
+    t.index "account_id, lower((name)::text)", name: "index_teams_on_account_id_and_lower_name", unique: true
     t.index ["account_id"], name: "index_teams_on_account_id"
-    t.index ["name", "account_id"], name: "index_teams_on_name_and_account_id", unique: true
   end
 
   create_table "ticket_rules", force: :cascade do |t|
