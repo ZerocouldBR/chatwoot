@@ -141,9 +141,10 @@ export function useUISettings() {
 
   const isOnExpandedLayout = computed(() => {
     const {
-      LAYOUT_TYPES: { CONDENSED },
+      LAYOUT_TYPES: { CONDENSED, EXPANDED },
     } = wootConstants;
-    const { conversation_display_type: conversationDisplayType = CONDENSED } =
+    // Tickets open full width by default, like Zendesk; agents can switch to the list + ticket layout.
+    const { conversation_display_type: conversationDisplayType = EXPANDED } =
       uiSettings.value;
     return conversationDisplayType !== CONDENSED;
   });

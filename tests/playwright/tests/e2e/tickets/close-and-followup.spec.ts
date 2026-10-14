@@ -19,7 +19,7 @@ test('a solved ticket closes and can no longer be changed', async ({ page, baseU
   expect(statuses[String(ticket.id)]).toBe('closed');
 
   await page.goto(`/app/accounts/${env.account_id}/tickets/${ticket.id}`);
-  await expect(page.locator('.conversation--header--actions').getByText('Fechado')).toBeVisible();
+  await expect(page.getByTestId('ticket-header-status')).toHaveText('Fechado');
   await expect(page.getByText('Este ticket está fechado.')).toBeVisible();
   await expect(page.getByRole('button', { name: 'Resolver' })).toHaveCount(0);
   await expect(page.getByRole('button', { name: 'Reabrir' })).toHaveCount(0);
@@ -35,13 +35,13 @@ test('the close delay is configured in the ticket settings', async ({ page, base
   const hours = page.getByTestId('close-solved-hours');
   await expect(hours).toHaveValue('96');
   await hours.fill('48');
-  await page.getByRole('button', { name: 'Salvar' }).first().click();
+  await page.getByRole('button', { name: 'Salvar', exact: true }).click();
   await expect(page.getByText('Prazo de fechamento salvo')).toBeVisible();
 
   const api = await ApiClient.login(baseURL!, env.users.admin.email, E2E_PASSWORD, env.account_id);
   const account = await api.ctx.get(`/api/v1/accounts/${env.account_id}`, { headers: api.auth });
   expect((await account.json()).settings.close_solved_after_hours).toBe(48);
   await hours.fill('96');
-  await page.getByRole('button', { name: 'Salvar' }).first().click();
+  await page.getByRole('button', { name: 'Salvar', exact: true }).click();
   await api.dispose();
 });

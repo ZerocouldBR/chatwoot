@@ -14,6 +14,7 @@ import { BUS_EVENTS } from 'shared/constants/busEvents';
 import { emitter } from 'shared/helpers/mitt';
 import SidepanelSwitch from 'dashboard/components-next/Conversation/SidepanelSwitch.vue';
 import ConversationSidebar from 'dashboard/components/widgets/conversation/ConversationSidebar.vue';
+import TicketPropertiesPanel from './TicketPropertiesPanel.vue';
 
 export default {
   components: {
@@ -21,6 +22,7 @@ export default {
     ConversationBox,
     SidepanelSwitch,
     ConversationSidebar,
+    TicketPropertiesPanel,
   },
   beforeRouteLeave(to, from, next) {
     // Clear selected state if navigating away from a conversation to a route without a conversationId to prevent stale data issues
@@ -205,6 +207,10 @@ export default {
       :folders-id="foldersId"
       :is-on-expanded-layout="isOnExpandedLayout"
       @conversation-load="onConversationLoad"
+    />
+    <TicketPropertiesPanel
+      v-if="showMessageView && currentChat.id"
+      :conversation="currentChat"
     />
     <ConversationBox
       v-if="showMessageView"

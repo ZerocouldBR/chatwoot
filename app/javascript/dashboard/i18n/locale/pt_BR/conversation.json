@@ -294,7 +294,8 @@
           "LABEL": "Cco",
           "PLACEHOLDER": "E-mails separados por vírgulas",
           "ERROR": "Por favor, insira endereços de e-mail válidos"
-        }
+        },
+        "EDIT_TO": "Editar destinatário"
       },
       "UNDEFINED_VARIABLES": {
         "TITLE": "Variáveis não definidas",
@@ -312,7 +313,8 @@
         "EXPAND": "Expandir a prévia"
       },
       "SUBMIT_AS": "Enviar como {status}",
-      "SUBMIT_AS_TOOLTIP": "Enviar e mudar o status do ticket"
+      "SUBMIT_AS_TOOLTIP": "Enviar e mudar o status do ticket",
+      "SEND_AS": "Enviar como {status}"
     },
     "VISIBLE_TO_AGENTS": "Mensagem Privada: Apenas visível para você e seu grupo",
     "CHANGE_STATUS": "Estado do ticket mudou",
@@ -373,7 +375,7 @@
       }
     },
     "SIDEBAR": {
-      "CONTACT": "Contatos",
+      "CONTACT": "Cliente",
       "COPILOT": "Copiloto"
     },
     "VOICE_WIDGET": {
@@ -479,7 +481,28 @@
       "offered": "Oferecida",
       "good": "Boa",
       "bad": "Ruim"
-    }
+    },
+    "TICKET_NUMBER": "Ticket #{id}",
+    "NO_SUBJECT": "(sem assunto)",
+    "CREATED_AGO": "Criado {time}",
+    "CHANNEL_CHIP": {
+      "email": "Pelo e-mail",
+      "whatsapp": "Pelo WhatsApp",
+      "api": "Pela API",
+      "web_widget": "Pelo chat do site",
+      "telegram": "Pelo Telegram",
+      "sms": "Por SMS",
+      "twilio_sms": "Por SMS",
+      "facebook_page": "Pelo Facebook",
+      "instagram": "Pelo Instagram",
+      "line": "Pelo LINE",
+      "tiktok": "Pelo TikTok",
+      "twitter_profile": "Pelo X"
+    },
+    "REQUESTER": "Solicitante",
+    "APPLY_MACRO": "Aplicar macro",
+    "APPLY_MACRO_SEARCH": "Buscar macros",
+    "EDIT_SUBJECT": "Clique para editar o assunto"
   },
   "EMAIL_TRANSCRIPT": {
     "TITLE": "Enviar transcrição de ticket",
@@ -541,7 +564,7 @@
       "CONVERSATION_INFO": "Informação do ticket",
       "CONTACT_NOTES": "Notas do contato",
       "CONTACT_ATTRIBUTES": "Atributos do contato",
-      "PREVIOUS_CONVERSATION": "Tickets anteriores",
+      "PREVIOUS_CONVERSATION": "Histórico de interações",
       "MACROS": "Macros",
       "LINEAR_ISSUES": "Problemas do Linear vinculados",
       "SHOPIFY_ORDERS": "Pedidos do Shopify",

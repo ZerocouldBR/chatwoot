@@ -13,12 +13,14 @@ import { INBOX_TYPES } from 'dashboard/helper/inbox';
 import { mapGetters } from 'vuex';
 import NextButton from 'dashboard/components-next/button/Button.vue';
 import SubmitAsMenu from 'dashboard/components-next/Conversation/SubmitAsMenu.vue';
+import ApplyMacroMenu from 'dashboard/components-next/Conversation/ApplyMacroMenu.vue';
 
 export default {
   name: 'ReplyBottomPanel',
   components: {
     NextButton,
     SubmitAsMenu,
+    ApplyMacroMenu,
     FileUpload,
     VideoCallButton,
     RequestContactInfoButton,
@@ -135,6 +137,7 @@ export default {
     'selectWhatsappTemplate',
     'selectContentTemplate',
     'requestContactInfoTemplate',
+    'executeMacro',
   ],
   setup(props) {
     const { setSignatureFlagForInbox, fetchSignatureFlagFromUISettings } =
@@ -275,8 +278,12 @@ export default {
 </script>
 
 <template>
-  <div class="flex justify-between p-3" :class="wrapClass">
+  <div class="flex items-end justify-between gap-2 p-3" :class="wrapClass">
     <div class="left-wrap">
+      <ApplyMacroMenu
+        v-if="!newConversationModalActive"
+        @apply="$emit('executeMacro', $event)"
+      />
       <NextButton
         v-if="!isEditorDisabled"
         v-tooltip.top-end="$t('CONVERSATION.REPLYBOX.TIP_EMOJI_ICON')"
@@ -411,11 +418,11 @@ export default {
 
 <style lang="scss" scoped>
 .left-wrap {
-  @apply items-center flex gap-2;
+  @apply items-center flex flex-wrap gap-2 min-w-0;
 }
 
 .right-wrap {
-  @apply flex;
+  @apply flex shrink-0;
 }
 
 :deep(.file-uploads) {

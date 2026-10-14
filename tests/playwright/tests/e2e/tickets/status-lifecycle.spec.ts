@@ -24,23 +24,23 @@ test.describe('ticket status lifecycle', () => {
     expect((await api.getConversation(ticketId)).status).toBe('new_ticket');
 
     await page.goto(`/app/accounts/${env.account_id}/tickets/${ticketId}`);
-    const header = page.locator('.conversation--header--actions');
-    await expect(header.getByText('Novo')).toBeVisible();
+    const status = page.getByTestId('ticket-header-status');
+    await expect(status).toHaveText('Novo');
 
     await page.getByTestId('ticket-status-menu').click();
     await page.getByRole('button', { name: 'Em espera' }).click();
-    await expect(header.getByText('Em espera')).toBeVisible();
+    await expect(status).toHaveText('Em espera');
     await expect.poll(async () => (await api.getConversation(ticketId)).status).toBe('on_hold');
 
     await page.locator('.ProseMirror').first().fill('Pode nos enviar o número da reserva?');
     await page.getByTestId('submit-as-menu').click();
     await page.getByRole('button', { name: 'Enviar como Pendente' }).click();
     await expect(page.locator('[id^=message]').getByText('Pode nos enviar o número da reserva?')).toBeVisible();
-    await expect(header.getByText('Pendente')).toBeVisible();
+    await expect(status).toHaveText('Pendente');
     await expect.poll(async () => (await api.getConversation(ticketId)).status).toBe('waiting_on_customer');
 
     await page.getByRole('button', { name: 'Resolver' }).click();
-    await expect(header.getByText('Resolvido')).toBeVisible();
+    await expect(status).toHaveText('Resolvido');
     const resolved = await api.getConversation(ticketId);
     expect(resolved.status).toBe('resolved');
     expect((resolved.meta as { assignee?: { id: number } }).assignee?.id).toBe(env.users.admin.id);

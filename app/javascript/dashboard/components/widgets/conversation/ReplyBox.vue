@@ -399,14 +399,16 @@ export default {
       );
     },
     replyButtonLabel() {
-      let sendMessageText = this.$t('CONVERSATION.REPLYBOX.SEND');
+      // Zendesk: "Submit as <current status>"; the arrow beside it submits with another status.
+      let sendMessageText = this.$t('CONVERSATION.REPLYBOX.SEND_AS', {
+        status: this.$t(
+          `CONVERSATION.TICKET_STATUS.${this.currentChat.status}`
+        ),
+      });
       if (this.isPrivate) {
         sendMessageText = this.$t('CONVERSATION.REPLYBOX.CREATE');
       }
-      const keyLabel = this.isEditorHotKeyEnabled('cmd_enter')
-        ? `(${this.shortcutKey})`
-        : '(↵)';
-      return `${sendMessageText} ${keyLabel}`;
+      return sendMessageText;
     },
     replyBoxClass() {
       return {
@@ -1267,7 +1269,7 @@ export default {
       const { email: inboxEmail, forward_to_email: forwardToEmail } =
         this.inbox;
 
-      const { cc, bcc, to } = getRecipients(
+      const { bcc, to } = getRecipients(
         this.lastEmail,
         conversationContact,
         inboxEmail,
@@ -1275,7 +1277,8 @@ export default {
       );
 
       this.toEmails = to.join(', ');
-      this.ccEmails = cc.join(', ');
+      // CCs live on the ticket (shown as chips in the e-mail head and copied on every public reply).
+      this.ccEmails = '';
       this.bccEmails = bcc.join(', ');
     },
     fetchAndSetReplyTo() {
@@ -1536,6 +1539,7 @@ export default {
         :message="message"
         :portal-slug="connectedPortalSlug"
         :new-conversation-modal-active="newConversationModalActive"
+        @execute-macro="onExecuteMacro"
         @select-whatsapp-template="openWhatsappTemplateModal"
         @select-content-template="openContentTemplateModal"
         @toggle-insert-article="toggleInsertArticle"

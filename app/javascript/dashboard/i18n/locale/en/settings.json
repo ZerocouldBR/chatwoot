@@ -317,7 +317,7 @@
     "CURRENTLY_VIEWING_ACCOUNT": "Currently viewing:",
     "SWITCH": "Switch",
     "INBOX_VIEW": "Inbox View",
-    "CONVERSATIONS": "Tickets",
+    "CONVERSATIONS": "Views",
     "INBOX": "My Inbox",
     "ALL_CONVERSATIONS": "All Tickets",
     "MENTIONED_CONVERSATIONS": "Mentions",
@@ -425,7 +425,9 @@
     "TICKET_TRIGGERS": "Triggers",
     "TICKET_AUTOMATIONS": "Automations",
     "SUSPENDED_TICKETS": "Suspended",
-    "DELETED_TICKETS": "Deleted"
+    "DELETED_TICKETS": "Deleted",
+    "COLLAPSE": "Collapse sidebar",
+    "EXPAND": "Expand sidebar"
   },
   "DATA_IMPORTS": {
     "HEADER": "Data",
@@ -1337,5 +1339,10 @@
         "tiktok": "TikTok"
       }
     }
+  },
+  "NOTIFICATIONS_BELL": {
+    "TITLE": "Notifications",
+    "READ_ALL": "Mark all as read",
+    "EMPTY": "No notifications"
   }
 }

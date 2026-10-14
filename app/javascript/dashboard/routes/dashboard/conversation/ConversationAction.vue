@@ -1,4 +1,5 @@
 <script setup>
+import { useTicketPanelFields } from 'dashboard/composables/useTicketPanelFields';
 import { computed, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useTimeoutFn } from '@vueuse/core';
@@ -27,6 +28,8 @@ defineProps({
     required: true,
   },
 });
+
+const { fieldClass } = useTicketPanelFields();
 
 const EMPTY_NOTE_DURATION = 2500;
 
@@ -309,9 +312,9 @@ const rejectSuggestedLabel = ({ title }) => {
 </script>
 
 <template>
-  <div>
-    <TicketFields :conversation="currentChat" />
-    <div>
+  <!-- "contents": each section is ordered (or hidden) by the account's ticket field settings in the panel. -->
+  <div class="contents">
+    <div :class="fieldClass('assignee')">
       <ContactDetailsItem
         compact
         :title="$t('CONVERSATION_SIDEBAR.ASSIGNEE_LABEL')"
@@ -342,7 +345,7 @@ const rejectSuggestedLabel = ({ title }) => {
         @select="onClickAssignAgent"
       />
     </div>
-    <div>
+    <div :class="fieldClass('team')">
       <ContactDetailsItem
         compact
         :title="$t('CONVERSATION_SIDEBAR.TEAM_LABEL')"
@@ -362,7 +365,7 @@ const rejectSuggestedLabel = ({ title }) => {
         @select="onClickAssignTeam"
       />
     </div>
-    <div>
+    <div :class="fieldClass('priority')">
       <ContactDetailsItem compact :title="$t('CONVERSATION.PRIORITY.TITLE')">
         <template #button>
           <SuggestButton
@@ -455,27 +458,33 @@ const rejectSuggestedLabel = ({ title }) => {
         {{ $t('CONVERSATION.SUGGESTIONS.EMPTY') }}
       </span>
     </div>
-    <ContactDetailsItem
-      compact
-      :title="$t('CONVERSATION_SIDEBAR.ACCORDION.CONVERSATION_LABELS')"
-    >
-      <template #button>
-        <SuggestButton
-          v-if="isSuggestionsEnabled"
-          :is-active="isLabelSuggestionActive"
-          :is-loading="isSuggestingLabels"
-          @click="suggestLabels"
-        />
-      </template>
-    </ContactDetailsItem>
-    <ConversationLabels
-      :conversation-id="conversationId"
-      :suggested-labels="suggestedLabels"
-      :is-suggestion-active="isLabelSuggestionActive"
-      :is-suggesting="isSuggestingLabels"
-      @accept-suggestion="acceptSuggestedLabels([$event])"
-      @reject-suggestion="rejectSuggestedLabel"
-      @accept-all-suggestions="acceptSuggestedLabels(suggestedLabels)"
+    <div :class="fieldClass('labels')">
+      <ContactDetailsItem
+        compact
+        :title="$t('CONVERSATION_SIDEBAR.ACCORDION.CONVERSATION_LABELS')"
+      >
+        <template #button>
+          <SuggestButton
+            v-if="isSuggestionsEnabled"
+            :is-active="isLabelSuggestionActive"
+            :is-loading="isSuggestingLabels"
+            @click="suggestLabels"
+          />
+        </template>
+      </ContactDetailsItem>
+      <ConversationLabels
+        :conversation-id="conversationId"
+        :suggested-labels="suggestedLabels"
+        :is-suggestion-active="isLabelSuggestionActive"
+        :is-suggesting="isSuggestingLabels"
+        @accept-suggestion="acceptSuggestedLabels([$event])"
+        @reject-suggestion="rejectSuggestedLabel"
+        @accept-all-suggestions="acceptSuggestedLabels(suggestedLabels)"
+      />
+    </div>
+    <TicketFields
+      :class="fieldClass('ticket_type')"
+      :conversation="currentChat"
     />
   </div>
 </template>

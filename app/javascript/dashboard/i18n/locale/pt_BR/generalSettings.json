@@ -131,6 +131,23 @@
         "SUCCESS": "Prazo de fechamento salvo",
         "ERROR": "Informe um número inteiro de horas entre 1 e 672",
         "API_ERROR": "Não foi possível salvar o prazo de fechamento"
+      },
+      "TICKET_FIELDS": {
+        "TITLE": "Campos do ticket",
+        "NOTE": "Escolha quais campos os agentes veem na coluna esquerda do ticket e em que ordem. Mantenha poucos: só o que o agente precisa para trabalhar o ticket. O solicitante aparece sempre.",
+        "SUBMIT": "Salvar campos",
+        "SUCCESS": "Campos do ticket salvos",
+        "API_ERROR": "Não foi possível salvar os campos do ticket",
+        "MOVE_UP": "Subir",
+        "MOVE_DOWN": "Descer",
+        "FIELDS": {
+          "assignee": "Atribuído",
+          "team": "Grupo",
+          "followers": "Seguidores",
+          "ticket_type": "Tipo (com vencimento, problema e incidentes)",
+          "priority": "Prioridade",
+          "labels": "Tags"
+        }
       }
     },
     "UPDATE_CHATWOOT": "Uma atualização {latestChatwootVersion} para o Chatwoot está disponível. Por favor, atualize sua instância.",

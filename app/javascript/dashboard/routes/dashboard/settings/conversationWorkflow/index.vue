@@ -8,6 +8,7 @@ import SettingsLayout from '../SettingsLayout.vue';
 import ConversationRequiredAttributes from 'dashboard/components-next/ConversationWorkflow/ConversationRequiredAttributes.vue';
 import AutoResolve from 'dashboard/routes/dashboard/settings/account/components/AutoResolve.vue';
 import CloseSolvedTickets from 'dashboard/routes/dashboard/settings/account/components/CloseSolvedTickets.vue';
+import TicketPanelFields from 'dashboard/routes/dashboard/settings/account/components/TicketPanelFields.vue';
 
 const { accountId } = useAccount();
 const isFeatureEnabledonAccount = useMapGetter(
@@ -41,6 +42,7 @@ const showRequiredAttributes = computed(() => {
 
     <template #body>
       <div class="flex flex-col gap-6 mt-4">
+        <TicketPanelFields />
         <CloseSolvedTickets />
         <AutoResolve v-if="showAutoResolutionConfig" />
         <ConversationRequiredAttributes :is-enabled="showRequiredAttributes" />

@@ -1,4 +1,5 @@
 <script setup>
+import NotificationsBell from './NotificationsBell.vue';
 import { useAdmin } from 'dashboard/composables/useAdmin';
 import { h, ref, computed, onMounted, watch } from 'vue';
 import { provideSidebarContext, useSidebarResize } from './provider';
@@ -16,8 +17,6 @@ import { useWindowSize, useEventListener } from '@vueuse/core';
 import Button from 'dashboard/components-next/button/Button.vue';
 import SidebarGroup from './SidebarGroup.vue';
 import SidebarProfileMenu from './SidebarProfileMenu.vue';
-import ChannelLeaf from './ChannelLeaf.vue';
-import ChannelIcon from 'next/icon/ChannelIcon.vue';
 import EmojiIcon from 'next/emoji-icon-picker/EmojiIcon.vue';
 import SidebarAccountSwitcher from './SidebarAccountSwitcher.vue';
 import Logo from 'next/icon/Logo.vue';
@@ -216,13 +215,9 @@ useEventListener(document, 'mouseup', onResizeEnd);
 useEventListener(document, 'touchmove', onResizeMove, { passive: false });
 useEventListener(document, 'touchend', onResizeEnd);
 
-const inboxes = useMapGetter('inboxes/getInboxes');
 const labels = useMapGetter('labels/getLabelsOnSidebar');
 const allUnreadCount = useMapGetter(
   'conversationUnreadCounts/getAllUnreadCount'
-);
-const getInboxUnreadCount = useMapGetter(
-  'conversationUnreadCounts/getInboxUnreadCount'
 );
 const getLabelUnreadCount = useMapGetter(
   'conversationUnreadCounts/getLabelUnreadCount'
@@ -316,14 +311,6 @@ const sortedTeams = computed(() =>
   })
 );
 
-const sortedInboxes = computed(() =>
-  sortSidebarItems(inboxes.value, {
-    sortBy: getSortForSection(SIDEBAR_SORT_SECTIONS.CHANNELS),
-    labelKey: inbox => inbox.name,
-    unreadCountKey: inbox => getInboxUnreadCount.value(inbox.id),
-  })
-);
-
 const sortedLabels = computed(() =>
   sortSidebarItems(labels.value, {
     sortBy: getSortForSection(SIDEBAR_SORT_SECTIONS.LABELS),
@@ -375,24 +362,14 @@ const menuItems = computed(() => {
       activeOn: ['ticket_home'],
     },
     {
-      name: 'Inbox',
-      label: t('SIDEBAR.INBOX'),
-      icon: 'i-lucide-inbox',
-      to: accountScopedRoute('inbox_view'),
-      activeOn: ['inbox_view', 'inbox_view_conversation'],
-      getterKeys: {
-        count: 'notifications/getUnreadCount',
-      },
-    },
-    {
       name: 'Conversation',
       label: t('SIDEBAR.CONVERSATIONS'),
-      icon: 'i-lucide-message-circle',
+      icon: 'i-lucide-layout-list',
       children: [
         {
           name: 'All',
           label: t('SIDEBAR.ALL_CONVERSATIONS'),
-          icon: 'i-lucide-inbox',
+          icon: 'i-lucide-ticket',
           badgeCount: allUnreadCount.value,
           activeOn: ['inbox_conversation'],
           to: accountScopedRoute('home'),
@@ -410,7 +387,7 @@ const menuItems = computed(() => {
         {
           name: 'Participating',
           label: t('SIDEBAR.PARTICIPATING_CONVERSATIONS'),
-          icon: 'i-lucide-user-round-check',
+          icon: 'i-lucide-eye',
           badgeCount: hasFilteredUnreadCounts.value
             ? participatingUnreadCount.value
             : 0,
@@ -421,7 +398,7 @@ const menuItems = computed(() => {
           name: 'Unattended',
           activeOn: ['conversation_through_unattended'],
           label: t('SIDEBAR.UNATTENDED_CONVERSATIONS'),
-          icon: 'i-lucide-clock-alert',
+          icon: 'i-lucide-hourglass',
           badgeCount: hasFilteredUnreadCounts.value
             ? unattendedUnreadCount.value
             : 0,
@@ -482,29 +459,6 @@ const menuItems = computed(() => {
                 })
               : undefined,
             to: accountScopedRoute('team_conversations', { teamId: team.id }),
-          })),
-        },
-        {
-          name: 'Channels',
-          label: t('SIDEBAR.CHANNELS'),
-          icon: 'i-lucide-mailbox',
-          activeOn: ['conversation_through_inbox'],
-          ...buildSortConfig(SIDEBAR_SORT_SECTIONS.CHANNELS),
-          collapsible: true,
-          showTreeLine: true,
-          children: sortedInboxes.value.map(inbox => ({
-            name: `${inbox.name}-${inbox.id}`,
-            label: inbox.name,
-            badgeCount: getInboxUnreadCount.value(inbox.id),
-            icon: h(ChannelIcon, { inbox, class: 'size-[16px]' }),
-            to: accountScopedRoute('inbox_dashboard', { inbox_id: inbox.id }),
-            component: leafProps =>
-              h(ChannelLeaf, {
-                label: leafProps.label,
-                active: leafProps.active,
-                inbox,
-                badgeCount: leafProps.badgeCount,
-              }),
           })),
         },
         {
@@ -626,7 +580,7 @@ const menuItems = computed(() => {
     {
       name: 'Contacts',
       label: t('SIDEBAR.CONTACTS'),
-      icon: 'i-lucide-contact',
+      icon: 'i-lucide-contact-round',
       children: [
         {
           name: 'All Contacts',
@@ -822,12 +776,12 @@ const menuItems = computed(() => {
     {
       name: 'Settings',
       label: t('SIDEBAR.SETTINGS'),
-      icon: 'i-lucide-bolt',
+      icon: 'i-lucide-settings',
       children: [
         {
           name: 'Settings Account Settings',
           label: t('SIDEBAR.ACCOUNT_SETTINGS'),
-          icon: 'i-lucide-briefcase',
+          icon: 'i-lucide-building',
           to: accountScopedRoute('general_settings_index'),
         },
         // {
@@ -880,7 +834,7 @@ const menuItems = computed(() => {
         {
           name: 'Settings Inboxes',
           label: t('SIDEBAR.INBOXES'),
-          icon: 'i-lucide-inbox',
+          icon: 'i-lucide-mailbox',
           activeOn: [
             'settings_inbox_list',
             'settings_inbox_show',
@@ -906,7 +860,7 @@ const menuItems = computed(() => {
         {
           name: 'Settings Custom Attributes',
           label: t('SIDEBAR.CUSTOM_ATTRIBUTES'),
-          icon: 'i-lucide-code',
+          icon: 'i-lucide-text-cursor-input',
           to: accountScopedRoute('attributes_list'),
         },
         {
@@ -918,7 +872,7 @@ const menuItems = computed(() => {
         {
           name: 'Settings Ticket Automations',
           label: t('SIDEBAR.TICKET_AUTOMATIONS'),
-          icon: 'i-lucide-timer-reset',
+          icon: 'i-lucide-timer',
           to: accountScopedRoute('ticket_automations_index'),
         },
         {
@@ -936,7 +890,7 @@ const menuItems = computed(() => {
         {
           name: 'Settings Macros',
           label: t('SIDEBAR.MACROS'),
-          icon: 'i-lucide-toy-brick',
+          icon: 'i-lucide-wand-sparkles',
           to: accountScopedRoute('macros_wrapper'),
         },
         {
@@ -964,7 +918,7 @@ const menuItems = computed(() => {
         {
           name: 'Settings Audit Logs',
           label: t('SIDEBAR.AUDIT_LOGS'),
-          icon: 'i-lucide-briefcase',
+          icon: 'i-lucide-scroll-text',
           to: accountScopedRoute('auditlogs_list'),
         },
         {
@@ -976,7 +930,7 @@ const menuItems = computed(() => {
         {
           name: 'Settings Sla',
           label: t('SIDEBAR.SLA'),
-          icon: 'i-lucide-clock-alert',
+          icon: 'i-lucide-gauge',
           to: accountScopedRoute('sla_list'),
         },
         {
@@ -988,7 +942,7 @@ const menuItems = computed(() => {
         {
           name: 'Conversation Workflow',
           label: t('SIDEBAR.CONVERSATION_WORKFLOW'),
-          icon: 'i-lucide-workflow',
+          icon: 'i-lucide-sliders-horizontal',
           to: accountScopedRoute('conversation_workflow_index'),
         },
         {
@@ -1021,7 +975,7 @@ const menuItems = computed(() => {
         ],
       },
     ]"
-    class="bg-n-background flex flex-col text-sm pb-px fixed top-0 ltr:left-0 rtl:right-0 h-full z-40 w-[200px] md:w-auto md:relative md:flex-shrink-0 md:ltr:translate-x-0 md:rtl:translate-x-0 ltr:border-r rtl:border-l border-n-weak"
+    class="bg-n-background flex flex-col text-sm pb-px overflow-x-clip fixed top-0 ltr:left-0 rtl:right-0 h-full z-40 w-[200px] md:w-auto md:relative md:flex-shrink-0 md:ltr:translate-x-0 md:rtl:translate-x-0 ltr:border-r rtl:border-l border-n-weak"
     :class="[
       {
         'shadow-lg md:shadow-none': isMobileSidebarOpen,
@@ -1067,10 +1021,10 @@ const menuItems = computed(() => {
         <RouterLink
           v-if="!isEffectivelyCollapsed"
           :to="{ name: 'search' }"
-          class="flex gap-2 items-center px-2 py-1 w-full h-7 rounded-lg outline outline-1 outline-n-weak bg-n-button-color transition-all duration-100 ease-out"
+          class="flex flex-1 min-w-0 gap-2 items-center px-2 py-1 h-7 rounded-lg outline outline-1 outline-n-weak bg-n-button-color transition-all duration-100 ease-out"
         >
           <span class="flex-shrink-0 i-lucide-search size-4 text-n-slate-10" />
-          <span class="flex-grow text-start text-n-slate-10">
+          <span class="flex-grow min-w-0 truncate text-start text-n-slate-10">
             {{ t('COMBOBOX.SEARCH_PLACEHOLDER') }}
           </span>
           <span
@@ -1087,7 +1041,11 @@ const menuItems = computed(() => {
         >
           <span class="i-lucide-search size-4 text-n-slate-11" />
         </RouterLink>
-        <ComposeConversation align="start">
+        <NotificationsBell
+          class="shrink-0"
+          :collapsed="isEffectivelyCollapsed"
+        />
+        <ComposeConversation class="shrink-0" align="start">
           <template #trigger="{ isOpen }">
             <Button
               icon="i-lucide-pen-line"
@@ -1134,7 +1092,29 @@ const menuItems = computed(() => {
           :is-collapsed="isEffectivelyCollapsed"
           @open-key-shortcut-modal="emit('openKeyShortcutModal')"
         />
+        <Button
+          v-if="!isMobile && !isEffectivelyCollapsed"
+          data-testid="sidebar-collapse-toggle"
+          icon="i-lucide-panel-left-close"
+          ghost
+          slate
+          sm
+          class="shrink-0 rtl:rotate-180"
+          :aria-label="t('SIDEBAR.COLLAPSE')"
+          @click="snapToCollapsed"
+        />
       </div>
+      <Button
+        v-if="!isMobile && isEffectivelyCollapsed"
+        data-testid="sidebar-expand-toggle"
+        icon="i-lucide-panel-left-open"
+        ghost
+        slate
+        sm
+        class="self-center mb-2 rtl:rotate-180"
+        :aria-label="t('SIDEBAR.EXPAND')"
+        @click="snapToExpanded"
+      />
     </section>
     <!-- Resize Handle (desktop only) -->
     <div

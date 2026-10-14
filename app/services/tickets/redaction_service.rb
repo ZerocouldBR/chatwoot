@@ -26,6 +26,14 @@ class Tickets::RedactionService
     replacement = BLOCK * target.length
     redact = ->(value) { value.is_a?(String) ? value.gsub(target, replacement) : value }
     message.update!(content: redact.call(message.content), content_attributes: deep_map(message.content_attributes, redact))
+    redact_subject(redact)
+  end
+
+  # Chat tickets take their subject from the first message, so the redacted text can be there too.
+  def redact_subject(redact)
+    conversation = message.conversation
+    subject = redact.call(conversation.subject)
+    conversation.update_columns(subject: subject) if subject != conversation.subject # rubocop:disable Rails/SkipsModelValidations
   end
 
   def deep_map(value, redact)

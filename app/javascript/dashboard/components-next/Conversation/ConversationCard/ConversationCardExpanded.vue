@@ -216,7 +216,20 @@ const selectedModel = computed({
         {{ currentContact.name }}
       </h4>
 
+      <!-- Views list tickets by subject, like Zendesk; tickets without one show the last message. -->
+      <span
+        v-if="chat.subject"
+        data-testid="ticket-list-subject"
+        class="flex-1 min-w-0 truncate text-sm"
+        :class="[
+          orderClass('content'),
+          unreadCount > 0 ? 'font-semibold text-n-slate-12' : 'text-n-slate-12',
+        ]"
+      >
+        {{ chat.subject }}
+      </span>
       <CardContent
+        v-else
         :class="orderClass('content')"
         :last-message="lastMessageInChat"
         :voice-call-status="voiceCallData.status"

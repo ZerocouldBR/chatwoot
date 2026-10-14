@@ -77,7 +77,6 @@ test.describe('customer satisfaction', () => {
       }, { timeout: 30_000 })
       .toEqual(['good', 'Resolveram rápido']);
 
-    await api.updateUISettings({ is_contact_sidebar_open: true });
     await page.goto(`/app/accounts/${env.account_id}/tickets/${ticket.id}`);
     await expect(page.getByTestId('ticket-satisfaction')).toContainText('Boa · Resolveram rápido');
   });

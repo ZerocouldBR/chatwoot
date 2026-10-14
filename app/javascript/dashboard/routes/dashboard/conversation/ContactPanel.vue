@@ -46,6 +46,12 @@ const {
   isOnExpandedLayout,
 } = useUISettings();
 
+// Ticket properties, followers and macros live in the ticket's left column and footer instead.
+const MOVED_TO_TICKET_LAYOUT = [
+  'conversation_actions',
+  'conversation_participants',
+  'macros',
+];
 const dragging = ref(false);
 const conversationSidebarItems = ref([]);
 
@@ -169,7 +175,11 @@ onMounted(() => {
       >
         <template #item="{ element }">
           <div
-            v-if="element.name === 'conversation_actions'"
+            v-if="MOVED_TO_TICKET_LAYOUT.includes(element.name)"
+            class="hidden"
+          />
+          <div
+            v-else-if="element.name === 'conversation_actions'"
             class="conversation--actions"
           >
             <AccordionItem

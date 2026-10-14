@@ -325,7 +325,8 @@
         "SUBJECT": {
           "LABEL": "Subject",
           "PLACEHOLDER": "Enter a subject"
-        }
+        },
+        "EDIT_TO": "Edit recipient"
       },
       "UNDEFINED_VARIABLES": {
         "TITLE": "Undefined variables",
@@ -341,7 +342,8 @@
         "REMOVE": "Remove quoted text"
       },
       "SUBMIT_AS": "Submit as {status}",
-      "SUBMIT_AS_TOOLTIP": "Send and change the ticket status"
+      "SUBMIT_AS_TOOLTIP": "Send and change the ticket status",
+      "SEND_AS": "Submit as {status}"
     },
     "VISIBLE_TO_AGENTS": "Private Note: Only visible to you and your group",
     "CHANGE_STATUS": "Ticket status changed",
@@ -403,7 +405,7 @@
       }
     },
     "SIDEBAR": {
-      "CONTACT": "Contact",
+      "CONTACT": "Customer",
       "COPILOT": "Copilot"
     },
     "VOICE_WIDGET": {
@@ -509,7 +511,28 @@
       "offered": "Offered",
       "good": "Good",
       "bad": "Bad"
-    }
+    },
+    "TICKET_NUMBER": "Ticket #{id}",
+    "NO_SUBJECT": "(no subject)",
+    "CREATED_AGO": "Created {time}",
+    "CHANNEL_CHIP": {
+      "email": "By e-mail",
+      "whatsapp": "By WhatsApp",
+      "api": "By API",
+      "web_widget": "By web chat",
+      "telegram": "By Telegram",
+      "sms": "By SMS",
+      "twilio_sms": "By SMS",
+      "facebook_page": "By Facebook",
+      "instagram": "By Instagram",
+      "line": "By LINE",
+      "tiktok": "By TikTok",
+      "twitter_profile": "By X"
+    },
+    "REQUESTER": "Requester",
+    "APPLY_MACRO": "Apply macro",
+    "APPLY_MACRO_SEARCH": "Search macros",
+    "EDIT_SUBJECT": "Click to edit the subject"
   },
   "EMAIL_TRANSCRIPT": {
     "TITLE": "Send ticket transcript",
@@ -571,7 +594,7 @@
       "CONVERSATION_INFO": "Ticket Information",
       "CONTACT_NOTES": "Contact Notes",
       "CONTACT_ATTRIBUTES": "Contact Attributes",
-      "PREVIOUS_CONVERSATION": "Previous Tickets",
+      "PREVIOUS_CONVERSATION": "Interaction history",
       "MACROS": "Macros",
       "LINEAR_ISSUES": "Linked Linear Issues",
       "SHOPIFY_ORDERS": "Shopify Orders",

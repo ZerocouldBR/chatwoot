@@ -312,12 +312,12 @@
     "CURRENTLY_VIEWING_ACCOUNT": "Visualização atual:",
     "SWITCH": "Trocar",
     "INBOX_VIEW": "Caixa de entrada",
-    "CONVERSATIONS": "Tickets",
+    "CONVERSATIONS": "Visualizações",
     "INBOX": "Caixa de Entrada",
     "ALL_CONVERSATIONS": "Todos os tickets",
     "MENTIONED_CONVERSATIONS": "Menções",
     "PARTICIPATING_CONVERSATIONS": "Seguindo",
-    "UNATTENDED_CONVERSATIONS": "Aguardando resposta",
+    "UNATTENDED_CONVERSATIONS": "Aguardando",
     "REPORTS": "Relatórios",
     "SETTINGS": "Configurações",
     "CONTACTS": "Contatos",
@@ -420,7 +420,9 @@
     "TICKET_TRIGGERS": "Gatilhos",
     "TICKET_AUTOMATIONS": "Automações",
     "SUSPENDED_TICKETS": "Suspensos",
-    "DELETED_TICKETS": "Excluídos"
+    "DELETED_TICKETS": "Excluídos",
+    "COLLAPSE": "Recolher menu",
+    "EXPAND": "Expandir menu"
   },
   "DATA_IMPORTS": {
     "HEADER": "Dados",
@@ -1300,5 +1302,10 @@
         "tiktok": "TikTok"
       }
     }
+  },
+  "NOTIFICATIONS_BELL": {
+    "TITLE": "Notificações",
+    "READ_ALL": "Marcar todas como lidas",
+    "EMPTY": "Nenhuma notificação"
   }
 }

@@ -139,6 +139,23 @@
         "SUCCESS": "Close delay saved",
         "ERROR": "Enter a whole number of hours between 1 and 672",
         "API_ERROR": "Could not save the close delay"
+      },
+      "TICKET_FIELDS": {
+        "TITLE": "Ticket fields",
+        "NOTE": "Choose which fields agents see in the left column of a ticket, and their order. Keep it short: only what agents need to work the ticket. The requester is always shown.",
+        "SUBMIT": "Save fields",
+        "SUCCESS": "Ticket fields saved",
+        "API_ERROR": "Could not save the ticket fields",
+        "MOVE_UP": "Move up",
+        "MOVE_DOWN": "Move down",
+        "FIELDS": {
+          "assignee": "Assignee",
+          "team": "Group",
+          "followers": "Followers",
+          "ticket_type": "Type (with due date, problem and incidents)",
+          "priority": "Priority",
+          "labels": "Tags"
+        }
       }
     },
     "UPDATE_CHATWOOT": "An update {latestChatwootVersion} for Chatwoot is available. Please update your instance.",
