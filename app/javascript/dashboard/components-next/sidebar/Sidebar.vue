@@ -295,13 +295,22 @@ const buildSortConfig = section => ({
   onSortChange: sortBy => updateSortPreference(section, sortBy),
 });
 
-const sortedFolders = computed(() =>
-  sortSidebarItems(conversationCustomViews.value, {
-    sortBy: getSortForSection(SIDEBAR_SORT_SECTIONS.FOLDERS),
-    labelKey: view => view.name,
-    unreadCountKey: view => getFolderUnreadCount.value(view.id),
-  })
-);
+// ServiceDesk: as views compartilhadas do Zendesk ficam na ordem do Zendesk
+// (posição, já ordenadas pela API servicedesk/views); os filtros pessoais
+// seguem a ordenação escolhida no menu.
+const sortedFolders = computed(() => {
+  const views = conversationCustomViews.value || [];
+  const shared = views.filter(view => view.shared);
+  const personal = sortSidebarItems(
+    views.filter(view => !view.shared),
+    {
+      sortBy: getSortForSection(SIDEBAR_SORT_SECTIONS.FOLDERS),
+      labelKey: view => view.name,
+      unreadCountKey: view => getFolderUnreadCount.value(view.id),
+    }
+  );
+  return [...shared, ...personal];
+});
 
 const sortedTeams = computed(() =>
   sortSidebarItems(teams.value, {

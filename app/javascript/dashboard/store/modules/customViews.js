@@ -1,6 +1,7 @@
 import * as MutationHelpers from 'shared/helpers/vuex/mutationHelpers';
 import types from '../mutation-types';
 import CustomViewsAPI from '../../api/customViews';
+import ServicedeskViewsAPI from '../../api/servicedeskViews';
 import { FEATURE_FLAGS } from 'dashboard/featureFlags';
 
 const VIEW_TYPES = {
@@ -59,6 +60,31 @@ const refreshConversationUnreadCounts = (
   );
 };
 
+// ServiceDesk: as views de conversa vêm da API servicedesk/views (views do
+// Zendesk compartilhadas pela conta, filtradas pelos grupos de quem está
+// logado, mais os filtros pessoais), com colunas e ordenação. Sem a API
+// (backend antigo), volta aos filtros do próprio usuário.
+const toSharedViewRecord = view => ({
+  ...view,
+  filter_type: VIEW_TYPES.CONVERSATION,
+  query: view.query || { payload: [] },
+});
+
+const fetchViews = async filterType => {
+  if (FILTER_KEYS[filterType] === VIEW_TYPES.CONVERSATION) {
+    try {
+      const { data } = await ServicedeskViewsAPI.get();
+      if (Array.isArray(data?.payload)) {
+        return data.payload.map(toSharedViewRecord);
+      }
+    } catch (error) {
+      // segue para os filtros do usuário
+    }
+  }
+  const response = await CustomViewsAPI.getCustomViewsByFilterType(filterType);
+  return response.data;
+};
+
 export const state = {
   [VIEW_TYPES.CONVERSATION]: {
     records: [],
@@ -100,9 +126,8 @@ export const actions = {
   get: async function getCustomViews({ commit }, filterType) {
     commit(types.SET_CUSTOM_VIEW_UI_FLAG, { isFetching: true });
     try {
-      const response =
-        await CustomViewsAPI.getCustomViewsByFilterType(filterType);
-      commit(types.SET_CUSTOM_VIEW, { data: response.data, filterType });
+      const data = await fetchViews(filterType);
+      commit(types.SET_CUSTOM_VIEW, { data, filterType });
     } catch (error) {
       // Ignore error
     } finally {
