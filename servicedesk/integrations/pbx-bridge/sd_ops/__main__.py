@@ -97,6 +97,9 @@ def main(argv=None) -> int:
         print(json.dumps(out))
         return 0
     if a.cmd == "serve":
+        if os.environ.get("SDOPS_MIGRATE_ON_START", "").lower() in ("1", "true", "yes", "sim"):
+            from .bootstrap import migrate
+            migrate(s.database_url)
         import uvicorn
         from .app import create_app
         uvicorn.run(create_app(s), host=os.environ.get("HOST", "0.0.0.0"), port=int(os.environ.get("PORT", "8080")),

@@ -1,5 +1,6 @@
 .venv
-**/__pycache__
+__pycache__
 .pytest_cache
 dev/run
+tests
 *.sqlite3*
