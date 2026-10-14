@@ -17,7 +17,7 @@ RSpec.describe 'Devise::Mailer' do
     end
 
     it 'has the correct header data' do
-      expect(mail.reply_to).to contain_exactly('accounts@chatwoot.com')
+      expect(mail.reply_to).to contain_exactly('accounts@helpdesk.local')
       expect(mail.to).to contain_exactly(confirmable_user.email)
       expect(mail.subject).to eq('Confirmation Instructions')
     end
@@ -40,7 +40,7 @@ RSpec.describe 'Devise::Mailer' do
 
     it 'shows the default confirmation state' do
       expect(mail_body).to include('Confirm your email to get started')
-      expect(mail_body).to include('Welcome to Chatwoot. We just need to verify your email address before you can start using your account.')
+      expect(mail_body).to include('Welcome to Helpdesk. We just need to verify your email address before you can start using your account.')
       expect(mail_body).to include('Confirm my account')
       expect(mail_body).not_to include('Workspace invitation')
     end
@@ -59,7 +59,7 @@ RSpec.describe 'Devise::Mailer' do
 
       it 'refers to the inviter and their account' do
         expect(mail_body).to include("You're invited to join #{account.name}")
-        expect(mail_body).to include("#{inviter_val.name} invited you to join the #{account.name} workspace on Chatwoot.")
+        expect(mail_body).to include("#{inviter_val.name} invited you to join the #{account.name} workspace on Helpdesk.")
         expect(mail_body).to include('Accept invitation')
         expect(mail_body).not_to include('Confirm your email to get started')
       end

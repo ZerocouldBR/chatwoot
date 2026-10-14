@@ -1,6 +1,5 @@
 <script>
 import { useAlert } from 'dashboard/composables';
-import Branding from 'shared/components/Branding.vue';
 import Spinner from 'shared/components/Spinner.vue';
 import Rating from 'survey/components/Rating.vue';
 import Feedback from 'survey/components/Feedback.vue';
@@ -14,7 +13,6 @@ import { CSAT_DISPLAY_TYPES } from 'shared/constants/messages';
 export default {
   name: 'Response',
   components: {
-    Branding,
     Rating,
     Spinner,
     Banner,
@@ -174,7 +172,7 @@ export default {
       class="flex flex-col w-full h-full bg-n-solid-1 rounded-lg border border-solid border-n-weak shadow-md lg:w-2/5 lg:h-auto"
     >
       <div class="w-full px-12 pt-12 pb-6 m-auto my-0">
-        <img v-if="logo" :src="logo" alt="Chatwoot logo" class="mb-6 logo" />
+        <img v-if="logo" :src="logo" alt="logo" class="mb-6 logo" />
         <div
           v-if="!isRatingSubmitted"
           v-dompurify-html="formattedMessageContent"
@@ -213,9 +211,7 @@ export default {
           @send-feedback="sendFeedback"
         />
       </div>
-      <div class="mb-3">
-        <Branding />
-      </div>
+      <div class="mb-3 p-3" />
     </div>
   </div>
 </template>

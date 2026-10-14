@@ -430,7 +430,7 @@
         "SLUG": {
           "LABEL": "Slug",
           "PLACEHOLDER": "Category slug for urls",
-          "HELP_TEXT": "app.chatwoot.com/hc/my-portal/sq/categories/my-slug",
+          "HELP_TEXT": "help.example.com/hc/my-portal/sq/categories/my-slug",
           "ERROR": "Slug is required"
         },
         "DESCRIPTION": {
@@ -461,7 +461,7 @@
         "SLUG": {
           "LABEL": "Slug",
           "PLACEHOLDER": "Category slug for urls",
-          "HELP_TEXT": "app.chatwoot.com/hc/my-portal/sq/categories/my-slug",
+          "HELP_TEXT": "help.example.com/hc/my-portal/sq/categories/my-slug",
           "ERROR": "Slug is required"
         },
         "DESCRIPTION": {
@@ -698,7 +698,7 @@
             "LABEL": "Slug",
             "PLACEHOLDER": "Category slug for urls",
             "ERROR": "Slug is required",
-            "HELP_TEXT": "app.chatwoot.com/hc/{portalSlug}/{localeCode}/categories/{categorySlug}"
+            "HELP_TEXT": "help.example.com/hc/{portalSlug}/{localeCode}/categories/{categorySlug}"
           },
           "DESCRIPTION": {
             "LABEL": "Përshkrimi",
@@ -933,7 +933,7 @@
           },
           "DNS_CONFIGURATION_DIALOG": {
             "HEADER": "Konfigurimi i DNS",
-            "DESCRIPTION": "Log in to the account you have with your DNS provider, and add a CNAME record for subdomain pointing to chatwoot.help",
+            "DESCRIPTION": "Log in to the account you have with your DNS provider, and add a CNAME record for subdomain pointing to {domain}",
             "COPY": "CNAME u kopjua me sukses",
             "SEND_INSTRUCTIONS": {
               "HEADER": "Dërgo udhëzimet",

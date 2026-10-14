@@ -1,6 +1,5 @@
 <script>
 import Banner from '../Banner.vue';
-import Branding from 'shared/components/Branding.vue';
 import ChatHeader from '../ChatHeader.vue';
 import ChatHeaderExpanded from '../ChatHeaderExpanded.vue';
 import configMixin from '../../mixins/configMixin';
@@ -10,7 +9,6 @@ import { IFrameHelper } from 'widget/helpers/utils';
 export default {
   components: {
     Banner,
-    Branding,
     ChatHeader,
     ChatHeaderExpanded,
   },
@@ -20,7 +18,6 @@ export default {
       showPopoutButton: false,
       scrollPosition: 0,
       ticking: true,
-      disableBranding: window.chatwootWebChannel.disableBranding || false,
       requestID: null,
     };
   },
@@ -138,7 +135,7 @@ export default {
       <Banner />
       <router-view />
 
-      <Branding v-if="!isOnArticleViewer" :disable-branding="disableBranding" />
+      <div v-if="!isOnArticleViewer" class="p-3" />
     </div>
   </div>
 </template>

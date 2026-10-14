@@ -430,7 +430,7 @@
         "SLUG": {
           "LABEL": "Slug",
           "PLACEHOLDER": "Categoria de slug para URLs",
-          "HELP_TEXT": "app.chatwoot.com/hc/my-portal/en-US/categories/my-slug",
+          "HELP_TEXT": "help.example.com/hc/my-portal/en-US/categories/my-slug",
           "ERROR": "Slug é obrigatório"
         },
         "DESCRIPTION": {
@@ -461,7 +461,7 @@
         "SLUG": {
           "LABEL": "Slug",
           "PLACEHOLDER": "Categoria de slug para URLs",
-          "HELP_TEXT": "app.chatwoot.com/hc/my-portal/en-US/categories/my-slug",
+          "HELP_TEXT": "help.example.com/hc/my-portal/en-US/categories/my-slug",
           "ERROR": "Slug é obrigatório"
         },
         "DESCRIPTION": {
@@ -933,7 +933,7 @@
           },
           "DNS_CONFIGURATION_DIALOG": {
             "HEADER": "Configuração de DNS",
-            "DESCRIPTION": "Faça o login na conta que você tem com seu provedor DNS e adicione um registro CNAME para subdomínio apontando para chatwoot.help",
+            "DESCRIPTION": "Faça o login na conta que você tem com seu provedor DNS e adicione um registro CNAME para subdomínio apontando para {domain}",
             "COPY": "CNAME copiado com sucesso",
             "SEND_INSTRUCTIONS": {
               "HEADER": "Enviar instruções",

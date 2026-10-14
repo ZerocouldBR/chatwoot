@@ -2,7 +2,6 @@
 import { mapGetters } from 'vuex';
 import LoadingState from './components/widgets/LoadingState.vue';
 import NetworkNotification from './components/NetworkNotification.vue';
-import UpdateBanner from './components/app/UpdateBanner.vue';
 import ImpersonationBanner from './components/app/ImpersonationBanner.vue';
 import StatusBanner from './components/app/StatusBanner.vue';
 import PaymentPendingBanner from './components/app/PaymentPendingBanner.vue';
@@ -31,7 +30,6 @@ export default {
     LoadingState,
     NetworkNotification,
     ImpersonationBanner,
-    UpdateBanner,
     StatusBanner,
     PaymentPendingBanner,
     WootSnackbarBox,
@@ -57,7 +55,6 @@ export default {
   },
   data() {
     return {
-      latestChatwootVersion: null,
       reconnectService: null,
     };
   },
@@ -115,12 +112,10 @@ export default {
         accountId: this.currentAccountId,
       });
       const account = this.getAccount(this.currentAccountId);
-      const { locale, latest_chatwoot_version: latestChatwootVersion } =
-        account;
+      const { locale } = account;
       const { pubsub_token: pubsubToken } = this.currentUser || {};
       // If user locale is set, use it; otherwise use account locale
       this.setLocale(this.uiSettings?.locale || locale);
-      this.latestChatwootVersion = latestChatwootVersion;
       vueActionCable.init(this.store, pubsubToken);
       this.reconnectService = new ReconnectService(this.store, this.router);
       window.reconnectService = this.reconnectService;
@@ -145,7 +140,6 @@ export default {
     :dir="isRTL ? 'rtl' : 'ltr'"
   >
     <ImpersonationBanner />
-    <UpdateBanner :latest-chatwoot-version="latestChatwootVersion" />
     <StatusBanner />
     <template v-if="currentAccountId">
       <PendingEmailVerificationBanner v-if="hideOnOnboardingView" />

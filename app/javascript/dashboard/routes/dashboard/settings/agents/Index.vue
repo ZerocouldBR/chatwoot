@@ -15,6 +15,7 @@ import EditAgent from './EditAgent.vue';
 import BaseSettingsHeader from '../components/BaseSettingsHeader.vue';
 import SettingsLayout from '../SettingsLayout.vue';
 import Button from 'dashboard/components-next/button/Button.vue';
+import { useConfig } from 'dashboard/composables/useConfig';
 
 const getters = useStoreGetters();
 const store = useStore();
@@ -50,9 +51,15 @@ const uiFlags = computed(() => getters['agents/getUIFlags'].value);
 const currentUserId = computed(() => getters.getCurrentUserID.value);
 const customRoles = useMapGetter('customRole/getCustomRoles');
 
+const { isEnterprise } = useConfig();
+const isOnChatwootCloud = useMapGetter('globalConfig/isOnChatwootCloud');
+
 onMounted(() => {
   store.dispatch('agents/get');
-  store.dispatch('customRole/getCustomRole');
+  // Custom roles are served only by the enterprise API.
+  if (isEnterprise || isOnChatwootCloud.value) {
+    store.dispatch('customRole/getCustomRole');
+  }
 });
 
 const findCustomRole = agent =>

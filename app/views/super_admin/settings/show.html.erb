@@ -2,69 +2,10 @@
 <%
   features = SuperAdmin::FeaturesHelper.available_features
   included_features = features.select { |_key, attrs| attrs[:enabled] && attrs[:config_key].blank? }
-  locked_features = features.reject { |_key, attrs| attrs[:enabled] }
-  summary_row = "grid grid-cols-[auto_minmax(0,1fr)] items-center gap-x-4 gap-y-3 px-5 py-4 sm:grid-cols-[auto_minmax(0,1fr)_auto]"
-  summary_actions = "col-start-2 flex min-w-0 flex-wrap items-center gap-2 sm:col-start-auto"
   feature_grid = "grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4"
 %>
 
 <%= render "section", title: t("super_admin.navigation.settings"), description: t("super_admin.settings.description") do %>
-  <% if Redis::Alfred.get(Redis::Alfred::CHATWOOT_INSTALLATION_CONFIG_RESET_WARNING) %>
-    <%= render "alert", role: "alert" do %>
-      <strong class="font-medium"><%= t("super_admin.settings.alert") %></strong>
-      <%= t("super_admin.settings.unauthorized_changes") %>
-      <%= t("super_admin.settings.contact_for_help") %> <span class="font-medium">sales@chatwoot.com</span>
-    <% end %>
-  <% end %>
-
-  <% user_count = User.count if ChatwootHub.pricing_plan != 'community' %>
-  <% if user_count && user_count > ChatwootHub.pricing_plan_quantity %>
-    <%= render "alert", role: "alert" do %>
-      <%= t("super_admin.settings.agents_over_limit", count: user_count) %>
-    <% end %>
-  <% end %>
-
-  <div class="rounded-xl border border-n-weak bg-n-solid-1 divide-y divide-n-weak">
-    <% if ChatwootApp.enterprise? %>
-      <div class="<%= summary_row %>">
-        <%= render "icon_tile", icon: "i-lucide-badge-check", tone: "bg-n-teal-3 text-n-teal-11" %>
-        <div class="min-w-0">
-          <h2 class="text-heading-3"><%= t("super_admin.settings.current_plan") %></h2>
-          <p class="text-body-main text-n-slate-11"><%= SuperAdmin::FeaturesHelper.plan_details.html_safe %></p>
-        </div>
-        <div class="<%= summary_actions %>">
-          <%= render "button", label: t("super_admin.settings.refresh"), icon: "i-lucide-refresh-cw size-3.5", url: refresh_super_admin_settings_path, variant: :secondary %>
-          <%= render "button", label: t("super_admin.settings.manage"), icon_end: "i-lucide-arrow-up-right size-3.5", url: ChatwootHub.billing_url, target: "_blank", rel: "noopener noreferrer" %>
-        </div>
-      </div>
-    <% end %>
-
-    <div class="<%= summary_row %>">
-      <%= render "icon_tile", icon: "i-lucide-fingerprint", tone: "bg-n-iris-3 text-n-iris-11" %>
-      <div class="min-w-0">
-        <h2 class="text-heading-3"><%= t("super_admin.settings.installation_identifier") %></h2>
-        <p class="text-body-main text-n-slate-11"><%= t("super_admin.settings.installation_identifier_description") %></p>
-      </div>
-      <div class="<%= summary_actions %> sm:w-80">
-        <div class="w-full"><%= render "secret", value: ChatwootHub.installation_identifier, boxed: true %></div>
-      </div>
-    </div>
-
-    <div class="<%= summary_row %>">
-      <%= render "icon_tile", icon: "i-lucide-life-buoy", tone: "bg-n-amber-3 text-n-amber-11" %>
-      <div class="min-w-0">
-        <h2 class="text-heading-3"><%= t("super_admin.settings.need_help") %></h2>
-        <p class="text-body-main text-n-slate-11"><%= t("super_admin.settings.need_help_description") %></p>
-      </div>
-      <div class="<%= summary_actions %>">
-        <%= render "button", label: t("super_admin.settings.community_support"), icon_end: "i-lucide-arrow-up-right size-3.5 text-n-slate-10", url: "https://discord.gg/cJXdrwS", target: "_blank", variant: :secondary %>
-        <% if ChatwootHub.pricing_plan != 'community' %>
-          <%= render "button", label: t("super_admin.settings.chat_support"), icon: "i-lucide-message-circle size-3.5", variant: :secondary, data: { support_chat: true } %>
-        <% end %>
-      </div>
-    </div>
-  </div>
-
   <div class="space-y-6" data-filter-scope>
     <%= render "filter_bar" %>
 
@@ -83,15 +24,6 @@
         <%= render partial: "feature_card", collection: included_features.values, as: :attrs %>
       </div>
     </div>
-
-    <% if locked_features.any? %>
-      <div data-filter-group>
-        <h2 class="mb-3 text-heading-2"><%= t("super_admin.settings.locked") %></h2>
-        <div class="<%= feature_grid %>">
-          <%= render partial: "feature_card", collection: locked_features.values, as: :attrs, locals: { locked: true } %>
-        </div>
-      </div>
-    <% end %>
 
     <p class="hidden py-8 text-center text-n-slate-11" data-filter-empty><%= t("super_admin.features.no_match") %></p>
   </div>
