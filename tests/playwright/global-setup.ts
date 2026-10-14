@@ -31,5 +31,6 @@ export default async function globalSetup(config: FullConfig) {
       origins: [],
     })
   );
+  // Keeps the session open: the browser storage state uses it.
   await api.ctx.dispose();
 }

@@ -8,7 +8,7 @@ RSpec.describe Tickets::Rules::Defaults do
     described_class.new(account).seed
 
     expect(TicketRule.where(account: account).kind_trigger.ordered.first.title).to eq('Notificar solicitante e CCs sobre pedido recebido')
-    expect(TicketRule.where(account: account).group(:kind).count).to eq('trigger' => 3, 'automation' => 2)
+    expect(TicketRule.where(account: account).group(:kind).count).to eq('trigger' => 3, 'automation' => 3)
     expect(TicketRule.where(account: account).kind_automation.pluck(:active)).to all(be(false))
   end
 end

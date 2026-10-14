@@ -34,7 +34,8 @@ class MessageTemplates::Template::CsatSurvey
 
   def content_attributes
     {
-      display_type: csat_config['display_type'] || 'emoji'
+      # Zendesk asks Good or Bad; inboxes can still choose the emoji or star scales.
+      display_type: csat_config['display_type'] || 'good_bad'
     }
   end
 end

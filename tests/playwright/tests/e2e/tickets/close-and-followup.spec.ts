@@ -26,7 +26,7 @@ test('a solved ticket closes and can no longer be changed', async ({ page, baseU
 
   await expect(api.call('post', `/conversations/${ticket.id}/messages`, { content: 'oi' })).rejects.toThrow(/422/);
   await expect(api.call('post', `/conversations/${ticket.id}/toggle_status`, { status: 'open' })).rejects.toThrow(/422/);
-  await api.ctx.dispose();
+  await api.dispose();
 });
 
 test('the close delay is configured in the ticket settings', async ({ page, baseURL }) => {
@@ -43,5 +43,5 @@ test('the close delay is configured in the ticket settings', async ({ page, base
   expect((await account.json()).settings.close_solved_after_hours).toBe(48);
   await hours.fill('96');
   await page.getByRole('button', { name: 'Salvar' }).first().click();
-  await api.ctx.dispose();
+  await api.dispose();
 });

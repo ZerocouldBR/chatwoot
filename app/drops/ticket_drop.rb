@@ -22,6 +22,10 @@ class TicketDrop < BaseDrop
     @obj.ticket_type && I18n.t("tickets.types.#{@obj.ticket_type}")
   end
 
+  def satisfaction
+    I18n.t("tickets.satisfaction.#{@obj.satisfaction}")
+  end
+
   def url
     app_account_conversation_url(account_id: @obj.account_id, id: @obj.display_id)
   end

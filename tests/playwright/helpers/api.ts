@@ -19,6 +19,12 @@ export class ApiClient {
     return new ApiClient(ctx, auth, accountId);
   }
 
+  // Signs out (each login is a session, and users have a session limit) and closes the request context.
+  async dispose() {
+    await this.ctx.delete('/auth/sign_out', { headers: this.auth });
+    await this.ctx.dispose();
+  }
+
   // Header bag the dashboard keeps in the cw_d_session_info cookie.
   sessionCookieValue() {
     return JSON.stringify(this.auth);

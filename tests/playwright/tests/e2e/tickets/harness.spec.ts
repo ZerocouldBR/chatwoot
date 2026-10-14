@@ -12,7 +12,7 @@ test('API-created ticket shows up for the logged-in admin', async ({ page, baseU
 
   await page.goto(`/app/accounts/${env.account_id}/tickets/${ticket.id}`);
   await expect(page.locator('[id^=message]').getByText(`Primeira mensagem ${stamp}`)).toBeVisible();
-  await api.ctx.dispose();
+  await api.dispose();
 });
 
 test('old conversation links still open the ticket', async ({ page, baseURL }) => {
@@ -25,7 +25,7 @@ test('old conversation links still open the ticket', async ({ page, baseURL }) =
   await page.goto(`/app/accounts/${env.account_id}/conversations/${ticket.id}`);
   await expect(page.locator('[id^=message]').getByText(`Link antigo ${stamp}`)).toBeVisible();
   await expect(page.getByRole('link', { name: 'Tickets' }).first()).toBeVisible();
-  await api.ctx.dispose();
+  await api.dispose();
 });
 
 // Regression: the "Unsolved" default filter once made the list refetch forever.
@@ -44,5 +44,5 @@ test('the ticket list loads once with the unsolved filter', async ({ page, baseU
   await expect(page.getByRole('heading', { level: 4 }).first()).toBeVisible();
   await page.waitForTimeout(5000);
   expect(listRequests).toBeLessThan(5);
-  await api.ctx.dispose();
+  await api.dispose();
 });

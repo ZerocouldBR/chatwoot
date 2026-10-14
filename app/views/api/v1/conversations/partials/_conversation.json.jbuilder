@@ -63,6 +63,8 @@ json.company_name conversation.company&.name
 json.followup_source_id conversation.followup_source&.display_id
 json.merged_into_id conversation.merged_into&.display_id
 json.problem_id conversation.problem&.display_id
+json.satisfaction conversation.satisfaction
+json.satisfaction_comment conversation.satisfaction_comment unless conversation.satisfaction_unoffered?
 json.incident_ids conversation.incidents.pluck(:display_id) if conversation.ticket_type_problem?
 json.cc_emails conversation.conversation_ccs.map(&:email)
 json.sla_policy_id conversation.sla_policy_id

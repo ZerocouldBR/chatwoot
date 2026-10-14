@@ -697,6 +697,11 @@ pt_BR:
       medium: 'Normal'
       high: 'Alta'
       urgent: 'Urgente'
+    satisfaction:
+      unoffered: 'Não oferecida'
+      offered: 'Oferecida'
+      good: 'Boa'
+      bad: 'Ruim'
     types:
       question: 'Pergunta'
       incident: 'Incidente'
@@ -719,6 +724,8 @@ pt_BR:
           title: 'Lembrete de pendente após 24 horas'
           subject: '[Lembrete] {{ticket.title}}'
           body: "Estamos aguardando sua resposta na solicitação #{{ticket.id}}. Responda a este e-mail para continuar."
+        satisfaction_request:
+          title: 'Solicitar avaliação de satisfação do cliente'
         pending_reminder_5d:
           title: 'Lembrete de pendente após 5 dias'
           subject: '[Lembrete] {{ticket.title}}'

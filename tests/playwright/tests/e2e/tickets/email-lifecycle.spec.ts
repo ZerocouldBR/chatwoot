@@ -21,7 +21,7 @@ test.describe('e-mail tickets', () => {
   });
 
   test.afterEach(async () => {
-    await api.ctx.dispose();
+    await api.dispose();
   });
 
   test('customer e-mail opens a ticket, pending waits for the customer and the reply reopens it', async () => {

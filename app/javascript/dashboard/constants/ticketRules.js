@@ -22,6 +22,7 @@ const COMMON_CONDITIONS = {
   channel: { operators: IDENTITY, input: 'channel' },
   labels: { operators: ['includes', 'not_includes'], input: 'text' },
   subject: { operators: TEXT, input: 'text' },
+  satisfaction: { operators: IDENTITY, changes: true, input: 'satisfaction' },
 };
 
 const TRIGGER_CONDITIONS = {
@@ -85,6 +86,7 @@ export const ACTIONS = {
   email_group: { input: 'email', target: 'team' },
   email_user: { input: 'email', target: 'agent' },
   notify_webhook: { input: 'text' },
+  request_satisfaction: { input: 'none' },
 };
 
 export const STATUSES = [
@@ -119,6 +121,7 @@ export const CHANNELS = [
   'tiktok',
 ];
 export const VIAS = ['agent', 'customer', 'rule', 'bot', 'system'];
+export const SATISFACTIONS = ['unoffered', 'offered', 'good', 'bad'];
 export const PLACEHOLDERS = [
   '{{ticket.id}}',
   '{{ticket.title}}',

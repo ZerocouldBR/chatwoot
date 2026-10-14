@@ -3,7 +3,11 @@ import { computed } from 'vue';
 import BaseBubble from './Base.vue';
 import FormattedContent from './Text/FormattedContent.vue';
 import { useI18n } from 'vue-i18n';
-import { CSAT_RATINGS, CSAT_DISPLAY_TYPES } from 'shared/constants/messages';
+import {
+  CSAT_RATINGS,
+  CSAT_DISPLAY_TYPES,
+  CSAT_GOOD_BAD_RATINGS,
+} from 'shared/constants/messages';
 import { useMessageContext } from '../provider.js';
 
 const { contentAttributes, content } = useMessageContext();
@@ -24,6 +28,10 @@ const displayType = computed(() => {
 const isStarRating = computed(() => {
   return displayType.value === CSAT_DISPLAY_TYPES.STAR;
 });
+
+const isGoodBad = computed(
+  () => displayType.value === CSAT_DISPLAY_TYPES.GOOD_BAD
+);
 
 const rating = computed(() => {
   if (isRatingSubmitted.value) {
@@ -48,7 +56,16 @@ const starRatingValue = computed(() => {
       <dt class="text-n-slate-11 italic">
         {{ t('CONVERSATION.RATING_TITLE') }}
       </dt>
-      <dd v-if="!isStarRating">
+      <dd v-if="isGoodBad">
+        {{
+          t(
+            response.rating === CSAT_GOOD_BAD_RATINGS.GOOD
+              ? 'CONVERSATION.SATISFACTION.good'
+              : 'CONVERSATION.SATISFACTION.bad'
+          )
+        }}
+      </dd>
+      <dd v-else-if="!isStarRating">
         {{ t(rating.translationKey) }}
       </dd>
       <dd v-else class="flex mt-1">

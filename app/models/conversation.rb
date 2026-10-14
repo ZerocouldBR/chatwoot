@@ -17,6 +17,7 @@
 #  last_activity_at       :datetime         not null
 #  next_sla_breach_at     :datetime
 #  priority               :integer
+#  satisfaction           :integer          default(0), not null
 #  sla_breached           :boolean          default(FALSE), not null
 #  status                 :integer          default("new_ticket"), not null
 #  status_changed_at      :datetime
@@ -87,6 +88,7 @@ class Conversation < ApplicationRecord
   include SlaTrackable
   include TicketProblemLinkable
   include TicketTrashable
+  include TicketSatisfaction
 
   CONVERSATION_UPDATED_ADDITIONAL_ATTRIBUTE_KEYS = %w[conversation_language].freeze
   FILTERED_UNREAD_COUNT_ADDITIONAL_ATTRIBUTE_KEYS = %w[browser_language conversation_language mail_subject referer].freeze

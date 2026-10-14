@@ -25,7 +25,8 @@
 #
 class TicketRule < ApplicationRecord
   ACTION_FIELDS = %w[status priority ticket_type team_id assignee_id add_tags remove_tags set_tags add_cc add_follower
-                     email_requester email_requester_and_ccs email_assignee email_group email_user notify_webhook].freeze
+                     email_requester email_requester_and_ccs email_assignee email_group email_user notify_webhook
+                     request_satisfaction].freeze
   EMAIL_ACTIONS = %w[email_requester email_requester_and_ccs email_assignee email_group email_user].freeze
 
   belongs_to :account
@@ -84,9 +85,15 @@ class TicketRule < ApplicationRecord
   def nullifies?(condition, action)
     field, operator, value = condition.values_at('field', 'operator', 'value')
     return tags_nullify?(operator, value.to_s.split, action) if field == 'labels'
+    return satisfaction_nullified?(operator, value, action) if field == 'satisfaction'
     return false unless action['field'] == field
 
     operator == 'is' ? action['value'].to_s != value.to_s : operator == 'is_not' && action['value'].to_s == value.to_s
+  end
+
+  # Requesting the survey makes the ticket's satisfaction "offered".
+  def satisfaction_nullified?(operator, value, action)
+    action['field'] == 'request_satisfaction' && operator == 'is' && value == 'unoffered'
   end
 
   def tags_nullify?(operator, tags, action)

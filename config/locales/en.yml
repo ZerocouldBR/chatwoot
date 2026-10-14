@@ -1073,6 +1073,11 @@ en:
       medium: 'Normal'
       high: 'High'
       urgent: 'Urgent'
+    satisfaction:
+      unoffered: 'Unoffered'
+      offered: 'Offered'
+      good: 'Good'
+      bad: 'Bad'
     types:
       question: 'Question'
       incident: 'Incident'
@@ -1095,6 +1100,8 @@ en:
           title: 'Pending notification 24 hours'
           subject: '[Reminder] {{ticket.title}}'
           body: "We are waiting for your reply on request #{{ticket.id}}. Reply to this email to continue."
+        satisfaction_request:
+          title: 'Request customer satisfaction rating'
         pending_reminder_5d:
           title: 'Pending notification 5 days'
           subject: '[Reminder] {{ticket.title}}'

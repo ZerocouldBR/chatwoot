@@ -5,6 +5,7 @@ import Rating from 'survey/components/Rating.vue';
 import Feedback from 'survey/components/Feedback.vue';
 import Banner from 'survey/components/Banner.vue';
 import StarRating from 'shared/components/StarRating.vue';
+import GoodBadRating from 'shared/components/GoodBadRating.vue';
 import { useMessageFormatter } from 'shared/composables/useMessageFormatter';
 import { getSurveyDetails, updateSurvey } from 'survey/api/survey';
 
@@ -18,6 +19,7 @@ export default {
     Banner,
     Feedback,
     StarRating,
+    GoodBadRating,
   },
   setup() {
     const { formatMessage } = useMessageFormatter();
@@ -61,6 +63,9 @@ export default {
     },
     isStarType() {
       return this.displayType === CSAT_DISPLAY_TYPES.STAR;
+    },
+    isGoodBadType() {
+      return this.displayType === CSAT_DISPLAY_TYPES.GOOD_BAD;
     },
     shouldShowBanner() {
       return this.isRatingSubmitted || this.errorMessage;
@@ -201,6 +206,14 @@ export default {
           :selected-rating="selectedRating"
           :is-disabled="isFeedbackSubmitted || isUpdating"
           class="[&>button>span]:text-4xl !justify-start !px-0"
+          @select-rating="selectRating"
+        />
+        <GoodBadRating
+          v-if="isGoodBadType"
+          :selected-rating="selectedRating"
+          :is-disabled="isFeedbackSubmitted || isUpdating"
+          :good-label="$t('SURVEY.GOOD_BAD.GOOD')"
+          :bad-label="$t('SURVEY.GOOD_BAD.BAD')"
           @select-rating="selectRating"
         />
         <Feedback

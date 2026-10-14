@@ -6,6 +6,7 @@ import {
   CHANNELS,
   PRIORITIES,
   RULE_SETTABLE_STATUSES,
+  SATISFACTIONS,
   STATUSES,
   TICKET_TYPES,
   VIAS,
@@ -75,6 +76,10 @@ const options = computed(() => {
       return fromKeys(['public', 'private', 'present'], valueLabel);
     case 'via':
       return fromKeys(VIAS, valueLabel);
+    case 'satisfaction':
+      return fromKeys(SATISFACTIONS, id =>
+        t(`CONVERSATION.SATISFACTION.${id}`)
+      );
     case 'boolean':
       return fromKeys(['true', 'false'], valueLabel);
     default:
@@ -84,8 +89,9 @@ const options = computed(() => {
 </script>
 
 <template>
+  <span v-if="input === 'none'" />
   <select
-    v-if="options"
+    v-else-if="options"
     v-model="value"
     data-testid="rule-value"
     :aria-label="$t('TICKET_RULES.VALUE')"

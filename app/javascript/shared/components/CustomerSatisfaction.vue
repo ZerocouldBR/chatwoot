@@ -4,6 +4,7 @@ import Spinner from 'shared/components/Spinner.vue';
 import { CSAT_RATINGS, CSAT_DISPLAY_TYPES } from 'shared/constants/messages';
 import FluentIcon from 'shared/components/FluentIcon/Index.vue';
 import StarRating from 'shared/components/StarRating.vue';
+import GoodBadRating from 'shared/components/GoodBadRating.vue';
 import { useMessageFormatter } from 'shared/composables/useMessageFormatter';
 import { getContrastingTextColor } from '@chatwoot/utils';
 
@@ -12,6 +13,7 @@ export default {
     Spinner,
     FluentIcon,
     StarRating,
+    GoodBadRating,
   },
   props: {
     messageContentAttributes: {
@@ -74,6 +76,9 @@ export default {
     },
     isStarType() {
       return this.displayType === CSAT_DISPLAY_TYPES.STAR;
+    },
+    isGoodBadType() {
+      return this.displayType === CSAT_DISPLAY_TYPES.GOOD_BAD;
     },
   },
 
@@ -150,6 +155,15 @@ export default {
         {{ rating.emoji }}
       </button>
     </div>
+    <GoodBadRating
+      v-else-if="isGoodBadType"
+      class="px-4"
+      :selected-rating="selectedRating"
+      :is-disabled="isFeedbackSubmitted || isUpdating"
+      :good-label="$t('CSAT.GOOD')"
+      :bad-label="$t('CSAT.BAD')"
+      @select-rating="selectStarRating"
+    />
     <StarRating
       v-else-if="isStarType"
       :selected-rating="selectedRating"

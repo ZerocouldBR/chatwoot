@@ -28,6 +28,7 @@ class Tickets::Rules::ActionApplier
     when 'add_tags', 'remove_tags', 'set_tags' then @conversation.update!(label_list: new_tags(field, value.to_s.split))
     when 'add_cc' then Tickets::CcList.new(@conversation).add(value, author: @rule, via: 'rule')
     when 'add_follower' then @conversation.conversation_participants.find_or_create_by!(user_id: value)
+    when 'request_satisfaction' then Tickets::SatisfactionRequestService.new(conversation: @conversation).perform
     end
   end
 

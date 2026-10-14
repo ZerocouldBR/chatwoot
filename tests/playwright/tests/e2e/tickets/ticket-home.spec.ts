@@ -30,5 +30,5 @@ test('agent home lists my tickets, CCs and followed tickets', async ({ page, bas
 
   await page.getByTestId('home-ticket').filter({ hasText: `Seguindo ${stamp}` }).click();
   await expect(page).toHaveURL(new RegExp(`/tickets/${followed.id}$`));
-  await api.ctx.dispose();
+  await api.dispose();
 });

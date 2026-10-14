@@ -38,6 +38,8 @@ class CsatSurveyResponse < ApplicationRecord
   validates :contact_id, presence: true
   validates :conversation_id, presence: true
 
+  after_save_commit -> { conversation.rate_satisfaction!(rating) }, if: :saved_change_to_rating?
+
   scope :filter_by_created_at, ->(range) { where(created_at: range) if range.present? }
   scope :filter_by_assigned_agent_id, ->(user_ids) { where(assigned_agent_id: user_ids) if user_ids.present? }
   scope :filter_by_inbox_id, ->(inbox_id) { joins(:conversation).where(conversations: { inbox_id: inbox_id }) if inbox_id.present? }

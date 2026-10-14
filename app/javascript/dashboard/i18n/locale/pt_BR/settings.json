@@ -1235,7 +1235,8 @@
       "hours_since_assigned": "Horas desde a atribuição",
       "hours_since_requester_update": "Horas desde a atualização do solicitante",
       "hours_since_assignee_update": "Horas desde a atualização do atribuído",
-      "hours_until_due_date": "Horas até o vencimento"
+      "hours_until_due_date": "Horas até o vencimento",
+      "satisfaction": "Satisfação"
     },
     "OPERATORS": {
       "is": "é",
@@ -1267,7 +1268,8 @@
       "email_assignee": "Enviar e-mail ao atribuído",
       "email_group": "Enviar e-mail ao grupo",
       "email_user": "Enviar e-mail a um usuário",
-      "notify_webhook": "Notificar webhook"
+      "notify_webhook": "Notificar webhook",
+      "request_satisfaction": "Solicitar avaliação de satisfação"
     },
     "VALUES": {
       "NONE": "(nenhum)",

@@ -18,9 +18,10 @@ class Tickets::Rules::Conditions
     'contact_id' => IDENTITY_OPERATORS,
     'channel' => IDENTITY_OPERATORS,
     'labels' => %w[includes not_includes],
-    'subject' => %w[contains not_contains]
+    'subject' => %w[contains not_contains],
+    'satisfaction' => IDENTITY_OPERATORS
   }.freeze
-  CHANGEABLE_FIELDS = %w[status priority ticket_type team_id assignee_id company_id contact_id].freeze
+  CHANGEABLE_FIELDS = %w[status priority ticket_type team_id assignee_id company_id contact_id satisfaction].freeze
   TRIGGER_OPERATORS = {
     'ticket' => %w[is], # created | updated
     'comment' => %w[is], # public | private | present

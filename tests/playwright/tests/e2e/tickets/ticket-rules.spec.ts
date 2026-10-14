@@ -18,7 +18,7 @@ test.describe('triggers and automations', () => {
 
   test.afterEach(async () => {
     while (created.length) await api.call('delete', `/ticket_rules/${created.pop()}`);
-    await api.ctx.dispose();
+    await api.dispose();
   });
 
   test('a trigger made in settings raises the priority of tickets tagged vip', async ({ page }) => {

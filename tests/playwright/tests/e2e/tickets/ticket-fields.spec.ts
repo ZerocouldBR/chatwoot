@@ -30,7 +30,7 @@ test('agent edits subject, type and due date of a ticket', async ({ page, baseUR
       return [current.subject, current.ticket_type, current.due_at ? new Date(Number(current.due_at) * 1000).toISOString().slice(0, 10) : null];
     })
     .toEqual([`Cancelamento ${stamp}`, 'task', '2030-05-20']);
-  await api.ctx.dispose();
+  await api.dispose();
 });
 
 test('agent copies and uncopies people on a ticket', async ({ page, baseURL }) => {
@@ -49,5 +49,5 @@ test('agent copies and uncopies people on a ticket', async ({ page, baseURL }) =
 
   await ccs.getByRole('button', { name: `Remover gerente-${stamp}@example.test` }).click();
   await expect(ccs.getByText('Ninguém em cópia')).toBeVisible();
-  await api.ctx.dispose();
+  await api.dispose();
 });

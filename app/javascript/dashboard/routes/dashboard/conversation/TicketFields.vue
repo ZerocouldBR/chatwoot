@@ -259,6 +259,24 @@ const onDueDateChange = event => {
     </div>
     <ContactDetailsItem
       compact
+      :title="$t('CONVERSATION.SATISFACTION.LABEL')"
+    />
+    <p class="mb-2 text-sm text-n-slate-12" data-testid="ticket-satisfaction">
+      <span
+        class="font-medium"
+        :class="{
+          'text-n-teal-11': conversation.satisfaction === 'good',
+          'text-n-ruby-11': conversation.satisfaction === 'bad',
+        }"
+      >
+        {{ $t(`CONVERSATION.SATISFACTION.${conversation.satisfaction}`) }}
+      </span>
+      <span v-if="conversation.satisfaction_comment" class="text-n-slate-11">
+        · {{ conversation.satisfaction_comment }}
+      </span>
+    </p>
+    <ContactDetailsItem
+      compact
       :title="$t('CONVERSATION.TICKET_FIELDS.COMPANY')"
     />
     <p class="mb-2 text-sm text-n-slate-12">

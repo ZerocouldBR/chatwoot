@@ -486,7 +486,8 @@
         "contact_id": "Requester",
         "cached_label_list": "Tags",
         "ccs": "CC",
-        "problem_id": "Problem"
+        "problem_id": "Problem",
+        "satisfaction": "Satisfaction"
       },
       "CHANGE_VALUES": "{from} → {to}",
       "META": "{via} · {time}",
@@ -501,7 +502,14 @@
       "DAYS": "{count}d",
       "TOOLTIP": "Time left before the next SLA target"
     },
-    "MERGED_INTO": "Merged into #{id}"
+    "MERGED_INTO": "Merged into #{id}",
+    "SATISFACTION": {
+      "LABEL": "Satisfaction",
+      "unoffered": "Not offered",
+      "offered": "Offered",
+      "good": "Good",
+      "bad": "Bad"
+    }
   },
   "EMAIL_TRANSCRIPT": {
     "TITLE": "Send ticket transcript",

@@ -17,7 +17,7 @@ test.describe('SLA', () => {
 
   test.afterEach(async () => {
     if (policyId) await api.call('delete', `/sla_policies/${policyId}`);
-    await api.ctx.dispose();
+    await api.dispose();
   });
 
   test('admin creates a policy and urgent tickets show the first reply target', async ({ page }) => {

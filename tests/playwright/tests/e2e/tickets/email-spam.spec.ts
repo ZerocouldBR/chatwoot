@@ -23,7 +23,7 @@ test.describe('spam and suspended tickets', () => {
 
   test.afterEach(async () => {
     if (contactId) await api.call('put', `/contacts/${contactId}`, { blocked: false });
-    await api.ctx.dispose();
+    await api.dispose();
   });
 
   test('marking a ticket as spam suspends the next e-mail, which can be recovered', async ({ page }) => {

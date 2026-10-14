@@ -3,7 +3,10 @@ module TicketAuditable
   extend ActiveSupport::Concern
 
   TRIGGER_DELAY = 2.seconds
-  AUDITED_FIELDS = %w[status priority assignee_id team_id subject ticket_type due_at company_id contact_id problem_id cached_label_list].freeze
+  AUDITED_FIELDS = %w[
+    status priority assignee_id team_id subject ticket_type due_at
+    company_id contact_id problem_id satisfaction cached_label_list
+  ].freeze
 
   included do
     has_many :conversation_events, dependent: :delete_all

@@ -14,7 +14,7 @@ test.describe('merge, problems and trash', () => {
   });
 
   test.afterEach(async () => {
-    await api.ctx.dispose();
+    await api.dispose();
   });
 
   const ticketUrl = (id: number) => `/app/accounts/${env.account_id}/tickets/${id}`;

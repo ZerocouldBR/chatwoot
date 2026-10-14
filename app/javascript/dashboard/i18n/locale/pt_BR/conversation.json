@@ -456,7 +456,8 @@
         "contact_id": "Solicitante",
         "cached_label_list": "Tags",
         "ccs": "Em cópia (CC)",
-        "problem_id": "Problema"
+        "problem_id": "Problema",
+        "satisfaction": "Satisfação"
       },
       "CHANGE_VALUES": "{from} → {to}",
       "META": "{via} · {time}",
@@ -471,7 +472,14 @@
       "DAYS": "{count} d",
       "TOOLTIP": "Tempo até a próxima meta de SLA"
     },
-    "MERGED_INTO": "Mesclado no #{id}"
+    "MERGED_INTO": "Mesclado no #{id}",
+    "SATISFACTION": {
+      "LABEL": "Satisfação",
+      "unoffered": "Não oferecida",
+      "offered": "Oferecida",
+      "good": "Boa",
+      "bad": "Ruim"
+    }
   },
   "EMAIL_TRANSCRIPT": {
     "TITLE": "Enviar transcrição de ticket",

@@ -17,7 +17,7 @@ test.describe('ticket status lifecycle', () => {
   });
 
   test.afterEach(async () => {
-    await api.ctx.dispose();
+    await api.dispose();
   });
 
   test('new ticket can be put on hold, submitted as pending and resolved', async ({ page }) => {

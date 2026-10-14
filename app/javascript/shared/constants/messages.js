@@ -92,7 +92,11 @@ export const CSAT_RATINGS = [
 export const CSAT_DISPLAY_TYPES = {
   EMOJI: 'emoji',
   STAR: 'star',
+  GOOD_BAD: 'good_bad',
 };
+
+// Good/Bad ratings are stored on the 1-5 scale so CSAT reports keep working.
+export const CSAT_GOOD_BAD_RATINGS = { GOOD: 5, BAD: 1 };
 
 export const AUDIO_FORMATS = {
   WEBM: 'audio/webm',

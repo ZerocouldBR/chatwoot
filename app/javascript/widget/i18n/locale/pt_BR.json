@@ -114,7 +114,9 @@
   "CSAT": {
     "TITLE": "Avalie sua conversa",
     "SUBMITTED_TITLE": "Obrigado por enviar a classificação",
-    "PLACEHOLDER": "Conte-nos mais..."
+    "PLACEHOLDER": "Conte-nos mais...",
+    "GOOD": "Bom",
+    "BAD": "Ruim"
   },
   "EMAIL_TRANSCRIPT": {
     "BUTTON_TEXT": "Solicitar uma transcrição de conversa",

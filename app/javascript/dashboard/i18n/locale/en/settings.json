@@ -1272,7 +1272,8 @@
       "hours_since_assigned": "Hours since assigned",
       "hours_since_requester_update": "Hours since requester update",
       "hours_since_assignee_update": "Hours since assignee update",
-      "hours_until_due_date": "Hours until due date"
+      "hours_until_due_date": "Hours until due date",
+      "satisfaction": "Satisfaction"
     },
     "OPERATORS": {
       "is": "is",
@@ -1304,7 +1305,8 @@
       "email_assignee": "Email assignee",
       "email_group": "Email group",
       "email_user": "Email user",
-      "notify_webhook": "Notify webhook"
+      "notify_webhook": "Notify webhook",
+      "request_satisfaction": "Request satisfaction rating"
     },
     "VALUES": {
       "NONE": "(none)",

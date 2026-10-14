@@ -12,7 +12,8 @@ users = {
   agent: { email: ENV.fetch('E2E_AGENT_EMAIL', 'e2e-agent@helpdesk.test'), name: 'Bruno Agente', role: :agent }
 }.transform_values do |attrs|
   user = User.find_or_initialize_by(email: attrs[:email])
-  user.assign_attributes(name: attrs[:name], password: password, password_confirmation: password)
+  # Sessions left over from earlier runs would hit the per-user session limit.
+  user.assign_attributes(name: attrs[:name], password: password, password_confirmation: password, tokens: {})
   user.skip_confirmation! if user.new_record?
   user.save!
   AccountUser.find_or_create_by!(account: account, user: user) { |au| au.role = attrs[:role] }

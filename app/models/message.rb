@@ -333,6 +333,7 @@ class Message < ApplicationRecord
   def execute_after_create_commit_callbacks
     # rails issue with order of active record callbacks being executed https://github.com/rails/rails/issues/20911
     record_ticket_comment
+    conversation.offer_satisfaction! if input_csat?
     reopen_conversation
     fill_conversation_subject
     mark_pending_conversation_as_open_for_human_response

@@ -20,5 +20,5 @@ test('ticket events list the agent changes and comments', async ({ page, baseURL
   await expect(events.getByText('Novo → Em espera')).toBeVisible();
   await expect(events.getByText('Ana Admin adicionou uma nota interna')).toBeVisible();
   await expect(events.getByText(/criou o ticket/)).toBeVisible();
-  await api.ctx.dispose();
+  await api.dispose();
 });

@@ -38,8 +38,17 @@ class Tickets::Rules::Defaults
   def automations
     [
       pending_reminder('pending_reminder_24h', 24),
-      pending_reminder('pending_reminder_5d', 120)
+      pending_reminder('pending_reminder_5d', 120),
+      satisfaction_request
     ]
+  end
+
+  # Zendesk's system automation: one day after the ticket is solved, the requester is asked to rate it.
+  def satisfaction_request
+    { title: t('satisfaction_request.title'), active: false,
+      conditions: { all: [condition('status', 'is', 'resolved'), condition('hours_since_resolved', 'is', '24'),
+                          condition('satisfaction', 'is', 'unoffered')], any: [] },
+      actions: [{ field: 'request_satisfaction', value: '' }] }
   end
 
   def pending_reminder(key, hours)

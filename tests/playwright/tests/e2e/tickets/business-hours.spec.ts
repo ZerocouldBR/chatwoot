@@ -34,5 +34,5 @@ test('admin creates a schedule with Saturday hours and a holiday', async ({ page
   expect(schedule.holidays.map(holiday => holiday.name)).toEqual(['Natal']);
 
   await api.call('delete', `/business_schedules/${schedule.id}`);
-  await api.ctx.dispose();
+  await api.dispose();
 });
