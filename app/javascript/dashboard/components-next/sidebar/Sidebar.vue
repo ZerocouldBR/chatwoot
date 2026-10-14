@@ -946,6 +946,13 @@ const menuItems = computed(() => {
           to: accountScopedRoute('conversation_workflow_index'),
         },
         {
+          // ServiceDesk: credenciais e configuração da 55PBX (só administrador, pela permissão da rota)
+          name: 'Settings Telephony 55PBX',
+          label: t('SIDEBAR.SD_TELEPHONY'),
+          icon: 'i-lucide-phone-call',
+          to: accountScopedRoute('sd_telephony_settings_index'),
+        },
+        {
           name: 'Settings Security',
           label: t('SIDEBAR.SECURITY'),
           icon: 'i-lucide-shield',
