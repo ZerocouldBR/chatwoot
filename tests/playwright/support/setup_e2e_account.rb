@@ -23,4 +23,21 @@ api_inbox = account.inboxes.find_by(name: 'E2E API') ||
             account.inboxes.create!(name: 'E2E API', channel: Channel::Api.create!(account: account))
 User.where(email: users.values.pluck(:email)).find_each { |u| InboxMember.find_or_create_by!(inbox: api_inbox, user: u) }
 
-puts "E2E_JSON:#{{ account_id: account.id, users: users, api_inbox_id: api_inbox.id }.to_json}"
+# Real e-mail inbox for the e-mail scenarios, when the test mailbox is configured (tests/playwright/.env).
+email_inbox_id = nil
+if ENV['MAIL_SUPPORT_ADDRESS'].present?
+  channel = Channel::Email.find_by(email: ENV.fetch('MAIL_SUPPORT_ADDRESS'), account: account) ||
+            Channel::Email.new(account: account, email: ENV.fetch('MAIL_SUPPORT_ADDRESS'))
+  channel.update!(
+    imap_enabled: true, imap_address: ENV.fetch('MAIL_SUPPORT_IMAP_HOST'), imap_port: ENV.fetch('MAIL_SUPPORT_IMAP_PORT'),
+    imap_login: ENV.fetch('MAIL_SUPPORT_USER'), imap_password: ENV.fetch('MAIL_SUPPORT_PASSWORD'), imap_enable_ssl: true,
+    smtp_enabled: true, smtp_address: ENV.fetch('MAIL_SUPPORT_SMTP_HOST'), smtp_port: ENV.fetch('MAIL_SUPPORT_SMTP_PORT'),
+    smtp_login: ENV.fetch('MAIL_SUPPORT_USER'), smtp_password: ENV.fetch('MAIL_SUPPORT_PASSWORD'), smtp_enable_ssl_tls: true, smtp_enable_starttls_auto: false,
+    smtp_domain: ENV.fetch('MAIL_SUPPORT_ADDRESS').split('@').last, smtp_authentication: 'login'
+  )
+  email_inbox = channel.inbox || account.inboxes.create!(name: 'E2E E-mail', channel: channel)
+  User.where(email: users.values.pluck(:email)).find_each { |u| InboxMember.find_or_create_by!(inbox: email_inbox, user: u) }
+  email_inbox_id = email_inbox.id
+end
+
+puts "E2E_JSON:#{{ account_id: account.id, users: users, api_inbox_id: api_inbox.id, email_inbox_id: email_inbox_id }.to_json}"

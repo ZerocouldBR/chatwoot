@@ -58,6 +58,29 @@ export class ApiClient {
     });
   }
 
+  async listConversations(inboxId: number) {
+    const res = await this.call<{ data: { payload: Array<Record<string, unknown>> } }>(
+      'get',
+      `/conversations?inbox_id=${inboxId}&status=all&assignee_type=all`
+    );
+    return res.data.payload;
+  }
+
+  // Polls the inbox until a ticket matches, e.g. one created from an e-mail that is still being fetched over IMAP.
+  async waitForConversation(
+    inboxId: number,
+    predicate: (conversation: Record<string, unknown>) => boolean,
+    { timeoutMs = 240_000, intervalMs = 5_000 } = {}
+  ) {
+    const deadline = Date.now() + timeoutMs;
+    while (Date.now() < deadline) {
+      const match = (await this.listConversations(inboxId)).find(predicate);
+      if (match) return match;
+      await new Promise(resolve => setTimeout(resolve, intervalMs));
+    }
+    throw new Error(`no matching ticket in inbox ${inboxId} within ${timeoutMs}ms`);
+  }
+
   async getConversation(id: number) {
     return this.call<Record<string, unknown>>('get', `/conversations/${id}`);
   }

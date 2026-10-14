@@ -11,6 +11,7 @@ export type E2EUser = { id: number; email: string; name: string };
 export type E2EEnv = {
   account_id: number;
   api_inbox_id: number;
+  email_inbox_id: number | null;
   users: { admin: E2EUser; agent: E2EUser };
 };
 

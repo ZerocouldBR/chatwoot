@@ -150,6 +150,15 @@ RSpec.describe Imap::ImapMailbox do
       end
     end
 
+    context 'when the email was sent from the support address itself' do
+      let(:inbound_mail) { create_inbound_email_from_mail(from: channel.email, to: 'cliente@example.com', subject: 'Re: Hello!') }
+
+      it 'ignores it instead of adding it to a ticket' do
+        expect { class_instance.process(inbound_mail.mail, channel) }.not_to change(Conversation, :count)
+        expect(Message.where(inbox: channel.inbox)).to be_empty
+      end
+    end
+
     context 'when an auto reply email' do
       let(:auto_reply_mail) { create_inbound_email_from_fixture('auto_reply.eml') }
 
