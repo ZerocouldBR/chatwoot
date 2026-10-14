@@ -46,7 +46,13 @@ import {
   removeSignature,
   getEffectiveChannelType,
   getReplyVariables,
+  resolveVariablesInMessage,
 } from 'dashboard/helper/editorHelper';
+import {
+  editorModeForFill,
+  isFillForConversation,
+  loadMacroFiles,
+} from 'dashboard/servicedesk/macroEditorFill';
 import { useCopilotReply } from 'dashboard/composables/useCopilotReply';
 import { useMacroExecution } from 'dashboard/composables/useMacroExecution';
 import ConversationResolveAttributesModal from 'dashboard/components-next/ConversationWorkflow/ConversationResolveAttributesModal.vue';
@@ -634,6 +640,7 @@ export default {
       this.onNewConversationModalActive
     );
     emitter.on(CMD_AI_ASSIST, this.executeCopilotAction);
+    emitter.on(BUS_EVENTS.SD_MACRO_FILL_EDITOR, this.onMacroFillEditor);
   },
   unmounted() {
     document.removeEventListener('paste', this.onPaste);
@@ -643,6 +650,7 @@ export default {
       this.onNewConversationModalActive
     );
     emitter.off(CMD_AI_ASSIST, this.executeCopilotAction);
+    emitter.off(BUS_EVENTS.SD_MACRO_FILL_EDITOR, this.onMacroFillEditor);
   },
   methods: {
     openContactInfoTemplateModal() {
@@ -834,6 +842,35 @@ export default {
     },
     toggleMacrosMenu(value) {
       this.showMacrosMenu = value;
+    },
+    // ServiceDesk M5.1: a resposta/nota da macro entra no editor para revisão (não é enviada).
+    async onMacroFillEditor(fill) {
+      if (!isFillForConversation(fill, this.currentChat?.id)) return;
+
+      const mode = editorModeForFill(fill);
+      if (this.replyType !== mode) this.setReplyMode(mode);
+      // espera o editor trocar de modo e carregar o rascunho antes de inserir
+      for (let tick = 0; tick < 2; tick += 1) {
+        // eslint-disable-next-line no-await-in-loop
+        await new Promise(resolve => {
+          this.$nextTick(resolve);
+        });
+      }
+
+      if (fill.content) {
+        emitter.emit(
+          BUS_EVENTS.INSERT_INTO_RICH_EDITOR,
+          resolveVariablesInMessage(fill.content, this.messageVariables)
+        );
+      }
+
+      const files = fill.files || [];
+      if (!files.length) return;
+      const loaded = await loadMacroFiles(files);
+      loaded.forEach(file => this.onFileUpload(file));
+      if (loaded.length < files.length) {
+        useAlert(this.$t('MACROS.EXECUTE.ATTACHMENT_FAILED'));
+      }
     },
     onExecuteMacro(macro) {
       const pending = this.macroExecution.execute(macro, this.currentChat.id);

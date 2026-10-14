@@ -13,6 +13,7 @@ import {
   PRIORITY_CONDITION_VALUES,
 } from 'dashboard/constants/automation';
 import { STATUS_FILTER_OPTIONS } from 'dashboard/constants/ticketStatuses';
+import { getTicketStatusOptions } from 'dashboard/servicedesk/actionOptions';
 
 /**
  * This is a shared composables that holds utilities used to build dropdown and file options
@@ -28,6 +29,11 @@ export default function useAutomationValues() {
   const labels = useMapGetter('labels/getLabels');
   const teams = useMapGetter('teams/getTeams');
   const slaPolicies = useMapGetter('sla/getSLA');
+  const attributesByModel = useMapGetter('attributes/getAttributesByModel');
+  const conversationAttributes = () =>
+    typeof attributesByModel.value === 'function'
+      ? attributesByModel.value('conversation_attribute')
+      : [];
 
   const booleanFilterOptions = computed(() => [
     { id: true, name: t('FILTER.ATTRIBUTE_LABELS.TRUE') },
@@ -120,6 +126,10 @@ export default function useAutomationValues() {
       type,
       addNoneToListFn: addNoneToList,
       priorityOptions: priorityOptions.value,
+      ticketStatusOptions:
+        type === 'set_ticket_status'
+          ? getTicketStatusOptions(conversationAttributes())
+          : [],
     });
   };
 

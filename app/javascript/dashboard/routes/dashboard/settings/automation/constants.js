@@ -832,6 +832,22 @@ export const AUTOMATION_ACTION_TYPES = [
     label: 'ADD_SLA',
     inputType: 'search_select',
   },
+  // ServiceDesk M4: status do ticket (rótulo + status canônico), campo e assunto
+  {
+    key: 'set_ticket_status',
+    label: 'SET_TICKET_STATUS',
+    inputType: 'search_select',
+  },
+  {
+    key: 'set_custom_attribute',
+    label: 'SET_CUSTOM_ATTRIBUTE',
+    inputType: 'custom_attribute',
+  },
+  {
+    key: 'change_subject',
+    label: 'CHANGE_SUBJECT',
+    inputType: 'text',
+  },
 ];
 
 export const DEFAULT_DELAY_MINUTES = 240; // 4 hours
