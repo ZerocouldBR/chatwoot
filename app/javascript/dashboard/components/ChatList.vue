@@ -18,6 +18,7 @@ import ConversationBulkActions from './widgets/conversation/conversationBulkActi
 import TeleportWithDirection from 'dashboard/components-next/TeleportWithDirection.vue';
 import ConversationResolveAttributesModal from 'dashboard/components-next/ConversationWorkflow/ConversationResolveAttributesModal.vue';
 import TicketTable from 'dashboard/servicedesk/ticketList/TicketTable.vue';
+import { toNativeStatus } from 'dashboard/servicedesk/statusFilter';
 import { useTicketListMode } from 'dashboard/servicedesk/ticketList/useTicketListMode';
 
 import { useUISettings } from 'dashboard/composables/useUISettings';
@@ -514,8 +515,9 @@ function setParamsForEditFolderModal() {
 }
 
 function initializeExistingFilterToModal() {
+  // ServiceDesk: Pendente/Em espera viram o status nativo (snoozed) no modal
   const statusFilter = initializeStatusAndAssigneeFilterToModal(
-    activeStatus.value,
+    toNativeStatus(activeStatus.value),
     currentUserDetails.value,
     activeAssigneeTab.value
   );

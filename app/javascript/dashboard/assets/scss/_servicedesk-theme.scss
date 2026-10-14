@@ -212,6 +212,14 @@
   --sd-status-closed-fg: 237 238 240;
   --sd-status-closed-soft: 33 34 37;
   --sd-status-closed-soft-fg: 135 146 157;
+
+  // Barra lateral no tema escuro (ver .sd-nav-kale no fim do arquivo)
+  .sd-nav-kale {
+    --background-color: var(--sd-nav-bg);
+    --border-weak: var(--sd-nav-active);
+    --border-container: var(--sd-nav-active);
+    --button-color: var(--sd-nav-active);
+  }
 }
 
 // ---- Tipografia base (Garden: system-ui 14/20) ----
@@ -237,4 +245,22 @@ p {
 .sd-focus-ring:focus-visible {
   outline: none;
   box-shadow: 0 0 0 3px rgba(var(--sd-focus-ring));
+}
+
+// ---- Barra lateral escura (Garden kale) ----
+// O <aside> do Sidebar recebe `sd-nav-kale dark`: a classe `dark` troca a
+// paleta n-* para a versão escura só dentro da barra (texto claro sobre fundo
+// escuro) e aqui o fundo vira o kale #03363D no tema claro. No tema escuro a
+// barra usa --sd-nav-bg (regra `.sd-nav-kale` dentro do bloco `.dark`).
+// Contraste WCAG sobre o kale: slate-12 11,3:1 · slate-11 6,3:1 ·
+// slate-10 ajustado 5,0:1 (o padrão escuro daria 3,1:1) · item ativo 8,4:1.
+.sd-nav-kale {
+  --sd-nav-kale: 3 54 61; // garden kale-800 #03363D
+  --sd-nav-kale-strong: 23 73 77; // garden kale-700 #17494D
+  --background-color: var(--sd-nav-kale);
+  --slate-9: 140 148 156;
+  --slate-10: 154 161 169;
+  --border-weak: var(--sd-nav-kale-strong);
+  --border-container: var(--sd-nav-kale-strong);
+  --button-color: var(--sd-nav-kale-strong);
 }

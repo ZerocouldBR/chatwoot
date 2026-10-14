@@ -970,6 +970,8 @@ const menuItems = computed(() => {
 </script>
 
 <template>
+  <!-- ServiceDesk: barra lateral escura (Garden kale) nos dois temas; a classe
+       `dark` aplica a paleta escura só aqui dentro (ver _servicedesk-theme.scss) -->
   <aside
     v-on-click-outside="[
       closeMobileSidebar,
@@ -981,7 +983,7 @@ const menuItems = computed(() => {
         ],
       },
     ]"
-    class="bg-n-background flex flex-col text-sm pb-px fixed top-0 ltr:left-0 rtl:right-0 h-full z-40 w-[200px] md:w-auto md:relative md:flex-shrink-0 md:ltr:translate-x-0 md:rtl:translate-x-0 ltr:border-r rtl:border-l border-n-weak"
+    class="sd-nav-kale dark bg-n-background flex flex-col text-sm pb-px fixed top-0 ltr:left-0 rtl:right-0 h-full z-40 w-[200px] md:w-auto md:relative md:flex-shrink-0 md:ltr:translate-x-0 md:rtl:translate-x-0 ltr:border-r rtl:border-l border-n-weak"
     :class="[
       {
         'shadow-lg md:shadow-none': isMobileSidebarOpen,

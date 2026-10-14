@@ -19,6 +19,8 @@ import ConversationInfo from './ConversationInfo.vue';
 import CustomAttributes from './customAttributes/CustomAttributes.vue';
 import SharedFiles from './SharedFiles.vue';
 import TicketPropertiesPanel from './ticketPanel/TicketPropertiesPanel.vue';
+import { useTicketWorkspace } from 'dashboard/servicedesk/workspace/useTicketWorkspace';
+import { useI18n } from 'vue-i18n';
 import Draggable from 'vuedraggable';
 import MacrosList from './Macros/List.vue';
 import ShopifyOrdersList from 'dashboard/components/widgets/conversation/ShopifyOrdersList.vue';
@@ -45,6 +47,21 @@ const {
   toggleSidebarUIState,
   isOnExpandedLayout,
 } = useUISettings();
+
+// ServiceDesk: com o layout Agent Workspace as propriedades ficam na coluna
+// da esquerda e este painel vira o CONTEXTO (contato/organização, tickets
+// anteriores, macros...). Sem largura, as propriedades ficam no topo daqui.
+const { t } = useI18n();
+const { isWorkspaceLayout } = useTicketWorkspace();
+const panelTitle = computed(() =>
+  isWorkspaceLayout.value
+    ? t('SERVICEDESK_TICKET_PANEL.WORKSPACE.CONTEXT')
+    : t('SERVICEDESK_TICKET_PANEL.WORKSPACE.PROPERTIES')
+);
+
+// No workspace, a seção "Ações do ticket" (grupo, responsável, prioridade,
+// tags) fica oculta: já está nas propriedades à esquerda. (Sem comentário no
+// template: o slot #item do Draggable aceita um único nó.)
 
 const dragging = ref(false);
 const conversationSidebarItems = ref([]);
@@ -147,12 +164,12 @@ onMounted(() => {
 
 <template>
   <div class="w-full">
-    <SidebarActionsHeader
-      :title="$t('CONVERSATION.SIDEBAR.CONTACT')"
-      @close="closeContactPanel"
+    <SidebarActionsHeader :title="panelTitle" @close="closeContactPanel" />
+    <!-- ServiceDesk: propriedades no topo só sem a coluna da esquerda -->
+    <TicketPropertiesPanel
+      v-if="!isWorkspaceLayout"
+      :conversation-id="conversationId"
     />
-    <!-- ServiceDesk: painel de propriedades do ticket (fixo no topo) -->
-    <TicketPropertiesPanel :conversation-id="conversationId" />
     <ContactInfo :contact="contact" :channel-type="channelType" />
     <div class="px-2 pb-8 list-group">
       <Draggable
@@ -168,6 +185,7 @@ onMounted(() => {
         <template #item="{ element }">
           <div
             v-if="element.name === 'conversation_actions'"
+            v-show="!isWorkspaceLayout"
             class="conversation--actions"
           >
             <AccordionItem

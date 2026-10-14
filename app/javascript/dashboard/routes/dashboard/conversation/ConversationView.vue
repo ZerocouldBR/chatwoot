@@ -15,6 +15,8 @@ import CmdBarConversationSnooze from 'dashboard/routes/dashboard/commands/CmdBar
 import { emitter } from 'shared/helpers/mitt';
 import SidepanelSwitch from 'dashboard/components-next/Conversation/SidepanelSwitch.vue';
 import ConversationSidebar from 'dashboard/components/widgets/conversation/ConversationSidebar.vue';
+import TicketWorkspaceProperties from './ticketPanel/TicketWorkspaceProperties.vue';
+import { useTicketWorkspace } from 'dashboard/servicedesk/workspace/useTicketWorkspace';
 
 export default {
   components: {
@@ -23,6 +25,7 @@ export default {
     CmdBarConversationSnooze,
     SidepanelSwitch,
     ConversationSidebar,
+    TicketWorkspaceProperties,
   },
   beforeRouteLeave(to, from, next) {
     // Clear selected state if navigating away from a conversation to a route without a conversationId to prevent stale data issues
@@ -62,6 +65,8 @@ export default {
     const { uiSettings, updateUISettings, isOnExpandedLayout } =
       useUISettings();
     const { accountId } = useAccount();
+    // ServiceDesk: propriedades à esquerda quando há largura (Agent Workspace)
+    const { isWorkspaceLayout } = useTicketWorkspace();
     provide(
       CONTACT_CONVERSATION_NAVIGATION,
       useContactConversationNavigation()
@@ -72,6 +77,7 @@ export default {
       updateUISettings,
       isOnExpandedLayout,
       accountId,
+      isWorkspaceLayout,
     };
   },
   data() {
@@ -89,6 +95,11 @@ export default {
     },
     showMessageView() {
       return this.conversationId ? true : !this.isOnExpandedLayout;
+    },
+    shouldShowPropertiesColumn() {
+      return (
+        !!this.currentChat.id && this.showMessageView && this.isWorkspaceLayout
+      );
     },
     shouldShowSidebar() {
       if (!this.currentChat.id) {
@@ -207,6 +218,11 @@ export default {
       :folders-id="foldersId"
       :is-on-expanded-layout="isOnExpandedLayout"
       @conversation-load="onConversationLoad"
+    />
+    <TicketWorkspaceProperties
+      v-if="shouldShowPropertiesColumn"
+      :key="currentChat.id"
+      :conversation-id="currentChat.id"
     />
     <ConversationBox
       v-if="showMessageView"

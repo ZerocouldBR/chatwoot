@@ -104,8 +104,11 @@ TEAM_NAMES = [
   'Ouvidoria', 'Jurídico', 'Segurança da Informação', 'Equipe Argentina'
 ].freeze
 teams = TEAM_NAMES.map do |name|
-  team = account.teams.find_or_initialize_by(name: name.downcase)
+  # nome como digitado (o Team não força mais minúsculas); acha o time antigo
+  # salvo em minúsculas e corrige o nome
+  team = account.teams.find_by('LOWER(name) = ?', name.downcase) || account.teams.new
   STATS['times_criados'] += 1 if team.new_record?
+  team.name = name
   team.description = 'Time fictício (demo)'
   team.allow_auto_assign = false
   team.save! if team.changed? # sem mudança = sem callbacks/jobs

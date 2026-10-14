@@ -96,7 +96,7 @@ class Seeders::AccountSeeder
 
   def add_user_to_teams(user:, teams:)
     teams.each do |team|
-      team_record = @account.teams.where('name LIKE ?', "%#{team.downcase}%").first if team.present?
+      team_record = @account.teams.where('name ILIKE ?', "%#{ActiveRecord::Base.sanitize_sql_like(team)}%").first if team.present?
       TeamMember.find_or_create_by!(team_id: team_record.id, user_id: user.id) unless team_record.nil?
     end
   end

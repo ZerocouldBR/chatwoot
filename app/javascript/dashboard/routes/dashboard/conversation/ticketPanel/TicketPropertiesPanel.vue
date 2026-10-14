@@ -41,7 +41,16 @@ import TicketPropertyField from './TicketPropertyField.vue';
 
 const props = defineProps({
   conversationId: { type: [Number, String], required: true },
+  // 'embedded': topo do painel da direita (layout clássico, com borda inferior);
+  // 'column': coluna própria à esquerda (Agent Workspace).
+  variant: {
+    type: String,
+    default: 'embedded',
+    validator: value => ['embedded', 'column'].includes(value),
+  },
 });
+
+const isColumn = computed(() => props.variant === 'column');
 
 const store = useStore();
 const route = useRoute();
@@ -470,24 +479,28 @@ const formatMetaValue = field => {
 
 <template>
   <section
-    class="ticket-properties border-b border-n-weak bg-n-solid-1"
+    class="ticket-properties bg-n-solid-1"
+    :class="{ 'border-b border-n-weak': !isColumn }"
     :aria-label="$t('SERVICEDESK_TICKET_PANEL.TITLE')"
   >
-    <header class="flex items-center justify-between gap-2 px-4 pt-3 pb-2">
-      <h3 class="m-0 text-sm font-semibold text-n-slate-12">
-        {{ $t('SERVICEDESK_TICKET_PANEL.TITLE') }}
-        <span class="ms-1 font-normal text-n-slate-11">
-          {{
-            $t('SERVICEDESK_TICKET_PANEL.TICKET_NUMBER', {
-              number: ticketNumber,
-            })
-          }}
-        </span>
-      </h3>
+    <!-- Nº e selo de status (o título "Propriedades" fica no cabeçalho do
+         painel/coluna). O selo quebra linha em vez de truncar. -->
+    <header class="flex flex-wrap items-center gap-x-2 gap-y-1 px-4 pt-3 pb-2">
       <span
-        class="max-w-[50%] truncate px-2 py-0.5 text-xs font-semibold rounded-full ring-1 ring-inset ring-black/5 dark:ring-white/10"
+        class="text-sm whitespace-nowrap text-n-slate-11"
+        data-testid="ticket-number"
+      >
+        {{
+          $t('SERVICEDESK_TICKET_PANEL.TICKET_NUMBER', {
+            number: ticketNumber,
+          })
+        }}
+      </span>
+      <span
+        class="ms-auto max-w-full px-2 py-0.5 text-xs font-semibold leading-4 break-words whitespace-normal rounded-full ring-1 ring-inset ring-black/5 dark:ring-white/10"
         :class="statusBadgeClass"
         :data-category="ticketStatus.category"
+        data-testid="ticket-status-badge"
       >
         {{ statusBadgeLabel }}
       </span>

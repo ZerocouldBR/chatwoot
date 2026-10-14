@@ -41,6 +41,12 @@
       "UNASSIGN_TEAM_CONFIRMATION_LABEL": "Tem certeza de que deseja remover a atribuição de {n} ticket? | Tem certeza de que deseja remover a atribuição de {n} tickets?",
       "ASSIGN_SUCCESFUL": "Times atribuídos com sucesso.",
       "ASSIGN_FAILED": "Falha ao atribuir time. Por favor, tente novamente."
+    },
+    "MACROS": {
+      "EXECUTE_MACRO": "Executar macro",
+      "EXECUTE_CONFIRMATION_LABEL": "Executar {macroName} em {n} ticket? | Executar {macroName} em {n} tickets?",
+      "QUEUED": "Macro enfileirada para {count} ticket. | Macro enfileirada para {count} tickets.",
+      "QUEUED_WITH_MISSING_ATTRIBUTES": "Macro enfileirada para {count} ticket. Faltam campos obrigatórios e ele pode continuar aberto. | Macro enfileirada para {count} tickets. Ao menos um tem campos obrigatórios faltando e pode continuar aberto."
     }
   }
 }

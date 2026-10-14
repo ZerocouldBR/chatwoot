@@ -1,4 +1,8 @@
 import { CONVERSATION_PRIORITY_ORDER } from 'shared/constants/messages';
+import {
+  isSdCategoryFilter,
+  matchesStatusFilter,
+} from 'dashboard/servicedesk/statusFilter';
 
 export const findPendingMessageIndex = (chat, message) => {
   const { echo_id: tempMessageId } = message;
@@ -7,8 +11,16 @@ export const findPendingMessageIndex = (chat, message) => {
   );
 };
 
-export const filterByStatus = (chatStatus, filterStatus) =>
-  filterStatus === 'all' ? true : chatStatus === filterStatus;
+export const filterByStatus = (chatStatus, filterStatus, conversation) => {
+  // ServiceDesk: Pendente/Em espera (snoozed + categoria do zd_status)
+  if (isSdCategoryFilter(filterStatus)) {
+    return matchesStatusFilter(
+      { ...conversation, status: chatStatus },
+      filterStatus
+    );
+  }
+  return filterStatus === 'all' ? true : chatStatus === filterStatus;
+};
 
 export const filterByInbox = (shouldFilter, inboxId, chatInboxId) => {
   const isOnInbox = Number(inboxId) === chatInboxId;
@@ -48,7 +60,7 @@ export const applyPageFilters = (conversation, filters) => {
   const team = meta.team || {};
   const { id: chatTeamId } = team;
 
-  let shouldFilter = filterByStatus(chatStatus, status);
+  let shouldFilter = filterByStatus(chatStatus, status, conversation);
   shouldFilter = filterByInbox(shouldFilter, inboxId, chatInboxId);
   shouldFilter = filterByTeam(shouldFilter, teamId, chatTeamId);
   shouldFilter = filterByLabel(shouldFilter, labels, chatLabels);

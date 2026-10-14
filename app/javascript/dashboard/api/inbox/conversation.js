@@ -1,5 +1,6 @@
 /* global axios */
 import ApiClient from '../ApiClient';
+import { toApiStatusParams } from 'dashboard/servicedesk/statusFilter';
 
 class ConversationApi extends ApiClient {
   constructor() {
@@ -25,7 +26,8 @@ class ConversationApi extends ApiClient {
       params: {
         inbox_id: inboxId,
         team_id: teamId,
-        status,
+        // ServiceDesk: Pendente/Em espera viram status=snoozed + zd_status_category
+        ...toApiStatusParams(status),
         assignee_type: assigneeType,
         page,
         labels,
@@ -107,7 +109,7 @@ class ConversationApi extends ApiClient {
     return axios.get(`${this.url}/meta`, {
       params: {
         inbox_id: inboxId,
-        status,
+        ...toApiStatusParams(status),
         assignee_type: assigneeType,
         labels,
         team_id: teamId,

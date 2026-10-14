@@ -38,6 +38,12 @@
       "HIDE_CONDITIONAL": "Hide conditional fields"
     },
     "OTHER_FIELDS": "Other filled fields ({count})",
-    "META_FIELDS": "Imported data"
+    "META_FIELDS": "Imported data",
+    "WORKSPACE": {
+      "PROPERTIES": "Properties",
+      "CONTEXT": "Context",
+      "COLLAPSE": "Collapse properties",
+      "EXPAND": "Show properties"
+    }
   }
 }
