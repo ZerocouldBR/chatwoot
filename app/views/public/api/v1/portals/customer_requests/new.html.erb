@@ -1,0 +1,92 @@
+<%# ServiceDesk B2B: "Enviar uma solicitação" do Copenhagen: seletor "Escolha seu problema abaixo" (quando há mais de um
+    formulário), Assunto, Descrição (com a dica do Zendesk), campos do formulário, Anexos e o botão Enviar. %>
+<% content_for :head do %>
+  <title><%= I18n.t('public_portal.sd.requests.new_title') %> | <%= @portal.display_title(@locale) %></title>
+  <meta name="robots" content="noindex">
+<% end %>
+<% max_files = PortalCustomers::CreateRequestService::MAX_ATTACHMENTS %>
+<% max_mb = [GlobalConfigService.load('MAXIMUM_FILE_UPLOAD_SIZE', 40).to_i, 1].max %>
+<div class="container">
+  <nav class="sub-nav">
+    <%= render 'public/api/v1/portals/servicedesk/breadcrumbs', items: [[I18n.t('public_portal.sd.requests.new_title'), nil]] %>
+    <div class="search-container">
+      <%= render 'public/api/v1/portals/servicedesk/search' %>
+    </div>
+  </nav>
+
+  <h1><%= I18n.t('public_portal.sd.requests.new_title') %></h1>
+
+  <div id="main-content" class="form">
+    <%= render 'public/api/v1/portals/customer_requests/errors', errors: @errors %>
+
+    <% if @forms.size > 1 %>
+      <div class="form-field">
+        <label for="sd-form-switcher"><%= I18n.t('public_portal.sd.requests.form_label') %></label>
+        <select id="sd-form-switcher" data-sd-form-switcher="<%= portal_customer_new_request_path(@portal.slug, @locale) %>">
+          <% @forms.each do |form| %>
+            <option value="<%= form.id %>" <%= 'selected' if form.id == @form.id %>><%= form.name %></option>
+          <% end %>
+        </select>
+      </div>
+    <% end %>
+
+    <%= form_tag(portal_customer_requests_path(@portal.slug, @locale), method: :post, multipart: true,
+                 data: { turbo: false, sd_submit_once: true }, id: 'new_request', class: 'request-form') do %>
+      <%= hidden_field_tag :form_id, @form.id %>
+      <% if @form.description.present? %><p class="hint"><%= @form.description %></p><% end %>
+
+      <div class="form-field string required request_subject">
+        <label for="request_subject"><%= I18n.t('public_portal.sd.requests.subject') %></label>
+        <input type="text" name="subject" id="request_subject" required maxlength="255" value="<%= params[:subject] %>">
+      </div>
+
+      <div class="form-field text required request_description">
+        <label for="request_description"><%= I18n.t('public_portal.sd.requests.description') %></label>
+        <textarea name="description" id="request_description" required maxlength="20000"><%= params[:description] %></textarea>
+        <p id="request_description_hint"><%= I18n.t('public_portal.sd.requests.description_hint') %></p>
+      </div>
+
+      <% @form.fields.each do |field| %>
+        <% field_id = "request_custom_fields_#{field.key.parameterize(separator: '_')}" %>
+        <% value = params.dig(:fields, field.key) %>
+        <div class="form-field <%= field.required ? 'required' : 'optional' %>">
+          <label for="<%= field_id %>">
+            <%= field.label %><% unless field.required %><span class="optional"><%= I18n.t('public_portal.sd.requests.optional') %></span><% end %>
+          </label>
+          <% case field.type %>
+          <% when 'textarea' %>
+            <textarea id="<%= field_id %>" name="fields[<%= field.key %>]" maxlength="1000" <%= 'required' if field.required %>><%= value %></textarea>
+          <% when 'list' %>
+            <select id="<%= field_id %>" name="fields[<%= field.key %>]" <%= 'required' if field.required %>>
+              <option value="">-</option>
+              <% field.options.each do |option| %>
+                <option value="<%= option %>" <%= 'selected' if value == option %>><%= option %></option>
+              <% end %>
+            </select>
+          <% else %>
+            <input id="<%= field_id %>" name="fields[<%= field.key %>]" type="<%= field.type == 'number' ? 'number' : 'text' %>" maxlength="1000" value="<%= value %>" <%= 'required' if field.required %>>
+          <% end %>
+          <% if field.description.present? %><p><%= field.description %></p><% end %>
+        </div>
+      <% end %>
+
+      <div class="form-field">
+        <label for="request-attachments"><%= I18n.t('public_portal.sd.requests.attachments') %></label>
+        <div class="sd-files">
+          <div class="upload-dropzone">
+            <input id="request-attachments" class="upload-input" type="file" name="attachments[]" multiple
+                   data-sd-attachments data-max-files="<%= max_files %>" data-max-bytes="<%= max_mb.megabytes %>">
+            <span class="upload-link" aria-hidden="true"><%= I18n.t('public_portal.sd.requests.add_files') %></span>
+          </div>
+          <ul class="upload-list" data-sd-attachments-list></ul>
+          <p class="upload-error" data-sd-attachments-error hidden></p>
+        </div>
+        <p><%= I18n.t('public_portal.sd.requests.attachments_hint', count: max_files, size: max_mb) %></p>
+      </div>
+
+      <footer>
+        <input type="submit" name="commit" value="<%= I18n.t('public_portal.sd.requests.submit') %>">
+      </footer>
+    <% end %>
+  </div>
+</div>

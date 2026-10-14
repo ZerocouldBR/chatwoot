@@ -34,6 +34,8 @@ class Portal < ApplicationRecord
   has_many :categories, dependent: :destroy_async
   has_many :folders,  through: :categories
   has_many :articles, dependent: :destroy_async
+  # ServiceDesk B2B: segmentos de usuário (artigos restritos) do portal do cliente
+  has_many :user_segments, class_name: 'PortalUserSegment', dependent: :destroy_async
   has_one_attached :logo
   has_many :inboxes, dependent: :nullify
   belongs_to :channel_web_widget, class_name: 'Channel::WebWidget', optional: true
@@ -67,7 +69,7 @@ class Portal < ApplicationRecord
 
   # TODO: 'website_token' is an unused reserved key; remove with a migration that scrubs it from existing portals' config
   CONFIG_JSON_KEYS = %w[allowed_locales default_locale draft_locales website_token social_profiles layout
-                        locale_translations popular_content analytics].freeze
+                        locale_translations popular_content analytics customer_portal].freeze
 
   def analytics
     value = config_value('analytics')
@@ -153,6 +155,26 @@ class Portal < ApplicationRecord
 
   def social_profiles
     config_value('social_profiles') || {}
+  end
+
+  # ServiceDesk B2B: portal do cliente (login do contato, artigos por segmento, solicitações).
+  # Ver PortalConfigSchema::CUSTOMER_PORTAL_SCHEMA e docs/PORTAL-CLIENTE.md.
+  def customer_portal
+    value = config_value('customer_portal')
+    value.is_a?(Hash) ? value : {}
+  end
+
+  def customer_portal_enabled?
+    ActiveModel::Type::Boolean.new.cast(customer_portal['enabled']) == true
+  end
+
+  # Igual à opção "Exigir login" do Zendesk Guide: toda a Central só abre para contato logado.
+  def require_sign_in?
+    customer_portal_enabled? && ActiveModel::Type::Boolean.new.cast(customer_portal['require_sign_in']) == true
+  end
+
+  def organization_requests_enabled?
+    customer_portal_enabled? && ActiveModel::Type::Boolean.new.cast(customer_portal['organization_requests']) == true
   end
 
   private

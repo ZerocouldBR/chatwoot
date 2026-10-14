@@ -1,0 +1,65 @@
+<%# ServiceDesk B2B: página inicial da Central igual à do Zendesk da B2B (Copenhagen): faixa com a pesquisa,
+    categorias em blocos (nome + descrição) e "Atividade recente". "Artigos promovidos" só aparece se houver. %>
+<% content_for :head do %>
+  <title><%= @portal.display_title(@locale) %></title>
+<% end %>
+<h1 class="visibility-hidden"><%= I18n.t('public_portal.sd.footer.brand') %></h1>
+
+<section id="main-content" class="section hero">
+  <div class="hero-inner">
+    <h2 class="visibility-hidden"><%= I18n.t('public_portal.sd.hero.search_placeholder') %></h2>
+    <%= render 'public/api/v1/portals/servicedesk/search', full: true %>
+  </div>
+</section>
+
+<div class="container">
+  <section class="section knowledge-base">
+    <h2 class="visibility-hidden"><%= I18n.t('public_portal.sidebar.categories') %></h2>
+    <section class="categories blocks">
+      <ul class="blocks-list">
+        <% sd_home_categories(@portal, @locale).each do |category| %>
+          <li class="blocks-item">
+            <a href="<%= sd_category_link(category) %>" class="blocks-item-link">
+              <h4 class="blocks-item-title"><%= category.name %></h4>
+              <p class="blocks-item-description"><%= category.description %></p>
+            </a>
+          </li>
+        <% end %>
+      </ul>
+    </section>
+
+    <% promoted = @recommended_articles.presence %>
+    <% if promoted %>
+      <section class="articles">
+        <h2><%= I18n.t('public_portal.sd.home.promoted') %></h2>
+        <ul class="article-list promoted-articles">
+          <% promoted.each do |article| %>
+            <li class="promoted-articles-item"><a href="<%= sd_article_link(article) %>"><%= article.title %></a></li>
+          <% end %>
+        </ul>
+      </section>
+    <% end %>
+  </section>
+
+  <% recent = sd_recent_articles(@portal, @locale) %>
+  <% if recent.any? %>
+    <section class="section home-section activity">
+      <section class="recent-activity">
+        <h2 class="recent-activity-header"><%= I18n.t('public_portal.sd.home.recent_activity') %></h2>
+        <ul class="recent-activity-list">
+          <% recent.each do |article| %>
+            <li class="recent-activity-item">
+              <% if article.category %>
+                <a class="recent-activity-item-parent" href="<%= sd_category_link(article.category) %>"><%= article.category.name %></a>
+              <% end %>
+              <a class="recent-activity-item-link" href="<%= sd_article_link(article) %>"><%= article.title %></a>
+              <div class="recent-activity-item-meta">
+                <%= I18n.t('public_portal.sd.home.article_updated', date: sd_time(article.updated_at, with_time: false)) %>
+              </div>
+            </li>
+          <% end %>
+        </ul>
+      </section>
+    </section>
+  <% end %>
+</div>

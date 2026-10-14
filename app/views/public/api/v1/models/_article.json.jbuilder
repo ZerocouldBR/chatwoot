@@ -31,9 +31,14 @@ if article.author.present?
   end
 end
 
+# ServiceDesk B2B: traduções associadas só entram se o visitante pode ver (publicadas e no segmento dele).
+visible_segment_ids = respond_to?(:portal_visible_segment_ids) ? portal_visible_segment_ids : []
+visible_associated = article.associated_articles.select do |associated|
+  associated.published? && (associated.portal_user_segment_id.nil? || visible_segment_ids.include?(associated.portal_user_segment_id))
+end
 json.associated_articles do
-  if article.associated_articles.any?
-    json.array! article.associated_articles.each do |associated_article|
+  if visible_associated.any?
+    json.array! visible_associated.each do |associated_article|
       json.partial! 'public/api/v1/models/hc/associated_article', formats: [:json], article: associated_article
     end
   end

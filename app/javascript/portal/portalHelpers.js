@@ -10,6 +10,7 @@ import TableOfContents from './components/TableOfContents.vue';
 import SidebarThemeToggle from './components/SidebarThemeToggle.vue';
 import { initializeTheme } from './portalThemeHelper.js';
 import { getLanguageDirection } from 'dashboard/components/widgets/conversation/advancedFilterItems/languages.js';
+import { initCustomerPortal } from './customerPortal';
 
 export const getHeadingsfromTheArticle = () => {
   const rows = [];
@@ -175,6 +176,7 @@ export const InitializationHelpers = {
       InitializationHelpers.initializeTableOfContents();
       InitializationHelpers.initializeSidebarThemeToggle();
       InitializationHelpers.initializeDetailsClickAway();
+      initCustomerPortal();
     }
   },
 

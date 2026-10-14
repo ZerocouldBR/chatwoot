@@ -557,6 +557,126 @@ en:
       invalid_configuration: 'Invalid configuration'
       disabled: 'Installing tools from a manifest is not enabled'
   public_portal:
+    sd:
+      nav:
+        skip: Skip to main content
+        home: Home page
+        logo_alt: Home page of the B2B Help Center
+        my_activities: My activities
+        help_center: Help Center
+        submit_request: Submit a request
+        my_requests: My requests
+        sign_in: Sign in
+        sign_out: Sign out
+        account_menu: Account menu
+        main: Main navigation
+      hero:
+        title: How can we help?
+        search_placeholder: Search
+      footer:
+        brand: B2B
+        copyright: "© %{year} B2B.reservas. All rights reserved."
+        tagline: Building connections to make life simpler
+        website: B2B.reservas website
+      home:
+        promoted: Promoted articles
+        recent_activity: Recent activity
+        article_updated: "Article updated on %{date}"
+      category:
+        see_all: "See all %{count} articles"
+      article:
+        in_section: Articles in this section
+        updated: "Updated on %{date}"
+        still_need_help: Have more questions? Submit a request
+        return_to_top: Return to top
+      search:
+        results_for:
+          one: "1 result for \"%{query}\""
+          other: "%{count} results for \"%{query}\""
+      login:
+        title: Sign in to the Help Center
+        subtitle: Enter the email registered with B2B.reservas. We will send you a sign-in link, no password needed.
+        email_label: Email
+        email_placeholder: you@company.com
+        submit: Send sign-in link
+        sent_title: Check your email
+        sent_body: If %{email} is registered, you will receive a sign-in link. The link is valid for %{minutes} minutes and can be used only once.
+        dormant: Demo environment. Email delivery is turned off.
+        sso_error: We could not sign you in through the HUB. Try again or request a sign-in link by email.
+        verify_title: Sign in to the Help Center
+        verify_body: Click the button to finish signing in.
+        verify_submit: Sign in
+        invalid_title: Invalid or expired link
+        invalid_body: This link was already used or has expired. Request a new sign-in link.
+        new_link: Request a new link
+        restricted: Sign in to see the articles and follow your requests.
+        email:
+          subject: Your sign-in link to %{portal}
+          greeting: Hi %{name},
+          intro: We received a request to sign in to %{portal}. Click the button below to sign in.
+          button: Sign in to the Help Center
+          expiry: The link is valid for %{minutes} minutes and can be used only once.
+          ignore: If you did not request this, you can ignore this email.
+      requests:
+        requests_tab: Requests
+        support_badge: Team
+        details: Request details
+        title: My requests
+        mine: My requests
+        organization: Organization requests
+        search_placeholder: Search requests
+        search: Search
+        filter_status: Status
+        any_status: Any status
+        subject: Subject
+        id: Id
+        created_at: Created
+        last_activity: Last activity
+        status_column: Status
+        requester: Requester
+        assignee: Assignee
+        form: Form
+        empty: No requests found.
+        new_title: Submit a request
+        form_label: Please choose your issue below
+        description: Description
+        description_hint: Please enter the details of your request. A member of our support staff will respond as soon as possible.
+        attachments: Attachments (optional)
+        attachments_hint: Up to %{count} files, %{size} MB each.
+        add_files: Add file or drop files here
+        optional: (optional)
+        submit: Submit
+        created: "Your request #%{id} was submitted. We will reply as soon as possible."
+        reply_title: Add to conversation
+        reply_placeholder: Write your reply
+        solve: Mark as solved
+        solve_hint: Check this if your request has been solved.
+        send_reply: Submit
+        closed_reply_notice: This request is closed. Your reply will open a new follow-up request linked to this one.
+        closed_notice: This request is closed and no longer accepts replies.
+        follow_up: Create a follow-up request
+        rate: Rate this support
+        support_team: B2B.reservas team
+        you: You
+        attachments_label: Attachments
+        back: My requests
+        submitted_by: "%{name} submitted this request"
+        status:
+          open: Open
+          awaiting: Awaiting your reply
+          solved: Solved
+        errors:
+          title: Please fix the items below
+          inbox_not_configured: Request submission is not configured in this Help Center yet. Please contact B2B.reservas through the support channels.
+          field_invalid: "Please fill in the %{field} field correctly."
+          subject_required: Please enter a subject.
+          description_required: Please enter a description.
+          too_many_attachments: Send at most %{count} attachments.
+          attachment_too_big: "The file %{file} exceeds the %{size} MB limit."
+          attachment_type: "The file type of %{file} is not supported."
+          attachment_invalid: The file could not be attached.
+          reply_required: Write a reply or attach a file.
+          reply_not_allowed: You cannot reply to this request.
     search:
       search_placeholder: Search for article by title or body...
       empty_placeholder: No results found.

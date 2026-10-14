@@ -4,13 +4,15 @@ class Public::Api::V1::Portals::ArticlesController < Public::Api::V1::Portals::B
   before_action :set_portal_layout
   before_action :set_view_variant
   before_action :ensure_portal_feature_enabled
+  before_action :enforce_portal_sign_in, except: [:tracking_pixel]
   before_action :set_category, except: [:index, :show, :tracking_pixel]
   before_action :set_article, only: [:show, :show_markdown]
+  before_action :authorize_article_access, only: [:show, :show_markdown]
   layout 'portal'
 
   def index
     @search_query = list_params[:query]
-    @articles = @portal.articles.published.includes(:category, :author)
+    @articles = @portal.articles.published.visible_to_segments(portal_visible_segment_ids).includes(:category, :author)
 
     @articles = @articles.where(locale: permitted_params[:locale]) if permitted_params[:locale].present?
 
@@ -71,6 +73,39 @@ class Public::Api::V1::Portals::ArticlesController < Public::Api::V1::Portals::B
 
   def set_article
     @article = @portal.articles.find_by(slug: permitted_params[:article_slug])
+  end
+
+  # ServiceDesk B2B: no portal do cliente (customer_portal.enabled) rascunho só abre com o token de
+  # pré-visualização do painel (no Chatwoot original o rascunho abre para quem souber o slug); artigo restrito a
+  # um segmento só abre para o contato logado que pertence ao segmento (anônimo vai para o login).
+  def authorize_article_access
+    return article_not_found if @article.blank?
+    return if article_preview_token_valid?
+    return article_not_found if customer_portal_enabled? && !@article.published?
+    return if article_visible_to_viewer?
+    return article_not_found unless login_may_unlock_article?
+
+    redirect_to portal_customer_login_path(@portal.slug, portal_customer_locale, return_to: request.fullpath)
+  end
+
+  def article_not_found
+    action_name == 'show_markdown' ? head(:not_found) : render_404
+  end
+
+  def article_visible_to_viewer?
+    @article.portal_user_segment_id.blank? || portal_visible_segment_ids.include?(@article.portal_user_segment_id)
+  end
+
+  # Anônimo no portal do cliente vai para o login; logado sem permissão, markdown ou portal sem login: 404.
+  def login_may_unlock_article?
+    customer_portal_enabled? && !portal_contact_signed_in? && action_name != 'show_markdown'
+  end
+
+  def article_preview_token_valid?
+    token = params[:preview_token].presence
+    return false if token.blank?
+
+    Rails.application.message_verifier(:sd_article_preview).verified(token, purpose: :preview) == @article.id
   end
 
   def set_category

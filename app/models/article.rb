@@ -2,36 +2,38 @@
 #
 # Table name: articles
 #
-#  id                    :bigint           not null, primary key
-#  content               :text
-#  description           :text
-#  draft_content         :text
-#  draft_title           :string
-#  locale                :string           default("en"), not null
-#  meta                  :jsonb
-#  position              :integer
-#  slug                  :string           not null
-#  status                :integer
-#  title                 :string
-#  views                 :integer
-#  created_at            :datetime         not null
-#  updated_at            :datetime         not null
-#  account_id            :integer          not null
-#  associated_article_id :bigint
-#  author_id             :bigint
-#  category_id           :integer
-#  folder_id             :integer
-#  portal_id             :integer          not null
+#  id                     :bigint           not null, primary key
+#  content                :text
+#  description            :text
+#  draft_content          :text
+#  draft_title            :string
+#  locale                 :string           default("en"), not null
+#  meta                   :jsonb
+#  position               :integer
+#  slug                   :string           not null
+#  status                 :integer
+#  title                  :string
+#  views                  :integer
+#  created_at             :datetime         not null
+#  updated_at             :datetime         not null
+#  account_id             :integer          not null
+#  associated_article_id  :bigint
+#  author_id              :bigint
+#  category_id            :integer
+#  folder_id              :integer
+#  portal_id              :integer          not null
+#  portal_user_segment_id :bigint
 #
 # Indexes
 #
-#  index_articles_on_account_id             (account_id)
-#  index_articles_on_associated_article_id  (associated_article_id)
-#  index_articles_on_author_id              (author_id)
-#  index_articles_on_portal_id              (portal_id)
-#  index_articles_on_slug                   (slug) UNIQUE
-#  index_articles_on_status                 (status)
-#  index_articles_on_views                  (views)
+#  index_articles_on_account_id              (account_id)
+#  index_articles_on_associated_article_id   (associated_article_id)
+#  index_articles_on_author_id               (author_id)
+#  index_articles_on_portal_id               (portal_id)
+#  index_articles_on_portal_user_segment_id  (portal_user_segment_id)
+#  index_articles_on_slug                    (slug) UNIQUE
+#  index_articles_on_status                  (status)
+#  index_articles_on_views                   (views)
 #
 class Article < ApplicationRecord
   include PgSearch::Model
@@ -52,6 +54,8 @@ class Article < ApplicationRecord
   belongs_to :category, optional: true
   belongs_to :portal
   belongs_to :author, class_name: 'User', inverse_of: :articles
+  # ServiceDesk B2B: artigo restrito a um segmento (ver PortalUserSegment). Sem segmento = público.
+  belongs_to :portal_user_segment, optional: true
 
   before_validation :ensure_account_id
   before_validation :ensure_article_slug
@@ -65,6 +69,7 @@ class Article < ApplicationRecord
   validates :title, presence: true
   validates :content, presence: true, if: :published?
   validates :slug, exclusion: { in: RESERVED_SLUGS }
+  validate :portal_user_segment_in_same_portal
   validates :slug, uniqueness: true, format: { with: /\A[a-zA-Z0-9_-]+\z/ }, if: :will_save_change_to_slug?
 
   # ensuring that the position is always set correctly
@@ -81,6 +86,14 @@ class Article < ApplicationRecord
   scope :order_by_updated_at, -> { reorder(updated_at: :desc) }
   scope :order_by_position, -> { reorder(position: :asc) }
   scope :order_by_views, -> { reorder(views: :desc) }
+  # ServiceDesk B2B: artigos que o visitante do portal pode ver. `segment_ids` vem de
+  # PortalUserSegment.visible_ids_for(portal, contato); anônimo passa [] e só vê os artigos sem segmento.
+  scope :visible_to_segments, lambda { |segment_ids|
+    ids = Array(segment_ids).compact
+    next where(portal_user_segment_id: nil) if ids.empty?
+
+    where('articles.portal_user_segment_id IS NULL OR articles.portal_user_segment_id IN (?)', ids)
+  }
 
   # TODO: if text search slows down https://www.postgresql.org/docs/current/textsearch-features.html#TEXTSEARCH-UPDATE-TRIGGERS
   # - the A, B and C are for weightage. See: https://github.com/Casecommons/pg_search#weighting
@@ -176,6 +189,12 @@ class Article < ApplicationRecord
   private_class_method :rebalance_positions, :resequence_category
 
   private
+
+  def portal_user_segment_in_same_portal
+    return if portal_user_segment.blank?
+
+    errors.add(:portal_user_segment_id, 'must belong to the same portal') if portal_user_segment.portal_id != portal_id
+  end
 
   def category_id_changed_action
     # We need to update the position of the article in the new category

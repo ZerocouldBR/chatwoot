@@ -482,6 +482,126 @@ pt_BR:
       slug_generation_failed: 'Não foi possível gerar um slug único após 5 tentativas'
       limit_exceeded: 'Você pode criar no máximo %{limit} ferramentas personalizadas por conta'
   public_portal:
+    sd:
+      nav:
+        skip: Pular para o conteúdo principal
+        home: Página inicial
+        logo_alt: Página inicial da Central de Ajuda de B2B
+        my_activities: Minhas atividades
+        help_center: Central de Ajuda
+        submit_request: Enviar uma solicitação
+        my_requests: Minhas solicitações
+        sign_in: Entrar
+        sign_out: Sair
+        account_menu: Menu da conta
+        main: Navegação principal
+      hero:
+        title: Como podemos ajudar?
+        search_placeholder: Pesquisar
+      footer:
+        brand: B2B
+        copyright: "© %{year} B2B.reservas. Todos os direitos reservados."
+        tagline: Desenvolver conexões para simplificar a vida
+        website: Site da B2B.reservas
+      home:
+        promoted: Artigos promovidos
+        recent_activity: Atividade recente
+        article_updated: "Artigo atualizado em %{date}"
+      category:
+        see_all: "Ver todos os %{count} artigos"
+      article:
+        in_section: Artigos nesta seção
+        updated: "Atualizado em %{date}"
+        still_need_help: Ainda tem dúvidas? Enviar uma solicitação
+        return_to_top: Voltar ao topo
+      search:
+        results_for:
+          one: "1 resultado para \"%{query}\""
+          other: "%{count} resultados para \"%{query}\""
+      login:
+        title: Acesse a Central de Ajuda
+        subtitle: Informe o e-mail cadastrado na B2B.reservas. Enviaremos um link de acesso, sem senha.
+        email_label: E-mail
+        email_placeholder: seu@email.com.br
+        submit: Enviar link de acesso
+        sent_title: Verifique seu e-mail
+        sent_body: Se %{email} estiver cadastrado, você vai receber um link para entrar. O link vale por %{minutes} minutos e só pode ser usado uma vez.
+        dormant: Ambiente de demonstração. O envio de e-mails está desligado.
+        sso_error: Não foi possível entrar pelo HUB. Tente de novo ou peça um link de acesso por e-mail.
+        verify_title: Entrar na Central de Ajuda
+        verify_body: Clique no botão para concluir o acesso.
+        verify_submit: Entrar
+        invalid_title: Link inválido ou expirado
+        invalid_body: Este link já foi usado ou expirou. Peça um novo link de acesso.
+        new_link: Pedir um novo link
+        restricted: Entre para ver os artigos e acompanhar suas solicitações.
+        email:
+          subject: Seu link de acesso à %{portal}
+          greeting: Olá, %{name}!
+          intro: Recebemos um pedido de acesso à %{portal}. Clique no botão abaixo para entrar.
+          button: Entrar na Central de Ajuda
+          expiry: O link vale por %{minutes} minutos e só pode ser usado uma vez.
+          ignore: Se você não pediu este acesso, ignore este e-mail.
+      requests:
+        requests_tab: Solicitações
+        support_badge: Equipe
+        details: Detalhes da solicitação
+        title: Minhas solicitações
+        mine: Minhas solicitações
+        organization: Solicitações da organização
+        search_placeholder: Pesquisar solicitações
+        search: Pesquisar
+        filter_status: Status
+        any_status: Qualquer status
+        subject: Assunto
+        id: Id
+        created_at: Criado
+        last_activity: Última atividade
+        status_column: Status
+        requester: Solicitante
+        assignee: Atribuído para
+        form: Formulário
+        empty: Nenhuma solicitação encontrada.
+        new_title: Enviar uma solicitação
+        form_label: Escolha seu problema abaixo
+        description: Descrição
+        description_hint: Insira os detalhes de sua solicitação. Um membro de nossa equipe de suporte responderá assim que possível.
+        attachments: Anexos (opcional)
+        attachments_hint: Até %{count} arquivos, com até %{size} MB cada.
+        add_files: Adicionar arquivo ou soltar arquivos aqui
+        optional: (opcional)
+        submit: Enviar
+        created: "Sua solicitação #%{id} foi enviada. Responderemos assim que possível."
+        reply_title: Adicionar à conversa
+        reply_placeholder: Escreva sua resposta
+        solve: Marcar como resolvido
+        solve_hint: Marque se a sua solicitação já foi resolvida.
+        send_reply: Enviar
+        closed_reply_notice: Esta solicitação está fechada. Sua resposta abrirá uma nova solicitação de acompanhamento, ligada a esta.
+        closed_notice: Esta solicitação está fechada e não aceita mais respostas.
+        follow_up: Criar uma solicitação de acompanhamento
+        rate: Avalie o atendimento
+        support_team: Equipe B2B.reservas
+        you: Você
+        attachments_label: Anexos
+        back: Minhas solicitações
+        submitted_by: "%{name} enviou esta solicitação"
+        status:
+          open: Aberto
+          awaiting: Aguardando sua resposta
+          solved: Resolvido
+        errors:
+          title: Corrija os itens abaixo
+          inbox_not_configured: O envio de solicitações ainda não foi configurado nesta Central. Fale com a B2B.reservas pelos canais de atendimento.
+          field_invalid: "Preencha corretamente o campo %{field}."
+          subject_required: Informe o assunto.
+          description_required: Informe a descrição.
+          too_many_attachments: Envie no máximo %{count} anexos.
+          attachment_too_big: "O arquivo %{file} passa do limite de %{size} MB."
+          attachment_type: "O tipo do arquivo %{file} não é aceito."
+          attachment_invalid: Não foi possível anexar o arquivo.
+          reply_required: Escreva uma resposta ou anexe um arquivo.
+          reply_not_allowed: Você não pode responder a esta solicitação.
     search:
       search_placeholder: Pesquisar por artigo por título ou corpo...
       empty_placeholder: Nenhum resultado encontrado.

@@ -1,0 +1,10 @@
+<% if errors.present? %>
+  <div class="notification notification-error" role="alert" data-testid="sd-errors">
+    <strong><%= I18n.t('public_portal.sd.requests.errors.title') %></strong>
+    <ul>
+      <% errors.each do |error| %>
+        <li><%= error %></li>
+      <% end %>
+    </ul>
+  </div>
+<% end %>

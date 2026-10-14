@@ -839,7 +839,11 @@
         "META_TITLE": "Meta título",
         "META_TITLE_PLACEHOLDER": "Adicionar meta título",
         "META_TAGS": "Meta tags",
-        "META_TAGS_PLACEHOLDER": "Adicionar meta tags"
+        "META_TAGS_PLACEHOLDER": "Adicionar meta tags",
+        "VISIBILITY": "Visível para",
+        "VISIBILITY_PUBLIC": "Todos (público)",
+        "VISIBILITY_STAFF": "só equipe",
+        "VISIBILITY_HINT": "Artigo restrito só aparece no portal para o cliente logado que pertence ao segmento."
       },
       "API": {
         "ERROR": "Erro ao salvar artigo"

@@ -1,0 +1,22 @@
+<% content_for :head do %>
+  <title><%= I18n.t('public_portal.sd.login.verify_title') %> | <%= @portal.display_title(@locale) %></title>
+  <meta name="robots" content="noindex">
+  <%# same-origin: o token não vai em Referer para outros sites e o POST mantém o Origin exigido pelo CSRF do Rails %>
+  <meta name="referrer" content="same-origin">
+<% end %>
+<div class="container" id="main-content">
+  <div class="sign-in-box">
+    <% if @token_valid %>
+      <h1><%= I18n.t('public_portal.sd.login.verify_title') %></h1>
+      <p><%= I18n.t('public_portal.sd.login.verify_body') %></p>
+      <%= form_tag(portal_customer_login_verify_path(@portal.slug, @locale), method: :post, data: { turbo: false, sd_submit_once: true }) do %>
+        <%= hidden_field_tag :token, @token %>
+        <input type="submit" value="<%= I18n.t('public_portal.sd.login.verify_submit') %>">
+      <% end %>
+    <% else %>
+      <h1><%= I18n.t('public_portal.sd.login.invalid_title') %></h1>
+      <p><%= I18n.t('public_portal.sd.login.invalid_body') %></p>
+      <a class="button" href="<%= portal_customer_login_path(@portal.slug, @locale, local: 1) %>"><%= I18n.t('public_portal.sd.login.new_link') %></a>
+    <% end %>
+  </div>
+</div>

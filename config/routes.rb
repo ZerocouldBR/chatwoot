@@ -505,6 +505,8 @@ Rails.application.routes.draw do
             resources :articles do
               post :reorder, on: :collection
             end
+            # ServiceDesk B2B: segmentos de usuário (artigos restritos)
+            resources :user_segments, only: [:index], controller: 'portal_user_segments'
           end
 
           resources :upload, only: [:create]
@@ -705,6 +707,22 @@ Rails.application.routes.draw do
   get 'hc/:slug/articles/:article_slug.md', to: 'public/api/v1/portals/articles#show_markdown', as: :public_portal_article_markdown,
                                             defaults: { format: :md }
   get 'hc/:slug/articles/:article_slug', to: 'public/api/v1/portals/articles#show', as: :public_portal_article
+
+  # ServiceDesk B2B: portal do cliente (login do contato e "Minhas solicitações"), ver docs/PORTAL-CLIENTE.md
+  scope 'hc/:slug/:locale', module: 'public/api/v1/portals', as: :portal_customer,
+                            constraints: { locale: /[a-z]{2,3}(?:[_-][A-Za-z]{2,4})?/ } do
+    get 'login', to: 'customer_sessions#new', as: :login
+    post 'login', to: 'customer_sessions#create'
+    get 'login/verify', to: 'customer_sessions#verify', as: :login_verify
+    post 'login/verify', to: 'customer_sessions#confirm'
+    get 'sso/jwt', to: 'customer_sessions#jwt', as: :sso_jwt
+    delete 'logout', to: 'customer_sessions#destroy', as: :logout
+    get 'requests', to: 'customer_requests#index', as: :requests
+    get 'requests/new', to: 'customer_requests#new', as: :new_request
+    post 'requests', to: 'customer_requests#create'
+    get 'requests/:display_id', to: 'customer_requests#show', as: :request, constraints: { display_id: /\d+/ }
+    post 'requests/:display_id/comments', to: 'customer_requests#reply', as: :request_comments, constraints: { display_id: /\d+/ }
+  end
 
   # ----------------------------------------------------------------------
   # Used in mailer templates
