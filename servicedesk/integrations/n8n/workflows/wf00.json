@@ -1,0 +1,168 @@
+{
+  "name": "SD WF00 - Erros dos workflows (alerta)",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "9c687744-e0b2-55a4-b2de-4b95c1a109f3",
+      "name": "erro_trigger",
+      "type": "n8n-nodes-base.errorTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "1a3fbc51-1a96-526f-a038-76dff1474754",
+              "name": "sdops_base_url",
+              "type": "string",
+              "value": "https://SERVICEDESK.EXEMPLO/sd-ops/api/v1"
+            },
+            {
+              "id": "eb508ffd-e87e-55d2-93ae-8d6f0c488a82",
+              "name": "chatwoot_base_url",
+              "type": "string",
+              "value": "https://SERVICEDESK.EXEMPLO"
+            },
+            {
+              "id": "b1685b71-f2be-5d1f-abaf-26676e089041",
+              "name": "chatwoot_account_id",
+              "type": "number",
+              "value": 1
+            },
+            {
+              "id": "a55b92bb-1879-5f0e-8595-402c60f00d60",
+              "name": "ops_alert_conversation_id",
+              "type": "number",
+              "value": 0
+            },
+            {
+              "id": "6c4aa731-831d-5cf4-84ca-4b620bcfdb68",
+              "name": "console_base_url",
+              "type": "string",
+              "value": "https://SERVICEDESK.EXEMPLO/sd-console"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "a7f5baf2-3948-5b17-9f77-f3581c55140f",
+      "name": "config",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const e = $('erro_trigger').first().json;\nconst wf = (e.workflow && e.workflow.name) || '?';\nconst ex = e.execution || {};\nconst msg = ((ex.error && ex.error.message) || 'sem mensagem').slice(0, 500);\n// sem dados pessoais: só nomes técnicos e mensagem de erro (que não deve conter payload)\nreturn [{ json: { texto: '[n8n] Falha em ' + wf + ' / nó ' + (ex.lastNodeExecuted || '?') +\n  ' / execução ' + (ex.id || '?') + ': ' + msg } }];\n"
+      },
+      "id": "5bb4c4db-3842-571e-a21d-bdaccfd2a6b7",
+      "name": "formata_erro",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        440,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $('config').first().json.chatwoot_base_url }}/api/v1/accounts/{{ $('config').first().json.chatwoot_account_id }}/conversations/{{ $('config').first().json.ops_alert_conversation_id }}/messages",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-SD-Origin",
+              "value": "n8n"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 15000
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ content: $json.texto, message_type: 'outgoing', private: true, source_id: 'n8n:WF00:' + $execution.id + ':alerta_operacoes:' + $itemIndex, content_attributes: { sd_origin: 'n8n:WF00' } }) }}"
+      },
+      "id": "bc5c5b22-771d-506b-ab32-77958625d7a4",
+      "name": "alerta_operacoes",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        660,
+        0
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "REPLACE_CRED_CHATWOOT_N8N",
+          "name": "ServiceDesk/Chatwoot: api_access_token da Integração n8n"
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 2000
+    }
+  ],
+  "connections": {
+    "erro_trigger": {
+      "main": [
+        [
+          {
+            "node": "config",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "config": {
+      "main": [
+        [
+          {
+            "node": "formata_erro",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "formata_erro": {
+      "main": [
+        [
+          {
+            "node": "alerta_operacoes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "America/Sao_Paulo",
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "none"
+  },
+  "pinData": {},
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "servicedesk": {
+      "workflow": "WF00",
+      "description": "Workflow de erro: publica no ticket interno de operações uma nota com o workflow, o nó e a mensagem. Configure-o como 'Error workflow' nas Settings dos WF01-WF12.",
+      "generator": "servicedesk/integrations/n8n/tools/build_workflows.py",
+      "format_version": 1
+    }
+  }
+}

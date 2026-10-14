@@ -1,0 +1,457 @@
+{
+  "name": "SD WF03 - Ligação perdida (callback, prioridade e aviso)",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "sd/wf03-perdida",
+        "authentication": "headerAuth",
+        "options": {}
+      },
+      "id": "cead1979-a8de-5418-b916-01572baec6f6",
+      "name": "webhook_sd_ops",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        0
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "REPLACE_CRED_SDOPS_WEBHOOK_TOKEN",
+          "name": "SD-OPS -> n8n: X-SD-Webhook-Token"
+        }
+      },
+      "webhookId": "3ddc1039-8e5b-557a-8dc2-44ab766339dd"
+    },
+    {
+      "parameters": {
+        "jsCode": "// WF03: valida o envelope do sd-ops (WEBHOOK_CONTRACTS.md §8.2/§8.3) e aplica o anti-loop.\n// O token do header X-SD-Webhook-Token já foi conferido pelo nó Webhook (credencial Header Auth).\nconst WF = 'WF03';\nconst ACEITOS = [\"call.missed\"];\nconst entrada = $input.first().json;\nconst h = entrada.headers || {};\nconst ev = entrada.body || {};\nif ((h['x-sd-origin'] || '') !== 'sd-ops') {\n  throw new Error('Origem inesperada no header X-SD-Origin: ' + (h['x-sd-origin'] || '(vazio)'));\n}\nif (!ev.id || !ev.type) throw new Error('Envelope sem id/type');\nif (!ACEITOS.includes(ev.type)) return [];           // outro tipo: ignora sem erro\nconst ts = parseInt(h['x-sd-timestamp'] || '0', 10);\nif (ts && Math.abs(Date.now() / 1000 - ts) > 900) return [];  // fora da janela (reenvio antigo)\nif (String(ev.caused_by || '').startsWith('n8n:' + WF)) return [];  // causado por este workflow\nconst p = ev.payload || {};\nconst s = ev.subject || {};\nconst out = {\n  event_id: ev.id, type: ev.type, tenant_id: ev.tenant_id, correlation_id: ev.correlation_id || null,\n  payload: p,\n  call_id: p.call_id || s.call_id || null,\n  ticket_id: p.ticket_id || s.ticket_id || null,\n  conversation_id: p.conversation_id || s.conversation_id || null,\n};\n\nreturn [{ json: out }];\n"
+      },
+      "id": "f0c15576-9f44-5626-932b-99108d74ec89",
+      "name": "valida_evento",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "a9a2160b-1bd6-5e5c-ba7d-3d1fe4f8d847",
+              "name": "sdops_base_url",
+              "type": "string",
+              "value": "https://SERVICEDESK.EXEMPLO/sd-ops/api/v1"
+            },
+            {
+              "id": "a07a8ee5-bf3e-5667-8186-ce18e50aa9e7",
+              "name": "chatwoot_base_url",
+              "type": "string",
+              "value": "https://SERVICEDESK.EXEMPLO"
+            },
+            {
+              "id": "22e46937-5c21-504b-922b-201cfe9110bb",
+              "name": "chatwoot_account_id",
+              "type": "number",
+              "value": 1
+            },
+            {
+              "id": "1ad58322-72d4-5874-9ab9-3101a1be15e4",
+              "name": "ops_alert_conversation_id",
+              "type": "number",
+              "value": 0
+            },
+            {
+              "id": "278e6a28-f00a-5718-a205-539a34172e8f",
+              "name": "console_base_url",
+              "type": "string",
+              "value": "https://SERVICEDESK.EXEMPLO/sd-console"
+            },
+            {
+              "id": "be129e3d-1985-5fbd-aff1-1a3c13bd9727",
+              "name": "prioridade_perdida",
+              "type": "string",
+              "value": "high"
+            },
+            {
+              "id": "46f38d32-3290-5cdd-909f-7d4dce6fb8ec",
+              "name": "etiqueta_retorno",
+              "type": "string",
+              "value": "retorno_pendente"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "f19330d6-418c-5a1c-b7a1-9a8b25ca095e",
+      "name": "config",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        440,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "71d69c7b-84fa-58df-99bc-9541ec691ef7",
+              "leftValue": "={{ !!$('valida_evento').first().json.conversation_id }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "81f3db39-c1d2-5bf3-9b21-c3966f5b75e2",
+      "name": "tem_conversa",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        660,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $('config').first().json.chatwoot_base_url }}/api/v1/accounts/{{ $('config').first().json.chatwoot_account_id }}/conversations/{{ $('valida_evento').first().json.conversation_id }}/toggle_priority",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-SD-Origin",
+              "value": "n8n"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 15000
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ priority: $('config').first().json.prioridade_perdida }) }}"
+      },
+      "id": "08830942-66f5-52b7-b324-b6a4660c12a4",
+      "name": "prioridade",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        880,
+        -60
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "REPLACE_CRED_CHATWOOT_N8N",
+          "name": "ServiceDesk/Chatwoot: api_access_token da Integração n8n"
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 2000
+    },
+    {
+      "parameters": {
+        "url": "={{ $('config').first().json.chatwoot_base_url }}/api/v1/accounts/{{ $('config').first().json.chatwoot_account_id }}/conversations/{{ $('valida_evento').first().json.conversation_id }}/labels",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-SD-Origin",
+              "value": "n8n"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 15000
+        }
+      },
+      "id": "317fb431-cca7-54e5-9765-c13db25e2ebc",
+      "name": "etiquetas_atuais",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1100,
+        -60
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "REPLACE_CRED_CHATWOOT_N8N",
+          "name": "ServiceDesk/Chatwoot: api_access_token da Integração n8n"
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 2000
+    },
+    {
+      "parameters": {
+        "jsCode": "// POST /labels sobrescreve a lista: junta as atuais com a de retorno.\nconst atuais = ($('etiquetas_atuais').first().json.payload) || [];\nconst nova = $('config').first().json.etiqueta_retorno;\nreturn [{ json: { labels: Array.from(new Set(atuais.concat([nova]))) } }];\n"
+      },
+      "id": "f81034d8-f305-57ec-b782-c62a0d3dd5bf",
+      "name": "junta_etiquetas",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1320,
+        -60
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $('config').first().json.chatwoot_base_url }}/api/v1/accounts/{{ $('config').first().json.chatwoot_account_id }}/conversations/{{ $('valida_evento').first().json.conversation_id }}/labels",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-SD-Origin",
+              "value": "n8n"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 15000
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ labels: $json.labels }) }}"
+      },
+      "id": "1ea62a42-abb5-57ef-8d23-a1ea74df36ba",
+      "name": "grava_etiquetas",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1540,
+        -60
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "REPLACE_CRED_CHATWOOT_N8N",
+          "name": "ServiceDesk/Chatwoot: api_access_token da Integração n8n"
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 2000
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $('config').first().json.chatwoot_base_url }}/api/v1/accounts/{{ $('config').first().json.chatwoot_account_id }}/conversations/{{ $('valida_evento').first().json.conversation_id }}/messages",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-SD-Origin",
+              "value": "n8n"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 15000
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ content: 'Ligação perdida (' + $('valida_evento').first().json.payload.outcome + '). Tarefa de retorno ' + ($('valida_evento').first().json.payload.callback_task_id || '-') + ' criada. Ligue de volta pelo CTI.', message_type: 'outgoing', private: true, source_id: 'n8n:WF03:' + $execution.id + ':nota_retorno:' + $itemIndex, content_attributes: { sd_origin: 'n8n:WF03' } }) }}"
+      },
+      "id": "864f34fb-5445-5a1a-bae7-dccffe3e9c5b",
+      "name": "nota_retorno",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1760,
+        -60
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "REPLACE_CRED_CHATWOOT_N8N",
+          "name": "ServiceDesk/Chatwoot: api_access_token da Integração n8n"
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 2000
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $('config').first().json.chatwoot_base_url }}/api/v1/accounts/{{ $('config').first().json.chatwoot_account_id }}/conversations/{{ $('config').first().json.ops_alert_conversation_id }}/messages",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-SD-Origin",
+              "value": "n8n"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 15000
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ content: '[WF03] Ligação perdida sem conversa vinculada (chamada ' + $('valida_evento').first().json.call_id + ', retorno ' + ($('valida_evento').first().json.payload.callback_task_id || '-') + ').', message_type: 'outgoing', private: true, source_id: 'n8n:WF03:' + $execution.id + ':alerta_sem_conversa:' + $itemIndex, content_attributes: { sd_origin: 'n8n:WF03' } }) }}"
+      },
+      "id": "64039501-3911-5e57-8cda-609bf18bb7fe",
+      "name": "alerta_sem_conversa",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        880,
+        160
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "REPLACE_CRED_CHATWOOT_N8N",
+          "name": "ServiceDesk/Chatwoot: api_access_token da Integração n8n"
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 2000
+    }
+  ],
+  "connections": {
+    "webhook_sd_ops": {
+      "main": [
+        [
+          {
+            "node": "valida_evento",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "valida_evento": {
+      "main": [
+        [
+          {
+            "node": "config",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "config": {
+      "main": [
+        [
+          {
+            "node": "tem_conversa",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "tem_conversa": {
+      "main": [
+        [
+          {
+            "node": "prioridade",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "alerta_sem_conversa",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "prioridade": {
+      "main": [
+        [
+          {
+            "node": "etiquetas_atuais",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "etiquetas_atuais": {
+      "main": [
+        [
+          {
+            "node": "junta_etiquetas",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "junta_etiquetas": {
+      "main": [
+        [
+          {
+            "node": "grava_etiquetas",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "grava_etiquetas": {
+      "main": [
+        [
+          {
+            "node": "nota_retorno",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "America/Sao_Paulo",
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "none"
+  },
+  "pinData": {},
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "servicedesk": {
+      "workflow": "WF03",
+      "description": "call.missed -> o sd-ops já criou a tarefa de retorno (callback_task_id) e o ticket conforme a política; o workflow sobe a prioridade da conversa, marca a etiqueta de retorno e avisa o time.",
+      "generator": "servicedesk/integrations/n8n/tools/build_workflows.py",
+      "format_version": 1
+    }
+  }
+}

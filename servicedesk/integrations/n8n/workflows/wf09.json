@@ -1,0 +1,375 @@
+{
+  "name": "SD WF09 - Reconciliação diária com os relatórios 55PBX",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 3 * * *"
+            }
+          ]
+        }
+      },
+      "id": "fc404b7b-b277-52d4-aa33-08f4a562c31d",
+      "name": "todo_dia_03h",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        -80
+      ]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "sd/wf09-reconciliar",
+        "authentication": "headerAuth",
+        "options": {}
+      },
+      "id": "3867bdfd-4985-52d4-b05d-b95f2ee75bf5",
+      "name": "webhook_manual",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        80
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "REPLACE_CRED_SDOPS_WEBHOOK_TOKEN",
+          "name": "SD-OPS -> n8n: X-SD-Webhook-Token"
+        }
+      },
+      "webhookId": "3867bdfd-4985-52d4-b05d-b95f2ee75bf5"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "61315e1c-7da7-515a-8312-8629f3e42e3f",
+              "name": "sdops_base_url",
+              "type": "string",
+              "value": "https://SERVICEDESK.EXEMPLO/sd-ops/api/v1"
+            },
+            {
+              "id": "a3e6abf4-b6fd-5aa7-a81b-b09dc35ba2d4",
+              "name": "chatwoot_base_url",
+              "type": "string",
+              "value": "https://SERVICEDESK.EXEMPLO"
+            },
+            {
+              "id": "f02336e6-7daa-5346-bfcd-4a8d2e121963",
+              "name": "chatwoot_account_id",
+              "type": "number",
+              "value": 1
+            },
+            {
+              "id": "dbcd013a-4aa4-5db5-ac3f-e4fc27802d0c",
+              "name": "ops_alert_conversation_id",
+              "type": "number",
+              "value": 0
+            },
+            {
+              "id": "510ade7f-80db-53a4-80aa-81afb1a8b8d9",
+              "name": "console_base_url",
+              "type": "string",
+              "value": "https://SERVICEDESK.EXEMPLO/sd-console"
+            },
+            {
+              "id": "c602470e-77d6-503e-bc1f-caa6a2763b84",
+              "name": "dias_atras",
+              "type": "number",
+              "value": 1
+            },
+            {
+              "id": "48536274-f081-52d9-b8de-cb5914665312",
+              "name": "alerta_novas_acima",
+              "type": "number",
+              "value": 20
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "1fcee790-57cc-5a16-90e8-f5a395045a52",
+      "name": "config",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Dia(s) anterior(es) em horário de Brasília (UTC-3, sem horário de verão), convertido para UTC.\nconst body = ($('webhook_manual').isExecuted ? ($('webhook_manual').first().json.body || {}) : {});\nif (body.from && body.to) return [{ json: { from: body.from, to: body.to } }];\nconst dias = $('config').first().json.dias_atras || 1;\nconst agoraBRT = new Date(Date.now() - 3 * 3600 * 1000);\nconst fimBRT = Date.UTC(agoraBRT.getUTCFullYear(), agoraBRT.getUTCMonth(), agoraBRT.getUTCDate());\nconst ini = new Date(fimBRT - dias * 86400000 + 3 * 3600000);\nconst fim = new Date(fimBRT + 3 * 3600000 - 1000);\nreturn [{ json: { from: ini.toISOString(), to: fim.toISOString() } }];\n"
+      },
+      "id": "e620c48d-eba3-59a1-9e8f-02c68856c632",
+      "name": "janela",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        440,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $('config').first().json.sdops_base_url }}/reconciliations",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-SD-Origin",
+              "value": "n8n"
+            },
+            {
+              "name": "X-SD-Workflow",
+              "value": "WF09"
+            },
+            {
+              "name": "Idempotency-Key",
+              "value": "={{ $execution.id }}:reconcilia:{{ $itemIndex }}"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 600000,
+          "response": {
+            "response": {
+              "neverError": true,
+              "fullResponse": true
+            }
+          }
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ from: $json.from, to: $json.to }) }}"
+      },
+      "id": "6e737c77-0779-5cb9-84c1-86bd55c613bc",
+      "name": "reconcilia",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        660,
+        0
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "REPLACE_CRED_SDOPS_SERVICE_TOKEN",
+          "name": "SD-OPS: token de serviço do n8n (Authorization: Bearer)"
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 2000
+    },
+    {
+      "parameters": {
+        "jsCode": "const r = $('reconcilia').first().json;\n// sd-ops: 202 {rows, new} | 202 {skipped: motivo} | 502 {error, rows, new}\nconst b = r.body || {};\nconst erro = r.statusCode >= 300 || !!b.error;\nconst pulou = !!b.skipped;\nconst per = $('janela').first().json.from + ' a ' + $('janela').first().json.to;\nconst texto = '[WF09] Reconciliação ' + per + ': ' + (erro ? ('FALHOU (HTTP ' + r.statusCode + ') ' + (b.error || '')) :\n  pulou ? ('NÃO EXECUTADA: ' + b.skipped) : ('linhas do Report02 ' + (b.rows || 0) + ', novas (não vistas em tempo real) ' + (b.new || 0)));\n// \"novas\" > 0 = ligações que o tempo real não entregou: alerta só acima do limite configurado\nreturn [{ json: { alertar: erro || pulou || Number(b.new || 0) > $('config').first().json.alerta_novas_acima, texto } }];\n"
+      },
+      "id": "67dc412e-5dd7-51ef-bda2-c310ede99dc5",
+      "name": "resume",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        880,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "622eafa9-4e23-50eb-bf71-8a22e84ad197",
+              "leftValue": "={{ $json.alertar }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "de192e1f-873b-5027-b862-4d37b07332ad",
+      "name": "precisa_alertar",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1100,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $('config').first().json.chatwoot_base_url }}/api/v1/accounts/{{ $('config').first().json.chatwoot_account_id }}/conversations/{{ $('config').first().json.ops_alert_conversation_id }}/messages",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-SD-Origin",
+              "value": "n8n"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 15000
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ content: $json.texto, message_type: 'outgoing', private: true, source_id: 'n8n:WF09:' + $execution.id + ':alerta_reconciliacao:' + $itemIndex, content_attributes: { sd_origin: 'n8n:WF09' } }) }}"
+      },
+      "id": "37e5707b-f883-54ea-8e93-c88deab7ac94",
+      "name": "alerta_reconciliacao",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1320,
+        -40
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "REPLACE_CRED_CHATWOOT_N8N",
+          "name": "ServiceDesk/Chatwoot: api_access_token da Integração n8n"
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 2000
+    },
+    {
+      "parameters": {},
+      "id": "ad1af5bf-0f28-5771-bda7-b3790a8fe253",
+      "name": "sem_alerta",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        1320,
+        120
+      ]
+    }
+  ],
+  "connections": {
+    "todo_dia_03h": {
+      "main": [
+        [
+          {
+            "node": "config",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "webhook_manual": {
+      "main": [
+        [
+          {
+            "node": "config",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "config": {
+      "main": [
+        [
+          {
+            "node": "janela",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "janela": {
+      "main": [
+        [
+          {
+            "node": "reconcilia",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "reconcilia": {
+      "main": [
+        [
+          {
+            "node": "resume",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "resume": {
+      "main": [
+        [
+          {
+            "node": "precisa_alertar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "precisa_alertar": {
+      "main": [
+        [
+          {
+            "node": "alerta_reconciliacao",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "sem_alerta",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "America/Sao_Paulo",
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "none"
+  },
+  "pinData": {},
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "servicedesk": {
+      "workflow": "WF09",
+      "description": "03:00 (e sob demanda) -> pede ao sd-ops a reconciliação do dia anterior pelo Report02; divergências e erros viram alerta. Quem escreve é o sd-ops.",
+      "generator": "servicedesk/integrations/n8n/tools/build_workflows.py",
+      "format_version": 1
+    }
+  }
+}

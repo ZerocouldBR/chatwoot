@@ -1,0 +1,666 @@
+{
+  "name": "SD WF10 - Alertas de SLA",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "*/15 * * * *"
+            }
+          ]
+        }
+      },
+      "id": "a53195a4-ade0-5f79-a214-398acab9fd9c",
+      "name": "a_cada_15min",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        -120
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "a99079ad-fb64-583f-bd32-7addbe5dc413",
+              "name": "sdops_base_url",
+              "type": "string",
+              "value": "https://SERVICEDESK.EXEMPLO/sd-ops/api/v1"
+            },
+            {
+              "id": "719e55ec-e193-5827-8835-11f12e2f0064",
+              "name": "chatwoot_base_url",
+              "type": "string",
+              "value": "https://SERVICEDESK.EXEMPLO"
+            },
+            {
+              "id": "96424744-42df-532b-b230-2f96aa20d33a",
+              "name": "chatwoot_account_id",
+              "type": "number",
+              "value": 1
+            },
+            {
+              "id": "ffb4a924-0a68-54ba-850d-db77d157f8a8",
+              "name": "ops_alert_conversation_id",
+              "type": "number",
+              "value": 0
+            },
+            {
+              "id": "9760e0c3-c346-5043-b149-80069d76b748",
+              "name": "console_base_url",
+              "type": "string",
+              "value": "https://SERVICEDESK.EXEMPLO/sd-console"
+            },
+            {
+              "id": "7e15f8a0-8bd1-5e5f-845a-29d19c179c1f",
+              "name": "janela_min",
+              "type": "number",
+              "value": 60
+            },
+            {
+              "id": "a5084892-7056-5fd2-a7e7-130d84746dd3",
+              "name": "etiqueta_risco",
+              "type": "string",
+              "value": "sla_em_risco"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "08407041-cc78-5d9d-8540-fac8f41237c6",
+      "name": "config",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        220,
+        -120
+      ]
+    },
+    {
+      "parameters": {
+        "url": "={{ $('config').first().json.sdops_base_url }}/sla/at-risk",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-SD-Origin",
+              "value": "n8n"
+            },
+            {
+              "name": "X-SD-Workflow",
+              "value": "WF10"
+            },
+            {
+              "name": "Idempotency-Key",
+              "value": "={{ $execution.id }}:tickets_em_risco:{{ $itemIndex }}"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 15000
+        },
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "within",
+              "value": "={{ $('config').first().json.janela_min }}"
+            }
+          ]
+        }
+      },
+      "id": "ce782f55-19f0-5479-9d4c-80eae4df11d4",
+      "name": "tickets_em_risco",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        440,
+        -120
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "REPLACE_CRED_SDOPS_SERVICE_TOKEN",
+          "name": "SD-OPS: token de serviço do n8n (Authorization: Bearer)"
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 2000
+    },
+    {
+      "parameters": {
+        "jsCode": "// Resposta em array vira vários itens no n8n; resposta embrulhada ({items|data: [...]}) vira um item.\nconst lista = $('tickets_em_risco').all().map(i => i.json).flatMap(j => Array.isArray(j.items) ? j.items : (Array.isArray(j.data) ? j.data : [j]));\nreturn lista.filter(t => t && (t.ticket_id || t.id) && !t.breached).map(t => ({ json: {\n  ticket_id: t.ticket_id || t.id, protocolo: t.protocol || t.protocolo || '', metric: t.metric || '',\n  due_at: t.due_at || '' } }));\n"
+      },
+      "id": "d266c908-f627-5dbe-816a-e405559f39aa",
+      "name": "um_por_ticket",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        660,
+        -120
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const sd = $getWorkflowStaticData('global');\nsd.enviados = sd.enviados || {};\nconst agora = Date.now();\nfor (const [k, t] of Object.entries(sd.enviados)) if (agora - t > 7 * 86400000) delete sd.enviados[k];\nconst out = [];\nfor (const it of $input.all()) {\n  const chave = 'sla:' + it.json.ticket_id + ':' + it.json.metric + ':' + it.json.due_at;\n  if (sd.enviados[chave]) continue;          // já enviado/alertado: não repete\n  sd.enviados[chave] = agora;                // reserva antes do envio (no máximo uma vez)\n  out.push({ json: { ...it.json, chave } });\n}\nreturn out;\n"
+      },
+      "id": "0d0283b5-89d2-5a1c-8479-9840c47a3a1f",
+      "name": "so_novos",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        880,
+        -120
+      ]
+    },
+    {
+      "parameters": {
+        "url": "={{ $('config').first().json.sdops_base_url }}/tickets/{{ $json.ticket_id }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-SD-Origin",
+              "value": "n8n"
+            },
+            {
+              "name": "X-SD-Workflow",
+              "value": "WF10"
+            },
+            {
+              "name": "Idempotency-Key",
+              "value": "={{ $execution.id }}:consulta_ticket:{{ $itemIndex }}"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 15000
+        }
+      },
+      "id": "a8d7d65b-3383-54fe-8747-a764fa9de20d",
+      "name": "consulta_ticket",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1100,
+        -120
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "REPLACE_CRED_SDOPS_SERVICE_TOKEN",
+          "name": "SD-OPS: token de serviço do n8n (Authorization: Bearer)"
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 2000
+    },
+    {
+      "parameters": {
+        "jsCode": "// O /sla/at-risk não traz a conversa: usa a primária do ticket (conversations[0]); pareia por índice.\nconst base = $('so_novos').all();\nreturn $input.all().map((it, i) => ({ json: { ...base[i].json, conversation_id: (it.json.conversations || [])[0] || null } }))\n  .filter(x => x.json.conversation_id);\n"
+      },
+      "id": "01a1d010-0df9-5424-91c2-8bba8d49aaf0",
+      "name": "com_conversa",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1320,
+        -120
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $('config').first().json.chatwoot_base_url }}/api/v1/accounts/{{ $('config').first().json.chatwoot_account_id }}/conversations/{{ $json.conversation_id }}/messages",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-SD-Origin",
+              "value": "n8n"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 15000
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ content: 'SLA em risco: ' + $json.metric + ' vence em ' + $json.due_at + ' (ticket ' + $json.protocolo + ').', message_type: 'outgoing', private: true, source_id: 'n8n:WF10:' + $execution.id + ':nota_sla_risco:' + $itemIndex, content_attributes: { sd_origin: 'n8n:WF10' } }) }}"
+      },
+      "id": "fa280892-ce21-509f-9829-f9ff2c44adb0",
+      "name": "nota_sla_risco",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1540,
+        -120
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "REPLACE_CRED_CHATWOOT_N8N",
+          "name": "ServiceDesk/Chatwoot: api_access_token da Integração n8n"
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 2000
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "sd/wf10-sla",
+        "authentication": "headerAuth",
+        "options": {}
+      },
+      "id": "0e0154e7-e4e9-5ba9-8d1e-5183380103db",
+      "name": "webhook_sd_ops",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        160
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "REPLACE_CRED_SDOPS_WEBHOOK_TOKEN",
+          "name": "SD-OPS -> n8n: X-SD-Webhook-Token"
+        }
+      },
+      "webhookId": "3ee587ed-eba4-5267-b4c7-bd64ad884768"
+    },
+    {
+      "parameters": {
+        "jsCode": "// WF10: valida o envelope do sd-ops (WEBHOOK_CONTRACTS.md §8.2/§8.3) e aplica o anti-loop.\n// O token do header X-SD-Webhook-Token já foi conferido pelo nó Webhook (credencial Header Auth).\nconst WF = 'WF10';\nconst ACEITOS = [\"sla.breached\"];\nconst entrada = $input.first().json;\nconst h = entrada.headers || {};\nconst ev = entrada.body || {};\nif ((h['x-sd-origin'] || '') !== 'sd-ops') {\n  throw new Error('Origem inesperada no header X-SD-Origin: ' + (h['x-sd-origin'] || '(vazio)'));\n}\nif (!ev.id || !ev.type) throw new Error('Envelope sem id/type');\nif (!ACEITOS.includes(ev.type)) return [];           // outro tipo: ignora sem erro\nconst ts = parseInt(h['x-sd-timestamp'] || '0', 10);\nif (ts && Math.abs(Date.now() / 1000 - ts) > 900) return [];  // fora da janela (reenvio antigo)\nif (String(ev.caused_by || '').startsWith('n8n:' + WF)) return [];  // causado por este workflow\nconst p = ev.payload || {};\nconst s = ev.subject || {};\nconst out = {\n  event_id: ev.id, type: ev.type, tenant_id: ev.tenant_id, correlation_id: ev.correlation_id || null,\n  payload: p,\n  call_id: p.call_id || s.call_id || null,\n  ticket_id: p.ticket_id || s.ticket_id || null,\n  conversation_id: p.conversation_id || s.conversation_id || null,\n};\n\nreturn [{ json: out }];\n"
+      },
+      "id": "f1eba9c0-7f43-5364-bf3c-a6bd1e4cb263",
+      "name": "valida_evento",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        160
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "a99079ad-fb64-583f-bd32-7addbe5dc413",
+              "name": "sdops_base_url",
+              "type": "string",
+              "value": "https://SERVICEDESK.EXEMPLO/sd-ops/api/v1"
+            },
+            {
+              "id": "719e55ec-e193-5827-8835-11f12e2f0064",
+              "name": "chatwoot_base_url",
+              "type": "string",
+              "value": "https://SERVICEDESK.EXEMPLO"
+            },
+            {
+              "id": "96424744-42df-532b-b230-2f96aa20d33a",
+              "name": "chatwoot_account_id",
+              "type": "number",
+              "value": 1
+            },
+            {
+              "id": "ffb4a924-0a68-54ba-850d-db77d157f8a8",
+              "name": "ops_alert_conversation_id",
+              "type": "number",
+              "value": 0
+            },
+            {
+              "id": "9760e0c3-c346-5043-b149-80069d76b748",
+              "name": "console_base_url",
+              "type": "string",
+              "value": "https://SERVICEDESK.EXEMPLO/sd-console"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "9022ac09-f6fc-5f04-8f95-42f034c5d164",
+      "name": "config_evento",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        440,
+        160
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "32981eac-387d-5a15-998b-674b1715a8c7",
+              "leftValue": "={{ !!$('valida_evento').first().json.conversation_id }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "aef1a244-93c2-50ad-9579-e8d210d5a781",
+      "name": "tem_conversa",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        660,
+        160
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $('config_evento').first().json.chatwoot_base_url }}/api/v1/accounts/{{ $('config_evento').first().json.chatwoot_account_id }}/conversations/{{ $('valida_evento').first().json.conversation_id }}/toggle_priority",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-SD-Origin",
+              "value": "n8n"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 15000
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ priority: 'urgent' }) }}"
+      },
+      "id": "6f01cad2-5cd6-5bb5-9fd9-440742ee5f8e",
+      "name": "prioridade_urgente",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        880,
+        120
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "REPLACE_CRED_CHATWOOT_N8N",
+          "name": "ServiceDesk/Chatwoot: api_access_token da Integração n8n"
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 2000
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $('config_evento').first().json.chatwoot_base_url }}/api/v1/accounts/{{ $('config_evento').first().json.chatwoot_account_id }}/conversations/{{ $('valida_evento').first().json.conversation_id }}/messages",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-SD-Origin",
+              "value": "n8n"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 15000
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ content: 'SLA VIOLADO: ' + $('valida_evento').first().json.payload.metric + ' (prazo ' + $('valida_evento').first().json.payload.due_at + ').', message_type: 'outgoing', private: true, source_id: 'n8n:WF10:' + $execution.id + ':nota_sla_violado:' + $itemIndex, content_attributes: { sd_origin: 'n8n:WF10' } }) }}"
+      },
+      "id": "21819ef4-e13e-540d-be46-01a78509a385",
+      "name": "nota_sla_violado",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1100,
+        120
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "REPLACE_CRED_CHATWOOT_N8N",
+          "name": "ServiceDesk/Chatwoot: api_access_token da Integração n8n"
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 2000
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $('config_evento').first().json.chatwoot_base_url }}/api/v1/accounts/{{ $('config_evento').first().json.chatwoot_account_id }}/conversations/{{ $('config_evento').first().json.ops_alert_conversation_id }}/messages",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-SD-Origin",
+              "value": "n8n"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 15000
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ content: '[WF10] SLA violado no ticket ' + ($('valida_evento').first().json.payload.protocol || $('valida_evento').first().json.ticket_id) + ': ' + $('valida_evento').first().json.payload.metric, message_type: 'outgoing', private: true, source_id: 'n8n:WF10:' + $execution.id + ':alerta_sla_violado:' + $itemIndex, content_attributes: { sd_origin: 'n8n:WF10' } }) }}"
+      },
+      "id": "3c0fcbc4-29b5-5ead-8f78-0e12a1e1ecfd",
+      "name": "alerta_sla_violado",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1320,
+        200
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "REPLACE_CRED_CHATWOOT_N8N",
+          "name": "ServiceDesk/Chatwoot: api_access_token da Integração n8n"
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 2000
+    }
+  ],
+  "connections": {
+    "a_cada_15min": {
+      "main": [
+        [
+          {
+            "node": "config",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "config": {
+      "main": [
+        [
+          {
+            "node": "tickets_em_risco",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "tickets_em_risco": {
+      "main": [
+        [
+          {
+            "node": "um_por_ticket",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "um_por_ticket": {
+      "main": [
+        [
+          {
+            "node": "so_novos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "so_novos": {
+      "main": [
+        [
+          {
+            "node": "consulta_ticket",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "consulta_ticket": {
+      "main": [
+        [
+          {
+            "node": "com_conversa",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "com_conversa": {
+      "main": [
+        [
+          {
+            "node": "nota_sla_risco",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "webhook_sd_ops": {
+      "main": [
+        [
+          {
+            "node": "valida_evento",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "valida_evento": {
+      "main": [
+        [
+          {
+            "node": "config_evento",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "config_evento": {
+      "main": [
+        [
+          {
+            "node": "tem_conversa",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "tem_conversa": {
+      "main": [
+        [
+          {
+            "node": "prioridade_urgente",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "alerta_sla_violado",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "prioridade_urgente": {
+      "main": [
+        [
+          {
+            "node": "nota_sla_violado",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "nota_sla_violado": {
+      "main": [
+        [
+          {
+            "node": "alerta_sla_violado",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "America/Sao_Paulo",
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "none"
+  },
+  "pinData": {},
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "servicedesk": {
+      "workflow": "WF10",
+      "description": "A cada 15 min consulta tickets com SLA vencendo em 60 min e avisa uma vez por prazo (static data); sla.breached (evento) sobe a prioridade e avisa operações. O cálculo do SLA é do sd-ops.",
+      "generator": "servicedesk/integrations/n8n/tools/build_workflows.py",
+      "format_version": 1
+    }
+  }
+}

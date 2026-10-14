@@ -1,0 +1,762 @@
+{
+  "name": "SD WF07 - CSAT pelo canal permitido",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "sd/wf07-csat",
+        "authentication": "headerAuth",
+        "options": {}
+      },
+      "id": "28d1e1a4-0cfa-5e2c-be49-010522484b16",
+      "name": "webhook_sd_ops",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        0
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "REPLACE_CRED_SDOPS_WEBHOOK_TOKEN",
+          "name": "SD-OPS -> n8n: X-SD-Webhook-Token"
+        }
+      },
+      "webhookId": "408e3b26-3b94-51c5-822c-1bdc492f8329"
+    },
+    {
+      "parameters": {
+        "jsCode": "// WF07: valida o envelope do sd-ops (WEBHOOK_CONTRACTS.md §8.2/§8.3) e aplica o anti-loop.\n// O token do header X-SD-Webhook-Token já foi conferido pelo nó Webhook (credencial Header Auth).\nconst WF = 'WF07';\nconst ACEITOS = [\"ticket.status_changed\"];\nconst entrada = $input.first().json;\nconst h = entrada.headers || {};\nconst ev = entrada.body || {};\nif ((h['x-sd-origin'] || '') !== 'sd-ops') {\n  throw new Error('Origem inesperada no header X-SD-Origin: ' + (h['x-sd-origin'] || '(vazio)'));\n}\nif (!ev.id || !ev.type) throw new Error('Envelope sem id/type');\nif (!ACEITOS.includes(ev.type)) return [];           // outro tipo: ignora sem erro\nconst ts = parseInt(h['x-sd-timestamp'] || '0', 10);\nif (ts && Math.abs(Date.now() / 1000 - ts) > 900) return [];  // fora da janela (reenvio antigo)\nif (String(ev.caused_by || '').startsWith('n8n:' + WF)) return [];  // causado por este workflow\nconst p = ev.payload || {};\nconst s = ev.subject || {};\nconst out = {\n  event_id: ev.id, type: ev.type, tenant_id: ev.tenant_id, correlation_id: ev.correlation_id || null,\n  payload: p,\n  call_id: p.call_id || s.call_id || null,\n  ticket_id: p.ticket_id || s.ticket_id || null,\n  conversation_id: p.conversation_id || s.conversation_id || null,\n};\nif (p.to !== 'resolvido') return [];\nreturn [{ json: out }];\n"
+      },
+      "id": "00f9879e-ce3f-5d28-af98-81a7f6fc4a93",
+      "name": "valida_evento",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "07e27211-cc11-5419-af09-629cea8dfca2",
+              "name": "sdops_base_url",
+              "type": "string",
+              "value": "https://SERVICEDESK.EXEMPLO/sd-ops/api/v1"
+            },
+            {
+              "id": "3b2ef3e7-505f-528a-8324-a8a7ca09415c",
+              "name": "chatwoot_base_url",
+              "type": "string",
+              "value": "https://SERVICEDESK.EXEMPLO"
+            },
+            {
+              "id": "530fea83-0076-5a8c-a81a-6b54f6feacaf",
+              "name": "chatwoot_account_id",
+              "type": "number",
+              "value": 1
+            },
+            {
+              "id": "079e6f1c-cbdb-5df4-a74f-5c821553dc7f",
+              "name": "ops_alert_conversation_id",
+              "type": "number",
+              "value": 0
+            },
+            {
+              "id": "a7c57e22-05f7-5280-b73c-175428e5a10b",
+              "name": "console_base_url",
+              "type": "string",
+              "value": "https://SERVICEDESK.EXEMPLO/sd-console"
+            },
+            {
+              "id": "917f687b-a824-5ab5-b4aa-214a2bdd0e1c",
+              "name": "dry_run",
+              "type": "boolean",
+              "value": true
+            },
+            {
+              "id": "6f341546-f32b-5a9f-8734-38efc82556bd",
+              "name": "whatsapp_inbox_id",
+              "type": "number",
+              "value": 0
+            },
+            {
+              "id": "ae42dd07-d718-5b02-930e-1fe310705753",
+              "name": "template_nome",
+              "type": "string",
+              "value": ""
+            },
+            {
+              "id": "e9dfe6a5-9c1e-5f0f-bbb0-57068503d196",
+              "name": "template_idioma",
+              "type": "string",
+              "value": "pt_BR"
+            },
+            {
+              "id": "58d7697a-5d7e-5cff-81d8-2f0faead1d68",
+              "name": "template_categoria",
+              "type": "string",
+              "value": "UTILITY"
+            },
+            {
+              "id": "fdcc0f04-3292-5b32-a522-a3a2d112aec8",
+              "name": "atributo_optin",
+              "type": "string",
+              "value": "sd_whatsapp_optin"
+            },
+            {
+              "id": "cee45523-63b5-5225-8048-2965267c9284",
+              "name": "somente_origem_telefone",
+              "type": "boolean",
+              "value": true
+            },
+            {
+              "id": "5dc10ee1-3655-56e2-837e-60822341628f",
+              "name": "hora_inicio",
+              "type": "number",
+              "value": 8
+            },
+            {
+              "id": "f44f8db1-8543-52c5-8fbd-64f04a450530",
+              "name": "hora_fim",
+              "type": "number",
+              "value": 20
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "696060d4-fd9a-5437-af29-cc1a356dff6a",
+      "name": "config",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        440,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "amount": 120,
+        "unit": "minutes"
+      },
+      "id": "ea7bc6be-a472-5d8c-9250-c55358bd2e63",
+      "name": "aguarda",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        660,
+        0
+      ],
+      "webhookId": "f38e87a7-a9dc-5247-8bc7-ea9db84b6982"
+    },
+    {
+      "parameters": {
+        "url": "={{ $('config').first().json.sdops_base_url }}/tickets/{{ $('valida_evento').first().json.ticket_id }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-SD-Origin",
+              "value": "n8n"
+            },
+            {
+              "name": "X-SD-Workflow",
+              "value": "WF07"
+            },
+            {
+              "name": "Idempotency-Key",
+              "value": "={{ $execution.id }}:consulta_ticket:{{ $itemIndex }}"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 15000
+        }
+      },
+      "id": "217abb4f-83b1-5bf7-a90d-c6d9f9d7bdbc",
+      "name": "consulta_ticket",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        880,
+        0
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "REPLACE_CRED_SDOPS_SERVICE_TOKEN",
+          "name": "SD-OPS: token de serviço do n8n (Authorization: Bearer)"
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 2000
+    },
+    {
+      "parameters": {
+        "jsCode": "// Reaberto ou cancelado enquanto esperava: não envia.\nconst t = $('consulta_ticket').first().json;\nreturn ['resolvido', 'encerrado'].includes(t.status) ? [{ json: t }] : [];\n"
+      },
+      "id": "57405d22-4b9d-5444-a84a-f153bc66edae",
+      "name": "ainda_resolvido",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1100,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "url": "={{ $('config').first().json.chatwoot_base_url }}/api/v1/accounts/{{ $('config').first().json.chatwoot_account_id }}/contacts/{{ $('consulta_ticket').first().json.contact_id }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-SD-Origin",
+              "value": "n8n"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 15000
+        }
+      },
+      "id": "6652e45f-e370-5c5b-b831-dff85a6021ad",
+      "name": "consulta_contato",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1320,
+        0
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "REPLACE_CRED_CHATWOOT_N8N",
+          "name": "ServiceDesk/Chatwoot: api_access_token da Integração n8n"
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 2000
+    },
+    {
+      "parameters": {
+        "jsCode": "// Política de envio (LGPD + Meta): opt-in explícito no contato, telefone E.164, horário permitido,\n// template aprovado (fora da janela de 24 h só template). Sem opt-in: não envia.\nconst cfg = $('config').first().json;\nconst t = $('consulta_ticket').first().json;\nconst ct = $('consulta_contato').first().json.payload || $('consulta_contato').first().json;\nconst attrs = ct.custom_attributes || {};\nconst motivo = [];\nif (attrs[cfg.atributo_optin] !== true && String(attrs[cfg.atributo_optin]).toLowerCase() !== 'true') motivo.push('sem opt-in');\nif (!/^\\+\\d{10,15}$/.test(ct.phone_number || '')) motivo.push('sem telefone E.164');\nif (!cfg.template_nome) motivo.push('template não configurado');\nif (cfg.somente_origem_telefone && String(t.channel) !== 'phone') motivo.push('ticket não é de telefonia');\nconst agora = new Date(new Date().toLocaleString('en-US', { timeZone: 'America/Sao_Paulo' }));\nconst hora = agora.getHours(), dia = agora.getDay();\nif (dia === 0 || hora < cfg.hora_inicio || hora >= cfg.hora_fim) motivo.push('fora do horário permitido');\nreturn [{ json: { enviar: motivo.length === 0, motivo: motivo.join(', '), ticket_id: t.id, protocolo: t.protocol,\n  contact_id: ct.id, telefone_digitos: String(ct.phone_number || '').replace(/\\D/g, ''),\n  primeiro_nome: String(ct.name || '').split(' ')[0] } }];\n"
+      },
+      "id": "c7805576-18ee-590a-bc91-4dbf1c463611",
+      "name": "politica_envio",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1540,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "88e1e245-4a6c-5cb3-8156-978db0380062",
+              "leftValue": "={{ $json.enviar }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "0faca3ec-3fcf-56ee-ac55-76c0ee2b6d7e",
+      "name": "pode_enviar",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1760,
+        0
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "c556504e-69ea-5a61-a86a-74f142800dc5",
+      "name": "nao_envia_registra_motivo",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        1980,
+        180
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $('config').first().json.sdops_base_url }}/notifications/log",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-SD-Origin",
+              "value": "n8n"
+            },
+            {
+              "name": "X-SD-Workflow",
+              "value": "WF07"
+            },
+            {
+              "name": "Idempotency-Key",
+              "value": "={{ 'csat:' + $('politica_envio').first().json.ticket_id + ($('config').first().json.dry_run ? ':simulado' : '') }}"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 15000,
+          "response": {
+            "response": {
+              "neverError": true,
+              "fullResponse": true
+            }
+          }
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ channel: 'whatsapp', ticket_id: $('politica_envio').first().json.ticket_id, dedupe_key: 'csat:' + $('politica_envio').first().json.ticket_id + ($('config').first().json.dry_run ? ':simulado' : ''), template: $('config').first().json.template_nome, status: $('config').first().json.dry_run ? 'simulado' : 'enviando', detail: { tipo: 'csat', workflow: 'WF07' } }) }}"
+      },
+      "id": "b93b31b5-6aa1-5f9b-bf6c-31ff3300cadb",
+      "name": "registra_envio",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1980,
+        -40
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "REPLACE_CRED_SDOPS_SERVICE_TOKEN",
+          "name": "SD-OPS: token de serviço do n8n (Authorization: Bearer)"
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 2000
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "ac9e2c2d-ecd4-55d0-b6ea-df08eba6f5a3",
+              "leftValue": "={{ $json.statusCode < 300 && String(($json.headers || {})['idempotent-replay']) !== 'true' && !$('config').first().json.dry_run }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "ab4f3f1c-88c2-5692-b705-30a2438a64e0",
+      "name": "primeiro_envio",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        2200,
+        -40
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "dc63872f-6244-54e2-9c9a-cafc56b60f55",
+      "name": "dry_run_ou_duplicado",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        2420,
+        120
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $('config').first().json.chatwoot_base_url }}/api/v1/accounts/{{ $('config').first().json.chatwoot_account_id }}/contacts/{{ $('politica_envio').first().json.contact_id }}/contact_inboxes",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-SD-Origin",
+              "value": "n8n"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 15000
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ inbox_id: $('config').first().json.whatsapp_inbox_id, source_id: $('politica_envio').first().json.telefone_digitos }) }}"
+      },
+      "id": "61b1ee4c-4a8d-5a19-a055-0ddeb51e0fd7",
+      "name": "contact_inbox_whatsapp",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2420,
+        -60
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "REPLACE_CRED_CHATWOOT_N8N",
+          "name": "ServiceDesk/Chatwoot: api_access_token da Integração n8n"
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 2000
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $('config').first().json.chatwoot_base_url }}/api/v1/accounts/{{ $('config').first().json.chatwoot_account_id }}/conversations",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-SD-Origin",
+              "value": "n8n"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 15000
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ source_id: $json.source_id, inbox_id: $('config').first().json.whatsapp_inbox_id, contact_id: $('politica_envio').first().json.contact_id, custom_attributes: { sd_protocolo: $('politica_envio').first().json.protocolo } }) }}"
+      },
+      "id": "9f4e8fd5-2864-52ce-b91f-16a8573ee375",
+      "name": "conversa_whatsapp",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2640,
+        -60
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "REPLACE_CRED_CHATWOOT_N8N",
+          "name": "ServiceDesk/Chatwoot: api_access_token da Integração n8n"
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 2000
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $('config').first().json.chatwoot_base_url }}/api/v1/accounts/{{ $('config').first().json.chatwoot_account_id }}/conversations/{{ $json.id }}/messages",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-SD-Origin",
+              "value": "n8n"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 15000
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ content: 'Protocolo ' + $('politica_envio').first().json.protocolo, message_type: 'outgoing', content_attributes: { sd_origin: 'n8n:WF07' }, template_params: { name: $('config').first().json.template_nome, category: $('config').first().json.template_categoria, language: $('config').first().json.template_idioma, processed_params: { '1': $('politica_envio').first().json.primeiro_nome, '2': $('politica_envio').first().json.protocolo } } }) }}"
+      },
+      "id": "245ef8c6-ddc9-58f0-9f5e-5f36aac4201c",
+      "name": "envia_template",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2860,
+        -60
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "REPLACE_CRED_CHATWOOT_N8N",
+          "name": "ServiceDesk/Chatwoot: api_access_token da Integração n8n"
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 2000
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $('config').first().json.sdops_base_url }}/tickets/{{ $('politica_envio').first().json.ticket_id }}/links",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-SD-Origin",
+              "value": "n8n"
+            },
+            {
+              "name": "X-SD-Workflow",
+              "value": "WF07"
+            },
+            {
+              "name": "Idempotency-Key",
+              "value": "={{ $execution.id }}:vincula_conversa:{{ $itemIndex }}"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 15000
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ conversation_id: $('conversa_whatsapp').first().json.id }) }}"
+      },
+      "id": "bb428aa0-eded-56cd-a87d-1a75e5ed3265",
+      "name": "vincula_conversa",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        3080,
+        -60
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "REPLACE_CRED_SDOPS_SERVICE_TOKEN",
+          "name": "SD-OPS: token de serviço do n8n (Authorization: Bearer)"
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 2000
+    }
+  ],
+  "connections": {
+    "config": {
+      "main": [
+        [
+          {
+            "node": "aguarda",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "aguarda": {
+      "main": [
+        [
+          {
+            "node": "consulta_ticket",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "consulta_ticket": {
+      "main": [
+        [
+          {
+            "node": "ainda_resolvido",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "ainda_resolvido": {
+      "main": [
+        [
+          {
+            "node": "consulta_contato",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "consulta_contato": {
+      "main": [
+        [
+          {
+            "node": "politica_envio",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "politica_envio": {
+      "main": [
+        [
+          {
+            "node": "pode_enviar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "pode_enviar": {
+      "main": [
+        [
+          {
+            "node": "registra_envio",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "nao_envia_registra_motivo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "registra_envio": {
+      "main": [
+        [
+          {
+            "node": "primeiro_envio",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "primeiro_envio": {
+      "main": [
+        [
+          {
+            "node": "contact_inbox_whatsapp",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "dry_run_ou_duplicado",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "contact_inbox_whatsapp": {
+      "main": [
+        [
+          {
+            "node": "conversa_whatsapp",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "conversa_whatsapp": {
+      "main": [
+        [
+          {
+            "node": "envia_template",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "envia_template": {
+      "main": [
+        [
+          {
+            "node": "vincula_conversa",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "webhook_sd_ops": {
+      "main": [
+        [
+          {
+            "node": "valida_evento",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "valida_evento": {
+      "main": [
+        [
+          {
+            "node": "config",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "America/Sao_Paulo",
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "none"
+  },
+  "pinData": {},
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "servicedesk": {
+      "workflow": "WF07",
+      "description": "ticket.status_changed -> resolvido: espera 2 h (não pergunta se reabrir), e envia pesquisa CSAT por template de WhatsApp para tickets de telefonia sem pesquisa da 55PBX. E-mail/chat usam o CSAT nativo do Chatwoot (nada a fazer aqui). Uma vez por ticket. Começa em dry_run=true.",
+      "generator": "servicedesk/integrations/n8n/tools/build_workflows.py",
+      "format_version": 1
+    }
+  }
+}
