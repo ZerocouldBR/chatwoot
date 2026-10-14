@@ -73,6 +73,41 @@
     "title": "AnalysisIn",
     "type": "object"
    },
+   "BusinessHoursIn": {
+    "properties": {
+     "holidays": {
+      "items": {
+       "type": "string"
+      },
+      "title": "Holidays",
+      "type": "array"
+     },
+     "schedule": {
+      "additionalProperties": {
+       "items": {
+        "items": {
+         "type": "string"
+        },
+        "type": "array"
+       },
+       "type": "array"
+      },
+      "description": "{\"0\":[[\"09:00\",\"18:00\"]], ...} 0 = segunda",
+      "title": "Schedule",
+      "type": "object"
+     },
+     "timezone": {
+      "default": "America/Sao_Paulo",
+      "title": "Timezone",
+      "type": "string"
+     }
+    },
+    "required": [
+     "schedule"
+    ],
+    "title": "BusinessHoursIn",
+    "type": "object"
+   },
    "CallbackIn": {
     "properties": {
      "assigned_to": {
@@ -366,6 +401,49 @@
     "title": "MappingIn",
     "type": "object"
    },
+   "MappingRow": {
+    "properties": {
+     "agent_email": {
+      "description": "E-mail do agente no Chatwoot",
+      "title": "Agent Email",
+      "type": "string"
+     },
+     "branch": {
+      "description": "Ramal 55PBX (máscara, ex. 5005)",
+      "title": "Branch",
+      "type": "string"
+     },
+     "chatwoot_user_id": {
+      "anyOf": [
+       {
+        "type": "integer"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Chatwoot User Id"
+     },
+     "pbx_email": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "description": "E-mail do ramal na 55PBX (API de discagem), se diferente",
+      "title": "Pbx Email"
+     }
+    },
+    "required": [
+     "branch",
+     "agent_email"
+    ],
+    "title": "MappingRow",
+    "type": "object"
+   },
    "NoteIn": {
     "properties": {
      "body": {
@@ -639,6 +717,82 @@
     "title": "RuleIn",
     "type": "object"
    },
+   "RuleRow": {
+    "properties": {
+     "active": {
+      "default": true,
+      "title": "Active",
+      "type": "boolean"
+     },
+     "default_priority": {
+      "default": "normal",
+      "title": "Default Priority",
+      "type": "string"
+     },
+     "direction": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Direction"
+     },
+     "id": {
+      "anyOf": [
+       {
+        "type": "integer"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Id"
+     },
+     "mode": {
+      "title": "Mode",
+      "type": "string"
+     },
+     "name": {
+      "title": "Name",
+      "type": "string"
+     },
+     "queue_pattern": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Queue Pattern"
+     },
+     "reuse": {
+      "title": "Reuse",
+      "type": "string"
+     },
+     "reuse_window_hours": {
+      "default": 24,
+      "title": "Reuse Window Hours",
+      "type": "integer"
+     },
+     "sort": {
+      "default": 100,
+      "title": "Sort",
+      "type": "integer"
+     }
+    },
+    "required": [
+     "name",
+     "mode",
+     "reuse"
+    ],
+    "title": "RuleRow",
+    "type": "object"
+   },
    "SessionIn": {
     "properties": {
      "account_id": {
@@ -656,6 +810,165 @@
      "account_id"
     ],
     "title": "SessionIn",
+    "type": "object"
+   },
+   "SettingsIn": {
+    "properties": {
+     "agent_mappings": {
+      "anyOf": [
+       {
+        "items": {
+         "$ref": "#/components/schemas/MappingRow"
+        },
+        "type": "array"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "description": "ramal -> agente (substitui o conjunto)",
+      "title": "Agent Mappings"
+     },
+     "business_hours": {
+      "anyOf": [
+       {
+        "$ref": "#/components/schemas/BusinessHoursIn"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "secrets": {
+      "additionalProperties": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "description": "campo -> novo valor; \"\" = manter; null = apagar (volta ao ambiente)",
+      "title": "Secrets",
+      "type": "object"
+     },
+     "sla_policies": {
+      "anyOf": [
+       {
+        "items": {
+         "$ref": "#/components/schemas/SlaRow"
+        },
+        "type": "array"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Sla Policies"
+     },
+     "ticket_open_rules": {
+      "anyOf": [
+       {
+        "items": {
+         "$ref": "#/components/schemas/RuleRow"
+        },
+        "type": "array"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Ticket Open Rules"
+     },
+     "values": {
+      "additionalProperties": true,
+      "description": "campo -> valor; null = volta ao ambiente",
+      "title": "Values",
+      "type": "object"
+     },
+     "version": {
+      "anyOf": [
+       {
+        "type": "integer"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "description": "Versão lida no GET (controle de concorrência); omitir = sobrescreve",
+      "title": "Version"
+     }
+    },
+    "title": "SettingsIn",
+    "type": "object"
+   },
+   "SlaRow": {
+    "properties": {
+     "active": {
+      "default": true,
+      "title": "Active",
+      "type": "boolean"
+     },
+     "first_response_min": {
+      "anyOf": [
+       {
+        "type": "integer"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "First Response Min"
+     },
+     "id": {
+      "anyOf": [
+       {
+        "type": "integer"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Id"
+     },
+     "name": {
+      "title": "Name",
+      "type": "string"
+     },
+     "priority": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Priority"
+     },
+     "resolution_min": {
+      "anyOf": [
+       {
+        "type": "integer"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Resolution Min"
+     },
+     "sort": {
+      "default": 100,
+      "title": "Sort",
+      "type": "integer"
+     }
+    },
+    "required": [
+     "name"
+    ],
+    "title": "SlaRow",
     "type": "object"
    },
    "TicketIn": {
@@ -1486,6 +1799,129 @@
      }
     },
     "summary": "Kill Sessions",
+    "tags": [
+     "admin"
+    ]
+   }
+  },
+  "/sd-ops/api/v1/admin/settings": {
+   "get": {
+    "operationId": "get_settings_sd_ops_api_v1_admin_settings_get",
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      },
+      "description": "Successful Response"
+     }
+    },
+    "summary": "Get Settings",
+    "tags": [
+     "admin"
+    ]
+   },
+   "put": {
+    "operationId": "put_settings_sd_ops_api_v1_admin_settings_put",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/SettingsIn"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "summary": "Put Settings",
+    "tags": [
+     "admin"
+    ]
+   }
+  },
+  "/sd-ops/api/v1/admin/settings/test": {
+   "post": {
+    "description": "Testa com os valores salvos ou, se vierem no corpo, com os valores ainda não salvos (nada é gravado).",
+    "operationId": "test_settings_sd_ops_api_v1_admin_settings_test_post",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "anyOf": [
+         {
+          "$ref": "#/components/schemas/SettingsIn"
+         },
+         {
+          "type": "null"
+         }
+        ],
+        "title": "Body"
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "summary": "Test Settings",
+    "tags": [
+     "admin"
+    ]
+   }
+  },
+  "/sd-ops/api/v1/admin/settings/webhook-secret": {
+   "post": {
+    "description": "Gera um segredo novo do \"Tempo real por URL\". A URL completa aparece SÓ nesta resposta (no banco fica o\nSHA-256, como no seed-tenant); o segredo anterior deixa de ser aceito na hora.",
+    "operationId": "rotate_webhook_sd_ops_api_v1_admin_settings_webhook_secret_post",
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      },
+      "description": "Successful Response"
+     }
+    },
+    "summary": "Rotate Webhook",
     "tags": [
      "admin"
     ]
@@ -3438,7 +3874,7 @@
   },
   "/sd-ops/api/v1/ura/tickets/{protocolo}": {
    "get": {
-    "operationId": "ura_lookup_sd_ops_api_v1_ura_tickets__protocolo__get",
+    "operationId": "ura_lookup_sd_ops_api_v1_ura_tickets__protocolo__post",
     "parameters": [
      {
       "in": "path",
@@ -3476,7 +3912,7 @@
     ]
    },
    "post": {
-    "operationId": "ura_lookup_sd_ops_api_v1_ura_tickets__protocolo__get",
+    "operationId": "ura_lookup_sd_ops_api_v1_ura_tickets__protocolo__post",
     "parameters": [
      {
       "in": "path",

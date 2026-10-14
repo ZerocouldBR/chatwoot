@@ -11,7 +11,6 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse, PlainTextResponse
 
-from pbx_bridge.pbx_api import PbxApi
 
 from . import __version__, api, db, obs
 from . import models as m
@@ -22,6 +21,8 @@ from .config import OpsSettings
 from .dial import DialAdapter
 from .events import MemoryPublisher, RedisPublisher
 from .recordings import RecordingPipeline
+from .settings_check import ConnectionTester
+from .settings_store import SettingsProvider
 from .storage import make_storage
 from .tickets import TicketError
 from .worker import Worker
@@ -33,27 +34,36 @@ class Services:
     """Monta as dependências (injetáveis nos testes)."""
 
     def __init__(self, s: OpsSettings, engine=None, publisher=None, storage=None, cw_factory=None, profile_fn=None,
-                 dial=None, downloader=None, pbx=None):
+                 dial=None, downloader=None, pbx=None, tester=None):
         self.s = s
         self.engine = engine or db.make_engine(s.database_url)
-        self.storage = storage or make_storage(s)
+        # configuração por tenant: tela (ops.tenant_settings) > ambiente; recarrega sem reiniciar
+        self.settings = SettingsProvider(s, self.engine)
+        self.storage = storage or make_storage(s, self.settings)
         if publisher is None:
             publisher = RedisPublisher(s.redis_url, s.stream_key, s.stream_maxlen) if s.redis_url else MemoryPublisher()
         self.publisher = publisher
-        self.calls = CallEngine(s)
-        self.sync = ChatwootSync(s, self.engine, self.storage, cw_factory)
+        self.calls = CallEngine(s, self.settings)
+        self.sync = ChatwootSync(s, self.engine, self.storage, cw_factory, settings=self.settings)
         kw = {"downloader": downloader} if downloader else {}
-        self.recordings = RecordingPipeline(s, self.engine, self.storage, **kw)
-        b = s.bridge
-        if pbx is None and b.pbx_api_key:
-            pbx = PbxApi(b.pbx_api_url, b.pbx_api_key, b.pbx_api_key_header, b.pbx_queue, b.pbx_number, b.pbx_agent,
-                         b.tz_offset_hours, b.pbx_http_timeout)
-        self.worker = Worker(s, self.engine, self.calls, self.sync, self.recordings, self.publisher, pbx)
+        self.recordings = RecordingPipeline(s, self.engine, self.storage, settings=self.settings, **kw)
+        # Report02: um cliente por tenant conforme a configuração em vigor (Worker.pbx_for); `pbx` só se injetado
+        self.worker = Worker(s, self.engine, self.calls, self.sync, self.recordings, self.publisher, pbx,
+                             settings=self.settings)
         self.auth = Auth(s, self.engine, profile_fn)
         self.dial = dial or DialAdapter(s)
 
+        def _storage_ping(cfg):
+            st = self.storage.for_settings(cfg) if hasattr(self.storage, "for_settings") else self.storage
+            return st.ping()
+        self.tester = tester or ConnectionTester(storage_ping=_storage_ping)
+
     def health(self, full: bool = False) -> Dict[str, Any]:
-        out: Dict[str, Any] = {"status": "ok", "service": "sd-ops", "version": __version__, "enabled": self.s.enabled}
+        try:
+            enabled = self.settings.any_enabled() and not self.s.force_disabled
+        except Exception:  # noqa: BLE001
+            enabled = self.s.enabled
+        out: Dict[str, Any] = {"status": "ok", "service": "sd-ops", "version": __version__, "enabled": enabled}
         try:
             with self.engine.begin() as conn:
                 def cnt(tbl, *w):
@@ -86,7 +96,7 @@ class Services:
                 out["status"] = "degraded"
                 out["storage"] = "erro: %s" % type(e).__name__
             out["breakers_open"] = [k for k, v in self.worker.breaker.open_until.items() if v > __import__("time").time()]
-            out["dial"] = self.dial.available() or "disponível"
+            out["dial"] = self.dial.available(self.settings.effective(self.s.default_tenant)) or "disponível"
         return out
 
 
@@ -98,12 +108,14 @@ def create_app(s: Optional[OpsSettings] = None, services: Optional[Services] = N
     if probs and s.enabled:
         raise SystemExit("Configuração incompleta: " + ", ".join(probs))
     svc = services or Services(s)
-    run_workers = s.enabled and s.workers if start_workers is None else start_workers
+    # Os workers sobem sempre que SDOPS_WORKERS=true e só trabalham com algum tenant ativo (tela ou ENABLED):
+    # a ativação pela tela vale sem reiniciar, e o serviço dormente continua sem processar nada.
+    run_workers = s.workers and bool(s.database_url) if start_workers is None else start_workers
 
     @contextlib.asynccontextmanager
     async def lifespan(_app: FastAPI):
-        log.info("sd-ops %s iniciado; ENABLED=%s workers=%s dial=%s", __version__, s.enabled, run_workers,
-                 svc.dial.available() or "ok")
+        log.info("sd-ops %s iniciado; ENABLED(env)=%s workers=%s cofre=%s", __version__, s.enabled, run_workers,
+                 "ok" if svc.settings.vault.enabled else (svc.settings.vault.error or "sem SDOPS_SETTINGS_KEY"))
         if run_workers:
             svc.worker.start()
         yield

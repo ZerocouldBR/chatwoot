@@ -18,7 +18,7 @@ from sqlalchemy.dialects.postgresql import insert as pg_insert
 
 from pbx_bridge.normalize import mask, to_e164
 
-from . import db, obs, reports, sla, tickets, views
+from . import db, obs, reports, settings_api, sla, tickets, views
 from . import models as m
 from .auth import COOKIE, AuthError, Principal
 from .storage import parse_range
@@ -249,6 +249,7 @@ async def _read_limited(request: Request, limit: int) -> Optional[bytes]:
 
 def build(svc) -> APIRouter:
     s, engine, auth = svc.s, svc.engine, svc.auth
+    prov = svc.settings          # configuração em vigor por tenant (tela > ambiente), settings_store.py
     r = APIRouter()
 
     # ============================================================== autenticação
@@ -407,7 +408,8 @@ def build(svc) -> APIRouter:
             ident = "ambiguous" if any(x.get("needs_identification") for x in open_t) else ("unique" if contact else "none")
         return {"contact": contact, "phone_e164": e164, "identification": ident, "open_tickets": open_t,
                 "recent_calls": calls, "active_call": active, "callbacks_pending": cbs,
-                "dial": {"available": svc.dial.available() is None, "reason": svc.dial.available()}}
+                "dial": {"available": svc.dial.available(prov.effective(p.tenant_id)) is None,
+                         "reason": svc.dial.available(prov.effective(p.tenant_id))}}
 
     # ============================================================== chamadas
     @r.get(PREFIX + "/calls", tags=["chamadas"])
@@ -450,7 +452,8 @@ def build(svc) -> APIRouter:
             need(p, "-", "agente", "supervisor", "admin")
         else:
             need(p, "dial:write")
-        why = svc.dial.available()
+        cfg = prov.effective(p.tenant_id)
+        why = svc.dial.available(cfg)
         if why:
             return err("dial_disabled", why, 503)
         phone = (body.phone or "").strip()
@@ -477,7 +480,7 @@ def build(svc) -> APIRouter:
             recent = conn.execute(sa.select(sa.func.count()).select_from(m.dial_requests).where(
                 m.dial_requests.c.tenant_id == p.tenant_id, m.dial_requests.c.chatwoot_user_id == uid,
                 m.dial_requests.c.status.in_(("pending", "accepted", "mock")),
-                m.dial_requests.c.created_at > db.utcnow() - dt.timedelta(seconds=s.dial_pending_s))).scalar()
+                m.dial_requests.c.created_at > db.utcnow() - dt.timedelta(seconds=cfg.dial_pending_s))).scalar()
             if recent:
                 return err("dial_pending", "há uma discagem em andamento; aguarde", 409)
             did = conn.execute(m.dial_requests.insert().values(
@@ -485,7 +488,7 @@ def build(svc) -> APIRouter:
                 number_e164=phone, ticket_id=body.ticket_id, conversation_id=body.conversation_id,
                 contact_id=body.contact_id, status="pending").returning(m.dial_requests.c.id)).scalar()
             pbx_email = mp.pbx_email or mp.agent_email
-        res = svc.dial.dial(pbx_email, phone)
+        res = svc.dial.dial(pbx_email, phone, cfg)
         with engine.begin() as conn:
             conn.execute(m.dial_requests.update().where(m.dial_requests.c.id == did).values(
                 status=res.status, provider_http_status=res.http_status, provider_call_id=res.provider_call_id,
@@ -963,8 +966,9 @@ def build(svc) -> APIRouter:
     def capabilities(p: Principal = Depends(principal)):
         """O que o CTI pode oferecer a ESTE usuário agora (o sd-console não sonda nem adivinha). Capacidade
         desabilitada vem com o motivo em pt-BR; nada é simulado (mode=mock só existe no DEV)."""
-        why = svc.dial.available()
-        dial: Dict[str, Any] = {"enabled": why is None, "mode": s.dial_mode, "reason": why}
+        cfg = prov.effective(p.tenant_id)
+        why = svc.dial.available(cfg)
+        dial: Dict[str, Any] = {"enabled": why is None, "mode": cfg.dial_mode, "reason": why}
         with engine.begin() as conn:
             if dial["enabled"]:
                 if p.kind == "service":
@@ -985,26 +989,23 @@ def build(svc) -> APIRouter:
                         dial["branch"] = branch
             ura_cfgs = [x[0] or {} for x in conn.execute(sa.select(m.integration_accounts.c.ura_auth).where(
                 m.integration_accounts.c.tenant_id == p.tenant_id, m.integration_accounts.c.active.is_(True)))]
-        if dial["enabled"] and s.dial_mode == "mock":
+        if dial["enabled"] and cfg.dial_mode == "mock":
             dial["reason"] = "MODO MOCK (DEV): nenhuma ligação real"
-        webphone = ({"enabled": True, "mode": "external", "url": s.webphone_url, "reason": None} if s.webphone_url
+        webphone = ({"enabled": True, "mode": "external", "url": cfg.webphone_url, "reason": None} if cfg.webphone_url
                     else {"enabled": False, "mode": "external", "url": None,
                           "reason": "webphone da 55PBX não configurado no sd-ops (PBX_WEBPHONE_URL)"})
         cb_ok = p.can("callbacks:write", "agente", "supervisor")
         callbacks = {"enabled": cb_ok, "reason": None if cb_ok else "sem permissão para retornos"}
         rec_cfg = len(s.recording_url_secret or "") >= 32
         rec_ok = rec_cfg and (p.kind == "user" or "recordings:read" in p.scopes)
-        recordings = {"enabled": rec_ok, "mode": s.storage_backend,
+        recordings = {"enabled": rec_ok, "mode": cfg.storage_backend,
                       "reason": None if rec_ok else ("gravações sem RECORDING_URL_SECRET configurado" if not rec_cfg
                                                      else "token de serviço sem o escopo recordings:read")}
 
-        def _ura_ok(c: Dict[str, Any]) -> bool:
-            refs = [c.get("ref")] if c.get("type") in ("token", "bearer") else [c.get("user_ref"), c.get("pass_ref")]
-            return bool(c.get("type")) and all(s.cred(x) for x in refs)
-        ura_ok = any(_ura_ok(c) for c in ura_cfgs)
+        ura_ok = any(prov.ura_config(p.tenant_id, c)["ready"] for c in (ura_cfgs or [{}]))
         ura = {"enabled": ura_ok, "mode": "menu_dinamico",
                "reason": None if ura_ok else "Menu Dinâmico (URA) sem credencial configurada para este tenant"}
-        return {"tenant_id": p.tenant_id, "env": s.env, "integration_enabled": s.enabled,
+        return {"tenant_id": p.tenant_id, "env": s.env, "integration_enabled": cfg.enabled,
                 "capabilities": {"dial": dial, "webphone": webphone, "callbacks": callbacks,
                                  "recordings": recordings, "ura": ura}}
 
@@ -1093,7 +1094,8 @@ def build(svc) -> APIRouter:
     @r.post(PREFIX + "/admin/automation-routes", tags=["admin"], status_code=201)
     def add_route(body: RouteIn, p: Principal = Depends(principal)):
         admin(p)
-        if not body.url.startswith(("https://", "http://")):
+        # URL completa ou caminho relativo ("/webhook/sd/wf01"), completado com a URL do n8n da tela
+        if not body.url.startswith(("https://", "http://", "/")):
             raise ApiError("invalid_url", "URL inválida", 422)
         with engine.begin() as conn:
             rid = conn.execute(m.automation_routes.insert().values(tenant_id=p.tenant_id, **body.model_dump())
@@ -1146,7 +1148,9 @@ def build(svc) -> APIRouter:
                 m.integration_accounts.c.active.is_(True))).first()
         if a is not None:
             return a.tenant_id, a
-        if s.bridge.webhook_secret and hmac.compare_digest(secret.encode(), s.bridge.webhook_secret.encode()):
+        # WEBHOOK_SECRET do ambiente (legado, tenant padrão) só vale enquanto a tela não gerou um segredo próprio
+        if s.bridge.webhook_secret and hmac.compare_digest(secret.encode(), s.bridge.webhook_secret.encode()) \
+                and not prov.panel_has(s.default_tenant, settings_api.WH_LAST4):
             return s.default_tenant, None
         return None, None
 
@@ -1161,21 +1165,27 @@ def build(svc) -> APIRouter:
         if tenant_id is None:
             obs.METRICS.inc("sdops_webhook_received_total", source="55pbx", result="bad_secret")
             return err("not_found", "not found", 404)
+        cfg = prov.effective(tenant_id)
         ip = _client_ip(request, s.bridge.trust_proxy)
-        allowed = list(acc.allowed_ips) if acc is not None and acc.allowed_ips else s.bridge.allowed_ips
+        # IPs: tela > integration_accounts.allowed_ips (legado) > ALLOWED_IPS do ambiente
+        if prov.panel_has(tenant_id, "allowed_ips"):
+            allowed = cfg.bridge.allowed_ips
+        else:
+            allowed = list(acc.allowed_ips) if acc is not None and acc.allowed_ips else s.bridge.allowed_ips
         if not _ip_ok(ip, allowed):
             obs.METRICS.inc("sdops_webhook_received_total", source="55pbx", result="ip_forbidden")
             log.warning("webhook recusado: IP fora da lista (%s)", mask(ip))
             return err("forbidden", "forbidden", 403)
-        if acc is not None and acc.webhook_token_ref:
-            want = s.cred(acc.webhook_token_ref)
+        ref = acc.webhook_token_ref if acc is not None else None
+        if ref or prov.panel_has(tenant_id, "webhook_token"):
+            want = prov.webhook_token(tenant_id, ref)
             got = request.headers.get("token", "")
             if not want or not hmac.compare_digest(got.encode(), want.encode()):
                 obs.METRICS.inc("sdops_webhook_received_total", source="55pbx", result="bad_token")
                 return err("unauthorized", "token inválido", 401)
-        if not s.enabled:
+        if not cfg.enabled:
             return err("disabled", "integração desativada (ENABLED=false)", 503)
-        body = await _read_limited(request, s.bridge.max_body_bytes)
+        body = await _read_limited(request, cfg.bridge.max_body_bytes)
         if body is None:
             return err("too_large", "payload grande demais", 413)
         with obs.context(tenant=tenant_id):
@@ -1199,14 +1209,16 @@ def build(svc) -> APIRouter:
         tenant_id, _ = _account_by_secret(secret)
         if tenant_id is None:
             return err("not_found", "not found", 404)
-        if not s.enabled:
+        cfg = prov.effective(tenant_id)
+        if not cfg.enabled:
             return err("disabled", "integração desativada (ENABLED=false)", 503)
         body = await _read_limited(request, 1024 * 1024)
         if body is None:
             return err("too_large", "payload grande demais", 413)
         from pbx_bridge.app import verify_chatwoot_signature
-        if s.bridge.chatwoot_webhook_hmac_secret and not verify_chatwoot_signature(
-                s.bridge.chatwoot_webhook_hmac_secret, body, request.headers.get("x-chatwoot-timestamp", ""),
+        hsec = cfg.bridge.chatwoot_webhook_hmac_secret
+        if hsec and not verify_chatwoot_signature(
+                hsec, body, request.headers.get("x-chatwoot-timestamp", ""),
                 request.headers.get("x-chatwoot-signature", "")):
             return err("bad_signature", "assinatura inválida", 401)
         try:
@@ -1236,28 +1248,31 @@ def build(svc) -> APIRouter:
     # ============================================================== URA / menu dinâmico
     def _ura_tenant(request: Request) -> Optional[str]:
         with engine.begin() as conn:
-            accs = conn.execute(sa.select(m.integration_accounts).where(m.integration_accounts.c.active.is_(True))).fetchall()
+            accs = {a.tenant_id: a.ura_auth or {} for a in conn.execute(sa.select(m.integration_accounts).where(
+                m.integration_accounts.c.active.is_(True))).fetchall()}
+            tids = [t[0] for t in conn.execute(sa.select(m.tenants.c.id).where(m.tenants.c.active.is_(True)))]
         authz = request.headers.get("authorization", "")
-        for a in accs:
-            cfg = a.ura_auth or {}
+        for tid in tids:
+            # credenciais do Menu Dinâmico: tela > integration_accounts.ura_auth (refs de ambiente)
+            cfg = prov.ura_config(tid, accs.get(tid))
             typ = cfg.get("type")
             if typ == "token":
-                want = s.cred(cfg.get("ref"))
+                want = cfg["token"]
                 got = request.headers.get(cfg.get("header") or "x-sd-ura-token", "")
                 if want and got and hmac.compare_digest(got.encode(), want.encode()):
-                    return a.tenant_id
+                    return tid
             elif typ == "bearer" and authz.lower().startswith("bearer "):
-                want = s.cred(cfg.get("ref"))
+                want = cfg["token"]
                 if want and hmac.compare_digest(authz[7:].strip().encode(), want.encode()):
-                    return a.tenant_id
+                    return tid
             elif typ == "basic" and authz.lower().startswith("basic "):
                 try:
                     user, _, pw = base64.b64decode(authz[6:].strip()).decode().partition(":")
                 except Exception:  # noqa: BLE001
                     continue
-                wu, wp = s.cred(cfg.get("user_ref")), s.cred(cfg.get("pass_ref"))
+                wu, wp = cfg["user"], cfg["password"]
                 if wu and wp and hmac.compare_digest(user.encode(), wu.encode()) and hmac.compare_digest(pw.encode(), wp.encode()):
-                    return a.tenant_id
+                    return tid
         return None
 
     async def ura_lookup(protocolo: str, request: Request):
@@ -1276,7 +1291,8 @@ def build(svc) -> APIRouter:
                 ani = (parse_qs(body.decode(errors="ignore")).get("ani") or [None])[0]
         ip = _client_ip(request, s.bridge.trust_proxy)
         key = "ura:%s:%s" % (tenant_id, to_e164(ani) if ani else ip)
-        if not auth.limiter.allow(key, s.ura_rate_limit_per_min):
+        ucfg = prov.effective(tenant_id)
+        if not auth.limiter.allow(key, ucfg.ura_rate_limit_per_min):
             return err("rate_limited", "muitas consultas", 429)
         num = "".join(ch for ch in protocolo if ch.isdigit())
         ref = num if num and len(num) == len(protocolo.strip()) else protocolo
@@ -1296,7 +1312,7 @@ def build(svc) -> APIRouter:
                       "ani": views.masked(caller)}, actor_type="provider", actor_id="55pbx-ura", ip=mask(ip))
         if t is None:
             return {"encontrado": "nao", "proxima_acao": "repetir"}
-        if not verified and s.ura_require_caller_match:
+        if not verified and ucfg.ura_require_caller_match:
             return {"encontrado": "sim", "verificado": "nao",
                     "situacao_fala": "localizado; para detalhes fale com um atendente", "proxima_acao": "transferir"}
         with engine.begin() as conn:
@@ -1308,4 +1324,7 @@ def build(svc) -> APIRouter:
                 "fila": fila or ""}
 
     r.add_api_route(PREFIX + "/ura/tickets/{protocolo}", ura_lookup, methods=["GET", "POST"], tags=["ura"])
+
+    # ============================================================== configuração pelo painel (admin)
+    settings_api.register(r, svc, principal, ApiError)
     return r

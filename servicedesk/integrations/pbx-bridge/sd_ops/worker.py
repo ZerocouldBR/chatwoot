@@ -76,14 +76,45 @@ def backoff(attempt: int, base: int, cap: int) -> int:
 
 class Worker:
     def __init__(self, s: OpsSettings, engine, call_engine: CallEngine, sync, recordings, publisher,
-                 pbx: Optional[PbxApi] = None, http: Optional[httpx.Client] = None):
+                 pbx: Optional[PbxApi] = None, http: Optional[httpx.Client] = None, settings=None):
         self.s, self.engine, self.calls, self.sync, self.recs, self.pub = s, engine, call_engine, sync, recordings, publisher
-        self.pbx = pbx
+        self.pbx = pbx                   # cliente injetado (testes/CLI); sem ele, um por tenant conforme a configuração
+        self.settings = settings         # SettingsProvider (tela > ambiente); None = só o ambiente
+        self._pbx_cache: Dict[tuple, PbxApi] = {}
+        self._last_poll: Dict[str, float] = {}
         self.http = http or httpx.Client(timeout=10.0, follow_redirects=False)
         self.breaker = Breaker(s.breaker_threshold, s.breaker_cooldown_s)
         self.stop = threading.Event()
         self.wake = threading.Event()
         self.threads: List[threading.Thread] = []
+
+    # ================================================================== configuração por tenant
+    def cfg(self, tenant_id: Optional[str]) -> OpsSettings:
+        if self.settings is None or not tenant_id:
+            return self.s
+        return self.settings.effective(tenant_id)
+
+    def active(self) -> bool:
+        """Há algum tenant ativo (tela ou ENABLED)? Os workers sobem sempre, mas só trabalham com algum ativo:
+        assim a ativação pela tela vale sem reiniciar e o serviço dormente continua parado."""
+        if self.settings is None:
+            return self.s.enabled
+        return self.settings.any_enabled() and not self.s.force_disabled
+
+    def pbx_for(self, tenant_id: str) -> Optional[PbxApi]:
+        if self.pbx is not None:
+            return self.pbx
+        b = self.cfg(tenant_id).bridge
+        if not b.pbx_api_key:
+            return None
+        k = (b.pbx_api_url, b.pbx_api_key, b.pbx_api_key_header, b.pbx_queue, b.pbx_number, b.pbx_agent,
+             b.tz_offset_hours, b.pbx_http_timeout)
+        api = self._pbx_cache.get(k)
+        if api is None:
+            if len(self._pbx_cache) > 32:
+                self._pbx_cache.clear()
+            api = self._pbx_cache[k] = PbxApi(*k)
+        return api
 
     # ================================================================== inbox
     def _claim(self, table, extra_where: Optional[Callable] = None, limit: int = 20) -> List[Dict[str, Any]]:
@@ -264,7 +295,15 @@ class Worker:
         if r is None or not r.active:
             return "skip"
         env = p["envelope"]
-        code = deliver(self.http, r.url, env, self.s.cred(r.token_ref), self.s.cred(r.secret_ref))
+        # n8n: segredo HMAC, token e URL base da tela > variáveis referenciadas na rota (token_ref/secret_ref)
+        panel = self.cfg(row["tenant_id"]).panel or {}
+        url = r.url
+        if url.startswith("/"):
+            if not panel.get("n8n_base_url"):
+                raise RuntimeError("rota %s com URL relativa e sem URL do n8n configurada" % r.name)
+            url = panel["n8n_base_url"].rstrip("/") + url
+        code = deliver(self.http, url, env, panel.get("n8n_webhook_token") or self.s.cred(r.token_ref),
+                       panel.get("n8n_hmac_secret") or self.s.cred(r.secret_ref))
         ok = 200 <= code < 300
         with self.engine.begin() as conn:
             conn.execute(pg_insert(m.automation_executions).values(
@@ -301,7 +340,8 @@ class Worker:
     # ================================================================== reconciliação (Report02)
     def reconcile(self, tenant_id: str, start: dt.datetime, end: dt.datetime, mode: str = "poll",
                   chunk_h: int = 6) -> Dict[str, Any]:
-        if self.pbx is None or not self.s.bridge.pbx_api_key:
+        api = self.pbx_for(tenant_id)
+        if api is None or (self.pbx is not None and not self.cfg(tenant_id).bridge.pbx_api_key):
             return {"skipped": "PBX_API_KEY não configurada"}
         total = new = 0
         cur = start
@@ -312,7 +352,7 @@ class Worker:
                     tenant_id=tenant_id, mode=mode, window_start=cur, window_end=nxt, status="running")
                     .returning(m.reconciliation_runs.c.id)).scalar()
             try:
-                rows = self.pbx.report02(cur, nxt)
+                rows = api.report02(cur, nxt)
             except PbxError as e:
                 with self.engine.begin() as conn:
                     conn.execute(m.reconciliation_runs.update().where(m.reconciliation_runs.c.id == run_id).values(
@@ -337,10 +377,35 @@ class Worker:
             self.wake.set()
         return {"rows": total, "new": new}
 
-    def poll_once(self, now: Optional[dt.datetime] = None) -> Dict[str, Any]:
+    def poll_targets(self) -> List[str]:
+        """Tenants a consultar no Report02: o padrão (chave da tela ou PBX_API_KEY do ambiente) e os demais que
+        têm chave PRÓPRIA na tela (a do ambiente é do tenant padrão). Só os ativos."""
+        if self.settings is None:
+            return [self.s.default_tenant] if self.s.enabled else []
+        out = []
+        for tid in self.settings.enabled_tenants():
+            if tid == self.s.default_tenant or self.settings.panel_has(tid, "pbx_api_key"):
+                out.append(tid)
+        return out
+
+    def poll_once(self, now: Optional[dt.datetime] = None, force: bool = True) -> Dict[str, Any]:
+        """Uma passada do Report02 por tenant ativo (cada um com POLL_INTERVAL_MIN/LOOKBACK da sua configuração).
+        Devolve o resultado do tenant padrão (compatível com a v2) e, em `tenants`, o de cada um."""
         now = now or db.utcnow()
-        start = now - dt.timedelta(minutes=self.s.bridge.poll_lookback_min)
-        return self.reconcile(self.s.default_tenant, start, now, "poll", chunk_h=24)
+        targets = self.poll_targets() if self.settings is not None else [self.s.default_tenant]
+        if self.settings is None or (force and self.s.default_tenant not in targets and self.pbx is not None):
+            targets = list(dict.fromkeys([self.s.default_tenant] + targets))
+        res: Dict[str, Any] = {}
+        for tid in targets:
+            b = self.cfg(tid).bridge
+            if not force and time.time() - self._last_poll.get(tid, 0) < max(1, b.poll_interval_min) * 60:
+                continue
+            self._last_poll[tid] = time.time()
+            start = now - dt.timedelta(minutes=b.poll_lookback_min)
+            res[tid] = self.reconcile(tid, start, now, "poll", chunk_h=24)
+        out = dict(res.get(self.s.default_tenant) or {"skipped": "nenhum tenant ativo com chave"})
+        out["tenants"] = res
+        return out
 
     # ================================================================== manutenção
     def maintenance_once(self) -> Dict[str, int]:
@@ -350,10 +415,16 @@ class Worker:
         with self.engine.begin() as conn:
             out["stale_calls"] = self.calls.finalize_stale(conn)
         with self.engine.begin() as conn:
-            cutoff = db.utcnow() - dt.timedelta(days=self.s.raw_retention_days)
-            out["raw_purged"] = conn.execute(m.webhook_inbox.update().where(
-                m.webhook_inbox.c.status.in_(("done", "unparsed", "dead")), m.webhook_inbox.c.received_at < cutoff,
-                m.webhook_inbox.c.raw.isnot(None)).values(raw=None, raw_purged_at=db.utcnow())).rowcount
+            # retenção do payload bruto por tenant (tela > RETENTION_DAYS); sem tenant = padrão do ambiente
+            tids = [t[0] for t in conn.execute(sa.select(m.tenants.c.id))]
+            wi = m.webhook_inbox
+            out["raw_purged"] = 0
+            for tid in tids + [None]:
+                cutoff = db.utcnow() - dt.timedelta(days=self.cfg(tid).raw_retention_days)
+                out["raw_purged"] += conn.execute(wi.update().where(
+                    wi.c.tenant_id.is_(None) if tid is None else wi.c.tenant_id == tid,
+                    wi.c.status.in_(("done", "unparsed", "dead")), wi.c.received_at < cutoff,
+                    wi.c.raw.isnot(None)).values(raw=None, raw_purged_at=db.utcnow())).rowcount
             conn.execute(m.cti_sessions.delete().where(m.cti_sessions.c.expires_at < db.utcnow() - dt.timedelta(days=1)))
             conn.execute(m.idempotency_keys.delete().where(
                 m.idempotency_keys.c.created_at < db.utcnow() - dt.timedelta(hours=24)))
@@ -373,7 +444,7 @@ class Worker:
     def _loop(self, fn: Callable[[], Any], every: float, name: str) -> None:
         while not self.stop.is_set():
             try:
-                n = fn()
+                n = fn() if self.active() else 0
             except Exception:  # noqa: BLE001
                 log.exception("%s: erro inesperado", name)
                 n = 0
@@ -384,7 +455,8 @@ class Worker:
     def _periodic(self, fn: Callable[[], Any], every: float, name: str) -> None:
         while not self.stop.is_set():
             try:
-                fn()
+                if self.active():
+                    fn()
             except Exception:  # noqa: BLE001
                 log.exception("%s: erro inesperado", name)
             self.stop.wait(every)
@@ -393,7 +465,10 @@ class Worker:
         jobs = [(self._loop, (self.inbox_once, 2, "inbox")),
                 (self._loop, (self.outbox_once, 2, "outbox")),
                 (self._periodic, (self.maintenance_once, 60, "manutenção"))]
-        if self.pbx is not None and self.s.bridge.pbx_api_key:
+        if self.settings is not None:
+            # poller sempre registrado: cada tenant respeita o próprio intervalo (configurável pela tela)
+            jobs.append((self._periodic, (lambda: self.poll_once(force=False), 60, "poller")))
+        elif self.pbx is not None and self.s.bridge.pbx_api_key:
             jobs.append((self._periodic, (self.poll_once, max(1, self.s.bridge.poll_interval_min) * 60, "poller")))
         for fn, args in jobs:
             t = threading.Thread(target=fn, args=args, daemon=True, name="sdops-" + args[2])
