@@ -91,12 +91,12 @@ RSpec.describe Messages::SearchDataPresenter do
     context 'with campaign and automation data' do
       before do
         message.update(
-          content_attributes: { 'automation_rule_id' => '456' }
+          content_attributes: { 'ticket_rule_id' => '456' }
         )
       end
 
-      it 'includes automation_rule_id' do
-        expect(presenter.search_data[:additional_attributes][:automation_rule_id]).to eq('456')
+      it 'includes ticket_rule_id' do
+        expect(presenter.search_data[:additional_attributes][:ticket_rule_id]).to eq('456')
       end
     end
   end

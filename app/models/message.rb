@@ -35,6 +35,7 @@
 #  index_messages_on_created_at                         (created_at)
 #  index_messages_on_inbox_id                           (inbox_id)
 #  index_messages_on_sender_and_created                 (sender_type,sender_id,created_at)
+#  index_messages_on_sender_type_and_sender_id          (sender_type,sender_id)
 #  index_messages_on_source_id                          (source_id)
 #
 
@@ -352,8 +353,9 @@ class Message < ApplicationRecord
   def record_ticket_comment
     return unless incoming? || outgoing?
 
-    conversation.record_ticket_event(event_type: 'comment', author: sender, via: COMMENT_VIA_BY_SENDER.fetch(sender_type, 'system'),
-                                     value: { message_id: id, public: !private? })
+    # Messages without a sender come from whatever is acting: a ticket rule, the system...
+    author, via = sender ? [sender, COMMENT_VIA_BY_SENDER.fetch(sender_type, 'system')] : TicketAuditable.current_actor
+    conversation.record_ticket_event(event_type: 'comment', author: author, via: via, value: { message_id: id, public: !private? })
     conversation.schedule_sla_update unless private?
   end
 
@@ -394,13 +396,13 @@ class Message < ApplicationRecord
 
   def human_response?
     # if the sender is not a user, it's not a human response
-    # if automation rule id is present, it's not a human response
+    # if a ticket rule sent it, it's not a human response
     # if campaign id is present, it's not a human response
     # external echo messages are responses sent from the native app (WhatsApp Business, Instagram)
     # forwarded emails go to a third party, not to the contact
     outgoing? &&
       !forwarded? &&
-      content_attributes['automation_rule_id'].blank? &&
+      content_attributes['ticket_rule_id'].blank? &&
       additional_attributes['campaign_id'].blank? &&
       (sender.is_a?(User) || content_attributes['external_echo'].present?)
   end

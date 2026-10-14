@@ -31,13 +31,15 @@ RSpec.describe 'Assignment provenance through Action Cable', type: :job do
     )
   end
 
-  it 'marks automation rule assignments automatic' do
+  it 'marks ticket rule assignments automatic' do
     conversation.update!(assignee: nil)
-    rule = create(:automation_rule, account: account, actions: [{ action_name: 'assign_agent', action_params: [agent.id] }])
+    rule = TicketRule.create!(account: account, kind: :trigger, title: 'Atribuir',
+                              conditions: { all: [{ field: 'ticket', operator: 'is', value: 'updated' }], any: [] },
+                              actions: [{ field: 'assignee_id', value: agent.id.to_s }])
     clear_enqueued_jobs
     Current.user = agent
 
-    perform_enqueued_jobs(only: ActionCableBroadcastJob) { AutomationRules::ActionService.new(rule, account, conversation).perform }
+    perform_enqueued_jobs(only: ActionCableBroadcastJob) { Tickets::Rules::ActionApplier.new(rule, conversation).perform }
 
     expect(ActionCable.server).to have_received(:broadcast).with(
       agent.pubsub_token,

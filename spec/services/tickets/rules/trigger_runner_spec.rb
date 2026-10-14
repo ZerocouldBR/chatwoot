@@ -45,6 +45,45 @@ RSpec.describe Tickets::Rules::TriggerRunner do
       .with(a_hash_including(params: { account: account }, args: [conversation, a_hash_including(subject: "Pedido ##{conversation.display_id}")]))
   end
 
+  it 'replies through the channel with placeholders, recorded as the rule' do
+    trigger.call('Auto resposta', 1, [{ field: 'ticket', operator: 'is', value: 'created' }],
+                 [{ field: 'send_message', value: 'Recebemos o ticket #{{ticket.id}}' }])
+
+    described_class.new(conversation).perform
+
+    reply = conversation.messages.outgoing.last
+    expect(reply).to have_attributes(content: "Recebemos o ticket ##{conversation.display_id}", private: false)
+    expect(conversation.conversation_events.find_by(event_type: 'comment')).to have_attributes(via: 'rule', author_type: 'TicketRule')
+  end
+
+  context 'with a delay' do
+    let!(:delayed) do
+      trigger.call('Lembrete', 1, [{ field: 'status', operator: 'is', value: 'waiting_on_customer' }], [{ field: 'add_tags', value: 'lembrado' }])
+             .tap { |rule| rule.update!(delay_minutes: 60) }
+    end
+
+    before { conversation.update!(status: :waiting_on_customer) }
+
+    it 'acts once the delay is over if the ticket still matches' do
+      expect { described_class.new(conversation).perform }.to have_enqueued_job(Tickets::DelayedTriggerJob)
+      expect(conversation.reload.label_list).to be_empty
+
+      perform_enqueued_jobs(only: Tickets::DelayedTriggerJob)
+
+      expect(conversation.reload.label_list).to eq(['lembrado'])
+    end
+
+    it 'does nothing when the ticket no longer matches' do
+      described_class.new(conversation).perform
+      conversation.update!(status: :open)
+
+      perform_enqueued_jobs(only: Tickets::DelayedTriggerJob)
+
+      expect(conversation.reload.label_list).to be_empty
+      expect(delayed.reload.delay_minutes).to eq(60)
+    end
+  end
+
   it 'skips closed tickets' do
     trigger.call('Normal', 1, [{ field: 'ticket', operator: 'is', value: 'updated' }], [{ field: 'priority', value: 'high' }])
     conversation.update!(status: :resolved)

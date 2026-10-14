@@ -23,13 +23,6 @@ shared_examples_for 'reauthorizable' do
   end
 
   # Helper methods to set up mailer mocks
-  def setup_automation_rule_mailer(_obj)
-    account_mailer = instance_double(AdministratorNotifications::AccountNotificationMailer)
-    automation_mailer_response = instance_double(ActionMailer::MessageDelivery, deliver_later: true)
-    allow(AdministratorNotifications::AccountNotificationMailer).to receive(:with).and_return(account_mailer)
-    allow(account_mailer).to receive(:automation_rule_disabled).and_return(automation_mailer_response)
-  end
-
   def setup_integrations_hook_mailer(obj)
     integrations_mailer = instance_double(AdministratorNotifications::IntegrationsNotificationMailer)
     slack_mailer_response = instance_double(ActionMailer::MessageDelivery, deliver_later: true)
@@ -59,9 +52,7 @@ shared_examples_for 'reauthorizable' do
   describe 'prompt_reauthorization!' do
     before do
       # Setup mailer mocks based on model type
-      if model.to_s == 'AutomationRule'
-        setup_automation_rule_mailer(obj)
-      elsif model.to_s == 'Integrations::Hook'
+      if model.to_s == 'Integrations::Hook'
         setup_integrations_hook_mailer(obj)
       else
         setup_channel_mailer(obj)
@@ -77,9 +68,7 @@ shared_examples_for 'reauthorizable' do
     it 'calls the correct mailer based on model type' do
       obj.prompt_reauthorization!
 
-      if model.to_s == 'AutomationRule'
-        expect(AdministratorNotifications::AccountNotificationMailer).to have_received(:with).with(account: obj.account)
-      elsif model.to_s == 'Integrations::Hook'
+      if model.to_s == 'Integrations::Hook'
         expect(AdministratorNotifications::IntegrationsNotificationMailer).to have_received(:with).with(account: obj.account)
       else
         expect(AdministratorNotifications::ChannelNotificationsMailer).to have_received(:with).with(account: obj.account)

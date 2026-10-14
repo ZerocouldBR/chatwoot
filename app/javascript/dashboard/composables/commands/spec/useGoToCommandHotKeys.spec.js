@@ -56,8 +56,7 @@ const ROUTE_META = {
     featureFlag: MOCK_FEATURE_FLAGS.INTEGRATIONS,
     permissions: ['administrator'],
   },
-  automation_list: {
-    featureFlag: MOCK_FEATURE_FLAGS.AUTOMATIONS,
+  ticket_triggers_index: {
     permissions: ['administrator'],
   },
   auditlogs_list: {
@@ -275,7 +274,6 @@ describe('useGoToCommandHotKeys', () => {
     const { goToCommandHotKeys } = useGoToCommandHotKeys();
     const ids = goToCommandHotKeys.value.map(cmd => cmd.id);
     expect(ids).not.toContain('goto_contacts_dashboard');
-    expect(ids).not.toContain('open_automation_settings');
     expect(ids).not.toContain('open_audit_logs_settings');
   });
 

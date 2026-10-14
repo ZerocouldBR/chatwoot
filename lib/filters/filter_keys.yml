@@ -1,7 +1,6 @@
 ## This file contains the filter configurations which we use for the following
 # 1. Conversation Filters (app/services/filter_service.rb)
 # 2. Contact Filters (app/services/filter_service.rb)
-# 3. Automation Filters  (app/services/automation_rules/conditions_filter_service.rb), (app/services/automation_rules/condition_validation_service.rb)
 
 
 # Format

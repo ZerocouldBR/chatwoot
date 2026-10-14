@@ -177,9 +177,6 @@ Rails.application.routes.draw do
           resources :ticket_home, only: [:index] do
             get :stats, on: :collection
           end
-          resources :automation_rules, only: [:index, :create, :show, :update, :destroy] do
-            post :clone
-          end
           resources :macros, only: [:index, :create, :show, :update, :destroy] do
             post :execute, on: :member
           end

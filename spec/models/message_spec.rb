@@ -239,11 +239,11 @@ RSpec.describe Message do
       expect(conversation.waiting_since).to eq conversation.created_at
     end
 
-    it 'does not update first reply if the message is sent by automation' do
+    it 'does not update first reply if the message is sent by a ticket rule' do
       expect(conversation.first_reply_created_at).to be_nil
       expect(conversation.waiting_since).to eq conversation.created_at
 
-      create(:message, message_type: :outgoing, conversation: conversation, content_attributes: { automation_rule_id: 1 })
+      create(:message, message_type: :outgoing, conversation: conversation, content_attributes: { ticket_rule_id: 1 })
 
       expect(conversation.first_reply_created_at).to be_nil
       expect(conversation.waiting_since).to eq conversation.created_at

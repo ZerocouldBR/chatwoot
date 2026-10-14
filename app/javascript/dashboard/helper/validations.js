@@ -4,7 +4,6 @@ export const VALUE_REQUIRED = 'VALUE_REQUIRED';
 export const VALUE_MUST_BE_BETWEEN_1_AND_998 =
   'VALUE_MUST_BE_BETWEEN_1_AND_998';
 export const ACTION_PARAMETERS_REQUIRED = 'ACTION_PARAMETERS_REQUIRED';
-export const ATLEAST_ONE_CONDITION_REQUIRED = 'ATLEAST_ONE_CONDITION_REQUIRED';
 export const ATLEAST_ONE_ACTION_REQUIRED = 'ATLEAST_ONE_ACTION_REQUIRED';
 
 export const isEmptyValue = value => {
@@ -91,53 +90,8 @@ export const parseRouteFilters = serializedFilters => {
 };
 
 // ------------------------------------------------------------------
-// ---------------------- Automation Validation ---------------------
+// ------------------------ Action Validation -----------------------
 // ------------------------------------------------------------------
-
-/**
- * Validates the basic fields of an automation object.
- *
- * @param {Object} automation - The automation object to validate.
- * @returns {Object} An object containing any validation errors.
- */
-const validateBasicFields = automation => {
-  const errors = {};
-  const requiredFields = ['name', 'description', 'event_name'];
-
-  requiredFields.forEach(field => {
-    if (!automation[field]) {
-      errors[field] = `${
-        field.charAt(0).toUpperCase() + field.slice(1)
-      } is required`;
-    }
-  });
-
-  return errors;
-};
-
-/**
- * Validates the conditions of an automation object.
- *
- * @param {Array} conditions - The conditions to validate.
- * @returns {Object} An object containing any validation errors.
- */
-export const validateConditions = conditions => {
-  const errors = {};
-
-  if (!conditions || conditions.length === 0) {
-    errors.conditions = ATLEAST_ONE_CONDITION_REQUIRED;
-    return errors;
-  }
-
-  conditions.forEach((condition, index) => {
-    const error = validateSingleFilter(condition);
-    if (error) {
-      errors[`condition_${index}`] = error;
-    }
-  });
-
-  return errors;
-};
 
 /**
  * Validates a single action of an automation object.
@@ -184,48 +138,4 @@ export const validateActions = actions => {
     }
     return errors;
   }, {});
-};
-
-/**
- * Validates an automation object.
- *
- * @param {Object} automation - The automation object to validate.
- * @param {string} automation.name - The name of the automation.
- * @param {string} automation.description - The description of the automation.
- * @param {string} automation.event_name - The name of the event that triggers the automation.
- * @param {Array} automation.conditions - An array of condition objects for the automation.
- * @param {string} automation.conditions[].filter_operator - The operator for the condition.
- * @param {string|number} [automation.conditions[].values] - The value(s) for the condition.
- * @param {Array} automation.actions - An array of action objects for the automation.
- * @param {string} automation.actions[].action_name - The name of the action.
- * @param {Array} [automation.actions[].action_params] - The parameters for the action.
- *
- * @returns {Object} An object containing any validation errors.
- */
-const isMonitorRequired = automation =>
-  automation.event_name === 'monitor_matched' &&
-  !automation.monitor_id &&
-  !(
-    automation.id &&
-    !automation.active &&
-    automation.monitor_availability === 'deleted'
-  );
-
-export const validateAutomation = automation => {
-  const basicErrors = validateBasicFields(automation);
-  const conditionErrors =
-    automation.event_name === 'monitor_matched' && !automation.conditions.length
-      ? {}
-      : validateConditions(automation.conditions);
-  const actionErrors = validateActions(automation.actions);
-  const monitorErrors = isMonitorRequired(automation)
-    ? { monitor_id: 'MONITOR_REQUIRED' }
-    : {};
-
-  return {
-    ...basicErrors,
-    ...conditionErrors,
-    ...actionErrors,
-    ...monitorErrors,
-  };
 };

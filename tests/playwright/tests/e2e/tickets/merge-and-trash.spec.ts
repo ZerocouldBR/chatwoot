@@ -93,6 +93,6 @@ test.describe('merge, problems and trash', () => {
     await page.getByRole('button', { name: 'Redigir', exact: true }).click();
 
     await expect(page.locator('[id^=message]').getByText(`Meu cartão é ${'▇'.repeat(19)} ref ${stamp}`)).toBeVisible();
-    expect((await ticket(redacted.id)).labels).toContain('redacted_content');
+    await expect.poll(async () => (await ticket(redacted.id)).labels).toContain('redacted_content');
   });
 });

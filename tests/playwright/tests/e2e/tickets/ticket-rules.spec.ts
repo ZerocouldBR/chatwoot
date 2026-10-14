@@ -58,6 +58,36 @@ test.describe('triggers and automations', () => {
     ]);
   });
 
+  test('a trigger replies in the ticket channel with placeholders', async ({ page }) => {
+    const stamp = Date.now();
+    const title = `Auto resposta ${stamp}`;
+    const tag = `auto${stamp}`;
+
+    await page.goto(`/app/accounts/${env.account_id}/settings/triggers`);
+    await page.getByRole('button', { name: 'Novo gatilho' }).click();
+    const form = page.getByTestId('ticket-rule-form');
+    await form.getByTestId('rule-title').fill(title);
+    const condition = form.getByTestId('rule-condition').first();
+    await condition.getByTestId('rule-condition-field').selectOption('labels');
+    await condition.getByTestId('rule-value').fill(tag);
+    const action = form.getByTestId('rule-action').first();
+    await action.getByTestId('rule-action-field').selectOption('send_message');
+    await action.getByTestId('rule-value').fill('Recebemos o ticket #{{ticket.id}}, já vamos responder.');
+    await form.getByRole('button', { name: 'Salvar' }).click();
+    await expect(page.getByText('Salvo')).toBeVisible();
+    const { payload } = await api.call<{ payload: Rule[] }>('get', '/ticket_rules?kind=trigger');
+    created.push(payload.find(rule => rule.title === title)!.id);
+
+    const contact = await api.createContact(`Auto ${stamp}`);
+    const ticket = await api.createCustomerTicket(env.api_inbox_id, contact.id, `Olá ${stamp}`);
+    await api.call('post', `/conversations/${ticket.id}/labels`, { labels: [tag] });
+
+    await page.goto(`/app/accounts/${env.account_id}/tickets/${ticket.id}`);
+    await expect(page.locator('[id^=message]').getByText(`Recebemos o ticket #${ticket.id}, já vamos responder.`)).toBeVisible({
+      timeout: 30_000,
+    });
+  });
+
   test('an automation puts tickets pending for too long on hold', async ({ page }) => {
     const stamp = Date.now();
     const tag = `sem_resposta${stamp}`;

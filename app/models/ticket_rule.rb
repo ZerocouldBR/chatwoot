@@ -6,17 +6,18 @@
 #
 # Table name: ticket_rules
 #
-#  id          :bigint           not null, primary key
-#  actions     :jsonb            not null
-#  active      :boolean          default(TRUE), not null
-#  conditions  :jsonb            not null
-#  description :string
-#  kind        :integer          not null
-#  position    :integer          default(0), not null
-#  title       :string           not null
-#  created_at  :datetime         not null
-#  updated_at  :datetime         not null
-#  account_id  :bigint           not null
+#  id            :bigint           not null, primary key
+#  actions       :jsonb            not null
+#  active        :boolean          default(TRUE), not null
+#  conditions    :jsonb            not null
+#  delay_minutes :integer
+#  description   :string
+#  kind          :integer          not null
+#  position      :integer          default(0), not null
+#  title         :string           not null
+#  created_at    :datetime         not null
+#  updated_at    :datetime         not null
+#  account_id    :bigint           not null
 #
 # Indexes
 #
@@ -26,7 +27,7 @@
 class TicketRule < ApplicationRecord
   ACTION_FIELDS = %w[status priority ticket_type team_id assignee_id add_tags remove_tags set_tags add_cc add_follower
                      email_requester email_requester_and_ccs email_assignee email_group email_user notify_webhook
-                     request_satisfaction].freeze
+                     request_satisfaction send_message].freeze
   EMAIL_ACTIONS = %w[email_requester email_requester_and_ccs email_assignee email_group email_user].freeze
 
   belongs_to :account
@@ -34,7 +35,11 @@ class TicketRule < ApplicationRecord
   # Prefixed: Active Record already defines `trigger` and `triggers` class methods.
   enum kind: { trigger: 0, automation: 1 }, _prefix: true
 
+  DELAY_RANGE = (1..43_200) # minutes: up to 30 days
+
   validates :title, presence: true
+  validates :delay_minutes, numericality: { only_integer: true, in: DELAY_RANGE }, allow_nil: true
+  validates :delay_minutes, absence: true, unless: :kind_trigger?
   validate :conditions_are_valid
   validate :actions_are_valid
   validate :automation_is_time_based_and_nullified, if: :kind_automation?

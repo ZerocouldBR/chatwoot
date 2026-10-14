@@ -92,7 +92,7 @@ module ActivityMessageHandler
   end
 
   def automation_status_change_activity_content
-    if Current.executed_by.instance_of?(AutomationRule)
+    if Current.executed_by.instance_of?(TicketRule)
       I18n.t("conversations.activity.status.#{status}", user_name: I18n.t('automation.system_name'))
     elsif Current.executed_by.instance_of?(Contact)
       Current.executed_by = nil

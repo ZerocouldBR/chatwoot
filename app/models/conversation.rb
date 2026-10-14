@@ -17,7 +17,7 @@
 #  last_activity_at       :datetime         not null
 #  next_sla_breach_at     :datetime
 #  priority               :integer
-#  satisfaction           :integer          default(0), not null
+#  satisfaction           :integer          default("unoffered"), not null
 #  sla_breached           :boolean          default(FALSE), not null
 #  status                 :integer          default("new_ticket"), not null
 #  status_changed_at      :datetime
@@ -180,7 +180,6 @@ class Conversation < ApplicationRecord
   has_many :notifications, as: :primary_actor, dependent: :destroy_async
   has_many :attachments, through: :messages
   has_many :reporting_events, dependent: :destroy_async
-  has_many :automation_rule_pending_executions, dependent: :delete_all
 
   before_save :assign_team_from_assignee
   before_save :open_new_ticket_on_assignment

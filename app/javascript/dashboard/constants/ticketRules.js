@@ -87,6 +87,7 @@ export const ACTIONS = {
   email_user: { input: 'email', target: 'agent' },
   notify_webhook: { input: 'text' },
   request_satisfaction: { input: 'none' },
+  send_message: { input: 'textarea' },
 };
 
 export const STATUSES = [

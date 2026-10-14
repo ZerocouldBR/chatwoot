@@ -18,7 +18,7 @@ module TicketAuditable
   # Who is acting right now and through which path, from the request/job context.
   def self.current_actor
     executed_by = Current.executed_by
-    return [executed_by, 'rule'] if executed_by.is_a?(AutomationRule) || executed_by.is_a?(TicketRule)
+    return [executed_by, 'rule'] if executed_by.is_a?(TicketRule)
     return [executed_by, 'customer'] if executed_by.is_a?(Contact)
     return [Current.user, 'agent'] if Current.user.is_a?(User)
     return [Current.user, 'bot'] if Current.user.is_a?(AgentBot)

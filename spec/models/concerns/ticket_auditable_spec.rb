@@ -23,8 +23,10 @@ RSpec.describe TicketAuditable do
     expect(changes).to contain_exactly(['status', 'open', 'on_hold', 'agent', agent.id], ['priority', nil, 'high', 'agent', agent.id])
   end
 
-  it 'attributes changes made by an automation rule to the rule' do
-    rule = create(:automation_rule, account: account)
+  it 'attributes changes made by a ticket rule to the rule' do
+    rule = TicketRule.create!(account: account, kind: :trigger, title: 'Urgente',
+                              conditions: { all: [{ field: 'ticket', operator: 'is', value: 'created' }], any: [] },
+                              actions: [{ field: 'priority', value: 'urgent' }])
     Current.executed_by = rule
 
     conversation.update!(priority: :urgent)

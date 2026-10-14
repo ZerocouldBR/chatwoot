@@ -1,6 +1,7 @@
 <script>
 import { useAlert } from 'dashboard/composables';
 import Spinner from 'shared/components/Spinner.vue';
+import { uploadFile } from 'dashboard/helper/uploadHelper';
 export default {
   components: {
     Spinner,
@@ -30,11 +31,8 @@ export default {
       this.label = this.$t('AUTOMATION.ATTACHMENT.LABEL_UPLOADING');
       try {
         const file = event.target.files[0];
-        const id = await this.$store.dispatch(
-          'automations/uploadAttachment',
-          file
-        );
-        this.$emit('update:modelValue', [id]);
+        const { blobId } = await uploadFile(file);
+        this.$emit('update:modelValue', [blobId]);
         this.uploadState = 'uploaded';
         this.label = this.$t('AUTOMATION.ATTACHMENT.LABEL_UPLOADED');
       } catch (error) {

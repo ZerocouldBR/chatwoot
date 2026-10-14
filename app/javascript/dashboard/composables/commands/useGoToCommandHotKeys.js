@@ -196,7 +196,7 @@ const GO_TO_COMMANDS = [
     title: 'COMMAND_BAR.COMMANDS.GO_TO_SETTINGS_AUTOMATION',
     section: SECTION_SETTINGS,
     icon: ICON_REPEAT,
-    routeName: 'automation_list',
+    routeName: 'ticket_triggers_index',
   },
   {
     id: 'open_macro_settings',

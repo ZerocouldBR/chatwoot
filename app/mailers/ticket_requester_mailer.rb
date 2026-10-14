@@ -5,8 +5,12 @@ class TicketRequesterMailer < ConversationReplyMailer
     return unless smtp_config_set_or_development? || email_smtp_enabled? || (email_imap_enabled? && email_oauth_enabled?)
 
     @body = body
-    @options = { to: to, cc: cc.presence, from: email_from, reply_to: email_reply_to, subject: subject,
-                 in_reply_to: in_reply_to_email, references: references_header }
+    @options = { to: to, cc: cc.presence, from: email_from, reply_to: email_reply_to, subject: subject }
+    # Only e-mail tickets have a thread to reply into; chat tickets get a standalone e-mail.
+    if @inbox.email?
+      @options[:in_reply_to] = in_reply_to_email
+      @options[:references] = references_header
+    end
     # Marks the e-mail as automatic so out-of-office replies are not sent back (RFC 3834).
     headers['Auto-Submitted'] = 'auto-generated'
     oauth_smtp_settings

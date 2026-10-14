@@ -90,6 +90,14 @@ const options = computed(() => {
 
 <template>
   <span v-if="input === 'none'" />
+  <textarea
+    v-else-if="input === 'textarea'"
+    v-model="value"
+    data-testid="rule-value"
+    rows="3"
+    class="flex-1 min-w-64"
+    :aria-label="$t('TICKET_RULES.VALUE')"
+  />
   <select
     v-else-if="options"
     v-model="value"

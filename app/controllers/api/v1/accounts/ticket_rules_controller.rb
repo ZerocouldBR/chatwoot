@@ -51,7 +51,7 @@ class Api::V1::Accounts::TicketRulesController < Api::V1::Accounts::BaseControll
 
   def rule_params
     params.require(:ticket_rule).permit(
-      :title, :description, :active,
+      :title, :description, :active, :delay_minutes,
       conditions: { all: CONDITION_KEYS, any: CONDITION_KEYS },
       actions: [:field, :value, { value: %i[subject body team_id user_id] }]
     )

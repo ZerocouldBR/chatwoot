@@ -8,8 +8,8 @@ import {
   OPERATOR_TYPES_1,
   OPERATOR_TYPES_3,
   OPERATOR_TYPES_4,
-} from 'dashboard/routes/dashboard/settings/automation/operators';
-import { CAPTAIN_CONDITION } from 'dashboard/routes/dashboard/settings/automation/constants';
+} from 'dashboard/constants/automationRules/operators';
+import { CAPTAIN_CONDITION } from 'dashboard/constants/automationRules/constants';
 import actionQueryGenerator from './actionQueryGenerator';
 import filterQueryGenerator from './filterQueryGenerator';
 

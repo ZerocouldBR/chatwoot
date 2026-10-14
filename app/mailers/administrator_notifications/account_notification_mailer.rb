@@ -50,14 +50,6 @@ class AdministratorNotifications::AccountNotificationMailer < AdministratorNotif
     send_notification(subject, to: email_to, action_url: file_url)
   end
 
-  def automation_rule_disabled(rule)
-    subject = 'Automation rule disabled due to validation errors.'
-    action_url = settings_url('automation/list')
-    meta = { 'rule_name' => rule.name }
-
-    send_notification(subject, action_url: action_url, meta: meta)
-  end
-
   private
 
   def format_deletion_date(deletion_date_str)

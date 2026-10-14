@@ -43,7 +43,7 @@ module Reauthorizable
 
     reauthorization_handlers[self.class.name]&.call(self)
 
-    invalidate_inbox_cache unless instance_of?(::AutomationRule)
+    invalidate_inbox_cache
     dispatch_inbox_reauthorization_event(true) if state_changed
   end
 
@@ -59,11 +59,6 @@ module Reauthorizable
     AdministratorNotifications::ChannelNotificationsMailer.with(account: account).public_send(disconnect_type, inbox).deliver_later
   end
 
-  def handle_automation_rule_reauthorization
-    update!(active: false)
-    AdministratorNotifications::AccountNotificationMailer.with(account: account).automation_rule_disabled(self).deliver_later
-  end
-
   # call this after you successfully Reauthorized the object in UI
   def reauthorized!
     state_changed = reauthorization_required?
@@ -71,7 +66,7 @@ module Reauthorizable
     ::Redis::Alfred.delete(authorization_error_count_key)
     ::Redis::Alfred.delete(reauthorization_required_key)
 
-    invalidate_inbox_cache unless instance_of?(::AutomationRule)
+    invalidate_inbox_cache
     dispatch_inbox_reauthorization_event(false) if state_changed
   end
 
@@ -91,8 +86,7 @@ module Reauthorizable
       'Channel::Instagram' => ->(obj) { obj.send_channel_reauthorization_email(:instagram_disconnect) },
       'Channel::Tiktok' => ->(obj) { obj.send_channel_reauthorization_email(:tiktok_disconnect) },
       'Channel::Whatsapp' => ->(obj) { obj.send_channel_reauthorization_email(:whatsapp_disconnect) },
-      'Channel::Email' => ->(obj) { obj.send_channel_reauthorization_email(:email_disconnect) },
-      'AutomationRule' => ->(obj) { obj.handle_automation_rule_reauthorization }
+      'Channel::Email' => ->(obj) { obj.send_channel_reauthorization_email(:email_disconnect) }
     }
   end
 

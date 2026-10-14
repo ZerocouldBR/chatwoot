@@ -3,7 +3,7 @@ import {
   OPERATOR_TYPES_1,
   OPERATOR_TYPES_3,
   OPERATOR_TYPES_4,
-} from 'dashboard/routes/dashboard/settings/automation/operators';
+} from 'dashboard/constants/automationRules/operators';
 import {
   customAttributes,
   labels,
@@ -12,7 +12,7 @@ import {
   conversationAttrs,
   expectedOutputForCustomAttributeGenerator,
 } from './fixtures/automationFixtures';
-import { AUTOMATIONS } from 'dashboard/routes/dashboard/settings/automation/constants';
+import { AUTOMATIONS } from 'dashboard/constants/automationRules/constants';
 
 describe('getCustomAttributeInputType', () => {
   it('returns the attribute input type', () => {

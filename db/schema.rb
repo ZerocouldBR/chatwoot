@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2026_10_14_165327) do
+ActiveRecord::Schema[7.1].define(version: 2026_10_14_215903) do
   # These extensions should be enabled to support this database
   enable_extension "pg_stat_statements"
   enable_extension "pg_trgm"
@@ -287,42 +287,6 @@ ActiveRecord::Schema[7.1].define(version: 2026_10_14_165327) do
     t.index ["created_at"], name: "index_audits_on_created_at"
     t.index ["request_uuid"], name: "index_audits_on_request_uuid"
     t.index ["user_id", "user_type"], name: "user_index"
-  end
-
-  create_table "automation_rule_pending_executions", force: :cascade do |t|
-    t.bigint "automation_rule_id", null: false
-    t.bigint "conversation_id", null: false
-    t.bigint "account_id", null: false
-    t.bigint "message_id"
-    t.datetime "due_at", null: false
-    t.string "episode_key", null: false
-    t.integer "status", default: 0, null: false
-    t.string "skip_reason"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["account_id"], name: "index_automation_rule_pending_executions_on_account_id"
-    t.index ["automation_rule_id", "conversation_id", "episode_key"], name: "uniq_automation_pending_execution_episode", unique: true
-    t.index ["automation_rule_id"], name: "index_automation_rule_pending_executions_on_automation_rule_id"
-    t.index ["conversation_id"], name: "index_automation_rule_pending_executions_on_conversation_id"
-    t.index ["status", "due_at"], name: "index_automation_rule_pending_executions_on_status_and_due_at"
-    t.index ["status", "updated_at"], name: "index_automation_pending_executions_on_status_and_updated_at"
-  end
-
-  create_table "automation_rules", force: :cascade do |t|
-    t.bigint "account_id", null: false
-    t.string "name", null: false
-    t.text "description"
-    t.string "event_name", null: false
-    t.jsonb "conditions", default: "{}", null: false
-    t.jsonb "actions", default: "{}", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.boolean "active", default: true, null: false
-    t.integer "execution_delay"
-    t.bigint "monitor_id"
-    t.datetime "monitor_event_activated_at"
-    t.index ["account_id"], name: "index_automation_rules_on_account_id"
-    t.index ["monitor_id"], name: "index_automation_rules_on_monitor_id"
   end
 
   create_table "business_schedules", force: :cascade do |t|
@@ -1715,6 +1679,7 @@ ActiveRecord::Schema[7.1].define(version: 2026_10_14_165327) do
     t.jsonb "actions", default: [], null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "delay_minutes"
     t.index ["account_id", "kind", "position"], name: "index_ticket_rules_on_account_id_and_kind_and_position"
     t.index ["account_id"], name: "index_ticket_rules_on_account_id"
   end

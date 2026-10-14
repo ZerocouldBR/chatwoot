@@ -108,6 +108,9 @@ const payload = () => ({
   active: editing.value.active,
   conditions: editing.value.conditions,
   actions: editing.value.actions,
+  ...(props.kind === RULE_KINDS.TRIGGER && {
+    delay_minutes: editing.value.delay_minutes || null,
+  }),
 });
 
 const save = async () => {
@@ -242,6 +245,22 @@ onMounted(() => {
               <input v-model="editing.description" type="text" />
             </label>
           </div>
+          <label
+            v-if="kind === RULE_KINDS.TRIGGER"
+            class="flex flex-wrap items-center gap-2 text-sm text-n-slate-12"
+          >
+            {{ $t('TICKET_RULES.DELAY') }}
+            <input
+              v-model.number="editing.delay_minutes"
+              data-testid="rule-delay"
+              type="number"
+              min="1"
+              class="w-24 !mb-0"
+            />
+            <span class="text-xs text-n-slate-11">
+              {{ $t('TICKET_RULES.DELAY_HINT') }}
+            </span>
+          </label>
           <label class="flex items-center gap-2 text-sm text-n-slate-12">
             <input v-model="editing.active" type="checkbox" />
             {{ $t('TICKET_RULES.ACTIVE') }}

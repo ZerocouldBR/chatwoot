@@ -355,7 +355,6 @@
     "APPLICATIONS": "Applications",
     "LABELS": "Tags",
     "CUSTOM_ATTRIBUTES": "Custom Attributes",
-    "AUTOMATION": "Automation (legacy)",
     "MACROS": "Macros",
     "TEAMS": "Groups",
     "BILLING": "Billing",
@@ -1308,7 +1307,8 @@
       "email_group": "Email group",
       "email_user": "Email user",
       "notify_webhook": "Notify webhook",
-      "request_satisfaction": "Request satisfaction rating"
+      "request_satisfaction": "Request satisfaction rating",
+      "send_message": "Send message"
     },
     "VALUES": {
       "NONE": "(none)",
@@ -1338,7 +1338,9 @@
         "line": "LINE",
         "tiktok": "TikTok"
       }
-    }
+    },
+    "DELAY": "Run after (minutes)",
+    "DELAY_HINT": "Optional. The actions run later, only if the ticket still matches the conditions."
   },
   "NOTIFICATIONS_BELL": {
     "TITLE": "Notifications",

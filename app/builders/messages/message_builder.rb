@@ -14,7 +14,7 @@ class Messages::MessageBuilder
     @message_type = params[:message_type] || 'outgoing'
     @attachments = params[:attachments]
     @is_voice_message = ActiveModel::Type::Boolean.new.cast(params[:is_voice_message])
-    @automation_rule = content_attributes&.dig(:automation_rule_id)
+    @ticket_rule = content_attributes&.dig(:ticket_rule_id)
     return unless params.instance_of?(ActionController::Parameters)
 
     @in_reply_to = content_attributes&.dig(:in_reply_to)
@@ -150,8 +150,8 @@ class Messages::MessageBuilder
     @params[:external_created_at].present? ? { external_created_at: @params[:external_created_at] } : {}
   end
 
-  def automation_rule_id
-    @automation_rule.present? ? { content_attributes: { automation_rule_id: @automation_rule } } : {}
+  def ticket_rule_id
+    @ticket_rule.present? ? { content_attributes: { ticket_rule_id: @ticket_rule } } : {}
   end
 
   def campaign_id
@@ -182,7 +182,7 @@ class Messages::MessageBuilder
       in_reply_to: @in_reply_to,
       echo_id: @params[:echo_id],
       source_id: @params[:source_id]
-    }.merge(external_created_at).merge(automation_rule_id).merge(campaign_id).merge(template_params)
+    }.merge(external_created_at).merge(ticket_rule_id).merge(campaign_id).merge(template_params)
   end
 
   def email_inbox?
