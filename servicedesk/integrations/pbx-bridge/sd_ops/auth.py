@@ -35,6 +35,7 @@ class Principal:
     csrf_sha256: Optional[str] = None
     tenants: Set[str] = field(default_factory=set)   # token de serviço: tenants permitidos ("*" = todos)
     caused_by: Optional[str] = None                  # "n8n:WFxx" (anti-loop)
+    chatwoot_role: Optional[str] = None              # role da conta no Chatwoot no login (administrator | agent)
 
     @property
     def actor(self) -> str:
@@ -45,6 +46,12 @@ class Principal:
         if "admin" in r:
             r |= {"supervisor", "qa", "agente"}
         return bool(r & set(roles))
+
+    @property
+    def account_admin(self) -> bool:
+        """Administrator da conta no Chatwoot (validado no /api/v1/profile no login). Papel "admin" concedido em
+        ops.user_roles NÃO conta: a configuração da integração exige o administrador da conta."""
+        return self.kind == "user" and self.chatwoot_role == "administrator"
 
     def can(self, scope: str, *roles: str) -> bool:
         return (self.kind == "service" and scope in self.scopes) or (self.kind == "user" and self.has(*roles))
@@ -122,7 +129,8 @@ class Auth:
                 conn.execute(m.cti_sessions.insert().values(
                     token_sha256=db.sha256(token), csrf_sha256=db.sha256(csrf), tenant_id=ten.id,
                     chatwoot_user_id=int(prof["id"]), email=prof.get("email"), name=prof.get("name"),
-                    roles=sorted(roles), ip=ip, created_at=now, last_seen_at=now, expires_at=exp))
+                    roles=sorted(roles), chatwoot_role=str(acc.get("role") or "") or None, ip=ip, created_at=now,
+                    last_seen_at=now, expires_at=exp))
                 db.audit(conn, ten.id, "auth.session_created", "user", prof["id"], {"roles": sorted(roles)},
                          actor_type="user", actor_id=str(prof["id"]), ip=ip)
         if denied:
@@ -148,7 +156,7 @@ class Auth:
             conn.execute(m.cti_sessions.update().where(m.cti_sessions.c.id == r.id).values(
                 last_seen_at=now, expires_at=new_exp))
         return Principal("user", r.tenant_id, set(r.roles), set(), r.chatwoot_user_id, r.email, r.name,
-                         via_cookie=via_cookie, csrf_sha256=r.csrf_sha256)
+                         via_cookie=via_cookie, csrf_sha256=r.csrf_sha256, chatwoot_role=r.chatwoot_role)
 
     def revoke(self, token: str) -> None:
         with self.engine.begin() as conn:

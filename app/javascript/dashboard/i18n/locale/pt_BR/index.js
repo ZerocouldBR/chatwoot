@@ -34,6 +34,7 @@ import onboarding from './onboarding.json';
 import report from './report.json';
 import resetPassword from './resetPassword.json';
 import sdTheme from './sdTheme.json';
+import sdTelephony from './sdTelephony.json';
 import search from './search.json';
 import setNewPassword from './setNewPassword.json';
 import sessionLimit from './sessionLimit.json';
@@ -86,6 +87,7 @@ export default {
   ...report,
   ...resetPassword,
   ...sdTheme,
+  ...sdTelephony,
   ...search,
   ...setNewPassword,
   ...sessionLimit,

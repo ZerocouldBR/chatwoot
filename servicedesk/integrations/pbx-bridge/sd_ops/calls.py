@@ -45,9 +45,20 @@ def _ts(v: Optional[str]) -> Optional[dt.datetime]:
 
 
 class CallEngine:
-    def __init__(self, s: OpsSettings):
+    def __init__(self, s: OpsSettings, settings=None):
         self.s = s
+        self.settings = settings     # configuração por tenant (tela > ambiente)
         self.queue_team = {queue_key(k): v for k, v in s.bridge.queue_team_map.items()}
+
+    def cfg(self, tenant_id: Optional[str]) -> OpsSettings:
+        return self.settings.effective(tenant_id) if (self.settings is not None and tenant_id) else self.s
+
+    def queue_team_of(self, tenant_id: Optional[str], queue: str) -> Optional[str]:
+        """Fila -> time pelo mapa em vigor do tenant (QUEUE_TEAM_MAP da tela ou do ambiente)."""
+        qmap = self.cfg(tenant_id).bridge.queue_team_map
+        if qmap is self.s.bridge.queue_team_map:
+            return self.queue_team.get(queue_key(queue or ""))
+        return {queue_key(k): v for k, v in qmap.items()}.get(queue_key(queue or ""))
 
     # ================================================================== entrada
     def ingest(self, conn: Connection, tenant_id: str, d: Dict[str, Any], anomalies: List[str], source: str,
@@ -146,8 +157,9 @@ class CallEngine:
                 m.agent_phone_mappings.c.active.is_(True))).first()
             if r:
                 return r[0]
-            if branch in self.s.bridge.branch_agent_map:
-                return self.s.bridge.branch_agent_map[branch]
+            bmap = self.cfg(tenant_id).bridge.branch_agent_map
+            if branch in bmap:
+                return bmap[branch]
         return None
 
     def _recompute_leg(self, conn, tenant_id: str, leg: Dict[str, Any], now) -> Dict[str, Any]:
@@ -165,7 +177,7 @@ class CallEngine:
             first_rx = e.received_at if first_rx is None or e.received_at < first_rx else first_rx
             if e.kind != "start" and (end_rx is None or e.received_at < end_rx):
                 end_rx = e.received_at
-        tz = self.s.bridge.tz_offset_hours
+        tz = self.cfg(tenant_id).bridge.tz_offset_hours
         st = started_at(merged, tz, first_rx or now)
         talk = merged.get("spoken")
         wait = merged.get("waiting")
@@ -470,7 +482,7 @@ class CallEngine:
                   "channel": "phone", "origin": origin, "priority": rule["default_priority"],
                   "contact_e164": call.get("number_e164"), "contact_id": call.get("contact_id"),
                   "contact_name": root.get("client_name"),
-                  "team_name": self.queue_team.get(queue_key(call.get("queue") or "")) if call["direction"] == "receptivo" else None}
+                  "team_name": self.queue_team_of(tenant_id, call.get("queue") or "") if call["direction"] == "receptivo" else None}
         if ended and missed:
             fields.update(origin="call_missed", category="ligacao_perdida", subcategory=call["outcome"])
         t = tickets.create(conn, tenant_id, fields, "system", call_id=call["id"],

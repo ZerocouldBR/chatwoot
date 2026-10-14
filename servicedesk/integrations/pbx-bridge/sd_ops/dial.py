@@ -36,26 +36,30 @@ class DialAdapter:
         self.s = s
         self.http = client or httpx.Client(timeout=s.dial_timeout_s, follow_redirects=False)
 
-    def available(self) -> Optional[str]:
-        """None se pode discar; senão o motivo (exibido desabilitado na interface)."""
-        if self.s.dial_mode == "disabled":
-            return "click-to-call desativado (PBX_DIAL_MODE=disabled)"
-        if self.s.dial_mode == "mock":
-            return None if self.s.env == "dev" else "modo mock só é permitido no DEV"
-        if not (self.s.dial_client_code and self.s.dial_api_key and self.s.dial_jwt):
+    def available(self, cfg: Optional[OpsSettings] = None) -> Optional[str]:
+        """None se pode discar; senão o motivo (exibido desabilitado na interface). `cfg` = configuração em vigor
+        do tenant (tela > ambiente); sem ela, a do processo."""
+        s = cfg or self.s
+        if s.dial_mode == "disabled":
+            return "click-to-call desativado (PBX_DIAL_MODE=disabled ou modo disabled em Configurações > Telefonia 55PBX)"
+        if s.dial_mode == "mock":
+            return None if s.env == "dev" else "modo mock só é permitido no DEV"
+        if not (s.dial_client_code and s.dial_api_key and s.dial_jwt):
             return "credenciais da API de discagem ausentes (client_code, api_key e JWT, pedidos ao suporte 55PBX)"
         return None
 
-    def dial(self, pbx_email: str, phone: str) -> DialResult:
-        why = self.available()
+    def dial(self, pbx_email: str, phone: str, cfg: Optional[OpsSettings] = None) -> DialResult:
+        s = cfg or self.s
+        why = self.available(s)
         if why:
             return DialResult("disabled", message=why)
-        if self.s.dial_mode == "mock":
+        if s.dial_mode == "mock":
             return DialResult("mock", message="MODO MOCK (DEV): nenhuma ligação foi feita", simulated=True)
-        headers = {"client_code": self.s.dial_client_code, "api_key": self.s.dial_api_key,
-                   "Authorization": "Bearer " + self.s.dial_jwt, "Content-Type": "application/json"}
+        headers = {"client_code": s.dial_client_code, "api_key": s.dial_api_key,
+                   "Authorization": "Bearer " + s.dial_jwt, "Content-Type": "application/json"}
         try:
-            r = self.http.post(self.s.dial_url, json={"email": pbx_email, "phone": phone}, headers=headers)
+            r = self.http.post(s.dial_url, json={"email": pbx_email, "phone": phone}, headers=headers,
+                               timeout=s.dial_timeout_s)
         except httpx.TransportError as e:
             return DialResult("error", message="55PBX indisponível (%s)" % type(e).__name__)
         body: Dict[str, Any] = {}

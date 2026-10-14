@@ -130,18 +130,30 @@ class TenantContext:
 
 
 class ChatwootSync:
-    def __init__(self, s: OpsSettings, engine, storage, cw_factory: Optional[Callable] = None):
+    def __init__(self, s: OpsSettings, engine, storage, cw_factory: Optional[Callable] = None, settings=None):
         self.s, self.engine, self.storage = s, engine, storage
         self.cw_factory = cw_factory or self._default_cw
         self._ctx: Dict[str, TenantContext] = {}
+        self._cws: Dict[tuple, Any] = {}
+        self.settings = settings     # configuração por tenant (tela > ambiente)
+        if settings is not None:
+            settings.listeners.append(self.invalidate)
+
+    def invalidate(self, tenant_id: Optional[str] = None) -> None:
+        if tenant_id is None:
+            self._ctx.clear()
+        else:
+            self._ctx.pop(tenant_id, None)
 
     # ------------------------------------------------------------------ tenant
     def _default_cw(self, b: BridgeSettings):
         return OpsChatwoot(b.chatwoot_url, b.chatwoot_api_token, b.chatwoot_account_id, b.http_timeout)
 
     def tenant(self, tenant_id: str) -> TenantContext:
+        eff = self.settings.effective(tenant_id) if self.settings is not None else self.s
         c = self._ctx.get(tenant_id)
-        if c and time.time() - getattr(c, "_at", 0) < 300:
+        ttl = min(300, max(1, self.s.settings_ttl_s)) if self.settings is not None else 300
+        if c and time.time() - getattr(c, "_at", 0) < ttl and getattr(c, "_ver", 0) == eff.settings_version:
             return c
         with self.engine.begin() as conn:
             r = conn.execute(sa.select(m.tenants).where(m.tenants.c.id == tenant_id)).first()
@@ -151,19 +163,36 @@ class ChatwootSync:
             ref = conn.execute(sa.select(m.integration_credentials_refs.c.env_var).where(
                 m.integration_credentials_refs.c.tenant_id == tenant_id,
                 m.integration_credentials_refs.c.name == "chatwoot_api_token")).scalar()
-        over = {k: v for k, v in (row.get("settings") or {}).items() if k in BRIDGE_OVERRIDABLE}
+        # precedência: tela (ops.tenant_settings) > tenants.settings (legado) > ambiente
+        panel_keys = set()
+        if self.settings is not None:
+            try:
+                r_ = self.settings.row(tenant_id) or {}
+            except sa.exc.SQLAlchemyError:
+                r_ = {}
+            from .settings_store import BY_KEY
+            panel_keys = {BY_KEY[k].target.split(".", 1)[1] for k in list(r_.get("values") or {}) + list(r_.get("secrets") or {})
+                          if k in BY_KEY and BY_KEY[k].target.startswith("bridge.")}
+        over = {k: v for k, v in (row.get("settings") or {}).items() if k in BRIDGE_OVERRIDABLE and k not in panel_keys}
         with self.engine.begin() as conn:
             maps = {r.branch: r.agent_email for r in conn.execute(sa.select(m.agent_phone_mappings).where(
                 m.agent_phone_mappings.c.tenant_id == tenant_id, m.agent_phone_mappings.c.active.is_(True)))}
-        if maps:  # ops.agent_phone_mappings (admin) vence o BRANCH_AGENT_MAP do ambiente
-            over["branch_agent_map"] = dict(over.get("branch_agent_map") or self.s.bridge.branch_agent_map, **maps)
-        b = dataclasses.replace(self.s.bridge, chatwoot_account_id=row["chatwoot_account_id"],
+        if maps:  # ops.agent_phone_mappings (admin / tela) vence o BRANCH_AGENT_MAP do ambiente
+            over["branch_agent_map"] = dict(over.get("branch_agent_map") or eff.bridge.branch_agent_map, **maps)
+        token = self.settings.chatwoot_token(tenant_id, ref) if self.settings is not None else \
+            ((self.s.cred(ref) if ref else "") or self.s.bridge.chatwoot_api_token)
+        b = dataclasses.replace(eff.bridge, chatwoot_account_id=row["chatwoot_account_id"],
                                 pbx_inbox_id=row.get("pbx_inbox_id") or self.s.bridge.pbx_inbox_id,
                                 integration_user_id=row.get("integration_user_id") or self.s.bridge.integration_user_id,
-                                chatwoot_api_token=(self.s.cred(ref) if ref else "") or self.s.bridge.chatwoot_api_token,
-                                **over)
-        c = TenantContext(row, b, self.cw_factory(b))
+                                chatwoot_api_token=token, **over)
+        # o cliente do Chatwoot só é recriado se URL/token/conta mudarem (os testes injetam uma fábrica com estado)
+        ck = (b.chatwoot_url, b.chatwoot_api_token, b.chatwoot_account_id, b.http_timeout)
+        old = self._ctx.get(tenant_id)
+        cw = old.cw if old is not None and getattr(old, "_ck", None) == ck else self.cw_factory(b)
+        c = TenantContext(row, b, cw)
         c._at = time.time()  # type: ignore[attr-defined]
+        c._ver = eff.settings_version  # type: ignore[attr-defined]
+        c._ck = ck  # type: ignore[attr-defined]
         self._ctx[tenant_id] = c
         return c
 

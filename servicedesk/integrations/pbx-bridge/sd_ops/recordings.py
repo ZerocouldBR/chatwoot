@@ -93,8 +93,12 @@ def backoff(attempt: int) -> int:
 
 
 class RecordingPipeline:
-    def __init__(self, s: OpsSettings, engine, storage, downloader: Callable = download):
+    def __init__(self, s: OpsSettings, engine, storage, downloader: Callable = download, settings=None):
         self.s, self.engine, self.storage, self.downloader = s, engine, storage, downloader
+        self.settings = settings     # configuração por tenant (tela > ambiente)
+
+    def cfg(self, tenant_id: str) -> OpsSettings:
+        return self.settings.effective(tenant_id) if self.settings is not None else self.s
 
     def run(self, recording_id: str) -> str:
         with self.engine.begin() as conn:
@@ -103,9 +107,10 @@ class RecordingPipeline:
                 return "skip"
             rec = dict(r._mapping)
         url = rec["source_url"]
-        if not url or not host_allowed(url, self.s.bridge.audio_allowed_hosts):
+        cfg = self.cfg(rec["tenant_id"])
+        if not url or not host_allowed(url, cfg.bridge.audio_allowed_hosts):
             return self._fail(rec, "host da gravação fora de AUDIO_ALLOWED_HOSTS ou URL ausente")
-        b = self.s.bridge
+        b = cfg.bridge
         headers = {b.pbx_api_key_header: b.pbx_api_key} if (b.audio_send_api_key and b.pbx_api_key) else None
         try:
             data = self.downloader(url, b.audio_max_mb * 1024 * 1024, headers=headers)
@@ -113,22 +118,22 @@ class RecordingPipeline:
             if e.permanent:
                 return self._fail(rec, str(e))
             return self._retry(rec, str(e))
-        if len(data) < self.s.recording_min_bytes:
+        if len(data) < cfg.recording_min_bytes:
             return self._retry(rec, "arquivo incompleto (%d bytes)" % len(data))
         kind = detect(data)
         if kind is None:
             return self._fail(rec, "tipo de arquivo não reconhecido como áudio")
         mime, ext = kind
         dur = duration_of(data, mime, b.ffmpeg_bin)
-        if dur is not None and dur > self.s.recording_max_duration_s:
+        if dur is not None and dur > cfg.recording_max_duration_s:
             return self._fail(rec, "duração acima do limite (%.0f s)" % dur)
         exp = rec.get("expected_talk_s")
         integrity = "ok"
         if dur is None:
             integrity = "unknown_duration"
         elif exp:
-            if dur < exp * self.s.recording_short_ratio:
-                if rec["attempts"] < self.s.recording_short_retries:
+            if dur < exp * cfg.recording_short_ratio:
+                if rec["attempts"] < cfg.recording_short_retries:
                     return self._retry(rec, "áudio mais curto que o tempo falado (%.0f s de %d s)" % (dur, exp))
                 integrity = "short"
             elif abs(dur - exp) > max(10.0, 0.1 * exp):
@@ -143,7 +148,8 @@ class RecordingPipeline:
         with self.engine.begin() as conn:
             r = conn.execute(m.call_recordings.update().where(m.call_recordings.c.id == rec["id"],
                                                               m.call_recordings.c.status == "pending").values(
-                status="stored", storage_backend=self.storage.backend, storage_key=key, mime=mime,
+                status="stored", storage_backend=getattr(self.storage, "backend_for", lambda _k: self.storage.backend)(key),
+                storage_key=key, mime=mime,
                 size_bytes=len(data), duration_s=dur, sha256=digest, integrity=integrity, stored_at=when,
                 attempts=rec["attempts"] + 1, last_error=None, updated_at=when))
             if r.rowcount == 0:
@@ -166,7 +172,7 @@ class RecordingPipeline:
             db.audit(conn, rec["tenant_id"], "recording.stored", "recording", rec["id"],
                      {"size": len(data), "duration_s": dur, "integrity": integrity})
             db.sync_log(conn, rec["tenant_id"], "55pbx", "recording.download", "ok", "recording", rec["id"])
-            if self.s.chatwoot_attach_recording and call is not None:
+            if cfg.chatwoot_attach_recording and call is not None:
                 db.enqueue(conn, rec["tenant_id"], "chatwoot.sync_call", "sync_call:rec:%s" % rec["id"],
                            {"call_id": call.id, "leg_id": rec["leg_id"], "recording_id": rec["id"]},
                            ordering_key="call:" + call.id)

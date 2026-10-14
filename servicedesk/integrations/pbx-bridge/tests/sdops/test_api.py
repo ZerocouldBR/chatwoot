@@ -152,7 +152,7 @@ def test_n8n_hmac_e_anti_loop(env, monkeypatch):
 def test_saude_e_metricas(env):
     _flow(env)
     h = env.client.get("/sd-ops/api/v1/ready").json()
-    assert h["status"] == "ok" and h["migration"] == "0002" and h["redis"] == "ok"
+    assert h["status"] == "ok" and h["migration"] == "0003" and h["redis"] == "ok"
     assert env.client.get("/integracoes/55pbx/health").json()["enabled"] is True
     txt = env.client.get("/sd-ops/metrics").text
     assert "sdops_webhook_received_total" in txt and "sdops_outbox_processed_total" in txt
