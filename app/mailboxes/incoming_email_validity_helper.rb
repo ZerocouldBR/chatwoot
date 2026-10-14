@@ -7,8 +7,16 @@ module IncomingEmailValidityHelper
     # Return if email doesn't have a valid sender
     # This can happen in cases like bounce emails for invalid contact email address
     return false unless Devise.email_regexp.match?(@processed_mail.original_sender)
+    # Mail sent from the support address itself (our own replies, copies to self) is not a customer message.
+    # Zendesk suspends these as "received from a support address".
+    return false if email_from_support_address?
 
     true
+  end
+
+  def email_from_support_address?
+    sender = @processed_mail.original_sender.to_s
+    [@channel.email, @channel.forward_to_email, @channel.imap_login].compact_blank.any? { |address| address.casecmp?(sender) }
   end
 
   def valid_external_email_for_active_account?

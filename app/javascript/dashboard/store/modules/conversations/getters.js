@@ -182,10 +182,6 @@ const getters = {
     return _state.conversationLastSeen;
   },
 
-  getContextMenuChatId: _state => {
-    return _state.contextMenuChatId;
-  },
-
   getCopilotAssistant: _state => {
     return _state.copilotAssistant;
   },

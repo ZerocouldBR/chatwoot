@@ -1,3 +1,4 @@
+# ServiceDesk M13: organizações (empresas) só são editadas com organizations.edit.
 class CompanyPolicy < ApplicationPolicy
   def index?
     true
@@ -12,11 +13,11 @@ class CompanyPolicy < ApplicationPolicy
   end
 
   def create?
-    true
+    sd_access.can?('organizations.edit')
   end
 
   def update?
-    true
+    sd_access.can?('organizations.edit')
   end
 
   def avatar?

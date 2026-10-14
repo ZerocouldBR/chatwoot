@@ -12,7 +12,7 @@
     "PAYWALL": {
       "TITLE": "Upgrade to create custom roles",
       "AVAILABLE_ON": "The custom role feature is only available in the Business and Enterprise plans.",
-      "UPGRADE_PROMPT": "Upgrade your plan to get access to advanced features like team management, automations, custom attributes, and more.",
+      "UPGRADE_PROMPT": "Upgrade your plan to get access to advanced features like group management, automations, custom attributes, and more.",
       "UPGRADE_NOW": "Upgrade now",
       "CANCEL_ANYTIME": "You can change or cancel your plan anytime"
     },
@@ -33,9 +33,9 @@
       }
     },
     "PERMISSIONS": {
-      "CONVERSATION_MANAGE": "Manage all conversations",
-      "CONVERSATION_UNASSIGNED_MANAGE": "Manage unassigned conversations and those assigned to them",
-      "CONVERSATION_PARTICIPATING_MANAGE": "Manage participating conversations and those assigned to them",
+      "CONVERSATION_MANAGE": "Manage all tickets",
+      "CONVERSATION_UNASSIGNED_MANAGE": "Manage unassigned tickets and those assigned to them",
+      "CONVERSATION_PARTICIPATING_MANAGE": "Manage participating tickets and those assigned to them",
       "CONTACT_MANAGE": "Manage contacts",
       "REPORT_MANAGE": "Manage reports",
       "KNOWLEDGE_BASE_MANAGE": "Manage knowledge base"

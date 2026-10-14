@@ -34,22 +34,13 @@
     },
     "UNREAD_MESSAGES": "Mensagens não lidas",
     "UNREAD_MESSAGE": "Mensagem não lida",
-    "CONTACT_HISTORY": {
-      "OLDER": "Ticket anterior",
-      "NEWER": "Próximo ticket",
-      "OLDER_WITH": "Ticket anterior de {name} · {time}",
-      "NEWER_WITH": "Próximo ticket de {name} · {time}",
-      "CUSTOMER": "este cliente",
-      "REPLY_TO_OLDER": "Responder neste ticket anterior",
-      "GO_TO_LATEST": "Ir para o ticket mais recente"
-    },
     "CLICK_HERE": "Clique aqui",
     "LOADING_INBOXES": "Carregando caixas de entrada",
     "LOADING_CONVERSATIONS": "Carregando tickets",
     "CANNOT_REPLY": "Você não pode responder porque",
     "24_HOURS_WINDOW": "Restrições de janela de mensagem de 24 horas",
     "48_HOURS_WINDOW": "Restrição da janela de mensagens de 48 horas",
-    "API_HOURS_WINDOW": "Você só pode responder a este ticket em {hours} horas",
+    "API_HOURS_WINDOW": "Você só pode responder o este ticket em {hours} horas",
     "NOT_ASSIGNED_TO_YOU": "Este ticket não está atribuído a você. Gostaria de atribuir este ticket a você mesmo?",
     "ASSIGN_TO_ME": "Atribuir a mim",
     "BOT_HANDOFF_MESSAGE": "Este ticket está sendo atendido por {assigneeName}.",
@@ -58,10 +49,10 @@
     "BOT_HANDOFF_REOPEN_ACTION": "Marcar ticket como aberto",
     "BOT_HANDOFF_SUCCESS": "Um ticket foi atribuído a você",
     "BOT_HANDOFF_ERROR": "Falha ao resolver tickets. Por favor, tente novamente.",
-    "TWILIO_WHATSAPP_CAN_REPLY": "Você só pode responder a este ticket usando um modelo de mensagem devido a",
+    "TWILIO_WHATSAPP_CAN_REPLY": "Você só pode responder o este ticket usando um modelo de mensagem devido a",
     "TWILIO_WHATSAPP_24_HOURS_WINDOW": "Restrições de janela de mensagem de 24 horas",
     "OLD_INSTAGRAM_INBOX_REPLY_BANNER": "Esta conta do Instagram foi migrada para a nova caixa de entrada do canal do Instagram. Todas as novas mensagens serão mostradas lá. Você não poderá mais enviar mensagens deste ticket.",
-    "INSTAGRAM_RESTRICTION_BANNER": "As mensagens do Instagram estão sendo afetadas por um problema na API da Meta, e não por uma falha no ServiceDesk. Algumas mensagens ou ações podem sofrer atrasos ou ficar temporariamente indisponíveis. Estamos trabalhando em conjunto com a Meta para resolver a situação o mais rápido possível.",
+    "INSTAGRAM_RESTRICTION_BANNER": "As mensagens do Instagram estão sendo afetadas por um problema na API da Meta, e não por uma falha no Chatwoot. Algumas mensagens ou ações podem sofrer atrasos ou ficar temporariamente indisponíveis. Estamos trabalhando em conjunto com a Meta para resolver a situação o mais rápido possível.",
     "INSTAGRAM_RESTRICTION_STATUS_LINK": "Ver atualizações de status",
     "REPLYING_TO": "Você está respondendo a:",
     "REMOVE_SELECTION": "Remover seleção",
@@ -89,18 +80,9 @@
     "SUCCESS_DELETE_MESSAGE": "Mensagem excluída com sucesso",
     "FAIL_DELETE_MESSSAGE": "Não foi possível excluir a mensagem! Tente novamente",
     "NO_RESPONSE": "Sem resposta",
-    "REQUEST_CONTACT_INFO": {
-      "ACTION": "Pedir ao cliente o número de WhatsApp",
-      "PENDING_ACTION": "Pedido de contato pendente",
-      "STATES": {
-        "PENDING": "Aguardando os dados de contato",
-        "SHARED": "Telefone compartilhado",
-        "IDENTITY_CONFLICT": "Telefone precisa de revisão"
-      }
-    },
     "RESPONSE": "Resposta",
     "RATING_TITLE": "Classificação",
-    "FEEDBACK_TITLE": "Avaliação",
+    "FEEDBACK_TITLE": "Feedback",
     "REPLY_MESSAGE_NOT_FOUND": "Mensagem não disponível",
     "CAPTAIN_GENERATION": {
       "TITLE": "Como esta resposta foi gerada?",
@@ -117,9 +99,9 @@
       "CREDITS": "Créditos: {credits}"
     },
     "CARD": {
-      "SHOW_LABELS": "Mostrar etiquetas",
-      "HIDE_LABELS": "Ocultar as etiquetas",
-      "LABELS_COUNT": "{count} etiquetas"
+      "SHOW_LABELS": "Mostrar tags",
+      "HIDE_LABELS": "Ocultar as tags",
+      "LABELS_COUNT": "{count} tags"
     },
     "VOICE_CALL": {
       "INCOMING_CALL": "Chamada recebida",
@@ -152,10 +134,8 @@
       "CLOSE": "Fechar",
       "DETAILS": "detalhes",
       "COPY_ID_SUCCESS": "ID do ticket copiado para área de transferência",
-      "SNOOZED_UNTIL": "Adiar até",
       "SNOOZED_UNTIL_TOMORROW": "Adiado até amanhã",
       "SNOOZED_UNTIL_NEXT_WEEK": "Adiada até a próxima semana",
-      "SNOOZED_UNTIL_NEXT_REPLY": "Adiado até a próxima resposta",
       "WHATSAPP_CALL": "Iniciar chamada no WhatsApp",
       "WHATSAPP_CALL_FAILED": "Não foi possível iniciar a chamada no WhatsApp.",
       "VOICE_CALL": "Iniciar chamada",
@@ -171,8 +151,6 @@
       }
     },
     "RESOLVE_DROPDOWN": {
-      "MARK_PENDING": "Deixar pendente",
-      "SNOOZE_UNTIL": "Adiar",
       "SNOOZE": {
         "TITLE": "Suspender até",
         "NEXT_REPLY": "Próxima resposta",
@@ -182,7 +160,7 @@
     },
     "MENTION": {
       "AGENTS": "Agentes",
-      "TEAMS": "Times"
+      "TEAMS": "Grupos"
     },
     "PICKER": {
       "VARIABLE": {
@@ -200,7 +178,7 @@
         "ACTION_COUNT": "1 ação | {count} ações"
       },
       "MENTION": {
-        "SEARCH_PLACEHOLDER": "Pesquisar agentes e times",
+        "SEARCH_PLACEHOLDER": "Pesquisar agentes e grupos",
         "FILTER": {
           "ALL": "Todos"
         },
@@ -209,7 +187,7 @@
         "AUTO_ASSIGN": "Atribuição automática",
         "ENABLED": "Ativado",
         "DISABLED": "Desativado",
-        "YOU_ARE_A_MEMBER": "Você faz parte deste time"
+        "YOU_ARE_A_MEMBER": "Você faz parte deste grupo"
       }
     },
     "CUSTOM_SNOOZE": {
@@ -217,23 +195,13 @@
       "APPLY": "Adiar",
       "CANCEL": "Cancelar"
     },
-    "SUGGESTIONS": {
-      "SUGGEST": "Sugerir etiquetas",
-      "EMPTY": "Nenhuma sugestão nova",
-      "ACCEPT": "Aceitar",
-      "APPLY_HINT": "Clique para aplicar",
-      "REJECT": "Descartar",
-      "ACCEPT_ALL": "Aceitar todas",
-      "ERROR": "Não foi possível carregar as sugestões. Tente novamente.",
-      "APPLY_ERROR": "Não foi possível aplicar as etiquetas sugeridas. Tente novamente."
-    },
     "PRIORITY": {
       "TITLE": "Prioridade",
       "OPTIONS": {
         "NONE": "Nenhuma",
         "URGENT": "Urgente",
         "HIGH": "Alta",
-        "MEDIUM": "Média",
+        "MEDIUM": "Normal",
         "LOW": "Baixa"
       },
       "CHANGE_PRIORITY": {
@@ -250,23 +218,14 @@
       "CONFIRM": "Excluir"
     },
     "CARD_CONTEXT_MENU": {
-      "PENDING": "Deixar pendente",
-      "RESOLVED": "Marcar como resolvida",
       "MARK_AS_UNREAD": "Marcar como não lida",
       "MARK_AS_READ": "Marcar como lida",
-      "REOPEN": "Reabrir ticket",
-      "SNOOZE": {
-        "TITLE": "Adiar",
-        "NEXT_REPLY": "Até a próxima resposta",
-        "TOMORROW": "Até amanhã",
-        "NEXT_WEEK": "Até a próxima semana"
-      },
       "ASSIGN_AGENT": "Atribuir Agente",
-      "ASSIGN_LABEL": "Atribuir etiqueta",
-      "SEARCH_LABELS": "Pesquisar etiquetas",
-      "NO_LABELS_FOUND": "Nenhuma etiqueta encontrada",
+      "ASSIGN_LABEL": "Atribuir tag",
+      "SEARCH_LABELS": "Pesquisar tags",
+      "NO_LABELS_FOUND": "Nenhuma tag encontrada",
       "AGENTS_LOADING": "Carregando agentes...",
-      "ASSIGN_TEAM": "Atribuir time",
+      "ASSIGN_TEAM": "Atribuir grupo",
       "DELETE": "Excluir ticket",
       "OPEN_IN_NEW_TAB": "Abrir em nova aba",
       "COPY_LINK": "Copiar link do ticket",
@@ -277,16 +236,16 @@
           "FAILED": "Não foi possível atribuir agente. Por favor, tente novamente."
         },
         "LABEL_ASSIGNMENT": {
-          "SUCCESFUL": "Etiqueta #{labelName} atribuída para o ticket {conversationId}",
-          "FAILED": "Não foi possível atribuir etiqueta. Por favor, tente novamente."
+          "SUCCESFUL": "Tag #{labelName} atribuída para o ticket {conversationId}",
+          "FAILED": "Não foi possível atribuir tag. Por favor, tente novamente."
         },
         "LABEL_REMOVAL": {
-          "SUCCESFUL": "Etiqueta #{labelName} removida do ticket com id {conversationId}",
-          "FAILED": "Não foi possível remover a etiqueta. Por favor, tente novamente."
+          "SUCCESFUL": "Tag #{labelName} removida do ticket com id {conversationId}",
+          "FAILED": "Não foi possível remover a tag. Por favor, tente novamente."
         },
         "TEAM_ASSIGNMENT": {
-          "SUCCESFUL": "Time {team} atribuído para o ID do ticket {conversationId}",
-          "FAILED": "Não foi possível atribuir time. Por favor, tente novamente."
+          "SUCCESFUL": "Grupo {team} atribuído para o id de ticket {conversationId}",
+          "FAILED": "Não foi possível atribuir grupo. Por favor, tente novamente."
         }
       }
     },
@@ -325,6 +284,7 @@
       "COPILOT_THINKING": "O Copiloto está pensando",
       "EMAIL_HEAD": {
         "TO": "Para",
+        "ADD_BCC": "Adicionar cco",
         "CC": {
           "LABEL": "CC",
           "PLACEHOLDER": "E-mails separados por vírgulas",
@@ -335,11 +295,7 @@
           "PLACEHOLDER": "E-mails separados por vírgulas",
           "ERROR": "Por favor, insira endereços de e-mail válidos"
         },
-        "SUBJECT": {
-          "LABEL": "Assunto",
-          "PLACEHOLDER": "Digite o assunto"
-        },
-        "ADD_BCC": "Adicionar cco"
+        "EDIT_TO": "Editar destinatário"
       },
       "UNDEFINED_VARIABLES": {
         "TITLE": "Variáveis não definidas",
@@ -350,23 +306,23 @@
         }
       },
       "QUOTED_REPLY": {
-        "SHOW_TOOLTIP": "Mostrar conteúdo recortado",
-        "HIDE_TOOLTIP": "Ocultar conteúdo recortado",
-        "REMOVE": "Remover texto citado",
         "ENABLE_TOOLTIP": "Incluir o encadeamento de e-mails citado",
         "DISABLE_TOOLTIP": "Não incluir o encadeamento de e-mails citado",
         "REMOVE_PREVIEW": "Remover o encadeamento de e-mails citado",
         "COLLAPSE": "Recolher a prévia",
         "EXPAND": "Expandir a prévia"
-      }
+      },
+      "SUBMIT_AS": "Enviar como {status}",
+      "SUBMIT_AS_TOOLTIP": "Enviar e mudar o status do ticket",
+      "SEND_AS": "Enviar como {status}"
     },
-    "VISIBLE_TO_AGENTS": "Mensagem Privada: Apenas visível para você e seu time",
+    "VISIBLE_TO_AGENTS": "Mensagem Privada: Apenas visível para você e seu grupo",
     "CHANGE_STATUS": "Estado do ticket mudou",
     "CHANGE_STATUS_FAILED": "Mudança de status do ticket falhou",
     "CHANGE_AGENT": "Novo agente atribuído",
     "CHANGE_AGENT_FAILED": "Falha ao atribuir outro agente",
-    "ASSIGN_LABEL_SUCCESFUL": "Etiqueta atribuída com sucesso",
-    "ASSIGN_LABEL_FAILED": "Falha ao atribuir etiqueta",
+    "ASSIGN_LABEL_SUCCESFUL": "Tag atribuída com sucesso",
+    "ASSIGN_LABEL_FAILED": "Falha ao atribuir tag",
     "CHANGE_TEAM": "Status do ticket mudou",
     "SUCCESS_DELETE_CONVERSATION": "Ticket excluído com sucesso",
     "FAIL_DELETE_CONVERSATION": "Não foi possível excluir o ticket! Tente novamente",
@@ -376,7 +332,7 @@
     "SENT_BY": "Enviado por:",
     "BOT": "Robôs",
     "NATIVE_APP": "Aplicativo nativo",
-    "NATIVE_APP_ADVISORY": "Esta mensagem foi enviada a partir do aplicativo nativo. Responda pelo ServiceDesk para manter a janela de mensagens ativa.",
+    "NATIVE_APP_ADVISORY": "Esta mensagem foi enviada a partir do aplicativo nativo. Responda pelo Chatwoot para manter a janela de mensagens ativa.",
     "SEND_FAILED": "Não foi possível enviar a mensagem! Tente novamente",
     "TRY_AGAIN": "tentar novamente",
     "ASSIGNMENT": {
@@ -387,7 +343,6 @@
     "CONTEXT_MENU": {
       "COPY": "Copiar",
       "REPLY_TO": "Responder mensagem",
-      "FORWARD_EMAIL": "Encaminhar e-mail",
       "DELETE": "Excluir",
       "CREATE_A_CANNED_RESPONSE": "Adicionar às respostas prontas",
       "TRANSLATE": "Traduzir",
@@ -420,7 +375,7 @@
       }
     },
     "SIDEBAR": {
-      "CONTACT": "Contexto",
+      "CONTACT": "Cliente",
       "COPILOT": "Copiloto"
     },
     "VOICE_WIDGET": {
@@ -437,10 +392,120 @@
       "UNMUTE": "Desilenciar microfone",
       "VIEW_CHAT_HISTORY": "Ver histórico do ticket",
       "GO_TO_CONVERSATION": "Ir para o ticket"
-    }
+    },
+    "TICKET_STATUS": {
+      "new_ticket": "Novo",
+      "open": "Aberto",
+      "waiting_on_customer": "Pendente",
+      "on_hold": "Em espera",
+      "resolved": "Resolvido",
+      "closed": "Fechado",
+      "pending": "Com o robô"
+    },
+    "TICKET_FIELDS": {
+      "TITLE": "Ticket",
+      "SUBJECT": "Assunto",
+      "SUBJECT_PLACEHOLDER": "Adicione um assunto",
+      "TYPE": "Tipo",
+      "TYPE_PLACEHOLDER": "Selecione um tipo",
+      "NO_TYPE": "-",
+      "DUE_DATE": "Vencimento",
+      "COMPANY": "Empresa",
+      "NO_COMPANY": "Sem empresa",
+      "UPDATED": "Ticket atualizado",
+      "UPDATE_FAILED": "Não foi possível atualizar o ticket",
+      "TYPES": {
+        "question": "Pergunta",
+        "incident": "Incidente",
+        "problem": "Problema",
+        "task": "Tarefa"
+      },
+      "CC": "Em cópia (CC)",
+      "CC_PLACEHOLDER": "Adicione um e-mail para copiar",
+      "CC_ADD": "Adicionar",
+      "CC_REMOVE": "Remover {email}",
+      "CC_EMPTY": "Ninguém em cópia",
+      "PROBLEM": "Problema",
+      "PROBLEM_PLACEHOLDER": "Número do ticket de problema",
+      "INCIDENTS": "Incidentes ({count})"
+    },
+    "TICKET_EVENTS": {
+      "TITLE": "Eventos do ticket",
+      "EMPTY": "Nenhum evento ainda",
+      "LOAD_MORE": "Carregar eventos anteriores",
+      "CREATED": "{author} criou o ticket",
+      "CHANGED": "{author} alterou {field}",
+      "PUBLIC_COMMENT": "{author} adicionou uma resposta pública",
+      "PRIVATE_COMMENT": "{author} adicionou uma nota interna",
+      "SYSTEM": "Sistema",
+      "EMPTY_VALUE": "-",
+      "VIA": {
+        "agent": "agente",
+        "customer": "cliente",
+        "rule": "regra",
+        "bot": "robô",
+        "system": "sistema"
+      },
+      "FIELDS": {
+        "status": "Status",
+        "priority": "Prioridade",
+        "assignee_id": "Atribuído",
+        "team_id": "Grupo",
+        "subject": "Assunto",
+        "ticket_type": "Tipo",
+        "due_at": "Vencimento",
+        "company_id": "Empresa",
+        "contact_id": "Solicitante",
+        "cached_label_list": "Tags",
+        "ccs": "Em cópia (CC)",
+        "problem_id": "Problema",
+        "satisfaction": "Satisfação"
+      },
+      "CHANGE_VALUES": "{from} → {to}",
+      "META": "{via} · {time}",
+      "REDACTED": "{author} redigiu um comentário"
+    },
+    "CLOSED_TICKET_BANNER": "Este ticket está fechado. Um novo e-mail do cliente abre um ticket de acompanhamento.",
+    "FOLLOWUP_OF": "Acompanhamento do #{id}",
+    "SLA_BADGE": {
+      "BREACHED": "SLA violado",
+      "MINUTES": "{count} min",
+      "HOURS": "{count} h",
+      "DAYS": "{count} d",
+      "TOOLTIP": "Tempo até a próxima meta de SLA"
+    },
+    "MERGED_INTO": "Mesclado no #{id}",
+    "SATISFACTION": {
+      "LABEL": "Satisfação",
+      "unoffered": "Não oferecida",
+      "offered": "Oferecida",
+      "good": "Boa",
+      "bad": "Ruim"
+    },
+    "TICKET_NUMBER": "Ticket #{id}",
+    "NO_SUBJECT": "(sem assunto)",
+    "CREATED_AGO": "Criado {time}",
+    "CHANNEL_CHIP": {
+      "email": "Pelo e-mail",
+      "whatsapp": "Pelo WhatsApp",
+      "api": "Pela API",
+      "web_widget": "Pelo chat do site",
+      "telegram": "Pelo Telegram",
+      "sms": "Por SMS",
+      "twilio_sms": "Por SMS",
+      "facebook_page": "Pelo Facebook",
+      "instagram": "Pelo Instagram",
+      "line": "Pelo LINE",
+      "tiktok": "Pelo TikTok",
+      "twitter_profile": "Pelo X"
+    },
+    "REQUESTER": "Solicitante",
+    "APPLY_MACRO": "Aplicar macro",
+    "APPLY_MACRO_SEARCH": "Buscar macros",
+    "EDIT_SUBJECT": "Clique para editar o assunto"
   },
   "EMAIL_TRANSCRIPT": {
-    "TITLE": "Enviar transcrição do ticket",
+    "TITLE": "Enviar transcrição de ticket",
     "DESC": "Enviar uma cópia da transcrição do ticket para o endereço de e-mail especificado",
     "SUBMIT": "Enviar",
     "CANCEL": "Cancelar",
@@ -466,40 +531,40 @@
     "READ_LATEST_UPDATES": "Leia as últimas atualizações",
     "ALL_CONVERSATION": {
       "TITLE": "Todos os seus tickets em um só lugar",
-      "DESCRIPTION": "Veja todos os tickets dos seus clientes em um único painel. Você pode filtrar os tickets pelo canal de entrada, rótulo e status.",
+      "DESCRIPTION": "Veja todos os tickets dos seus clientes em um único painel. Você pode filtrar os tickets pelo canal de entrada, tag e status.",
       "NEW_LINK": "Clique aqui para criar uma caixa de entrada"
     },
     "TEAM_MEMBERS": {
-      "TITLE": "Convidar membros de seu time",
+      "TITLE": "Convidar membros de seu grupo",
       "DESCRIPTION": "Já que você está se preparando para conversar com seu cliente, traga seus colegas para ajudá-lo. Você pode convidar seus colegas adicionando os endereços de e-mail deles na lista de agentes.",
-      "NEW_LINK": "Clique aqui para convidar um membro do time"
+      "NEW_LINK": "Clique aqui para convidar um membro do grupo"
     },
     "LABELS": {
-      "TITLE": "Organizar tickets com etiquetas",
-      "DESCRIPTION": "Etiquetas fornecem uma forma mais fácil de organizar os seus tickets. Criar algumas etiquetas como #solicitação-suporte, #fatura-assunto etc., assim você poderá futuramente utiliza-las em um ticket posteriormente.",
-      "NEW_LINK": "Clique aqui para criar etiquetas"
+      "TITLE": "Organizar tickets com tags",
+      "DESCRIPTION": "Tags fornecem uma forma mais fácil de organizar o seu ticket. Criar algumas tags como #solicitação-suporte, #fatura-assunto etc., assim você poderá futuramente utiliza-las em um ticket posteriormente.",
+      "NEW_LINK": "Clique aqui para criar tags"
     },
     "CANNED_RESPONSES": {
       "TITLE": "Criar respostas prontas",
-      "DESCRIPTION": "Os modelos de respostas prontas ajudam você a responder rapidamente a um ticket. Os agentes podem digitar o caractere '/' seguido pelo atalho para inserir uma resposta.",
+      "DESCRIPTION": "Os modelos de respostas prontas ajudam você a responder rapidamente o um ticket. Os agentes podem digitar o caractere '/' seguido pelo atalho para inserir uma resposta.",
       "NEW_LINK": "Clique aqui para criar uma resposta pronta"
     }
   },
   "CONVERSATION_SIDEBAR": {
     "ASSIGNEE_LABEL": "Agente atribuído",
     "SELF_ASSIGN": "Atribuir a mim",
-    "TEAM_LABEL": "Time atribuído",
+    "TEAM_LABEL": "Grupo atribuído",
     "SELECT": {
       "PLACEHOLDER": "Nenhuma"
     },
     "ACCORDION": {
       "CONTACT_DETAILS": "Detalhes do contato",
       "CONVERSATION_ACTIONS": "Ações do ticket",
-      "CONVERSATION_LABELS": "Etiquetas do ticket",
+      "CONVERSATION_LABELS": "Tags do ticket",
       "CONVERSATION_INFO": "Informação do ticket",
       "CONTACT_NOTES": "Notas do contato",
       "CONTACT_ATTRIBUTES": "Atributos do contato",
-      "PREVIOUS_CONVERSATION": "Tickets anteriores",
+      "PREVIOUS_CONVERSATION": "Histórico de interações",
       "MACROS": "Macros",
       "LINEAR_ISSUES": "Problemas do Linear vinculados",
       "SHOPIFY_ORDERS": "Pedidos do Shopify",
@@ -565,29 +630,20 @@
     "BCC": "CCO",
     "CC": "Cc",
     "SUBJECT": "Assunto",
-    "DATE": "Data",
     "EXPAND": "Expandir e-mail"
   },
-  "FORWARD_EMAIL": {
-    "HEADER_TITLE": "---------- Mensagem encaminhada ---------",
-    "TO_LABEL": "Para:",
-    "TO_PLACEHOLDER": "Digite ao menos 2 caracteres para buscar por e-mail",
-    "MESSAGE_PLACEHOLDER": "Adicionar uma mensagem (opcional)",
-    "FORWARDED_TO": "Encaminhado para {emails}",
-    "CONTACT_CANNOT_SEE": "{name} não vê isto"
-  },
   "CONVERSATION_PARTICIPANTS": {
-    "SIDEBAR_MENU_TITLE": "Participantes",
-    "SIDEBAR_TITLE": "Participantes do ticket",
+    "SIDEBAR_MENU_TITLE": "Seguindo",
+    "SIDEBAR_TITLE": "Seguidores do ticket",
     "NO_RECORDS_FOUND": "Nenhum resultado encontrado",
-    "ADD_PARTICIPANTS": "Selecionar participantes",
-    "REMANING_PARTICIPANTS_TEXT": "+{count} participantes",
-    "REMANING_PARTICIPANT_TEXT": "+{count} participante",
-    "TOTAL_PARTICIPANTS_TEXT": "{count} pessoas estão participando.",
-    "TOTAL_PARTICIPANT_TEXT": "{count} pessoa está participando.",
-    "NO_PARTICIPANTS_TEXT": "Ninguém está participando!",
-    "WATCH_CONVERSATION": "Participar do ticket",
-    "YOU_ARE_WATCHING": "Você está participando",
+    "ADD_PARTICIPANTS": "Selecionar seguidores",
+    "REMANING_PARTICIPANTS_TEXT": "+{count} seguidores",
+    "REMANING_PARTICIPANT_TEXT": "+{count} seguidor",
+    "TOTAL_PARTICIPANTS_TEXT": "{count} pessoas estão seguindo.",
+    "TOTAL_PARTICIPANT_TEXT": "{count} pessoa está seguindo.",
+    "NO_PARTICIPANTS_TEXT": "Ninguém está seguindo este ticket",
+    "WATCH_CONVERSATION": "Seguir ticket",
+    "YOU_ARE_WATCHING": "Você está seguindo",
     "API": {
       "ERROR_MESSAGE": "Não foi possível atualizar, tente novamente!",
       "SUCCESS_MESSAGE": "Participantes atualizados!"
@@ -610,5 +666,98 @@
   },
   "GALLERY_VIEW": {
     "ERROR_DOWNLOADING": "Não foi possível baixar o anexo. Por favor, tente novamente"
+  },
+  "TICKET_HOME": {
+    "TITLE": "Página inicial",
+    "YOUR_WORK": "Seu trabalho",
+    "SHARED_WORK": "Trabalho compartilhado",
+    "DONE_WORK": "Trabalho concluído",
+    "VIEWS": {
+      "mine": "Tickets",
+      "ccs": "Em cópia (CC)",
+      "following": "Seguindo",
+      "solved": "Últimos 30 dias"
+    },
+    "TICKETS_COUNT": "{count} tickets",
+    "EMPTY": "Nenhum ticket aqui",
+    "LOAD_MORE": "Carregar mais",
+    "STATS": {
+      "TICKET_TITLE": "Estatísticas do ticket",
+      "THIS_WEEK": "Esta semana",
+      "GOOD": "Bom",
+      "BAD": "Ruim",
+      "SOLVED": "Resolvido",
+      "SATISFACTION_TITLE": "Estatísticas de satisfação",
+      "LAST_60_DAYS": "60 dias",
+      "YOU": "Você",
+      "SUPPORT": "Central de suporte",
+      "NO_RATINGS": "-",
+      "OPEN_TITLE": "Tickets abertos",
+      "YOUR_GROUPS": "Seus grupos",
+      "UPDATES_TITLE": "Atualizações",
+      "NO_UPDATES": "Nenhuma atualização recente",
+      "COMMENTED": "{author} comentou em {subject}",
+      "CHANGED": "{author} atualizou {subject}",
+      "SOMEONE": "Alguém"
+    }
+  },
+  "TICKET_MERGE": {
+    "ACTION": "Mesclar em outro ticket",
+    "TITLE": "Mesclar o ticket #{id}",
+    "DESCRIPTION": "Este ticket será fechado e mesclado no ticket escolhido. O solicitante dele entra em cópia nesse ticket.",
+    "TARGET": "Mesclar no ticket número",
+    "NOT_FOUND": "Ticket não encontrado",
+    "SOURCE_COMMENT": "Comentário no ticket #{id}",
+    "TARGET_COMMENT": "Comentário no ticket de destino",
+    "COMMENT_PLACEHOLDER": "Deixe vazio para o comentário padrão",
+    "PUBLIC": "Os solicitantes podem ver estes comentários",
+    "IRREVERSIBLE": "A mesclagem não pode ser desfeita.",
+    "CONFIRM": "Mesclar",
+    "DONE": "Mesclado no ticket #{id}",
+    "ERROR": "Não foi possível mesclar os tickets"
+  },
+  "TICKET_SPAM": {
+    "ACTION": "Marcar como spam",
+    "TITLE": "Marcar este ticket como spam?",
+    "DESCRIPTION": "O ticket vai para os excluídos e o solicitante é bloqueado: os próximos e-mails dele ficam suspensos.",
+    "CONFIRM": "Marcar como spam",
+    "DONE": "Ticket marcado como spam"
+  },
+  "TICKET_REDACTION": {
+    "ACTION": "Redigir",
+    "TITLE": "Redigir este comentário",
+    "DESCRIPTION": "A redação é permanente: o texto é substituído por blocos em todo lugar onde fica guardado, inclusive no e-mail original.",
+    "TEXT": "Texto a redigir",
+    "TEXT_PLACEHOLDER": "Deixe vazio para redigir o comentário inteiro",
+    "ATTACHMENTS": "Excluir os anexos ({count})",
+    "CONFIRM": "Redigir",
+    "DONE": "Comentário redigido",
+    "ERROR": "Não foi possível redigir o comentário"
+  },
+  "TICKET_QUEUES": {
+    "NO_SUBJECT": "(sem assunto)",
+    "DELETED_AT": "excluído {time}",
+    "DELETED": {
+      "TITLE": "Tickets excluídos",
+      "DESCRIPTION": "Tickets excluídos podem ser restaurados por 30 dias; depois são apagados de vez.",
+      "EMPTY": "Nenhum ticket excluído",
+      "RESTORE": "Restaurar",
+      "DELETE": "Excluir permanentemente",
+      "RESTORED": "Ticket restaurado",
+      "DELETED": "Ticket excluído permanentemente"
+    },
+    "SUSPENDED": {
+      "TITLE": "Tickets suspensos",
+      "DESCRIPTION": "E-mails retidos em vez de virarem tickets. Recupere um para transformá-lo em ticket; eles são apagados após 14 dias.",
+      "EMPTY": "Nenhum ticket suspenso",
+      "RESTORE": "Recuperar",
+      "DELETE": "Excluir",
+      "RESTORED": "E-mail recuperado",
+      "DELETED": "E-mail excluído",
+      "REASONS": {
+        "blocked_sender": "Remetente bloqueado",
+        "automated_response": "Resposta automática"
+      }
+    }
   }
 }

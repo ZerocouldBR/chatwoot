@@ -26,6 +26,11 @@ trigger_hourly_scheduled_items_job:
   queue: scheduled_jobs
 
 # executed At every minute..
+process_sla_breaches_job:
+  cron: '*/1 * * * *'
+  class: 'Sla::ProcessBreachesJob'
+  queue: scheduled_jobs
+
 trigger_imap_email_inboxes_job:
   cron: '*/1 * * * *'
   class: 'Inboxes::FetchImapEmailInboxesJob'

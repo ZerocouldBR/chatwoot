@@ -1,4 +1,8 @@
 json.settings resource.settings
+# ServiceDesk: valor efetivo (conta ou padrão da instalação) do formulário obrigatório ao resolver (M1)
+json.servicedesk do
+  json.require_form_on_resolve resource.servicedesk_require_form_on_resolve?
+end
 json.reporting_timezone ActiveSupport::TimeZone[resource.reporting_timezone].tzinfo.name if resource.reporting_timezone.present?
 json.created_at resource.created_at
 if resource.custom_attributes.present?

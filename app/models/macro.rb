@@ -10,11 +10,13 @@
 #  updated_at    :datetime         not null
 #  account_id    :bigint           not null
 #  created_by_id :bigint
+#  team_id       :bigint
 #  updated_by_id :bigint
 #
 # Indexes
 #
 #  index_macros_on_account_id  (account_id)
+#  index_macros_on_team_id     (team_id)
 #
 class Macro < ApplicationRecord
   include Rails.application.routes.url_helpers
@@ -26,7 +28,11 @@ class Macro < ApplicationRecord
              class_name: :User, optional: true
   has_many_attached :files
 
-  enum visibility: { personal: 0, global: 1 }
+  belongs_to :team, optional: true
+
+  enum visibility: { personal: 0, global: 1, team: 2 }
+
+  validates :team, presence: true, if: :team?
 
   validate :json_actions_format
   include Servicedesk::ActionsValidatable
@@ -37,12 +43,14 @@ class Macro < ApplicationRecord
 
   def set_visibility(user, params)
     self.visibility = params[:visibility]
+    self.team_id = team? ? params[:team_id] : nil
     self.visibility = :personal if user.agent?
   end
 
   def self.with_visibility(user, _params)
     records = Current.account.macros.global
     records = records.or(personal.where(created_by_id: user.id, account_id: Current.account.id))
+    records = records.or(team.where(team_id: user.team_ids, account_id: Current.account.id))
     records.order(:id)
   end
 

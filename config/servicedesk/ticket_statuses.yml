@@ -4,24 +4,24 @@
 # O frontend tem a mesma tabela em app/javascript/dashboard/servicedesk/ticketFormsMeta.json (chave "statuses");
 # spec/services/servicedesk/ticket_statuses_spec.rb falha se as duas divergirem.
 #
-# Status canônico (decisão 1): o rótulo exato fica no atributo de conversa `zd_status` e o status nativo do
-# Chatwoot é derivado da CATEGORIA:
-#   new / open      -> open
-#   pending / hold  -> snoozed
-#   solved / closed -> resolved
-# O status nativo `pending` do Chatwoot NÃO é usado: fica reservado à fila do bot/IA.
+# Status nativo (v3, modelo do Victor): o rótulo exato fica no atributo de conversa `zd_status` e o status
+# nativo do ticket é derivado da CATEGORIA, com o mesmo mapa do Zendesk:
+#   new -> new_ticket, open -> open, pending -> waiting_on_customer ("Pendente"), hold -> on_hold ("Em espera"),
+#   solved -> resolved, closed -> closed
+# O status nativo `pending` NÃO é usado: fica reservado à fila do bot/IA. Como no Zendesk, macros e automações
+# não levam um ticket para Novo nem para Fechado (set_ticket_status recusa essas categorias).
 #
 # Para mudar a lista: altere este arquivo E o ticketFormsMeta.json (gerador do painel) e a lista de valores do
 # atributo `zd_status` da conta (provision_fields_extra.rb). `origin_id` é o id do status no sistema de origem.
 attribute_key: zd_status
 
 categories:
-  new: open
+  new: new_ticket
   open: open
-  pending: snoozed
-  hold: snoozed
+  pending: waiting_on_customer
+  hold: on_hold
   solved: resolved
-  closed: resolved
+  closed: closed
 
 statuses:
   - { label: 'Novo', category: new, active: true, origin_id: 20487430798747 }

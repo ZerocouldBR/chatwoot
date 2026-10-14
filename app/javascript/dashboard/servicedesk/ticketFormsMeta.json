@@ -338,7 +338,7 @@
     "Novo": {
       "id": 20487430798747,
       "category": "new",
-      "native": "open",
+      "native": "new_ticket",
       "active": true
     },
     "Aberto": {
@@ -368,49 +368,49 @@
     "Pendente": {
       "id": 20487412004251,
       "category": "pending",
-      "native": "snoozed",
+      "native": "waiting_on_customer",
       "active": true
     },
     "Pendente Autenticação": {
       "id": 51446269872667,
       "category": "pending",
-      "native": "snoozed",
+      "native": "waiting_on_customer",
       "active": false
     },
     "Aguardando Desenvolvimento": {
       "id": 20487430857883,
       "category": "hold",
-      "native": "snoozed",
+      "native": "on_hold",
       "active": false
     },
     "Escalonado": {
       "id": 21790215283483,
       "category": "hold",
-      "native": "snoozed",
+      "native": "on_hold",
       "active": false
     },
     "Desenvolvimento": {
       "id": 21790243451291,
       "category": "hold",
-      "native": "snoozed",
+      "native": "on_hold",
       "active": true
     },
     "Retorno Integrações": {
       "id": 22412122152347,
       "category": "hold",
-      "native": "snoozed",
+      "native": "on_hold",
       "active": false
     },
     "Devolvido": {
       "id": 26904974432923,
       "category": "hold",
-      "native": "snoozed",
+      "native": "on_hold",
       "active": true
     },
     "Desenvolvimento Concluído": {
       "id": 26950275108635,
       "category": "hold",
-      "native": "snoozed",
+      "native": "on_hold",
       "active": true
     },
     "Resolvido": {
@@ -438,9 +438,17 @@
       "active": false
     }
   },
+  "category_default": {
+    "new": "Novo",
+    "open": "Aberto",
+    "pending": "Pendente",
+    "hold": "Desenvolvimento",
+    "solved": "Resolvido"
+  },
   "native_status_default": {
     "open": "Aberto",
-    "snoozed": "Pendente",
+    "waiting_on_customer": "Pendente",
+    "on_hold": "Desenvolvimento",
     "resolved": "Resolvido"
   }
 }

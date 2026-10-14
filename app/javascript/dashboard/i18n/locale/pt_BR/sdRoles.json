@@ -1,0 +1,122 @@
+{
+  "SD_ROLES": {
+    "MENU": "Papéis",
+    "HEADER": "Papéis",
+    "DESCRIPTION": "Papéis definem o que cada agente pode ver e fazer, como no Zendesk: acesso aos tickets, resposta pública ou só nota interna, edição, relatórios, macros e views.",
+    "LOADING": "Carregando papéis...",
+    "EMPTY": "Nenhum papel nesta conta.",
+    "NEW": "Novo papel",
+    "EDIT": "Editar",
+    "SYSTEM_BADGE": "padrão",
+    "TABLE": {
+      "NAME": "Papel",
+      "BASE": "Tipo",
+      "MEMBERS": "Agentes",
+      "ACTIONS": "Ações"
+    },
+    "BASE": {
+      "AGENT": "Agente",
+      "ADMINISTRATOR": "Administrador"
+    },
+    "DELETE": {
+      "BUTTON": "Excluir",
+      "CONFIRM": "Excluir o papel {name}?",
+      "SUCCESS": "Papel excluído",
+      "ERROR": "Não foi possível excluir o papel"
+    },
+    "API": {
+      "LOAD_ERROR": "Não foi possível carregar os papéis"
+    },
+    "FORM": {
+      "NEW_TITLE": "Novo papel",
+      "EDIT_TITLE": "Editar papel",
+      "NAME": "Nome",
+      "DESCRIPTION": "Descrição",
+      "BASE": "Tipo de papel",
+      "ADMIN_ALL": "Administradores têm todas as permissões e acesso às configurações.",
+      "PENDING": "(depende de outro módulo)",
+      "NAME_REQUIRED": "Informe o nome do papel",
+      "SAVED": "Papel salvo",
+      "ERROR": "Não foi possível salvar o papel",
+      "CANCEL": "Cancelar",
+      "SAVE": "Salvar"
+    },
+    "GROUPS": {
+      "TICKETS": "Tickets",
+      "PEOPLE": "Pessoas",
+      "TOOLS": "Ferramentas"
+    },
+    "PERMISSIONS": {
+      "TICKET_ACCESS": "Acesso aos tickets",
+      "TICKET_COMMENT_PUBLIC": "Pode responder ao cliente (comentário público)",
+      "TICKET_EDIT": "Pode editar propriedades do ticket (status, prioridade, responsável, campos)",
+      "TICKET_EDIT_TAGS": "Pode editar etiquetas",
+      "TICKET_ASSIGNABLE": "Pode ser responsável por tickets",
+      "TICKET_ASSIGN_ANY_TEAM": "Pode atribuir a qualquer grupo",
+      "TICKET_MERGE": "Pode mesclar tickets",
+      "TICKET_DELETE": "Pode excluir tickets",
+      "TICKET_REDACT": "Pode apagar mensagens",
+      "TICKET_MODIFY_CLOSED": "Pode alterar tickets fechados",
+      "TICKET_VIEW_DELETED": "Pode ver tickets excluídos",
+      "SUSPENDED_TICKETS_MANAGE": "Pode gerenciar tickets suspensos",
+      "CONTACTS_LIST": "Lista de usuários finais",
+      "CONTACTS_EDIT": "Perfil do usuário final",
+      "ORGANIZATIONS_EDIT": "Pode editar organizações",
+      "TEAM_DIRECTORY": "Membros da equipe",
+      "PROFILE_EDIT_OWN": "Pode alterar o próprio nome, alias, assinatura e foto",
+      "MACROS": "Macros",
+      "VIEWS": "Views",
+      "VIEWS_EXPORT": "Pode exportar views",
+      "REPORTS": "Relatórios",
+      "KB": "Central de ajuda"
+    },
+    "LEVELS": {
+      "TICKET_ACCESS": {
+        "ALL": "Todos",
+        "GROUPS": "Só dos próprios grupos",
+        "ASSIGNED": "Só os atribuídos a ele",
+        "REQUESTED": "Só os que ele abriu"
+      },
+      "CONTACTS_LIST": {
+        "NONE": "Sem acesso",
+        "FULL": "Pode ver"
+      },
+      "CONTACTS_EDIT": {
+        "READONLY": "Só leitura",
+        "FULL": "Pode editar"
+      },
+      "MACROS": {
+        "READONLY": "Só usar",
+        "PERSONAL": "Gerenciar pessoais",
+        "FULL": "Gerenciar pessoais e compartilhadas"
+      },
+      "VIEWS": {
+        "READONLY": "Só usar",
+        "PERSONAL": "Gerenciar pessoais",
+        "FULL": "Gerenciar pessoais e compartilhadas"
+      },
+      "REPORTS": {
+        "NONE": "Sem acesso",
+        "READONLY": "Só ver",
+        "FULL": "Ver e gerenciar"
+      },
+      "KB": {
+        "READONLY": "Só ler",
+        "FULL": "Gerenciar"
+      },
+      "TEAM_DIRECTORY": {
+        "NONE": "Sem acesso",
+        "READONLY": "Só ver",
+        "ALL": "Gerenciar"
+      }
+    },
+    "REPLY": {
+      "NOTE_ONLY": "Seu papel permite apenas notas internas neste ticket."
+    },
+    "AGENT": {
+      "ROLE_LABEL": "Papel",
+      "ROLE_NONE": "Sem papel (padrão do sistema)",
+      "ROLE_HINT": "O papel define acesso aos tickets, resposta pública e menus, como no Zendesk."
+    }
+  }
+}

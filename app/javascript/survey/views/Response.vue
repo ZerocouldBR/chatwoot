@@ -1,11 +1,11 @@
 <script>
 import { useAlert } from 'dashboard/composables';
-import Branding from 'shared/components/Branding.vue';
 import Spinner from 'shared/components/Spinner.vue';
 import Rating from 'survey/components/Rating.vue';
 import Feedback from 'survey/components/Feedback.vue';
 import Banner from 'survey/components/Banner.vue';
 import StarRating from 'shared/components/StarRating.vue';
+import GoodBadRating from 'shared/components/GoodBadRating.vue';
 import { useMessageFormatter } from 'shared/composables/useMessageFormatter';
 import { getSurveyDetails, updateSurvey } from 'survey/api/survey';
 
@@ -14,12 +14,12 @@ import { CSAT_DISPLAY_TYPES } from 'shared/constants/messages';
 export default {
   name: 'Response',
   components: {
-    Branding,
     Rating,
     Spinner,
     Banner,
     Feedback,
     StarRating,
+    GoodBadRating,
   },
   setup() {
     const { formatMessage } = useMessageFormatter();
@@ -63,6 +63,9 @@ export default {
     },
     isStarType() {
       return this.displayType === CSAT_DISPLAY_TYPES.STAR;
+    },
+    isGoodBadType() {
+      return this.displayType === CSAT_DISPLAY_TYPES.GOOD_BAD;
     },
     shouldShowBanner() {
       return this.isRatingSubmitted || this.errorMessage;
@@ -174,7 +177,7 @@ export default {
       class="flex flex-col w-full h-full bg-n-solid-1 rounded-lg border border-solid border-n-weak shadow-md lg:w-2/5 lg:h-auto"
     >
       <div class="w-full px-12 pt-12 pb-6 m-auto my-0">
-        <img v-if="logo" :src="logo" alt="Chatwoot logo" class="mb-6 logo" />
+        <img v-if="logo" :src="logo" alt="logo" class="mb-6 logo" />
         <div
           v-if="!isRatingSubmitted"
           v-dompurify-html="formattedMessageContent"
@@ -205,6 +208,14 @@ export default {
           class="[&>button>span]:text-4xl !justify-start !px-0"
           @select-rating="selectRating"
         />
+        <GoodBadRating
+          v-if="isGoodBadType"
+          :selected-rating="selectedRating"
+          :is-disabled="isFeedbackSubmitted || isUpdating"
+          :good-label="$t('SURVEY.GOOD_BAD.GOOD')"
+          :bad-label="$t('SURVEY.GOOD_BAD.BAD')"
+          @select-rating="selectRating"
+        />
         <Feedback
           v-if="enableFeedbackForm"
           :is-updating="isUpdating"
@@ -213,9 +224,7 @@ export default {
           @send-feedback="sendFeedback"
         />
       </div>
-      <div class="mb-3">
-        <Branding />
-      </div>
+      <div class="mb-3 p-3" />
     </div>
   </div>
 </template>

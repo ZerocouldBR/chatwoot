@@ -162,6 +162,22 @@ class Rack::Attack
     end
   end
 
+  ## ServiceDesk B2B: login do usuário final na Central de Ajuda (link mágico e SSO JWT)
+  throttle('portal_customer_login/ip', limit: 10, period: 10.minutes) do |req|
+    req.ip if req.post? && req.path_without_extensions.match?(%r{\A/hc/[^/]+/[^/]+/login(/verify)?\z})
+  end
+
+  throttle('portal_customer_login/email', limit: 5, period: 30.minutes) do |req|
+    if req.post? && req.path_without_extensions.match?(%r{\A/hc/[^/]+/[^/]+/login\z})
+      email = req.params['email'].to_s.downcase.gsub(/\s+/, '')
+      email.presence
+    end
+  end
+
+  throttle('portal_customer_sso/ip', limit: 30, period: 5.minutes) do |req|
+    req.ip if req.get? && req.path_without_extensions.match?(%r{\A/hc/[^/]+/[^/]+/sso/jwt\z})
+  end
+
   ## Reset password throttling
   throttle('reset_password/ip', limit: 5, period: 30.minutes) do |req|
     req.ip if req.path_without_extensions == '/auth/password' && req.post?

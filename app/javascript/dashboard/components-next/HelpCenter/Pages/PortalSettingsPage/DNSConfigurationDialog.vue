@@ -102,7 +102,8 @@ defineExpose({ dialogRef });
           <p class="mb-0 text-sm text-n-slate-12">
             {{
               t(
-                'HELP_CENTER.PORTAL_SETTINGS.CONFIGURATION_FORM.CUSTOM_DOMAIN.DNS_CONFIGURATION_DIALOG.DESCRIPTION'
+                'HELP_CENTER.PORTAL_SETTINGS.CONFIGURATION_FORM.CUSTOM_DOMAIN.DNS_CONFIGURATION_DIALOG.DESCRIPTION',
+                { domain }
               )
             }}
           </p>

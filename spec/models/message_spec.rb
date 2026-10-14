@@ -260,8 +260,14 @@ RSpec.describe Message do
       expect(message.conversation.open?).to be true
     end
 
-    it 'reopens snoozed conversation when the message is from a contact' do
-      conversation.snoozed!
+    it 'reopens an on-hold ticket when the message is from a contact' do
+      conversation.on_hold!
+      message.save!
+      expect(message.conversation.open?).to be true
+    end
+
+    it 'reopens a pending ticket when the customer replies' do
+      conversation.waiting_on_customer!
       message.save!
       expect(message.conversation.open?).to be true
     end

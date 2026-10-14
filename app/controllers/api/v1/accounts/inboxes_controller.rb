@@ -18,7 +18,8 @@ class Api::V1::Accounts::InboxesController < Api::V1::Accounts::BaseController
 
   # Deprecated: This API will be removed in 2.7.0
   def assignable_agents
-    @assignable_agents = @inbox.assignable_agents
+    # ServiceDesk M13: agente light, colaborador e suspensos não podem ser responsáveis
+    @assignable_agents = Servicedesk::Roles::Assignable.filter(Current.account, @inbox.assignable_agents)
   end
 
   def campaigns

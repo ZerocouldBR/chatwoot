@@ -1,7 +1,7 @@
 {
   "AUTOMATION": {
     "HEADER": "Automação",
-    "DESCRIPTION": "A automação pode substituir e simplificar processos existentes que requerem esforço manual, como a adição de etiquetas e a atribuição de tickets ao agente mais adequado. Isso permite que o time se concentre em seus pontos fortes e reduza o tempo gasto em tarefas rotineiras.",
+    "DESCRIPTION": "A automação pode substituir e simplificar processos existentes que requerem esforço manual, como a adição de tags e a atribuição de tickets ao agente mais adequado. Isso permite que o grupo se concentre em seus pontos fortes e reduza o tempo gasto em tarefas rotineiras.",
     "LEARN_MORE": "Aprenda mais sobre automação",
     "COUNT": "{n} automação | {n} automações",
     "HEADER_BTN_TXT": "Criar Automação",
@@ -141,7 +141,7 @@
     "ACTION": {
       "DELETE_MESSAGE": "Você precisa ter pelo menos uma ação para salvar",
       "TEAM_MESSAGE_INPUT_PLACEHOLDER": "Escreva sua mensagem aqui",
-      "TEAM_DROPDOWN_PLACEHOLDER": "Selecione times",
+      "TEAM_DROPDOWN_PLACEHOLDER": "Selecione grupos",
       "EMAIL_INPUT_PLACEHOLDER": "Insira o e-mail",
       "URL_INPUT_PLACEHOLDER": "Insira a URL",
       "INSERT_CONTACT_EMAIL": "Usar o e-mail do contato",
@@ -188,15 +188,15 @@
     },
     "ACTIONS": {
       "ASSIGN_AGENT": "Atribuir ao Agente",
-      "ASSIGN_TEAM": "Atribuir um Time",
+      "ASSIGN_TEAM": "Atribuir um Grupo",
       "REMOVE_ASSIGNED_AGENT": "Remove Assigned Agent",
-      "REMOVE_ASSIGNED_TEAM": "Remover Time Atribuído",
-      "ADD_LABEL": "Adicionar uma Etiqueta",
-      "REMOVE_LABEL": "Remover uma Etiqueta",
-      "SEND_EMAIL_TO_TEAM": "Enviar um e-mail para o Time",
+      "REMOVE_ASSIGNED_TEAM": "Remover Grupo Atribuído",
+      "ADD_LABEL": "Adicionar uma Tag",
+      "REMOVE_LABEL": "Remover uma Tag",
+      "SEND_EMAIL_TO_TEAM": "Enviar um e-mail para o Grupo",
       "SEND_EMAIL_TRANSCRIPT": "Enviar uma transcrição por e-mail",
       "MUTE_CONVERSATION": "Silenciar Ticket",
-      "SNOOZE_CONVERSATION": "Adiar Ticket",
+      "SNOOZE_CONVERSATION": "Colocar Ticket em Espera",
       "RESOLVE_CONVERSATION": "Resolver Ticket",
       "SEND_WEBHOOK_EVENT": "Enviar evento de Webhook",
       "SEND_ATTACHMENT": "Enviar Anexo",
@@ -217,7 +217,7 @@
     "PRIORITY_TYPES": {
       "NONE": "Nenhuma",
       "LOW": "Baixa",
-      "MEDIUM": "Média",
+      "MEDIUM": "Normal",
       "HIGH": "Alta",
       "URGENT": "Urgente"
     },
@@ -236,9 +236,9 @@
       "COMPANY_NAME": "Empresa",
       "REFERER_LINK": "Link de origem",
       "ASSIGNEE_NAME": "Agente atribuído",
-      "TEAM_NAME": "Time",
+      "TEAM_NAME": "Grupo",
       "PRIORITY": "Prioridade",
-      "LABELS": "Etiquetas"
+      "LABELS": "Tags"
     }
   }
 }

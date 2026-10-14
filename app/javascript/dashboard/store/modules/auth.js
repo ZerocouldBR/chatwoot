@@ -29,7 +29,12 @@ export const getters = {
   },
 
   getUISettings($state) {
-    return $state.currentUser.ui_settings || {};
+    // Like Zendesk, the ticket properties panel starts open; agents can still collapse it.
+    return {
+      is_contact_sidebar_open: true,
+      is_conv_actions_open: true,
+      ...($state.currentUser.ui_settings || {}),
+    };
   },
 
   getAuthUIFlags($state) {

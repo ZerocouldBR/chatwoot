@@ -26,6 +26,7 @@ import ReplyBox from './ReplyBox.vue';
 import MessageList from 'next/message/MessageList.vue';
 import ContactConversationLink from './ContactConversationLink.vue';
 import Banner from 'dashboard/components/ui/Banner.vue';
+import wootConstants from 'dashboard/constants/globals';
 import Spinner from 'dashboard/components-next/spinner/Spinner.vue';
 import NextButton from 'dashboard/components-next/button/Button.vue';
 import CollapsedReplyBar from './CollapsedReplyBar.vue';
@@ -284,6 +285,9 @@ export default {
       return META_RESTRICTION_STATUS_URL;
     },
     replyWindowBannerMessage() {
+      if (this.currentChat.status === wootConstants.STATUS_TYPE.CLOSED) {
+        return this.$t('CONVERSATION.CLOSED_TICKET_BANNER');
+      }
       if (this.isAWhatsAppChannel) {
         return this.$t('CONVERSATION.TWILIO_WHATSAPP_CAN_REPLY');
       }

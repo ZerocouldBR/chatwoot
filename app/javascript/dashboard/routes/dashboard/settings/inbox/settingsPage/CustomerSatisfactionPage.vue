@@ -46,7 +46,7 @@ const currentLabel = ref('');
 
 const state = reactive({
   csatSurveyEnabled: false,
-  displayType: 'emoji',
+  displayType: CSAT_DISPLAY_TYPES.GOOD_BAD,
   message: '',
   templateButtonText: 'Please rate us',
   surveyRuleOperator: 'contains',
@@ -150,7 +150,7 @@ const initializeState = () => {
   if (!csat_config) return;
 
   const {
-    display_type: displayType = CSAT_DISPLAY_TYPES.EMOJI,
+    display_type: displayType = CSAT_DISPLAY_TYPES.GOOD_BAD,
     message = '',
     button_text: buttonText = 'Please rate us',
     language = 'en',

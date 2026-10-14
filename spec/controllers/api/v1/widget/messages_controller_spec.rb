@@ -76,6 +76,22 @@ RSpec.describe '/api/v1/widget/messages', type: :request do
     end
 
     context 'when post request is made' do
+      it 'opens a new ticket when the visitor writes after the ticket was closed' do
+        conversation.update!(status: :resolved)
+        conversation.update!(status: :closed)
+
+        post api_v1_widget_messages_url,
+             params: { website_token: web_widget.website_token, message: { content: 'still there?', timestamp: Time.current } },
+             headers: { 'X-Auth-Token' => token },
+             as: :json
+
+        expect(response).to have_http_status(:success)
+        expect(conversation.reload.messages.where(content: 'still there?')).to be_empty
+        new_ticket = contact_inbox.conversations.order(:id).last
+        expect(new_ticket).not_to eq(conversation)
+        expect(new_ticket.messages.where(content: 'still there?')).to exist
+      end
+
       it 'creates message in conversation' do
         conversation.destroy! # Test all params
         message_params = { content: 'hello world', timestamp: Time.current }
@@ -220,8 +236,8 @@ RSpec.describe '/api/v1/widget/messages', type: :request do
         expect(conversation.reload.resolved?).to be(true)
       end
 
-      it 'does not create resolved activity messages when snoozed conversation is opened' do
-        conversation.snoozed!
+      it 'does not create resolved activity messages when an on-hold conversation is opened' do
+        conversation.on_hold!
 
         message_params = { content: 'hello world', timestamp: Time.current }
         post api_v1_widget_messages_url,
@@ -235,7 +251,7 @@ RSpec.describe '/api/v1/widget/messages', type: :request do
             account_id: conversation.account_id,
             inbox_id: conversation.inbox_id,
             message_type: :activity,
-            content: "Conversation was resolved by #{contact.name}",
+            content: "Ticket was resolved by #{contact.name}",
             content_attributes: { activity: { type: 'conversation_status_changed', status: 'resolved' } }
           }
         )

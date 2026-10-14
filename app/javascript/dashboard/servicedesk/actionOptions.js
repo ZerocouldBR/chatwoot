@@ -13,6 +13,12 @@ const toOption = value => ({ id: value, name: value });
  * Rótulos de status para set_ticket_status: a lista do atributo zd_status da conta
  * (é o que o backend aceita) e, sem ela, os status ativos de ticketFormsMeta.json.
  */
+// v3: como no Zendesk, macros e automações não levam o ticket para Novo nem para
+// Fechado (o backend ignora esses rótulos em set_ticket_status).
+const NOT_SETTABLE_NATIVE = ['new_ticket', 'closed'];
+const isSettableLabel = label =>
+  !NOT_SETTABLE_NATIVE.includes(ticketFormsMeta.statuses?.[label]?.native);
+
 export const getTicketStatusOptions = (conversationAttributes = []) => {
   const definition = conversationAttributes.find(
     attribute => attribute.attribute_key === TICKET_STATUS_ATTRIBUTE_KEY
@@ -21,10 +27,10 @@ export const getTicketStatusOptions = (conversationAttributes = []) => {
     definition?.attribute_display_type === 'list' &&
     definition.attribute_values?.length
   ) {
-    return definition.attribute_values.map(toOption);
+    return definition.attribute_values.filter(isSettableLabel).map(toOption);
   }
   return Object.entries(ticketFormsMeta.statuses || {})
-    .filter(([, status]) => status.active)
+    .filter(([label, status]) => status.active && isSettableLabel(label))
     .map(([label]) => toOption(label));
 };
 

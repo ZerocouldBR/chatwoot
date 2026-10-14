@@ -72,7 +72,7 @@ class SuperAdmin::InstallationConfigsController < SuperAdmin::ApplicationControl
     message = translate_with_resource('create.success') if action_name == 'create'
     return { notice: message } unless restart_required_config?(resource)
 
-    { success: "#{message.delete_suffix('.')}. Restart Chatwoot web and worker processes to apply this change everywhere." }
+    { success: "#{message.delete_suffix('.')}. Restart the web and worker processes to apply this change everywhere." }
   end
 
   def restart_required_config?(resource)

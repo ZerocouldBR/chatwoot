@@ -11,6 +11,7 @@ export const DEFAULT_CONVERSATION_SIDEBAR_ITEMS_ORDER = Object.freeze([
   { name: 'shared_files' },
   { name: 'previous_conversation' },
   { name: 'conversation_participants' },
+  { name: 'ticket_events' },
   { name: 'linear_issues' },
   { name: 'stripe_customer' },
   { name: 'shopify_orders' },
@@ -140,9 +141,10 @@ export function useUISettings() {
 
   const isOnExpandedLayout = computed(() => {
     const {
-      LAYOUT_TYPES: { CONDENSED },
+      LAYOUT_TYPES: { CONDENSED, EXPANDED },
     } = wootConstants;
-    const { conversation_display_type: conversationDisplayType = CONDENSED } =
+    // Tickets open full width by default, like Zendesk; agents can switch to the list + ticket layout.
+    const { conversation_display_type: conversationDisplayType = EXPANDED } =
       uiSettings.value;
     return conversationDisplayType !== CONDENSED;
   });

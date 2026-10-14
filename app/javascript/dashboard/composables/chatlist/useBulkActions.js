@@ -161,7 +161,7 @@ export function useBulkActions() {
     }
   }
 
-  async function onUpdateConversations(status, snoozedUntil) {
+  async function onUpdateConversations(status) {
     if (selectedConversations.value.length === 0) return;
 
     let conversationIds = selectedConversations.value;
@@ -208,7 +208,6 @@ export function useBulkActions() {
           fields: {
             status,
           },
-          snoozed_until: snoozedUntil,
         });
       }
 

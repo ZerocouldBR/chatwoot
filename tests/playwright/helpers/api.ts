@@ -1,0 +1,103 @@
+import { APIRequestContext, request } from '@playwright/test';
+
+type AuthHeaders = Record<'access-token' | 'token-type' | 'client' | 'expiry' | 'uid', string>;
+
+// Thin client over the dashboard API, authenticated as a real user via devise_token_auth.
+export class ApiClient {
+  private constructor(
+    readonly ctx: APIRequestContext,
+    readonly auth: AuthHeaders,
+    readonly accountId: number
+  ) {}
+
+  static async login(baseURL: string, email: string, password: string, accountId: number) {
+    const ctx = await request.newContext({ baseURL });
+    const res = await ctx.post('/auth/sign_in', { data: { email, password } });
+    if (!res.ok()) throw new Error(`login failed for ${email}: ${res.status()} ${await res.text()}`);
+    const h = res.headers();
+    const auth = { 'access-token': h['access-token'], 'token-type': h['token-type'], client: h.client, expiry: h.expiry, uid: h.uid };
+    return new ApiClient(ctx, auth, accountId);
+  }
+
+  // Signs out (each login is a session, and users have a session limit) and closes the request context.
+  async dispose() {
+    await this.ctx.delete('/auth/sign_out', { headers: this.auth });
+    await this.ctx.dispose();
+  }
+
+  // Header bag the dashboard keeps in the cw_d_session_info cookie.
+  sessionCookieValue() {
+    return JSON.stringify(this.auth);
+  }
+
+  async call<T = unknown>(method: 'get' | 'post' | 'patch' | 'put' | 'delete', path: string, data?: unknown): Promise<T> {
+    const res = await this.ctx.fetch(`/api/v1/accounts/${this.accountId}${path}`, {
+      method: method.toUpperCase(),
+      headers: this.auth,
+      data,
+    });
+    const body = await res.text();
+    if (!res.ok()) throw new Error(`${method.toUpperCase()} ${path} -> ${res.status()}: ${body}`);
+    return (body ? JSON.parse(body) : undefined) as T;
+  }
+
+  // Merges into the agent's saved UI settings (e.g. which sidebar sections are open).
+  async updateUISettings(settings: Record<string, unknown>) {
+    const res = await this.ctx.put('/api/v1/profile', {
+      headers: this.auth,
+      data: { profile: { ui_settings: settings } },
+    });
+    if (!res.ok()) throw new Error(`PUT /api/v1/profile -> ${res.status()}: ${await res.text()}`);
+  }
+
+  async createContact(name: string, email?: string) {
+    const res = await this.call<{ payload: { contact: { id: number } } }>('post', '/contacts', { name, email });
+    return res.payload.contact;
+  }
+
+  async createConversation(inboxId: number, contactId: number, message: string, extra: Record<string, unknown> = {}) {
+    return this.call<{ id: number; status: string }>('post', '/conversations', {
+      inbox_id: inboxId,
+      contact_id: contactId,
+      message: { content: message },
+      ...extra,
+    });
+  }
+
+  async listConversations(inboxId: number) {
+    const res = await this.call<{ data: { payload: Array<Record<string, unknown>> } }>(
+      'get',
+      `/conversations?inbox_id=${inboxId}&status=all&assignee_type=all`
+    );
+    return res.data.payload;
+  }
+
+  // Polls the inbox until a ticket matches, e.g. one created from an e-mail that is still being fetched over IMAP.
+  async waitForConversation(
+    inboxId: number,
+    predicate: (conversation: Record<string, unknown>) => boolean,
+    { timeoutMs = 240_000, intervalMs = 5_000 } = {}
+  ) {
+    const deadline = Date.now() + timeoutMs;
+    while (Date.now() < deadline) {
+      const match = (await this.listConversations(inboxId)).find(predicate);
+      if (match) return match;
+      await new Promise(resolve => setTimeout(resolve, intervalMs));
+    }
+    throw new Error(`no matching ticket in inbox ${inboxId} within ${timeoutMs}ms`);
+  }
+
+  // A ticket opened by the customer: the first message is incoming (an API inbox accepts it from the agent API).
+  async createCustomerTicket(inboxId: number, contactId: number, message: string) {
+    const ticket = await this.call<{ id: number; status: string }>('post', '/conversations', {
+      inbox_id: inboxId,
+      contact_id: contactId,
+    });
+    await this.call('post', `/conversations/${ticket.id}/messages`, { content: message, message_type: 'incoming' });
+    return ticket;
+  }
+
+  async getConversation(id: number) {
+    return this.call<Record<string, unknown>>('get', `/conversations/${id}`);
+  }
+}

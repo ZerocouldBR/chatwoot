@@ -1,6 +1,5 @@
 /* global axios */
 import ApiClient from '../ApiClient';
-import { toApiStatusParams } from 'dashboard/servicedesk/statusFilter';
 
 class ConversationApi extends ApiClient {
   constructor() {
@@ -26,8 +25,7 @@ class ConversationApi extends ApiClient {
       params: {
         inbox_id: inboxId,
         team_id: teamId,
-        // ServiceDesk: Pendente/Em espera viram status=snoozed + zd_status_category
-        ...toApiStatusParams(status),
+        status,
         assignee_type: assigneeType,
         page,
         labels,
@@ -57,10 +55,25 @@ class ConversationApi extends ApiClient {
     });
   }
 
-  toggleStatus({ conversationId, status, snoozedUntil = null }) {
+  toggleStatus({ conversationId, status }) {
     return axios.post(`${this.url}/${conversationId}/toggle_status`, {
       status,
-      snoozed_until: snoozedUntil,
+    });
+  }
+
+  addCc({ conversationId, email }) {
+    return axios.post(`${this.url}/${conversationId}/ccs`, { email });
+  }
+
+  removeCc({ conversationId, email }) {
+    return axios.delete(`${this.url}/${conversationId}/ccs`, {
+      params: { email },
+    });
+  }
+
+  getEvents({ conversationId, before }) {
+    return axios.get(`${this.url}/${conversationId}/events`, {
+      params: { before },
     });
   }
 
@@ -109,7 +122,7 @@ class ConversationApi extends ApiClient {
     return axios.get(`${this.url}/meta`, {
       params: {
         inbox_id: inboxId,
-        ...toApiStatusParams(status),
+        status,
         assignee_type: assigneeType,
         labels,
         team_id: teamId,

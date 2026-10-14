@@ -354,7 +354,7 @@ const actions = {
 
   toggleStatus: async (
     { commit },
-    { conversationId, status, snoozedUntil = null, customAttributes = null }
+    { conversationId, status, customAttributes = null }
   ) => {
     try {
       // Update custom attributes first if provided
@@ -369,22 +369,11 @@ const actions = {
         });
       }
 
-      const {
-        data: {
-          payload: {
-            current_status: updatedStatus,
-            snoozed_until: updatedSnoozedUntil,
-          } = {},
-        } = {},
-      } = await ConversationApi.toggleStatus({
-        conversationId,
-        status,
-        snoozedUntil,
-      });
+      const { data: { payload: { current_status: updatedStatus } = {} } = {} } =
+        await ConversationApi.toggleStatus({ conversationId, status });
       commit(types.CHANGE_CONVERSATION_STATUS, {
         conversationId,
         status: updatedStatus,
-        snoozedUntil: updatedSnoozedUntil,
       });
     } catch (error) {
       // Handle error
@@ -637,6 +626,11 @@ const actions = {
     commit(types.SET_CONVERSATION_FILTERS, data);
   },
 
+  // ServiceDesk: ordenação da view do Zendesk aberta (busca e ordem da store)
+  setConversationFiltersSort({ commit }, sortBy) {
+    commit(types.SET_CONVERSATION_FILTERS_SORT, sortBy || null);
+  },
+
   // Replaces the list with page 1 of the snake_case filters; sortBy overrides the activity order.
   applyConversationFilters: (
     { commit, dispatch },
@@ -689,10 +683,6 @@ const actions = {
 
   setCurrentChatPriority({ commit }, { priority, conversationId }) {
     commit(types.ASSIGN_PRIORITY, { priority, conversationId });
-  },
-
-  setContextMenuChatId({ commit }, chatId) {
-    commit(types.SET_CONTEXT_MENU_CHAT_ID, chatId);
   },
 
   getInboxCaptainAssistantById: async ({ commit }, conversationId) => {

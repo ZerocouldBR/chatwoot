@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2026_10_13_210000) do
+ActiveRecord::Schema[7.1].define(version: 2026_10_14_190000) do
   # These extensions should be enabled to support this database
   enable_extension "pg_stat_statements"
   enable_extension "pg_trgm"
@@ -52,11 +52,19 @@ ActiveRecord::Schema[7.1].define(version: 2026_10_13_210000) do
     t.boolean "auto_offline", default: true, null: false
     t.bigint "custom_role_id"
     t.bigint "agent_capacity_policy_id"
+    t.bigint "sd_role_id"
+    t.string "ticket_access_override"
+    t.boolean "only_private_comments", default: false, null: false
+    t.bigint "default_team_id"
+    t.datetime "suspended_at"
+    t.bigint "zendesk_user_id"
     t.index ["account_id", "user_id"], name: "uniq_user_id_per_account_id", unique: true
     t.index ["account_id"], name: "index_account_users_on_account_id"
     t.index ["agent_capacity_policy_id"], name: "index_account_users_on_agent_capacity_policy_id"
     t.index ["custom_role_id"], name: "index_account_users_on_custom_role_id"
+    t.index ["sd_role_id"], name: "index_account_users_on_sd_role_id"
     t.index ["user_id"], name: "index_account_users_on_user_id"
+    t.index ["zendesk_user_id"], name: "index_account_users_on_zendesk_user_id"
   end
 
   create_table "accounts", id: :serial, force: :cascade do |t|
@@ -184,6 +192,8 @@ ActiveRecord::Schema[7.1].define(version: 2026_10_13_210000) do
     t.datetime "updated_at", null: false
     t.integer "sla_status", default: 0
     t.datetime "completed_at"
+    t.jsonb "metrics", default: {}, null: false
+    t.datetime "next_breach_at"
     t.index ["account_id", "sla_policy_id", "conversation_id"], name: "index_applied_slas_on_account_sla_policy_conversation", unique: true
     t.index ["account_id"], name: "index_applied_slas_on_account_id"
     t.index ["conversation_id"], name: "index_applied_slas_on_conversation_id"
@@ -219,10 +229,12 @@ ActiveRecord::Schema[7.1].define(version: 2026_10_13_210000) do
     t.string "locale", default: "en", null: false
     t.string "draft_title"
     t.text "draft_content"
+    t.bigint "portal_user_segment_id"
     t.index ["account_id"], name: "index_articles_on_account_id"
     t.index ["associated_article_id"], name: "index_articles_on_associated_article_id"
     t.index ["author_id"], name: "index_articles_on_author_id"
     t.index ["portal_id"], name: "index_articles_on_portal_id"
+    t.index ["portal_user_segment_id"], name: "index_articles_on_portal_user_segment_id"
     t.index ["slug"], name: "index_articles_on_slug", unique: true
     t.index ["status"], name: "index_articles_on_status"
     t.index ["views"], name: "index_articles_on_views"
@@ -321,6 +333,19 @@ ActiveRecord::Schema[7.1].define(version: 2026_10_13_210000) do
     t.datetime "monitor_event_activated_at"
     t.index ["account_id"], name: "index_automation_rules_on_account_id"
     t.index ["monitor_id"], name: "index_automation_rules_on_monitor_id"
+  end
+
+  create_table "business_schedules", force: :cascade do |t|
+    t.bigint "account_id", null: false
+    t.string "name", null: false
+    t.string "time_zone", null: false
+    t.boolean "is_default", default: false, null: false
+    t.jsonb "intervals", default: [], null: false
+    t.jsonb "holidays", default: [], null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["account_id"], name: "index_business_schedules_on_account_id"
+    t.index ["account_id"], name: "index_business_schedules_one_default_per_account", unique: true, where: "is_default"
   end
 
   create_table "calls", force: :cascade do |t|
@@ -824,6 +849,31 @@ ActiveRecord::Schema[7.1].define(version: 2026_10_13_210000) do
     t.index ["phone_number", "account_id"], name: "index_contacts_on_phone_number_and_account_id"
   end
 
+  create_table "conversation_ccs", force: :cascade do |t|
+    t.bigint "account_id", null: false
+    t.bigint "conversation_id", null: false
+    t.string "email", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["account_id", "email"], name: "index_conversation_ccs_on_account_id_and_email"
+    t.index ["conversation_id", "email"], name: "index_conversation_ccs_on_conversation_id_and_email", unique: true
+  end
+
+  create_table "conversation_events", force: :cascade do |t|
+    t.bigint "account_id", null: false
+    t.bigint "conversation_id", null: false
+    t.string "event_type", null: false
+    t.string "field_name"
+    t.jsonb "previous_value"
+    t.jsonb "value"
+    t.string "author_type"
+    t.bigint "author_id"
+    t.string "via", null: false
+    t.datetime "created_at", null: false
+    t.index ["account_id", "created_at"], name: "index_conversation_events_on_account_id_and_created_at"
+    t.index ["conversation_id", "id"], name: "index_conversation_events_on_conversation_id_and_id"
+  end
+
   create_table "conversation_monitor_automation_deliveries", force: :cascade do |t|
     t.bigint "account_id", null: false
     t.bigint "monitor_id", null: false
@@ -982,7 +1032,7 @@ ActiveRecord::Schema[7.1].define(version: 2026_10_13_210000) do
   create_table "conversations", id: :serial, force: :cascade do |t|
     t.integer "account_id", null: false
     t.integer "inbox_id", null: false
-    t.integer "status", default: 0, null: false
+    t.integer "status", default: 4, null: false
     t.integer "assignee_id"
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
@@ -997,7 +1047,6 @@ ActiveRecord::Schema[7.1].define(version: 2026_10_13_210000) do
     t.datetime "last_activity_at", precision: nil, default: -> { "CURRENT_TIMESTAMP" }, null: false
     t.bigint "team_id"
     t.bigint "campaign_id"
-    t.datetime "snoozed_until", precision: nil
     t.jsonb "custom_attributes", default: {}
     t.datetime "assignee_last_seen_at", precision: nil
     t.datetime "first_reply_created_at", precision: nil
@@ -1008,20 +1057,40 @@ ActiveRecord::Schema[7.1].define(version: 2026_10_13_210000) do
     t.bigint "assignee_agent_bot_id"
     t.string "ai_assignee_type"
     t.datetime "status_changed_at"
+    t.string "subject", limit: 150
+    t.integer "ticket_type"
+    t.datetime "due_at"
+    t.bigint "submitter_id"
+    t.bigint "company_id"
+    t.bigint "followup_source_id"
+    t.datetime "next_sla_breach_at"
+    t.boolean "sla_breached", default: false, null: false
+    t.bigint "triggers_event_cursor"
+    t.bigint "merged_into_id"
+    t.bigint "problem_id"
+    t.datetime "deleted_at"
+    t.integer "satisfaction", default: 0, null: false
+    t.index ["account_id", "deleted_at"], name: "index_conversations_on_account_id_and_deleted_at"
     t.index ["account_id", "display_id"], name: "index_conversations_on_account_id_and_display_id", unique: true
+    t.index ["account_id", "due_at"], name: "index_conversations_on_account_id_and_due_at"
     t.index ["account_id", "id"], name: "index_conversations_on_id_and_account_id"
     t.index ["account_id", "inbox_id", "status", "assignee_id"], name: "conv_acid_inbid_stat_asgnid_idx"
+    t.index ["account_id", "next_sla_breach_at"], name: "index_conversations_on_account_id_and_next_sla_breach_at"
     t.index ["account_id", "status", "created_at"], name: "index_conversations_on_account_id_status_created_at"
+    t.index ["account_id", "status", "status_changed_at"], name: "index_conversations_on_account_status_changed_at"
     t.index ["account_id"], name: "index_conversations_on_account_id"
     t.index ["assignee_id", "account_id"], name: "index_conversations_on_assignee_id_and_account_id"
     t.index ["campaign_id"], name: "index_conversations_on_campaign_id"
+    t.index ["company_id"], name: "index_conversations_on_company_id"
     t.index ["contact_id"], name: "index_conversations_on_contact_id"
     t.index ["contact_inbox_id"], name: "index_conversations_on_contact_inbox_id"
     t.index ["created_at"], name: "index_conversations_on_created_at"
     t.index ["first_reply_created_at"], name: "index_conversations_on_first_reply_created_at"
+    t.index ["followup_source_id"], name: "index_conversations_on_followup_source_id"
     t.index ["identifier", "account_id"], name: "index_conversations_on_identifier_and_account_id"
     t.index ["inbox_id"], name: "index_conversations_on_inbox_id"
     t.index ["priority"], name: "index_conversations_on_priority"
+    t.index ["problem_id"], name: "index_conversations_on_problem_id"
     t.index ["status", "account_id"], name: "index_conversations_on_status_and_account_id"
     t.index ["status", "priority"], name: "index_conversations_on_status_and_priority"
     t.index ["team_id"], name: "index_conversations_on_team_id"
@@ -1343,7 +1412,9 @@ ActiveRecord::Schema[7.1].define(version: 2026_10_13_210000) do
     t.jsonb "actions", default: {}, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "team_id"
     t.index ["account_id"], name: "index_macros_on_account_id"
+    t.index ["team_id"], name: "index_macros_on_team_id"
   end
 
   create_table "mentions", force: :cascade do |t|
@@ -1475,6 +1546,23 @@ ActiveRecord::Schema[7.1].define(version: 2026_10_13_210000) do
     t.string "video_url"
   end
 
+  create_table "portal_user_segments", force: :cascade do |t|
+    t.bigint "account_id", null: false
+    t.bigint "portal_id", null: false
+    t.string "name", null: false
+    t.integer "user_type", default: 0, null: false
+    t.bigint "company_ids", default: [], null: false, array: true
+    t.string "tags", default: [], null: false, array: true
+    t.string "or_tags", default: [], null: false, array: true
+    t.bigint "contact_ids", default: [], null: false, array: true
+    t.string "external_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["account_id"], name: "index_portal_user_segments_on_account_id"
+    t.index ["portal_id", "external_id"], name: "index_portal_user_segments_on_portal_id_and_external_id", unique: true, where: "(external_id IS NOT NULL)"
+    t.index ["portal_id"], name: "index_portal_user_segments_on_portal_id"
+  end
+
   create_table "portals", force: :cascade do |t|
     t.integer "account_id", null: false
     t.string "name", null: false
@@ -1550,6 +1638,36 @@ ActiveRecord::Schema[7.1].define(version: 2026_10_13_210000) do
     t.index ["account_id", "metric", "date"], name: "index_rollup_timeseries"
   end
 
+  create_table "sd_roles", force: :cascade do |t|
+    t.bigint "account_id", null: false
+    t.string "key", null: false
+    t.string "name", null: false
+    t.text "description"
+    t.integer "base_role", default: 0, null: false
+    t.jsonb "permissions", default: {}, null: false
+    t.bigint "zendesk_custom_role_id"
+    t.boolean "system", default: false, null: false
+    t.integer "position", default: 0, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.jsonb "zendesk_configuration", default: {}, null: false
+    t.index ["account_id", "key"], name: "index_sd_roles_on_account_id_and_key", unique: true
+    t.index ["account_id", "name"], name: "index_sd_roles_on_account_id_and_name", unique: true
+    t.index ["account_id"], name: "index_sd_roles_on_account_id"
+  end
+
+  create_table "sd_ticket_audits", force: :cascade do |t|
+    t.bigint "account_id", null: false
+    t.bigint "conversation_id", null: false
+    t.string "author_type"
+    t.bigint "author_id"
+    t.string "via", default: "web", null: false
+    t.jsonb "events", default: [], null: false
+    t.datetime "created_at", null: false
+    t.index ["account_id"], name: "index_sd_ticket_audits_on_account_id"
+    t.index ["conversation_id", "id"], name: "index_sd_ticket_audits_on_conversation_id_and_id"
+  end
+
   create_table "sla_events", force: :cascade do |t|
     t.bigint "applied_sla_id", null: false
     t.bigint "conversation_id", null: false
@@ -1569,15 +1687,29 @@ ActiveRecord::Schema[7.1].define(version: 2026_10_13_210000) do
 
   create_table "sla_policies", force: :cascade do |t|
     t.string "name", null: false
-    t.float "first_response_time_threshold"
-    t.float "next_response_time_threshold"
-    t.boolean "only_during_business_hours", default: false
     t.bigint "account_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "description"
-    t.float "resolution_time_threshold"
+    t.integer "position", default: 0, null: false
+    t.jsonb "filter", default: {}, null: false
+    t.jsonb "targets", default: [], null: false
     t.index ["account_id"], name: "index_sla_policies_on_account_id"
+  end
+
+  create_table "suspended_tickets", force: :cascade do |t|
+    t.bigint "account_id", null: false
+    t.bigint "inbox_id", null: false
+    t.string "from_email", null: false
+    t.string "from_name"
+    t.string "subject"
+    t.string "message_id"
+    t.string "reason", null: false
+    t.datetime "recovered_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["account_id", "created_at"], name: "index_suspended_tickets_on_account_id_and_created_at"
+    t.index ["inbox_id", "message_id"], name: "index_suspended_tickets_on_inbox_id_and_message_id"
   end
 
   create_table "taggings", id: :serial, force: :cascade do |t|
@@ -1627,6 +1759,21 @@ ActiveRecord::Schema[7.1].define(version: 2026_10_13_210000) do
     t.string "icon_color", default: ""
     t.index "account_id, lower((name)::text)", name: "index_teams_on_account_id_and_lower_name", unique: true
     t.index ["account_id"], name: "index_teams_on_account_id"
+  end
+
+  create_table "ticket_rules", force: :cascade do |t|
+    t.bigint "account_id", null: false
+    t.integer "kind", null: false
+    t.string "title", null: false
+    t.string "description"
+    t.boolean "active", default: true, null: false
+    t.integer "position", default: 0, null: false
+    t.jsonb "conditions", default: {"all" => [], "any" => []}, null: false
+    t.jsonb "actions", default: [], null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["account_id", "kind", "position"], name: "index_ticket_rules_on_account_id_and_kind_and_position"
+    t.index ["account_id"], name: "index_ticket_rules_on_account_id"
   end
 
   create_table "user_sessions", force: :cascade do |t|

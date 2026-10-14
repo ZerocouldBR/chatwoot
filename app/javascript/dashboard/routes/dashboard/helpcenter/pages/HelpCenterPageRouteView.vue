@@ -2,7 +2,6 @@
 import { computed, onMounted, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import { useStore } from 'vuex';
-import UpgradePage from '../components/UpgradePage.vue';
 import { useUISettings } from 'dashboard/composables/useUISettings';
 import { FEATURE_FLAGS } from 'dashboard/featureFlags';
 
@@ -71,6 +70,5 @@ watch(
     >
       <router-view />
     </section>
-    <UpgradePage v-else />
   </div>
 </template>

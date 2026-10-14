@@ -223,15 +223,15 @@
     }
   },
   "LABEL_REPORTS": {
-    "HEADER": "Visão Geral das Etiquetas",
-    "DESCRIPTION": "Acompanhe o desempenho da sua etiqueta com métricas-chave incluindo tickets, tempo de resposta, tempos de resolução e casos resolvidos. Clique no nome da etiqueta para obter detalhes.",
+    "HEADER": "Visão Geral das Tags",
+    "DESCRIPTION": "Acompanhe o desempenho da sua tag com métricas-chave incluindo tickets, tempo de resposta, tempos de resolução e casos resolvidos. Clique no nome da tag para obter detalhes.",
     "LOADING_CHART": "Carregando dados do gráfico...",
     "NO_ENOUGH_DATA": "Não existem dados suficientes para gerar o relatório. Tente novamente mais tarde.",
-    "DOWNLOAD_LABEL_REPORTS": "Baixar relatórios de etiquetas",
-    "FILTER_DROPDOWN_LABEL": "Selecionar etiqueta",
+    "DOWNLOAD_LABEL_REPORTS": "Baixar relatórios de tags",
+    "FILTER_DROPDOWN_LABEL": "Selecionar tag",
     "FILTERS": {
       "INPUT_PLACEHOLDER": {
-        "LABELS": "Pesquisar etiquetas"
+        "LABELS": "Pesquisar tags"
       }
     },
     "METRICS": {
@@ -371,18 +371,18 @@
     }
   },
   "TEAM_REPORTS": {
-    "HEADER": "Resumo do Time",
-    "DESCRIPTION": "Tenha uma visão geral do desempenho dos seus times com métricas essenciais, incluindo tickets, tempos de resposta, tempos de resolução e casos resolvidos. Clique no nome do time para ver mais detalhes.",
+    "HEADER": "Resumo do Grupo",
+    "DESCRIPTION": "Tenha uma visão geral do desempenho dos seus grupos com métricas essenciais, incluindo tickets, tempos de resposta, tempos de resolução e casos resolvidos. Clique no nome do grupo para ver mais detalhes.",
     "LOADING_CHART": "Carregando dados do gráfico...",
     "NO_ENOUGH_DATA": "Não existem dados suficientes para gerar o relatório. Tente novamente mais tarde.",
-    "DOWNLOAD_TEAM_REPORTS": "Baixar relatórios de time",
-    "FILTER_DROPDOWN_LABEL": "Selecionar Time",
+    "DOWNLOAD_TEAM_REPORTS": "Baixar relatórios de grupo",
+    "FILTER_DROPDOWN_LABEL": "Selecionar Grupo",
     "FILTERS": {
       "ADD_FILTER": "Adicionar filtro",
       "CLEAR_ALL": "Limpar tudo",
       "NO_FILTER": "Não há filtros disponíveis",
       "INPUT_PLACEHOLDER": {
-        "TEAMS": "Pesquisar times"
+        "TEAMS": "Pesquisar grupos"
       }
     },
     "METRICS": {
@@ -459,7 +459,7 @@
       "INPUT_PLACEHOLDER": {
         "AGENTS": "Pesquisar agentes",
         "INBOXES": "Pesquisar caixas de entrada",
-        "TEAMS": "Pesquisar times",
+        "TEAMS": "Pesquisar grupos",
         "RATINGS": "Pesquisar avaliações"
       },
       "AGENTS": {
@@ -469,7 +469,7 @@
         "LABEL": "Caixa de Entrada"
       },
       "TEAMS": {
-        "LABEL": "Time"
+        "LABEL": "Grupo"
       },
       "RATINGS": {
         "LABEL": "Classificação"
@@ -551,14 +551,14 @@
     "HEATMAP_ARIA_LABEL": "{metric} por dia e hora",
     "ACCOUNT_CONVERSATIONS": {
       "HEADER": "Tickets Abertos",
-      "LOADING_MESSAGE": "Carregando métricas de tickets...",
+      "LOADING_MESSAGE": "Carregando métricas de ticket...",
       "OPEN": "Abertas",
-      "UNATTENDED": "Não atendidas",
+      "UNATTENDED": "Aguardando resposta",
       "UNASSIGNED": "Não atribuídas",
       "PENDING": "Pendentes"
     },
     "CONVERSATION_HEATMAP": {
-      "HEADER": "Tráfego de tickets",
+      "HEADER": "Tráfego de ticket",
       "NO_CONVERSATIONS": "Não há tickets",
       "CONVERSATION": "{count} ticket",
       "CONVERSATIONS": "{count} tickets",
@@ -578,19 +578,19 @@
       "TABLE_HEADER": {
         "AGENT": "Agente",
         "OPEN": "Abertas",
-        "UNATTENDED": "Não atendidas",
+        "UNATTENDED": "Aguardando resposta",
         "STATUS": "Status"
       }
     },
     "TEAM_CONVERSATIONS": {
-      "ALL_TEAMS": "Todos os Times",
-      "HEADER": "Tickets por times",
-      "LOADING_MESSAGE": "Carregando métricas de times...",
+      "ALL_TEAMS": "Todos os Grupos",
+      "HEADER": "Tickets por grupos",
+      "LOADING_MESSAGE": "Carregando métricas de grupos...",
       "NO_TEAMS": "Não há dados disponíveis",
       "TABLE_HEADER": {
-        "TEAM": "Time",
+        "TEAM": "Grupo",
         "OPEN": "Abrir",
-        "UNATTENDED": "Não atendidas",
+        "UNATTENDED": "Aguardando resposta",
         "STATUS": "Status"
       }
     },
@@ -612,7 +612,7 @@
   },
   "SLA_REPORTS": {
     "HEADER": "Relatórios SLA",
-    "NO_RECORDS": "Tickets com SLA aplicado não estão disponíveis.",
+    "NO_RECORDS": "Tickets com SLA aplicados não estão disponíveis.",
     "LOADING": "Carregando dados de SLA...",
     "DOWNLOAD_SLA_REPORTS": "Baixar relatórios de SLA",
     "DOWNLOAD_FAILED": "Falha ao baixar os relatórios de SLA",
@@ -627,14 +627,14 @@
         "SLA": "Nome do SLA",
         "AGENTS": "Nome do Agente",
         "INBOXES": "Nome da Caixa de Entrada",
-        "LABELS": "Nome da etiqueta",
-        "TEAMS": "Nome do Time"
+        "LABELS": "Nome da tag",
+        "TEAMS": "Nome do Grupo"
       },
       "SLA": "Política SLA",
       "INBOXES": "Caixa de Entrada",
       "AGENTS": "Agente",
       "LABELS": "Nome do campo",
-      "TEAMS": "Time"
+      "TEAMS": "Grupo"
     },
     "WITH": "com",
     "METRICS": {
@@ -663,7 +663,7 @@
   "SUMMARY_REPORTS": {
     "INBOX": "Caixa de Entrada",
     "AGENT": "Agente",
-    "TEAM": "Time",
+    "TEAM": "Grupo",
     "LABEL": "Nome do campo",
     "AVG_RESOLUTION_TIME": "Tempo Médio de Resolução",
     "AVG_FIRST_RESPONSE_TIME": "Tempo Médio de Primeira Resposta",

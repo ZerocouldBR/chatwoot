@@ -175,6 +175,37 @@ describe('#validateAuthenticateRoutePermission', () => {
         expect(next).toHaveBeenCalledWith();
       });
 
+      it('redirects community installs away from enterprise-only routes', async () => {
+        window.chatwootConfig = { isEnterprise: 'false' };
+        const to = {
+          name: 'sla_list',
+          params: { accountId: 1 },
+          matched: [
+            { meta: {} },
+            { meta: { installationTypes: ['cloud', 'enterprise'] } },
+          ],
+        };
+
+        await validateAuthenticateRoutePermission({ query: {}, ...to }, next);
+
+        expect(next).toHaveBeenCalledWith('/app/accounts/1/dashboard');
+      });
+
+      it('allows enterprise-only routes on enterprise installs', async () => {
+        window.chatwootConfig = { isEnterprise: 'true' };
+        const to = {
+          name: 'sla_list',
+          params: { accountId: 1 },
+          meta: { permissions: ['administrator'] },
+          matched: [{ meta: { installationTypes: ['cloud', 'enterprise'] } }],
+        };
+
+        await validateAuthenticateRoutePermission({ query: {}, ...to }, next);
+
+        expect(next).toHaveBeenCalledWith();
+        window.chatwootConfig = undefined;
+      });
+
       it('redirects a pending Shopify account to billing before onboarding', async () => {
         store.getters.getCurrentUser.accounts[0] = {
           ...store.getters.getCurrentUser.accounts[0],

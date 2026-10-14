@@ -6,21 +6,10 @@ import { vOnClickOutside } from '@vueuse/components';
 
 import Button from 'dashboard/components-next/button/Button.vue';
 import DropdownMenu from 'dashboard/components-next/dropdown-menu/DropdownMenu.vue';
-
-const props = defineProps({
-  showResolve: {
-    type: Boolean,
-    default: true,
-  },
-  showReopen: {
-    type: Boolean,
-    default: true,
-  },
-  showSnooze: {
-    type: Boolean,
-    default: true,
-  },
-});
+import {
+  AGENT_SETTABLE_STATUSES,
+  STATUS_ICONS,
+} from 'dashboard/constants/ticketStatuses';
 
 const emit = defineEmits(['update']);
 
@@ -29,48 +18,17 @@ const { t } = useI18n();
 const containerRef = useTemplateRef('containerRef');
 const [showDropdown, toggleDropdown] = useToggle(false);
 
-const updateMenuItems = computed(() => {
-  const items = [];
-
-  if (props.showResolve) {
-    items.push({
-      action: 'update',
-      value: 'resolved',
-      label: t('CONVERSATION.HEADER.RESOLVE_ACTION'),
-      icon: 'i-lucide-check',
-    });
-  }
-
-  if (props.showReopen) {
-    items.push({
-      action: 'update',
-      value: 'open',
-      label: t('CONVERSATION.HEADER.REOPEN_ACTION'),
-      icon: 'i-lucide-redo',
-    });
-  }
-
-  if (props.showSnooze) {
-    items.push({
-      action: 'update',
-      value: 'snoozed',
-      label: t('BULK_ACTION.UPDATE.SNOOZE_UNTIL'),
-      icon: 'i-lucide-alarm-clock',
-    });
-  }
-
-  return items;
-});
+const updateMenuItems = computed(() =>
+  AGENT_SETTABLE_STATUSES.map(status => ({
+    action: 'update',
+    value: status,
+    label: t(`CONVERSATION.TICKET_STATUS.${status}`),
+    icon: STATUS_ICONS[status],
+  }))
+);
 
 const handleUpdate = item => {
-  if (item.value === 'snoozed') {
-    // If the user clicks on the snooze option from the bulk action change status dropdown.
-    // Open the snooze option for bulk action in the cmd bar.
-    const ninja = document.querySelector('ninja-keys');
-    ninja?.open({ parent: 'bulk_action_snooze_conversation' });
-  } else {
-    emit('update', item.value);
-  }
+  emit('update', item.value);
   toggleDropdown(false);
 };
 </script>

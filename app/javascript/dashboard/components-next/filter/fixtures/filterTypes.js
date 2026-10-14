@@ -9,7 +9,7 @@ export const filterTypes = [
       { id: 'open', name: 'Open' },
       { id: 'resolved', name: 'Resolved' },
       { id: 'pending', name: 'Pending' },
-      { id: 'snoozed', name: 'Snoozed' },
+      { id: 'on_hold', name: 'On-hold' },
       { id: 'all', name: 'All' },
     ],
     dataType: 'text',

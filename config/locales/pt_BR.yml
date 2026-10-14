@@ -36,18 +36,18 @@ pt_BR:
   data_imports:
     intercom:
       activities:
-        assignment: '%{actor} atribuiu a conversa'
-        assignment_with_target: '%{actor} atribuiu a conversa para %{target}'
-        assign_and_reopen: '%{actor} atribuiu e reabriu a conversa'
-        assign_and_reopen_with_target: '%{actor} atribuiu a conversa para %{target} e a reabriu'
-        open: '%{actor} abriu a conversa'
-        close: '%{actor} fechou a conversa'
-        snoozed: '%{actor} colocou a conversa em modo de espera'
+        assignment: '%{actor} atribuiu o ticket'
+        assignment_with_target: '%{actor} atribuiu o ticket para %{target}'
+        assign_and_reopen: '%{actor} atribuiu e reabriu o ticket'
+        assign_and_reopen_with_target: '%{actor} atribuiu o ticket para %{target} e o reabriu'
+        open: '%{actor} abriu o ticket'
+        close: '%{actor} fechou o ticket'
+        snoozed: '%{actor} colocou o ticket em modo de espera'
         participant_added: '%{actor} adicionou um participante'
         participant_added_with_target: '%{actor} adicionou %{target} como participante'
         participant_removed: '%{actor} removeu um participante'
         participant_removed_with_target: '%{actor} removeu %{target} como participante'
-        conversation_attribute_updated: '%{actor} atualizou atributos de conversa'
+        conversation_attribute_updated: '%{actor} atualizou atributos de ticket'
         ticket_attribute_updated: '%{actor} atualizou os atributos do ticket'
         ticket_state_updated: '%{actor} atualizou o estado do ticket'
         custom_action_started: '%{actor} iniciou uma ação personalizada'
@@ -58,6 +58,8 @@ pt_BR:
     sessions:
       cannot_revoke_current: Você não pode revogar a sessão atual.
   errors:
+    servicedesk:
+      required_form_fields: 'Preencha os campos obrigatórios antes de resolver o ticket: %{fields}'
     account:
       not_authorized: Você não está autorizado a acessar esta conta
       email_limit_exceeded: O limite diário de envio de e-mails desta conta foi atingido
@@ -96,10 +98,29 @@ pt_BR:
       feature_not_enabled: SAML não está habilitado para esta conta
       sso_not_enabled: O SSO via SAML não está habilitado para esta instalação
       multi_account_invitation_not_allowed: Usuários associados a outra conta não podem ser adicionados enquanto o SAML estiver habilitado
+    ticket_home:
+      invalid_view: 'Visão desconhecida. Use mine, ccs, following ou solved'
+    sla:
+      business_hours_need_schedule: 'precisam de um horário comercial padrão (Configurações > Horário comercial) para metas em horas úteis'
+    tickets:
+      redaction:
+        text_not_found: 'O texto a redigir não foi encontrado no comentário'
+      merge:
+        same_ticket: 'Um ticket não pode ser mesclado nele mesmo'
+        source_solved: 'Só tickets não resolvidos podem ser mesclados em outro ticket'
+        target_closed: 'Não é possível mesclar em um ticket fechado'
+    ticket_rules:
+      invalid_kind: 'o tipo deve ser trigger ou automation'
+      needs_time_condition: 'precisam de pelo menos uma condição de "horas desde"'
+      needs_nullifying_action: 'devem mudar algo que uma das condições verifica (ou usar uma condição de horas com "é"), para que a automação rode só uma vez por ticket'
+      business_hours_need_schedule: 'precisam de um horário comercial padrão (Configurações > Horário comercial) para condições em horas úteis'
     conversations:
-      resolved: A conversa está resolvida e não aceita novas mensagens
+      resolved: O ticket está resolvido e não aceita novas mensagens
+      invalid_cc: Informe um e-mail válido para copiar no ticket
+      closed: O ticket está fechado. Respostas abrem um ticket de acompanhamento
+      invalid_status: Status de ticket inválido. Novo e Fechado são definidos pelo sistema
       unread_counts:
-        feature_not_enabled: O recurso de contagem de conversas não lidas não está habilitado para esta conta
+        feature_not_enabled: O recurso de contagem de tickets não lidos não está habilitado para esta conta
     data_import:
       data_type:
         invalid: Tipo de dado inválido
@@ -211,7 +232,7 @@ pt_BR:
     utc_warning: O relatório gerado está em fuso horário UTC
     agent_csv:
       agent_name: Nome do Agente
-      conversations_count: Conversas atribuídas
+      conversations_count: Tickets atribuídos
       avg_first_response_time: Tempo médio de primeira resposta
       avg_resolution_time: Tempo médio de resolução
       resolution_count: Contagem de Resolução
@@ -219,25 +240,25 @@ pt_BR:
     inbox_csv:
       inbox_name: Nome da Caixa de Entrada
       inbox_type: Tipo da Caixa de Entrada
-      conversations_count: Nº de Conversas
+      conversations_count: Nº de Tickets
       avg_first_response_time: Tempo médio de primeira resposta
       avg_resolution_time: Tempo médio de resolução
     label_csv:
-      label_title: Etiqueta
-      conversations_count: Nº de Conversas
+      label_title: Tag
+      conversations_count: Nº de Tickets
       avg_first_response_time: Tempo médio de primeira resposta
       avg_resolution_time: Tempo médio de resolução
       avg_reply_time: Tempo médio de resposta
       resolution_count: Contagem de Resolução
     team_csv:
-      team_name: Nome do Time
-      conversations_count: Contagem de conversas
+      team_name: Nome do Grupo
+      conversations_count: Contagem de tickets
       avg_first_response_time: Tempo médio de primeira resposta
       avg_resolution_time: Tempo médio de resolução
       resolution_count: Contagem de Resolução
       avg_customer_waiting_time: Tempo médio de espera do cliente
     conversation_csv:
-      conversations_count: Conversas
+      conversations_count: Tickets
       incoming_messages_count: Mensagens Recebidas
       outgoing_messages_count: Mensagens enviadas
       avg_first_response_time: Tempo médio de primeira resposta
@@ -247,13 +268,13 @@ pt_BR:
     conversation_traffic_csv:
       timezone: Fuso horário
     sla_csv:
-      conversation_id: ID da conversa
+      conversation_id: ID do ticket
       sla_policy_breached: Política SLA
       assignee: Agente atribuído
-      team: Time
+      team: Grupo
       inbox: Caixa de Entrada
-      labels: Etiquetas
-      conversation_link: Link para a Conversa
+      labels: Tags
+      conversation_link: Link para o Ticket
       breached_events: Eventos Violados
     default_group_by: dia
     csat:
@@ -261,7 +282,7 @@ pt_BR:
         contact_name: Nome do contato
         contact_email_address: E-mail de contato
         contact_phone_number: Telefone de contato
-        link_to_the_conversation: Link para a conversa
+        link_to_the_conversation: Link para o ticket
         agent_name: Nome do Agente
         rating: Classificação
         feedback: Comentário de Feedback
@@ -269,27 +290,27 @@ pt_BR:
         review_notes: Notas de Avaliação
   notifications:
     notification_title:
-      conversation_creation: 'A conversa (#%{display_id}) foi criada em %{inbox_name}'
-      conversation_assignment: 'Uma conversa (#%{display_id}) foi atribuída a você'
-      assigned_conversation_new_message: 'Uma nova mensagem foi criada na conversa (#%{display_id})'
-      conversation_mention: 'Você foi mencionado em uma conversa (#%{display_id})'
-      sla_missed_first_response: 'Meta de SLA de Primeira Resposta não alcançada para a conversa (#%{display_id})'
-      sla_missed_next_response: 'Meta de SLA de Próxima Resposta não alcançada para a conversa (#%{display_id})'
-      sla_missed_resolution: 'Meta de SLA de Resolução não alcançada para a conversa (#%{display_id})'
+      conversation_creation: 'O ticket (#%{display_id}) foi criado em %{inbox_name}'
+      conversation_assignment: 'Um ticket (#%{display_id}) foi atribuído a você'
+      assigned_conversation_new_message: 'Uma nova mensagem foi criada no ticket (#%{display_id})'
+      conversation_mention: 'Você foi mencionado em um ticket (#%{display_id})'
+      sla_missed_first_response: 'Meta de SLA de Primeira Resposta não alcançada para o ticket (#%{display_id})'
+      sla_missed_next_response: 'Meta de SLA de Próxima Resposta não alcançada para o ticket (#%{display_id})'
+      sla_missed_resolution: 'Meta de SLA de Resolução não alcançada para o ticket (#%{display_id})'
     attachment: 'Anexo'
     no_content: 'Sem conteúdo'
   conversations:
     captain:
       handoff: 'Transferindo para que outro agente dê assistência.'
     messages:
-      instagram_story_content: '%{story_sender} mencionou você na conversa: '
+      instagram_story_content: '%{story_sender} mencionou você no ticket: '
       instagram_deleted_story_content: Este Story não está mais disponível.
       instagram_shared_story_content: 'Story compartilhado'
       instagram_shared_post_content: 'Post compartilhado'
       deleted: Esta mensagem foi excluída
       whatsapp:
         list_button_label: 'Escolha um item'
-        call_permission_request_body: 'Gostaríamos de ligar para você em relação à sua conversa.'
+        call_permission_request_body: 'Gostaríamos de ligar para você em relação ao seu ticket.'
         flow_response: 'Enviou uma resposta de um Flow'
         unsupported_message: 'Esta mensagem não está disponível.'
       voice_call:
@@ -299,32 +320,35 @@ pt_BR:
         error_code: 'Código de erro: %{error_code}'
     activity:
       captain:
-        resolved: 'A conversa foi marcada como resolvida por %{user_name} por inatividade'
-        resolved_with_reason: 'A conversa foi marcada como resolvida por %{user_name} (%{reason})'
-        resolved_by_tool: 'A conversa foi marcada como resolvida por %{user_name}: %{reason}'
-        open: 'A conversa foi aberta por %{user_name}'
-        open_with_reason: 'A conversa foi marcada como aberta por %{user_name} (%{reason})'
-        auto_opened_after_agent_reply: 'A conversa foi marcada como aberta automaticamente após a resposta de um agente'
+        resolved: 'O ticket foi marcado como resolvido por %{user_name} por inatividade'
+        resolved_with_reason: 'O ticket foi marcado como resolvido por %{user_name} (%{reason})'
+        resolved_by_tool: 'O ticket foi marcado como resolvido por %{user_name}: %{reason}'
+        open: 'O ticket foi aberto por %{user_name}'
+        open_with_reason: 'O ticket foi marcado como aberto por %{user_name} (%{reason})'
+        auto_opened_after_agent_reply: 'O ticket foi marcado como aberto automaticamente após a resposta de um agente'
       agent_bot:
-        error_moved_to_open: 'A conversa foi marcada como aberta pelo sistema devido a um erro com o robô de atendimento.'
+        error_moved_to_open: 'O ticket foi marcado como aberto pelo sistema devido a um erro com o robô de atendimento.'
       status:
-        resolved: 'Conversa foi marcada como resolvida por %{user_name}'
-        contact_resolved: 'A conversa foi resolvida por %{contact_name}'
-        open: 'Conversa foi reaberta por %{user_name}'
-        pending: 'Conversa foi marcada como pendente por %{user_name}'
-        snoozed: 'Conversa foi adiada por %{user_name}'
-        auto_resolved_days: 'A conversa foi marcada como resolvida pelo sistema por ter %{count} dias de inatividade'
-        auto_resolved_hours: 'A conversa foi marcada como resolvida pelo sistema por ter %{count} horas de inatividade'
-        auto_resolved_minutes: 'A conversa foi marcada como resolvida pelo sistema por ter %{count} minutos de inatividade'
-        system_auto_open: O sistema reabriu a conversa devido a uma nova mensagem recebida.
+        resolved: 'Ticket foi marcado como resolvido por %{user_name}'
+        contact_resolved: 'O ticket foi resolvido por %{contact_name}'
+        open: 'Ticket foi reaberto por %{user_name}'
+        pending: 'Ticket foi entregue ao robô por %{user_name}'
+        new_ticket: 'Ticket foi marcado como novo por %{user_name}'
+        waiting_on_customer: 'Ticket foi marcado como pendente por %{user_name}'
+        on_hold: 'Ticket foi colocado em espera por %{user_name}'
+        closed: 'Ticket foi fechado por %{user_name}'
+        auto_resolved_days: 'O ticket foi marcado como resolvido pelo sistema por ter %{count} dias de inatividade'
+        auto_resolved_hours: 'O ticket foi marcado como resolvido pelo sistema por ter %{count} horas de inatividade'
+        auto_resolved_minutes: 'O ticket foi marcado como resolvido pelo sistema por ter %{count} minutos de inatividade'
+        system_auto_open: O sistema reabriu o ticket devido a uma nova mensagem recebida.
       priority:
         added: '%{user_name} definiu a prioridade para %{new_priority}'
         updated: '%{user_name} mudou a prioridade de %{old_priority} para %{new_priority}'
         removed: '%{user_name} removeu a prioridade'
       assignee:
-        self_assigned: '%{user_name} atribuiu a si mesmo essa conversa'
+        self_assigned: '%{user_name} atribuiu a si mesmo esse ticket'
         assigned: 'Atribuído a %{assignee_name} por %{user_name}'
-        removed: 'Conversa desatribuída por %{user_name}'
+        removed: 'Ticket desatribuído por %{user_name}'
       team:
         assigned: 'Atribuído a %{team_name} por %{user_name}'
         assigned_with_assignee: 'Atribuído a %{assignee_name} via %{team_name} por %{user_name}'
@@ -346,14 +370,14 @@ pt_BR:
         not_sent_due_to_messaging_window: 'Pesquisa CSAT não foi enviada devido a restrições de envio de mensagens'
       auto_resolve:
         not_sent_due_to_messaging_window: 'Auto-resolver mensagem não enviada devido a restrições de envio de mensagens'
-      muted: '%{user_name} silenciou a conversa'
-      unmuted: '%{user_name} reativou a conversa'
-      auto_resolution_message: 'Resolvendo a conversa dado que está inativa por um tempo. Por favor, inicie uma nova conversa se precisar de mais ajuda.'
+      muted: '%{user_name} silenciou o ticket'
+      unmuted: '%{user_name} reativou o ticket'
+      auto_resolution_message: 'Resolvendo o ticket dado que está inativo por um tempo. Por favor, inicie um novo ticket se precisar de mais ajuda.'
     templates:
       greeting_message_body: '%{account_name} normalmente responde em algumas horas.'
       ways_to_reach_you_message_body: 'Informe à equipe uma forma de contatá-lo.'
       email_input_box_message_body: 'Seja notificado por e-mail'
-      csat_input_message_body: 'Por favor, classifique a conversa'
+      csat_input_message_body: 'Por favor, classifique o ticket'
     reply:
       email:
         header:
@@ -366,10 +390,10 @@ pt_BR:
         header:
           reply_with_name: '%{assignee_name} de %{inbox_name} <%{from_email}>'
           reply_with_inbox_name: '%{inbox_name} <%{from_email}>'
-      email_subject: 'Novas mensagens nesta conversa'
-      transcript_subject: 'Transcrição da conversa'
+      email_subject: 'Novas mensagens neste ticket'
+      transcript_subject: 'Transcrição do ticket'
     survey:
-      response: 'Por favor, classifique esta conversa, %{link}'
+      response: 'Por favor, classifique este ticket, %{link}'
   contacts:
     online:
       delete: '%{contact_name} está Online, por favor, tente novamente mais tarde'
@@ -385,8 +409,8 @@ pt_BR:
       meeting_name: '%{agent_name} começou a reunião'
     slack:
       name: 'Slack'
-      short_description: 'Receba notificações e responda as conversas diretamente no Slack.'
-      description: "Integre Chatwoot com Slack para manter seu time em sincronia. Essa integração permite que você receba notificações de novas conversas e as responda diretamente na interface do Slack."
+      short_description: 'Receba notificações e responda os tickets diretamente no Slack.'
+      description: "Integre Chatwoot com Slack para manter seu grupo em sincronia. Essa integração permite que você receba notificações de novos tickets e os responda diretamente na interface do Slack."
     webhooks:
       name: 'Webhooks'
       description: 'Eventos webhook fornecem atualizações sobre atividades em tempo real na sua conta Chatwoot. Você pode se inscrever em seus eventos preferidos, e o Chatwoot enviará as chamadas HTTP com as atualizações.'
@@ -404,9 +428,9 @@ pt_BR:
       description: 'Aproveite o poder dos grandes modelos de linguagem do OpenAI com recursos como sugestões de resposta, resumo, reformulação de mensagens, verificação ortográfica e classificação de rótulos.'
     linear:
       name: 'Linear'
-      short_description: 'Crie e vincule issues do Linear diretamente de conversas.'
-      description: 'Crie issues em Linear diretamente da sua janela de conversa. Alternativamente, vincule as issues lineares existentes para um processo de rastreamento de problemas mais simples e eficiente.'
-      attachment_link_title: 'Conversa (#%{conversation_id}) com %{name}'
+      short_description: 'Crie e vincule issues do Linear diretamente de tickets.'
+      description: 'Crie issues em Linear diretamente da sua janela de ticket. Alternativamente, vincule as issues lineares existentes para um processo de rastreamento de problemas mais simples e eficiente.'
+      attachment_link_title: 'Ticket (#%{conversation_id}) com %{name}'
     notion:
       name: 'Notion'
       short_description: 'Integre banco de dados, documentos e páginas diretamente com o Capitão.'
@@ -414,11 +438,11 @@ pt_BR:
     shopify:
       name: 'Shopify'
       short_description: 'Acessar detalhes do pedido e dados de clientes da sua loja Shopify.'
-      description: 'Conecte sua loja Shopify para acessar detalhes de pedidos, informações de clientes e dados de produtos diretamente em suas conversas e ajudar sua equipe de suporte a fornecer um atendimento mais rápido e contextual aos seus clientes.'
+      description: 'Conecte sua loja Shopify para acessar detalhes de pedidos, informações de clientes e dados de produtos diretamente em seus tickets e ajudar sua equipe de suporte a fornecer um atendimento mais rápido e contextual aos seus clientes.'
     leadsquared:
       name: 'LeadSquared'
-      short_description: 'Sincronize seus contatos e conversas com LeadSquared CRM.'
-      description: 'Sincronize seus contatos e conversas com LeadSquared CRM. Essa integração cria automaticamente leads em LeadSquared quando novos contatos são adicionados, e registra a atividade de conversação para fornecer à sua equipe de vendas um contexto completo.'
+      short_description: 'Sincronize seus contatos e tickets com LeadSquared CRM.'
+      description: 'Sincronize seus contatos e tickets com LeadSquared CRM. Essa integração cria automaticamente leads em LeadSquared quando novos contatos são adicionados, e registra a atividade de conversação para fornecer à sua equipe de vendas um contexto completo.'
   captain:
     copilot_message_required: A mensagem é obrigatória
     copilot_error: 'Conecte com um assistente a esta caixa de entrada para usar Copilot'
@@ -431,7 +455,7 @@ pt_BR:
       completed_tool_call: 'Uso da ferramenta %{function_name} concluída'
       invalid_tool_call: 'Ferramenta inválida'
       tool_not_available: 'Ferramenta indisponível'
-      reply_suggestion_discarded: 'A conversa foi alterada enquanto o Copiloto elaborava a resposta, por isso a sugestão foi descartada.'
+      reply_suggestion_discarded: 'O ticket foi alterado enquanto o Copiloto elaborava a resposta, por isso a sugestão foi descartada.'
       reply_suggestion_failed: "O Copiloto não conseguiu gerar uma resposta. Tente novamente."
     documents:
       limit_exceeded: 'Limite de documento excedido'
@@ -460,6 +484,126 @@ pt_BR:
       slug_generation_failed: 'Não foi possível gerar um slug único após 5 tentativas'
       limit_exceeded: 'Você pode criar no máximo %{limit} ferramentas personalizadas por conta'
   public_portal:
+    sd:
+      nav:
+        skip: Pular para o conteúdo principal
+        home: Página inicial
+        logo_alt: Página inicial da Central de Ajuda de B2B
+        my_activities: Minhas atividades
+        help_center: Central de Ajuda
+        submit_request: Enviar uma solicitação
+        my_requests: Minhas solicitações
+        sign_in: Entrar
+        sign_out: Sair
+        account_menu: Menu da conta
+        main: Navegação principal
+      hero:
+        title: Como podemos ajudar?
+        search_placeholder: Pesquisar
+      footer:
+        brand: B2B
+        copyright: "© %{year} B2B.reservas. Todos os direitos reservados."
+        tagline: Desenvolver conexões para simplificar a vida
+        website: Site da B2B.reservas
+      home:
+        promoted: Artigos promovidos
+        recent_activity: Atividade recente
+        article_updated: "Artigo atualizado em %{date}"
+      category:
+        see_all: "Ver todos os %{count} artigos"
+      article:
+        in_section: Artigos nesta seção
+        updated: "Atualizado em %{date}"
+        still_need_help: Ainda tem dúvidas? Enviar uma solicitação
+        return_to_top: Voltar ao topo
+      search:
+        results_for:
+          one: "1 resultado para \"%{query}\""
+          other: "%{count} resultados para \"%{query}\""
+      login:
+        title: Acesse a Central de Ajuda
+        subtitle: Informe o e-mail cadastrado na B2B.reservas. Enviaremos um link de acesso, sem senha.
+        email_label: E-mail
+        email_placeholder: seu@email.com.br
+        submit: Enviar link de acesso
+        sent_title: Verifique seu e-mail
+        sent_body: Se %{email} estiver cadastrado, você vai receber um link para entrar. O link vale por %{minutes} minutos e só pode ser usado uma vez.
+        dormant: Ambiente de demonstração. O envio de e-mails está desligado.
+        sso_error: Não foi possível entrar pelo HUB. Tente de novo ou peça um link de acesso por e-mail.
+        verify_title: Entrar na Central de Ajuda
+        verify_body: Clique no botão para concluir o acesso.
+        verify_submit: Entrar
+        invalid_title: Link inválido ou expirado
+        invalid_body: Este link já foi usado ou expirou. Peça um novo link de acesso.
+        new_link: Pedir um novo link
+        restricted: Entre para ver os artigos e acompanhar suas solicitações.
+        email:
+          subject: Seu link de acesso à %{portal}
+          greeting: Olá, %{name}!
+          intro: Recebemos um pedido de acesso à %{portal}. Clique no botão abaixo para entrar.
+          button: Entrar na Central de Ajuda
+          expiry: O link vale por %{minutes} minutos e só pode ser usado uma vez.
+          ignore: Se você não pediu este acesso, ignore este e-mail.
+      requests:
+        requests_tab: Solicitações
+        support_badge: Equipe
+        details: Detalhes da solicitação
+        title: Minhas solicitações
+        mine: Minhas solicitações
+        organization: Solicitações da organização
+        search_placeholder: Pesquisar solicitações
+        search: Pesquisar
+        filter_status: Status
+        any_status: Qualquer status
+        subject: Assunto
+        id: Id
+        created_at: Criado
+        last_activity: Última atividade
+        status_column: Status
+        requester: Solicitante
+        assignee: Atribuído para
+        form: Formulário
+        empty: Nenhuma solicitação encontrada.
+        new_title: Enviar uma solicitação
+        form_label: Escolha seu problema abaixo
+        description: Descrição
+        description_hint: Insira os detalhes de sua solicitação. Um membro de nossa equipe de suporte responderá assim que possível.
+        attachments: Anexos (opcional)
+        attachments_hint: Até %{count} arquivos, com até %{size} MB cada.
+        add_files: Adicionar arquivo ou soltar arquivos aqui
+        optional: (opcional)
+        submit: Enviar
+        created: "Sua solicitação #%{id} foi enviada. Responderemos assim que possível."
+        reply_title: Adicionar à conversa
+        reply_placeholder: Escreva sua resposta
+        solve: Marcar como resolvido
+        solve_hint: Marque se a sua solicitação já foi resolvida.
+        send_reply: Enviar
+        closed_reply_notice: Esta solicitação está fechada. Sua resposta abrirá uma nova solicitação de acompanhamento, ligada a esta.
+        closed_notice: Esta solicitação está fechada e não aceita mais respostas.
+        follow_up: Criar uma solicitação de acompanhamento
+        rate: Avalie o atendimento
+        support_team: Equipe B2B.reservas
+        you: Você
+        attachments_label: Anexos
+        back: Minhas solicitações
+        submitted_by: "%{name} enviou esta solicitação"
+        status:
+          open: Aberto
+          awaiting: Aguardando sua resposta
+          solved: Resolvido
+        errors:
+          title: Corrija os itens abaixo
+          inbox_not_configured: O envio de solicitações ainda não foi configurado nesta Central. Fale com a B2B.reservas pelos canais de atendimento.
+          field_invalid: "Preencha corretamente o campo %{field}."
+          subject_required: Informe o assunto.
+          description_required: Informe a descrição.
+          too_many_attachments: Envie no máximo %{count} anexos.
+          attachment_too_big: "O arquivo %{file} passa do limite de %{size} MB."
+          attachment_type: "O tipo do arquivo %{file} não é aceito."
+          attachment_invalid: Não foi possível anexar o arquivo.
+          reply_required: Escreva uma resposta ou anexe um arquivo.
+          reply_not_allowed: Você não pode responder a esta solicitação.
     search:
       search_placeholder: Pesquisar por artigo por título ou corpo...
       empty_placeholder: Nenhum resultado encontrado.
@@ -543,7 +687,7 @@ pt_BR:
       company_name: Empresa
       inbox_name: Caixa de Entrada
       inbox_type: Tipo de Caixa de Entrada
-    button: Abrir conversa
+    button: Abrir ticket
   time_units:
     days:
       one: '%{count} dia'
@@ -563,7 +707,7 @@ pt_BR:
   automation:
     system_name: 'Sistema de Automação'
   crm:
-    no_message: 'Nenhuma mensagem na conversa'
+    no_message: 'Nenhuma mensagem no ticket'
     attachment: '[Anexo: %{type}]'
     no_content: '[Sem conteúdo]'
     created_activity: |
@@ -633,14 +777,14 @@ pt_BR:
         installation_override: 'Configuração da instalação'
         default: 'Padrão'
       features:
-        conversation_completion: 'Avaliador de conclusão de conversas inativas'
+        conversation_completion: 'Avaliador de conclusão de tickets inativos'
         editor: 'Editores'
         assistant: 'Assistente'
         copilot: 'Copiloto'
-        label_suggestion: 'Sugestão de etiqueta'
+        label_suggestion: 'Sugestão de tag'
         document_faq_generation: 'Geração de FAQs para documentos'
-        conversation_faq_generation: 'Geração de FAQs para conversas'
-        conversation_faq_matching: 'Correspondência de FAQs da conversa'
+        conversation_faq_generation: 'Geração de FAQs para tickets'
+        conversation_faq_matching: 'Correspondência de FAQs do ticket'
         help_center_article_generation: 'Geração de artigos da central de ajuda'
         onboarding_content_generation: 'Geração de conteúdo de onboarding'
         help_center_query_translation: 'Tradução de consultas da central de ajuda'
@@ -658,3 +802,53 @@ pt_BR:
         button: 'Reenviar e-mail de confirmação'
         sent: 'E-mail de confirmação enviado.'
         already_confirmed: 'O usuário já está confirmado.'
+  tickets:
+    merge:
+      source_comment: 'Esta solicitação foi fechada e mesclada na solicitação #%{id} "%{subject}".'
+      target_comment: 'A solicitação #%{id} "%{subject}" foi fechada e mesclada nesta solicitação.'
+    statuses:
+      new_ticket: 'Novo'
+      open: 'Aberto'
+      waiting_on_customer: 'Pendente'
+      on_hold: 'Em espera'
+      resolved: 'Resolvido'
+      closed: 'Fechado'
+      pending: 'Com o bot'
+    priorities:
+      low: 'Baixa'
+      medium: 'Normal'
+      high: 'Alta'
+      urgent: 'Urgente'
+    satisfaction:
+      unoffered: 'Não oferecida'
+      offered: 'Oferecida'
+      good: 'Boa'
+      bad: 'Ruim'
+    types:
+      question: 'Pergunta'
+      incident: 'Incidente'
+      problem: 'Problema'
+      task: 'Tarefa'
+    rules:
+      open_ticket: 'Abrir o ticket #%{id}'
+      defaults:
+        request_received:
+          title: 'Notificar solicitante e CCs sobre pedido recebido'
+          subject: '[Pedido recebido] {{ticket.title}}'
+          body: "Sua solicitação ({{ticket.id}}) foi recebida e está sendo analisada pela nossa equipe de suporte.\n\nPara adicionar comentários, responda a este e-mail."
+        group_assignment:
+          title: 'Notificar grupo sobre atribuição'
+          subject: '[{{ticket.group}}] Atribuição: {{ticket.title}}'
+          body: "O ticket #{{ticket.id}} foi atribuído ao grupo {{ticket.group}}.\n\n{{ticket.url}}"
+        default_priority:
+          title: 'Definir prioridade Normal quando vazia'
+        pending_reminder_24h:
+          title: 'Lembrete de pendente após 24 horas'
+          subject: '[Lembrete] {{ticket.title}}'
+          body: "Estamos aguardando sua resposta na solicitação #{{ticket.id}}. Responda a este e-mail para continuar."
+        satisfaction_request:
+          title: 'Solicitar avaliação de satisfação do cliente'
+        pending_reminder_5d:
+          title: 'Lembrete de pendente após 5 dias'
+          subject: '[Lembrete] {{ticket.title}}'
+          body: "Ainda estamos aguardando sua resposta na solicitação #{{ticket.id}}. Responda a este e-mail para continuar."

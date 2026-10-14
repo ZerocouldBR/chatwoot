@@ -26,7 +26,6 @@ RSpec.describe Conversations::EventDataPresenter do
         can_reply: conversation.can_reply?,
         channel: conversation.inbox.channel_type,
         timestamp: conversation.last_activity_at.to_i,
-        snoozed_until: conversation.snoozed_until,
         custom_attributes: conversation.custom_attributes,
         first_reply_created_at: nil,
         contact_last_seen_at: conversation.contact_last_seen_at.to_i,

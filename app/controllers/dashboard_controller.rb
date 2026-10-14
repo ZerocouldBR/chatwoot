@@ -1,6 +1,8 @@
 class DashboardController < ActionController::Base
   include SwitchLocale
   include PortalHomeData
+  # ServiceDesk B2B: a home da Central no domínio próprio usa os helpers da sessão do contato (artigos por segmento)
+  include PortalCustomerSession
 
   GLOBAL_CONFIG_KEYS = %w[
     LOGO

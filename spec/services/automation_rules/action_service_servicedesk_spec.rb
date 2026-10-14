@@ -12,7 +12,7 @@ RSpec.describe AutomationRules::ActionService do
     create(:custom_attribute_definition, account: account, attribute_key: 'zd_area_interna', attribute_display_type: 'list',
                                          attribute_values: %w[Suporte Financeiro])
     create(:custom_attribute_definition, account: account, attribute_key: 'zd_status', attribute_display_type: 'list',
-                                         attribute_values: ['Aberto', 'Em andamento', 'Pendente', 'Resolvido'])
+                                         attribute_values: ['Novo', 'Aberto', 'Em andamento', 'Pendente', 'Resolvido'])
   end
 
   it 'applies the ServiceDesk actions in order' do
@@ -27,8 +27,21 @@ RSpec.describe AutomationRules::ActionService do
     conversation.reload
 
     expect(conversation.custom_attributes).to include('zd_area_interna' => 'Financeiro', 'zd_status' => 'Pendente')
-    expect(conversation.status).to eq('snoozed')
+    expect(conversation.status).to eq('waiting_on_customer')
     expect(conversation.additional_attributes['mail_subject']).to eq('[Financeiro] Cobrança')
+    expect(conversation.subject).to eq('[Financeiro] Cobrança')
+  end
+
+  it 'never moves the ticket to New or Closed (as in Zendesk)' do
+    rule = create(:automation_rule, account: account, event_name: 'conversation_created', conditions: conditions,
+                                    actions: [{ 'action_name' => 'add_label', 'action_params' => ['vip'] }])
+    rule.actions = [{ 'action_name' => 'set_ticket_status', 'action_params' => ['Novo'] }]
+    rule.save!(validate: false)
+
+    described_class.new(rule, account, conversation).perform
+
+    expect(conversation.reload.status).to eq('open')
+    expect(conversation.custom_attributes['zd_status']).to be_nil
   end
 
   it 'keeps running the next actions when one of them is no longer valid' do

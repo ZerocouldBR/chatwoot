@@ -1,7 +1,7 @@
 {
   "AUTOMATION": {
     "HEADER": "Automation",
-    "DESCRIPTION": "Automation can replace and streamline existing processes that require manual effort, such as adding labels and assigning conversations to the most suitable agent. This allows the team to focus on their strengths while reducing time spent on routine tasks.",
+    "DESCRIPTION": "Automation can replace and streamline existing processes that require manual effort, such as adding tags and assigning tickets to the most suitable agent. This allows the group to focus on their strengths while reducing time spent on routine tasks.",
     "LEARN_MORE": "Learn more about automation",
     "COUNT": "{n} automation | {n} automations",
     "HEADER_BTN_TXT": "Create Automation",
@@ -39,7 +39,7 @@
           "RETRY": "Retry",
           "UNAVAILABLE": "Unavailable monitor",
           "UNAVAILABLE_HELP": "This monitor is unavailable for automation. Select a live monitor to activate this rule.",
-          "HELP": "Runs once when the monitor first matches a conversation from new live activity. Historical scans do not trigger actions."
+          "HELP": "Runs once when the monitor first matches a ticket from new live activity. Historical scans do not trigger actions."
         },
         "RUN_TYPE": {
           "LABEL": "When should this rule run?",
@@ -62,7 +62,7 @@
           "INBOX_LABEL": "Inbox",
           "ERROR": "The wait must be between 10 minutes and 30 days",
           "OPTIONS": {
-            "CONVERSATION_STATUS": "Conversation stays in a status",
+            "CONVERSATION_STATUS": "Ticket stays in a status",
             "CUSTOMER_UNRESPONSIVE": "Customer hasn't replied",
             "AGENT_UNRESPONSIVE": "No teammate has replied"
           },
@@ -72,11 +72,11 @@
             "DAYS": "{count} day | {count} days"
           },
           "EXPLANATION": {
-            "CONVERSATION_STATUS": "The clock starts when a conversation moves into this status. If it is still there {duration} later, the actions below run. If the status changes before then, nothing happens.",
+            "CONVERSATION_STATUS": "The clock starts when a ticket moves into this status. If it is still there {duration} later, the actions below run. If the status changes before then, nothing happens.",
             "CUSTOMER_UNRESPONSIVE": "The clock starts when a teammate replies. If the customer hasn't written back {duration} later, the actions below run. If they do reply, nothing happens, and the next teammate reply starts the clock again.",
             "AGENT_UNRESPONSIVE": "The clock starts when a customer sends a message. If no teammate has replied {duration} later, the actions below run. If someone replies before then, nothing happens."
           },
-          "FOOTNOTE": "Only new activity starts a clock. Conversations already sitting in this state are picked up the next time something happens on them."
+          "FOOTNOTE": "Only new activity starts a clock. Tickets already sitting in this state are picked up the next time something happens on them."
         },
         "CONDITIONS": {
           "LABEL": "Conditions"
@@ -151,7 +151,7 @@
     "CONDITION": {
       "DELETE_MESSAGE": "You need to have atleast one condition to save",
       "CONTACT_CUSTOM_ATTR_LABEL": "Contact Custom Attributes",
-      "CONVERSATION_CUSTOM_ATTR_LABEL": "Conversation Custom Attributes",
+      "CONVERSATION_CUSTOM_ATTR_LABEL": "Ticket Custom Attributes",
       "PLACEHOLDERS": {
         "CAPTAIN": "Describe what to look for, e.g. customer wants to cancel"
       }
@@ -159,7 +159,7 @@
     "ACTION": {
       "DELETE_MESSAGE": "You need to have atleast one action to save",
       "TEAM_MESSAGE_INPUT_PLACEHOLDER": "Enter your message here",
-      "TEAM_DROPDOWN_PLACEHOLDER": "Select teams",
+      "TEAM_DROPDOWN_PLACEHOLDER": "Select groups",
       "EMAIL_INPUT_PLACEHOLDER": "Enter email",
       "URL_INPUT_PLACEHOLDER": "Enter URL",
       "INSERT_CONTACT_EMAIL": "Use contact's email",
@@ -198,33 +198,33 @@
     "NONE_OPTION": "None",
     "LAST_RESPONDING_AGENT": "Last Responding Agent",
     "EVENTS": {
-      "CONVERSATION_CREATED": "Conversation Created",
-      "CONVERSATION_UPDATED": "Conversation Updated",
+      "CONVERSATION_CREATED": "Ticket Created",
+      "CONVERSATION_UPDATED": "Ticket Updated",
       "MESSAGE_CREATED": "Message Created",
-      "CONVERSATION_RESOLVED": "Conversation Resolved",
-      "CONVERSATION_OPENED": "Conversation Opened",
+      "CONVERSATION_RESOLVED": "Ticket Resolved",
+      "CONVERSATION_OPENED": "Ticket Opened",
       "MONITOR_MATCHED": "Monitor Matched"
     },
     "ACTIONS": {
       "ASSIGN_AGENT": "Assign to Agent",
-      "ASSIGN_TEAM": "Assign a Team",
+      "ASSIGN_TEAM": "Assign a Group",
       "REMOVE_ASSIGNED_AGENT": "Remove Assigned Agent",
-      "REMOVE_ASSIGNED_TEAM": "Remove Assigned Team",
-      "ADD_LABEL": "Add a Label",
-      "REMOVE_LABEL": "Remove a Label",
-      "SEND_EMAIL_TO_TEAM": "Send an Email to Team",
+      "REMOVE_ASSIGNED_TEAM": "Remove Assigned Group",
+      "ADD_LABEL": "Add a Tag",
+      "REMOVE_LABEL": "Remove a Tag",
+      "SEND_EMAIL_TO_TEAM": "Send an Email to Group",
       "SEND_EMAIL_TRANSCRIPT": "Send an Email Transcript",
-      "MUTE_CONVERSATION": "Mute Conversation",
-      "SNOOZE_CONVERSATION": "Snooze Conversation",
-      "RESOLVE_CONVERSATION": "Resolve Conversation",
+      "MUTE_CONVERSATION": "Mute Ticket",
+      "SNOOZE_CONVERSATION": "Put Ticket On-hold",
+      "RESOLVE_CONVERSATION": "Resolve Ticket",
       "SEND_WEBHOOK_EVENT": "Send Webhook Event",
       "SEND_ATTACHMENT": "Send Attachment",
       "SEND_MESSAGE": "Send a Message",
       "ADD_PRIVATE_NOTE": "Add a Private Note",
       "CHANGE_PRIORITY": "Change Priority",
       "ADD_SLA": "Add SLA",
-      "OPEN_CONVERSATION": "Open conversation",
-      "PENDING_CONVERSATION": "Mark conversation as pending",
+      "OPEN_CONVERSATION": "Open ticket",
+      "PENDING_CONVERSATION": "Mark ticket as pending",
       "SET_TICKET_STATUS": "Set ticket status",
       "SET_CUSTOM_ATTRIBUTE": "Set a field",
       "CHANGE_SUBJECT": "Change subject"
@@ -236,7 +236,7 @@
     "PRIORITY_TYPES": {
       "NONE": "None",
       "LOW": "Low",
-      "MEDIUM": "Medium",
+      "MEDIUM": "Normal",
       "HIGH": "High",
       "URGENT": "Urgent"
     },
@@ -246,7 +246,7 @@
       "MESSAGE_CONTAINS": "Message Content",
       "EMAIL": "Email",
       "INBOX": "Inbox",
-      "CONVERSATION_LANGUAGE": "Conversation Language",
+      "CONVERSATION_LANGUAGE": "Ticket Language",
       "PHONE_NUMBER": "Phone Number",
       "STATUS": "Status",
       "BROWSER_LANGUAGE": "Browser Language",
@@ -255,9 +255,9 @@
       "COMPANY_NAME": "Company",
       "REFERER_LINK": "Referrer Link",
       "ASSIGNEE_NAME": "Assignee",
-      "TEAM_NAME": "Team",
+      "TEAM_NAME": "Group",
       "PRIORITY": "Priority",
-      "LABELS": "Labels",
+      "LABELS": "Tags",
       "CAPTAIN": "Captain"
     }
   }

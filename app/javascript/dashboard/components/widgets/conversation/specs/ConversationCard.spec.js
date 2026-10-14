@@ -32,29 +32,20 @@ const mountComponent = (chat, currentContact = {}, props = {}) =>
   });
 
 describe('ConversationCard', () => {
-  it('does not reserve the labels row when only a persisted SLA policy id is present', () => {
-    const wrapper = mountComponent({ sla_policy_id: 1, applied_sla: null });
+  it('does not reserve the labels row when the ticket has no SLA', () => {
+    const wrapper = mountComponent({ sla_policy_id: null });
 
     expect(wrapper.findComponent({ name: 'CardLabels' }).exists()).toBe(false);
   });
 
-  it('shows the labels row when an active applied SLA is present', () => {
-    const wrapper = mountComponent({
-      sla_policy_id: 1,
-      applied_sla: { id: 1 },
-    });
+  it('shows the labels row when an SLA policy applies to the ticket', () => {
+    const wrapper = mountComponent({ sla_policy_id: 1 });
 
     expect(wrapper.findComponent({ name: 'CardLabels' }).exists()).toBe(true);
   });
 
   it('does not reserve the labels row when the contact is blocked', () => {
-    const wrapper = mountComponent(
-      {
-        sla_policy_id: 1,
-        applied_sla: { id: 1 },
-      },
-      { blocked: true }
-    );
+    const wrapper = mountComponent({ sla_policy_id: 1 }, { blocked: true });
 
     expect(wrapper.findComponent({ name: 'CardLabels' }).exists()).toBe(false);
   });

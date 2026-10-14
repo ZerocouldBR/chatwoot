@@ -76,6 +76,10 @@
         "PERSONAL": {
           "LABEL": "Privada",
           "DESCRIPTION": "Esta macro será privada para você e não estará disponível para outras pessoas."
+        },
+        "TEAM": {
+          "LABEL": "Grupo",
+          "DESCRIPTION": "Disponível para os agentes de um grupo."
         }
       }
     },
@@ -99,15 +103,15 @@
       "ATLEAST_ONE_ACTION_REQUIRED": "Pelo menos uma ação é necessária"
     },
     "ACTIONS": {
-      "ASSIGN_TEAM": "Atribuir um Time",
+      "ASSIGN_TEAM": "Atribuir um Grupo",
       "ASSIGN_AGENT": "Atribuir um Agente",
-      "ADD_LABEL": "Adicionar uma Etiqueta",
-      "REMOVE_LABEL": "Remover uma Etiqueta",
+      "ADD_LABEL": "Adicionar uma Tag",
+      "REMOVE_LABEL": "Remover uma Tag",
       "REMOVE_ASSIGNED_AGENT": "Remove Assigned Agent",
-      "REMOVE_ASSIGNED_TEAM": "Remover Time Atribuído",
+      "REMOVE_ASSIGNED_TEAM": "Remover Grupo Atribuído",
       "SEND_EMAIL_TRANSCRIPT": "Enviar uma transcrição por e-mail",
       "MUTE_CONVERSATION": "Silenciar Ticket",
-      "SNOOZE_CONVERSATION": "Adiar Ticket",
+      "SNOOZE_CONVERSATION": "Colocar Ticket em Espera",
       "RESOLVE_CONVERSATION": "Resolver Ticket",
       "CHANGE_STATUS": "Alterar Status",
       "SEND_ATTACHMENT": "Enviar Anexo",
@@ -122,7 +126,7 @@
     "PRIORITY_TYPES": {
       "NONE": "Nenhuma",
       "LOW": "Baixa",
-      "MEDIUM": "Média",
+      "MEDIUM": "Normal",
       "HIGH": "Alta",
       "URGENT": "Urgente"
     }

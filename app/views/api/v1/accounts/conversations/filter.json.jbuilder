@@ -1,3 +1,5 @@
+# ServiceDesk: relógios do ticket da página inteira numa consulta (colunas das views do Zendesk)
+Servicedesk::TicketClocks.preload(@conversations)
 json.meta do
   json.mine_count @conversations_count[:mine_count]
   json.unassigned_count @conversations_count[:unassigned_count]

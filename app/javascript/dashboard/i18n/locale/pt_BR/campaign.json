@@ -119,7 +119,7 @@
           },
           "AUDIENCE": {
             "LABEL": "Público",
-            "PLACEHOLDER": "Selecionar etiquetas dos clientes",
+            "PLACEHOLDER": "Selecionar tags dos clientes",
             "ERROR": "Público é necessário"
           },
           "SCHEDULED_AT": {
@@ -185,7 +185,7 @@
           },
           "AUDIENCE": {
             "LABEL": "Público",
-            "PLACEHOLDER": "Selecionar etiquetas dos clientes",
+            "PLACEHOLDER": "Selecionar tags dos clientes",
             "ERROR": "Público é necessário"
           },
           "SCHEDULED_AT": {

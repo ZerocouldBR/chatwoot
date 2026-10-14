@@ -6,10 +6,15 @@ export default {
     ALL: 'all',
   },
   STATUS_TYPE: {
+    UNSOLVED: 'unsolved',
+    NEW: 'new_ticket',
     OPEN: 'open',
+    WAITING_ON_CUSTOMER: 'waiting_on_customer',
+    ON_HOLD: 'on_hold',
     RESOLVED: 'resolved',
+    CLOSED: 'closed',
+    // The bot is handling the ticket.
     PENDING: 'pending',
-    SNOOZED: 'snoozed',
     ALL: 'all',
   },
   CONVERSATION_TYPE: {
@@ -38,11 +43,6 @@ export default {
     CONDENSED: 'condensed',
     EXPANDED: 'expanded',
   },
-  DOCS_URL: 'https://www.chatwoot.com/docs/product/',
-  HELP_CENTER_DOCS_URL:
-    'https://www.chatwoot.com/docs/product/others/help-center',
-  TESTIMONIAL_URL:
-    'https://testimonials.cdn.chatwoot.com/testimonial-content.json',
   WHATSAPP_EMBEDDED_SIGNUP_DOCS_URL:
     'https://developers.facebook.com/docs/whatsapp/embedded-signup/custom-flows/onboarding-business-app-users#limitations',
   SMALL_SCREEN_BREAKPOINT: 768,
@@ -71,12 +71,6 @@ export default {
     TYPE: 'type',
     SORT_ORDER: 'sort_order',
   },
-  SLA_MISS_TYPES: {
-    FRT: 'frt',
-    NRT: 'nrt',
-    RT: 'rt',
-  },
 };
 export const DEFAULT_REDIRECT_URL = '/app/';
-export const META_RESTRICTION_STATUS_URL =
-  'https://status.chatwoot.com/incidents';
+export const META_RESTRICTION_STATUS_URL = 'https://metastatus.com/';

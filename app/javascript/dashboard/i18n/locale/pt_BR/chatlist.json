@@ -10,7 +10,7 @@
     "FETCH_ERROR": "Não foi possível carregar os tickets. Por favor, tente novamente.",
     "TAB_HEADING": "Tickets",
     "MENTION_HEADING": "Menções",
-    "UNATTENDED_HEADING": "Não Atendidas",
+    "UNATTENDED_HEADING": "Aguardando resposta",
     "SEARCH": {
       "INPUT": "Pesquisar pessoas, tickets, respostas salvas .."
     },
@@ -21,23 +21,29 @@
       "all": "Todos"
     },
     "CHAT_STATUS_FILTER_ITEMS": {
+      "unsolved": {
+        "TEXT": "Não resolvidos"
+      },
+      "new_ticket": {
+        "TEXT": "Novos"
+      },
       "open": {
-        "TEXT": "Aberto"
+        "TEXT": "Abertos"
       },
-      "sd_pending": {
-        "TEXT": "Pendente"
+      "waiting_on_customer": {
+        "TEXT": "Pendentes"
       },
-      "sd_hold": {
+      "on_hold": {
         "TEXT": "Em espera"
       },
       "resolved": {
-        "TEXT": "Resolvido"
+        "TEXT": "Resolvidos"
+      },
+      "closed": {
+        "TEXT": "Fechados"
       },
       "pending": {
-        "TEXT": "Com o bot"
-      },
-      "snoozed": {
-        "TEXT": "Pendente ou em espera"
+        "TEXT": "Com o robô"
       },
       "all": {
         "TEXT": "Todos"

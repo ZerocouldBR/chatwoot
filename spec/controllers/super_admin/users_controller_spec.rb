@@ -398,7 +398,7 @@ RSpec.describe 'Super Admin Users API', type: :request do
 
         dialog = Nokogiri::HTML(response.body).at_css('dialog#unblock-email-dialog')
         expect(dialog.text).to include('Unblock bounced@example.com?')
-        expect(dialog.text).to include('Chatwoot will send emails to this address again.')
+        expect(dialog.text).to include('Helpdesk will send emails to this address again.')
         expect(dialog.at_css("form[action='/super_admin/users/#{user.id}/clear_email_suppression']")).to be_present
       end
 

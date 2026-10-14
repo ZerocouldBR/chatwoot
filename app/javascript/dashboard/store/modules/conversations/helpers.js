@@ -1,8 +1,9 @@
-import { CONVERSATION_PRIORITY_ORDER } from 'shared/constants/messages';
 import {
-  isSdCategoryFilter,
-  matchesStatusFilter,
-} from 'dashboard/servicedesk/statusFilter';
+  SD_SORT_OPTIONS,
+  SD_SORT_CONFIG,
+} from 'dashboard/servicedesk/views/sdSort';
+import { CONVERSATION_PRIORITY_ORDER } from 'shared/constants/messages';
+import { UNSOLVED_STATUSES } from 'dashboard/constants/ticketStatuses';
 
 export const findPendingMessageIndex = (chat, message) => {
   const { echo_id: tempMessageId } = message;
@@ -11,15 +12,12 @@ export const findPendingMessageIndex = (chat, message) => {
   );
 };
 
-export const filterByStatus = (chatStatus, filterStatus, conversation) => {
-  // ServiceDesk: Pendente/Em espera (snoozed + categoria do zd_status)
-  if (isSdCategoryFilter(filterStatus)) {
-    return matchesStatusFilter(
-      { ...conversation, status: chatStatus },
-      filterStatus
-    );
-  }
-  return filterStatus === 'all' ? true : chatStatus === filterStatus;
+// 'unsolved' groups New, Open, Pending and On-hold, mirroring the API filter.
+export const filterByStatus = (chatStatus, filterStatus) => {
+  if (filterStatus === 'all') return true;
+  if (filterStatus === 'unsolved')
+    return UNSOLVED_STATUSES.includes(chatStatus);
+  return chatStatus === filterStatus;
 };
 
 export const filterByInbox = (shouldFilter, inboxId, chatInboxId) => {
@@ -60,7 +58,7 @@ export const applyPageFilters = (conversation, filters) => {
   const team = meta.team || {};
   const { id: chatTeamId } = team;
 
-  let shouldFilter = filterByStatus(chatStatus, status, conversation);
+  let shouldFilter = filterByStatus(chatStatus, status);
   shouldFilter = filterByInbox(shouldFilter, inboxId, chatInboxId);
   shouldFilter = filterByTeam(shouldFilter, teamId, chatTeamId);
   shouldFilter = filterByLabel(shouldFilter, labels, chatLabels);
@@ -130,6 +128,8 @@ const SORT_OPTIONS = {
   waiting_since_desc: ['sortOnWaitingSince', 'desc'],
   priority_desc_created_at_asc: ['sortOnPriorityCreatedAt', 'desc'],
   unread: ['sortOnUnread', 'desc'],
+  // ServiceDesk: ordenações das views do Zendesk (sd_*), ver servicedesk/views/sdSort.js
+  ...SD_SORT_OPTIONS,
 };
 const sortAscending = (valueA, valueB) => valueA - valueB;
 const sortDescending = (valueA, valueB) => valueB - valueA;
@@ -182,6 +182,8 @@ const sortConfig = {
 
     return (b.last_activity_at || 0) - (a.last_activity_at || 0);
   },
+
+  ...SD_SORT_CONFIG,
 };
 
 export const sortComparator = (a, b, sortKey) => {

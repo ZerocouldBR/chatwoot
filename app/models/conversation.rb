@@ -4,19 +4,26 @@
 #
 #  id                     :integer          not null, primary key
 #  additional_attributes  :jsonb
-#  ai_assignee_type       :string
 #  agent_last_seen_at     :datetime
+#  ai_assignee_type       :string
 #  assignee_last_seen_at  :datetime
 #  cached_label_list      :text
 #  contact_last_seen_at   :datetime
 #  custom_attributes      :jsonb
+#  deleted_at             :datetime
+#  due_at                 :datetime
 #  first_reply_created_at :datetime
 #  identifier             :string
 #  last_activity_at       :datetime         not null
+#  next_sla_breach_at     :datetime
 #  priority               :integer
-#  snoozed_until          :datetime
-#  status                 :integer          default("open"), not null
+#  satisfaction           :integer          default(0), not null
+#  sla_breached           :boolean          default(FALSE), not null
+#  status                 :integer          default("new_ticket"), not null
 #  status_changed_at      :datetime
+#  subject                :string(150)
+#  ticket_type            :integer
+#  triggers_event_cursor  :bigint
 #  uuid                   :uuid             not null
 #  waiting_since          :datetime
 #  created_at             :datetime         not null
@@ -25,33 +32,46 @@
 #  assignee_agent_bot_id  :bigint
 #  assignee_id            :integer
 #  campaign_id            :bigint
+#  company_id             :bigint
 #  contact_id             :bigint
 #  contact_inbox_id       :bigint
 #  display_id             :integer          not null
+#  followup_source_id     :bigint
 #  inbox_id               :integer          not null
+#  merged_into_id         :bigint
+#  problem_id             :bigint
 #  sla_policy_id          :bigint
+#  submitter_id           :bigint
 #  team_id                :bigint
 #
 # Indexes
 #
-#  conv_acid_inbid_stat_asgnid_idx                    (account_id,inbox_id,status,assignee_id)
-#  index_conversations_on_account_id                  (account_id)
-#  index_conversations_on_account_id_and_display_id   (account_id,display_id) UNIQUE
-#  index_conversations_on_assignee_id_and_account_id  (assignee_id,account_id)
-#  index_conversations_on_campaign_id                 (campaign_id)
-#  index_conversations_on_contact_id                  (contact_id)
-#  index_conversations_on_contact_inbox_id            (contact_inbox_id)
-#  index_conversations_on_created_at                  (created_at)
-#  index_conversations_on_first_reply_created_at      (first_reply_created_at)
-#  index_conversations_on_id_and_account_id           (account_id,id)
-#  index_conversations_on_identifier_and_account_id   (identifier,account_id)
-#  index_conversations_on_inbox_id                    (inbox_id)
-#  index_conversations_on_priority                    (priority)
-#  index_conversations_on_status_and_account_id       (status,account_id)
-#  index_conversations_on_status_and_priority         (status,priority)
-#  index_conversations_on_team_id                     (team_id)
-#  index_conversations_on_uuid                        (uuid) UNIQUE
-#  index_conversations_on_waiting_since               (waiting_since)
+#  conv_acid_inbid_stat_asgnid_idx                           (account_id,inbox_id,status,assignee_id)
+#  index_conversations_on_account_id                         (account_id)
+#  index_conversations_on_account_id_and_deleted_at          (account_id,deleted_at)
+#  index_conversations_on_account_id_and_display_id          (account_id,display_id) UNIQUE
+#  index_conversations_on_account_id_and_due_at              (account_id,due_at)
+#  index_conversations_on_account_id_and_next_sla_breach_at  (account_id,next_sla_breach_at)
+#  index_conversations_on_account_id_status_created_at       (account_id,status,created_at)
+#  index_conversations_on_account_status_changed_at          (account_id,status,status_changed_at)
+#  index_conversations_on_assignee_id_and_account_id         (assignee_id,account_id)
+#  index_conversations_on_campaign_id                        (campaign_id)
+#  index_conversations_on_company_id                         (company_id)
+#  index_conversations_on_contact_id                         (contact_id)
+#  index_conversations_on_contact_inbox_id                   (contact_inbox_id)
+#  index_conversations_on_created_at                         (created_at)
+#  index_conversations_on_first_reply_created_at             (first_reply_created_at)
+#  index_conversations_on_followup_source_id                 (followup_source_id)
+#  index_conversations_on_id_and_account_id                  (account_id,id)
+#  index_conversations_on_identifier_and_account_id          (identifier,account_id)
+#  index_conversations_on_inbox_id                           (inbox_id)
+#  index_conversations_on_priority                           (priority)
+#  index_conversations_on_problem_id                         (problem_id)
+#  index_conversations_on_status_and_account_id              (status,account_id)
+#  index_conversations_on_status_and_priority                (status,priority)
+#  index_conversations_on_team_id                            (team_id)
+#  index_conversations_on_uuid                               (uuid) UNIQUE
+#  index_conversations_on_waiting_since                      (waiting_since)
 #
 
 class Conversation < ApplicationRecord
@@ -64,11 +84,17 @@ class Conversation < ApplicationRecord
   include SortHandler
   include PushDataHelper
   include ConversationMuteHelpers
+  include TicketAuditable
+  include SlaTrackable
+  include TicketProblemLinkable
+  include TicketTrashable
+  include TicketSatisfaction
+  include Servicedesk::ConversationClock
 
   CONVERSATION_UPDATED_ADDITIONAL_ATTRIBUTE_KEYS = %w[conversation_language].freeze
   FILTERED_UNREAD_COUNT_ADDITIONAL_ATTRIBUTE_KEYS = %w[browser_language conversation_language mail_subject referer].freeze
   FILTERED_UNREAD_COUNT_UPDATE_KEYS = %w[
-    cached_label_list campaign_id custom_attributes first_reply_created_at label_list last_activity_at priority snoozed_until waiting_since
+    cached_label_list campaign_id custom_attributes first_reply_created_at label_list last_activity_at priority waiting_since
   ].freeze
   private_constant :CONVERSATION_UPDATED_ADDITIONAL_ATTRIBUTE_KEYS, :FILTERED_UNREAD_COUNT_ADDITIONAL_ATTRIBUTE_KEYS,
                    :FILTERED_UNREAD_COUNT_UPDATE_KEYS
@@ -82,10 +108,27 @@ class Conversation < ApplicationRecord
   validates :custom_attributes, jsonb_attributes_length: true
   validates :uuid, uniqueness: true
   validate :validate_referer_url
+  validate :priority_cannot_be_cleared
+  validate :ticket_type_cannot_be_cleared
+  validate :due_at_only_for_tasks
+  validate :company_matches_requester
+  validate :closed_ticket_is_read_only
+  validates :subject, length: { maximum: 150 }
 
-  enum status: { open: 0, resolved: 1, pending: 2, snoozed: 3 }
+  # Ticket statuses follow Zendesk: new_ticket (New), open, waiting_on_customer (Pending), on_hold, resolved (Solved), closed.
+  # `pending` is the AI agent state: the bot is handling the ticket.
+  enum status: { open: 0, resolved: 1, pending: 2, new_ticket: 4, waiting_on_customer: 5, on_hold: 6, closed: 7 }
+  enum ticket_type: { question: 0, incident: 1, problem: 2, task: 3 }, _prefix: true
+  UNSOLVED_STATUSES = %w[new_ticket open waiting_on_customer on_hold].freeze
+  # Ticket fields that freeze once a ticket is closed (tags stay editable).
+  LOCKED_WHEN_CLOSED = %w[status priority assignee_id team_id subject ticket_type due_at company_id contact_id problem_id custom_attributes].freeze
+  # Statuses an agent can pick; New and Closed are only set by the system.
+  AGENT_SETTABLE_STATUSES = %w[open waiting_on_customer on_hold resolved pending].freeze
   enum priority: { low: 0, medium: 1, high: 2, urgent: 3 }
 
+  # Closed tickets never take new messages; resolved ones only reopen when the inbox keeps a single ticket per contact.
+  scope :not_closed, -> { where.not(status: :closed) }
+  scope :unfinished, -> { where.not(status: %i[resolved closed]) }
   scope :unassigned, -> { where(assignee_id: nil, assignee_agent_bot_id: nil) }
   scope :assigned, -> { where.not(assignee_id: nil).or(where.not(assignee_agent_bot_id: nil)) }
   scope :assigned_to, ->(agent) { where(assignee_id: agent.id) }
@@ -122,20 +165,29 @@ class Conversation < ApplicationRecord
   belongs_to :contact
   belongs_to :contact_inbox
   belongs_to :team, optional: true
+  belongs_to :company, optional: true
+  # The agent who opened the ticket on the requester's behalf; blank when the requester submitted it.
+  belongs_to :submitter, class_name: 'User', optional: true
+  # A follow-up ticket points to the closed ticket the customer replied to.
+  belongs_to :followup_source, class_name: 'Conversation', optional: true
+  has_many :followups, class_name: 'Conversation', foreign_key: :followup_source_id, dependent: :nullify, inverse_of: :followup_source
   belongs_to :campaign, optional: true
 
   has_many :mentions, dependent: :destroy_async
   has_many :messages, dependent: :destroy_async, autosave: true
   has_one :csat_survey_response, dependent: :destroy_async
   has_many :conversation_participants, dependent: :destroy_async
+  has_many :conversation_ccs, dependent: :delete_all
   has_many :notifications, as: :primary_actor, dependent: :destroy_async
   has_many :attachments, through: :messages
   has_many :reporting_events, dependent: :destroy_async
   has_many :automation_rule_pending_executions, dependent: :delete_all
 
-  before_save :ensure_snooze_until_reset
+  before_save :assign_team_from_assignee
+  before_save :open_new_ticket_on_assignment
   before_save :set_status_changed_at
   before_create :determine_conversation_status
+  before_create :fill_ticket_defaults
   before_create :ensure_waiting_since
   after_create :mark_contact_as_lead
 
@@ -170,15 +222,17 @@ class Conversation < ApplicationRecord
   end
 
   def toggle_status
-    # FIXME: implement state machine with aasm
     self.status = open? ? :resolved : :open
-    self.status = :open if pending? || snoozed?
     save
   end
 
   def toggle_priority(priority = nil)
     self.priority = priority.presence
     save
+  end
+
+  def new_or_open?
+    new_ticket? || open?
   end
 
   def bot_handoff!(dispatch_event: true)
@@ -188,7 +242,7 @@ class Conversation < ApplicationRecord
 
     update(waiting_since: Time.current) if waiting_since.blank?
     self.ai_assignee = nil
-    open!
+    assignee_id.present? ? open! : new_ticket!
     dispatch_bot_handoff_event if dispatch_event
   end
 
@@ -287,8 +341,48 @@ class Conversation < ApplicationRecord
     # rubocop:enable Rails/SkipsModelValidations
   end
 
-  def ensure_snooze_until_reset
-    self.snoozed_until = nil unless snoozed?
+  def assign_team_from_assignee
+    return unless will_save_change_to_assignee_id? && assignee_id.present? && team_id.blank?
+
+    self.team = account.teams.joins(:team_members).where(team_members: { user_id: assignee_id }).order(:id).first
+  end
+
+  def open_new_ticket_on_assignment
+    self.status = :open if new_ticket? && assignee_id.present?
+  end
+
+  def priority_cannot_be_cleared
+    return unless persisted? && will_save_change_to_priority? && priority.nil?
+
+    errors.add(:priority, :blank)
+  end
+
+  def ticket_type_cannot_be_cleared
+    return unless persisted? && will_save_change_to_ticket_type? && ticket_type.nil?
+
+    errors.add(:ticket_type, :blank)
+  end
+
+  def due_at_only_for_tasks
+    errors.add(:due_at, :present) if due_at.present? && !ticket_type_task?
+  end
+
+  def company_matches_requester
+    return unless will_save_change_to_company_id? && company_id.present?
+
+    errors.add(:company_id, :invalid) unless company_id == contact&.company_id
+  end
+
+  def closed_ticket_is_read_only
+    return unless persisted? && status_in_database == 'closed'
+    return unless changed_attribute_names_to_save.intersect?(LOCKED_WHEN_CLOSED)
+
+    errors.add(:base, I18n.t('errors.conversations.closed'))
+  end
+
+  def fill_ticket_defaults
+    self.company_id ||= contact&.company_id
+    self.subject ||= additional_attributes&.dig('mail_subject')&.truncate(150)
   end
 
   def set_status_changed_at
@@ -322,7 +416,10 @@ class Conversation < ApplicationRecord
   end
 
   def handle_campaign_status
-    set_active_bot_conversation if campaign.sender_id.nil? && inbox.active_bot?
+    return set_active_bot_conversation if campaign.sender_id.nil? && inbox.active_bot?
+
+    # Campaign tickets start a conversation the agent owns, so they skip New.
+    self.status = :open if new_ticket?
   end
 
   def set_active_bot_conversation
@@ -350,8 +447,8 @@ class Conversation < ApplicationRecord
   end
 
   def list_of_keys
-    %w[team_id assignee_id assignee_agent_bot_id ai_assignee_type status snoozed_until custom_attributes label_list waiting_since
-       first_reply_created_at priority]
+    %w[team_id assignee_id assignee_agent_bot_id ai_assignee_type status custom_attributes label_list waiting_since
+       first_reply_created_at priority subject ticket_type due_at company_id]
   end
 
   def allowed_keys?
@@ -378,7 +475,7 @@ class Conversation < ApplicationRecord
     # Display id is set via a trigger in the database
     # So we need to specifically fetch it after the record is created
     # We can't use reload because it will clear the previous changes, which we need for the dispatcher
-    obj_from_db = self.class.find(id)
+    obj_from_db = self.class.unscoped.find(id)
     self[:display_id] = obj_from_db[:display_id]
     self[:uuid] = obj_from_db[:uuid]
   end
@@ -413,7 +510,7 @@ class Conversation < ApplicationRecord
   end
 
   def conversation_status_changed_to_open?
-    return false unless open?
+    return false unless new_or_open?
     # saved_change_to_status? method only works in case of update
     return true if previous_changes.key?(:id) || saved_change_to_status?
   end

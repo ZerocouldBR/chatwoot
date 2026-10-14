@@ -2,10 +2,12 @@ import { frontendURL } from '../../../helper/URLHelper';
 import CompaniesIndex from './pages/CompaniesIndex.vue';
 import CompanyDetailView from './pages/CompanyDetailView.vue';
 import { FEATURE_FLAGS } from '../../../featureFlags';
+import { SD_ROUTE_PERMISSIONS } from 'dashboard/servicedesk/roles/permissions';
 
 const commonMeta = {
   featureFlag: FEATURE_FLAGS.COMPANIES,
-  permissions: ['administrator', 'agent'],
+  // ServiceDesk M13: organizações acompanham a lista de usuários finais (contacts.list)
+  permissions: SD_ROUTE_PERMISSIONS.companies,
 };
 
 export const routes = [

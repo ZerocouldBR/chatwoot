@@ -55,7 +55,7 @@ describe AutomationRuleListener do
                                         { 'action_name' => 'assign_agent', 'action_params' => [user_1.id] },
                                         { 'action_name' => 'send_email_transcript', 'action_params' => ['new_agent@example.com'] },
                                         { 'action_name' => 'mute_conversation', 'action_params' => nil },
-                                        { 'action_name' => 'change_status', 'action_params' => ['snoozed'] },
+                                        { 'action_name' => 'change_status', 'action_params' => ['on_hold'] },
                                         { 'action_name' => 'send_message', 'action_params' => ['Send this message.'] },
                                         { 'action_name' => 'send_attachment' }
                                       ])
@@ -326,12 +326,12 @@ describe AutomationRuleListener do
             {
               attribute_key: 'status',
               filter_operator: 'equal_to',
-              values: ['snoozed'],
+              values: ['on_hold'],
               query_operator: nil
             }.with_indifferent_access
           ]
         )
-        conversation.update(status: :snoozed)
+        conversation.update(status: :on_hold)
       end
 
       let!(:event) do
@@ -363,7 +363,7 @@ describe AutomationRuleListener do
               {
                 attribute_key: 'status',
                 filter_operator: 'equal_to',
-                values: ['snoozed'],
+                values: ['on_hold'],
                 query_operator: nil
               }.with_indifferent_access
             ]
@@ -391,7 +391,7 @@ describe AutomationRuleListener do
         end
 
         it 'when automation rule is triggers, it will not assign team on attribute_changed values' do
-          conversation.update(status: :snoozed)
+          conversation.update(status: :on_hold)
           event = Events::Base.new('conversation_updated', Time.zone.now, { conversation: conversation,
                                                                             changed_attributes: { company_name: %w[Marvel DC] } })
 

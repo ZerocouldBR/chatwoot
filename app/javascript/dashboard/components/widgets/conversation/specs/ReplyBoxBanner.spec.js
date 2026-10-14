@@ -78,7 +78,6 @@ describe('ReplyBoxBanner', () => {
       expect(changeStatus).toHaveBeenCalledWith(expect.anything(), {
         conversationId: 1,
         status: 'open',
-        snoozedUntil: null,
       });
       expect(setCurrentChatAssignee).toHaveBeenCalledWith(expect.anything(), {
         conversationId: 1,

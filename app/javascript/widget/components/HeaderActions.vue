@@ -27,8 +27,10 @@ export default {
     }),
     canLeaveConversation() {
       return [
+        CONVERSATION_STATUS.NEW,
         CONVERSATION_STATUS.OPEN,
-        CONVERSATION_STATUS.SNOOZED,
+        CONVERSATION_STATUS.WAITING_ON_CUSTOMER,
+        CONVERSATION_STATUS.ON_HOLD,
         CONVERSATION_STATUS.PENDING,
       ].includes(this.conversationStatus);
     },

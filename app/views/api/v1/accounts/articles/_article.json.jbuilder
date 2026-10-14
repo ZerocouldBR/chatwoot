@@ -10,6 +10,9 @@ json.position article.position
 json.account_id article.account_id
 json.updated_at article.updated_at.to_i
 json.meta article.meta
+# ServiceDesk B2B: segmento (artigo restrito) e token para pré-visualizar rascunho/restrito no portal
+json.portal_user_segment_id article.portal_user_segment_id
+json.sd_preview_token Rails.application.message_verifier(:sd_article_preview).generate(article.id, purpose: :preview, expires_in: 2.hours)
 
 json.category do
   json.id article.category_id

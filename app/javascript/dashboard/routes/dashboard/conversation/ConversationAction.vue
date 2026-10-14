@@ -1,4 +1,5 @@
 <script setup>
+import { useTicketPanelFields } from 'dashboard/composables/useTicketPanelFields';
 import { computed, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useTimeoutFn } from '@vueuse/core';
@@ -13,6 +14,7 @@ import {
   CONVERSATION_EVENTS,
 } from 'dashboard/helper/AnalyticsHelper/events';
 import ContactDetailsItem from './ContactDetailsItem.vue';
+import TicketFields from './TicketFields.vue';
 import MultiselectDropdown from 'shared/components/ui/MultiselectDropdown.vue';
 import ConversationLabels from './labels/LabelBox.vue';
 import NextButton from 'dashboard/components-next/button/Button.vue';
@@ -26,6 +28,8 @@ defineProps({
     required: true,
   },
 });
+
+const { fieldClass } = useTicketPanelFields();
 
 const EMPTY_NOTE_DURATION = 2500;
 
@@ -56,12 +60,17 @@ const {
   dismiss: dismissLabelSuggestions,
 } = useConversationSuggestions('labels', currentChat);
 
+// Once set, a ticket priority cannot go back to empty (Zendesk rule), so "None" is only offered before that.
 const priorityOptions = computed(() => [
-  {
-    id: null,
-    name: t('CONVERSATION.PRIORITY.OPTIONS.NONE'),
-    icon: 'i-woot-priority-empty',
-  },
+  ...(currentChat.value?.priority
+    ? []
+    : [
+        {
+          id: null,
+          name: t('CONVERSATION.PRIORITY.OPTIONS.NONE'),
+          icon: 'i-woot-priority-empty',
+        },
+      ]),
   {
     id: CONVERSATION_PRIORITY.URGENT,
     name: t('CONVERSATION.PRIORITY.OPTIONS.URGENT'),
@@ -140,7 +149,13 @@ const assignedPriority = computed({
     const selectedOption = priorityOptions.value.find(
       opt => opt.id === currentChat.value.priority
     );
-    return selectedOption || priorityOptions.value[0];
+    return (
+      selectedOption || {
+        id: null,
+        name: t('CONVERSATION.PRIORITY.OPTIONS.NONE'),
+        icon: 'i-woot-priority-empty',
+      }
+    );
   },
   set(priorityItem) {
     const conversationId = currentChat.value.id;
@@ -252,10 +267,8 @@ const onClickAssignTeam = selectedItemTeam => {
 };
 
 const onClickAssignPriority = selectedPriorityItem => {
-  const isSamePriority = assignedPriority.value?.id === selectedPriorityItem.id;
-  assignedPriority.value = isSamePriority
-    ? priorityOptions.value[0]
-    : selectedPriorityItem;
+  if (assignedPriority.value?.id === selectedPriorityItem.id) return;
+  assignedPriority.value = selectedPriorityItem;
 };
 
 const acceptSuggestedPriority = () => {
@@ -299,8 +312,9 @@ const rejectSuggestedLabel = ({ title }) => {
 </script>
 
 <template>
-  <div>
-    <div>
+  <!-- "contents": each section is ordered (or hidden) by the account's ticket field settings in the panel. -->
+  <div class="contents">
+    <div :class="fieldClass('assignee')">
       <ContactDetailsItem
         compact
         :title="$t('CONVERSATION_SIDEBAR.ASSIGNEE_LABEL')"
@@ -331,7 +345,7 @@ const rejectSuggestedLabel = ({ title }) => {
         @select="onClickAssignAgent"
       />
     </div>
-    <div>
+    <div :class="fieldClass('team')">
       <ContactDetailsItem
         compact
         :title="$t('CONVERSATION_SIDEBAR.TEAM_LABEL')"
@@ -351,7 +365,7 @@ const rejectSuggestedLabel = ({ title }) => {
         @select="onClickAssignTeam"
       />
     </div>
-    <div>
+    <div :class="fieldClass('priority')">
       <ContactDetailsItem compact :title="$t('CONVERSATION.PRIORITY.TITLE')">
         <template #button>
           <SuggestButton
@@ -444,27 +458,33 @@ const rejectSuggestedLabel = ({ title }) => {
         {{ $t('CONVERSATION.SUGGESTIONS.EMPTY') }}
       </span>
     </div>
-    <ContactDetailsItem
-      compact
-      :title="$t('CONVERSATION_SIDEBAR.ACCORDION.CONVERSATION_LABELS')"
-    >
-      <template #button>
-        <SuggestButton
-          v-if="isSuggestionsEnabled"
-          :is-active="isLabelSuggestionActive"
-          :is-loading="isSuggestingLabels"
-          @click="suggestLabels"
-        />
-      </template>
-    </ContactDetailsItem>
-    <ConversationLabels
-      :conversation-id="conversationId"
-      :suggested-labels="suggestedLabels"
-      :is-suggestion-active="isLabelSuggestionActive"
-      :is-suggesting="isSuggestingLabels"
-      @accept-suggestion="acceptSuggestedLabels([$event])"
-      @reject-suggestion="rejectSuggestedLabel"
-      @accept-all-suggestions="acceptSuggestedLabels(suggestedLabels)"
+    <div :class="fieldClass('labels')">
+      <ContactDetailsItem
+        compact
+        :title="$t('CONVERSATION_SIDEBAR.ACCORDION.CONVERSATION_LABELS')"
+      >
+        <template #button>
+          <SuggestButton
+            v-if="isSuggestionsEnabled"
+            :is-active="isLabelSuggestionActive"
+            :is-loading="isSuggestingLabels"
+            @click="suggestLabels"
+          />
+        </template>
+      </ContactDetailsItem>
+      <ConversationLabels
+        :conversation-id="conversationId"
+        :suggested-labels="suggestedLabels"
+        :is-suggestion-active="isLabelSuggestionActive"
+        :is-suggesting="isSuggestingLabels"
+        @accept-suggestion="acceptSuggestedLabels([$event])"
+        @reject-suggestion="rejectSuggestedLabel"
+        @accept-all-suggestions="acceptSuggestedLabels(suggestedLabels)"
+      />
+    </div>
+    <TicketFields
+      :class="fieldClass('ticket_type')"
+      :conversation="currentChat"
     />
   </div>
 </template>

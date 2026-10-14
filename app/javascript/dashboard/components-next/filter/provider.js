@@ -11,6 +11,7 @@ import {
 } from './helper/filterHelper';
 import { groupFilterTypes } from './helper/filterAttributeIcons';
 import languages from 'dashboard/components/widgets/conversation/advancedFilterItems/languages.js';
+import { STATUS_FILTER_OPTIONS } from 'dashboard/constants/ticketStatuses';
 
 /**
  * @typedef {Object} FilterOption
@@ -116,12 +117,14 @@ export function useConversationFilterContext() {
       attributeName: t('FILTER.ATTRIBUTES.STATUS'),
       label: t('FILTER.ATTRIBUTES.STATUS'),
       inputType: 'multiSelect',
-      options: ['open', 'resolved', 'pending', 'snoozed', 'all'].map(id => {
-        return {
-          id,
-          name: t(`CHAT_LIST.CHAT_STATUS_FILTER_ITEMS.${id}.TEXT`),
-        };
-      }),
+      options: [...STATUS_FILTER_OPTIONS.filter(id => id !== 'unsolved')].map(
+        id => {
+          return {
+            id,
+            name: t(`CHAT_LIST.CHAT_STATUS_FILTER_ITEMS.${id}.TEXT`),
+          };
+        }
+      ),
       dataType: 'text',
       filterOperators: equalityOperators.value,
       attributeModel: 'standard',

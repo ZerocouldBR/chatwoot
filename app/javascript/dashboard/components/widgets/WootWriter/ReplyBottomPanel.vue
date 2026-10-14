@@ -12,11 +12,17 @@ import RequestContactInfoButton from '../RequestContactInfoButton.vue';
 import { INBOX_TYPES } from 'dashboard/helper/inbox';
 import { mapGetters } from 'vuex';
 import NextButton from 'dashboard/components-next/button/Button.vue';
+import SubmitAsMenu from 'dashboard/components-next/Conversation/SubmitAsMenu.vue';
+import ApplyMacroMenu from 'dashboard/components-next/Conversation/ApplyMacroMenu.vue';
+import { getUserPermissions } from 'dashboard/helper/permissionsHelper';
+import { canEditTicket } from 'dashboard/servicedesk/roles/permissions';
 
 export default {
   name: 'ReplyBottomPanel',
   components: {
     NextButton,
+    SubmitAsMenu,
+    ApplyMacroMenu,
     FileUpload,
     VideoCallButton,
     RequestContactInfoButton,
@@ -28,6 +34,10 @@ export default {
       default: false,
     },
     onSend: {
+      type: Function,
+      default: () => {},
+    },
+    onSendAs: {
       type: Function,
       default: () => {},
     },
@@ -129,6 +139,7 @@ export default {
     'selectWhatsappTemplate',
     'selectContentTemplate',
     'requestContactInfoTemplate',
+    'executeMacro',
   ],
   setup(props) {
     const { setSignatureFlagForInbox, fetchSignatureFlagFromUISettings } =
@@ -164,6 +175,15 @@ export default {
     };
   },
   computed: {
+    // ServiceDesk M13: sem ticket.edit (Agente light, Colaborador) não há "Enviar como <status>"
+    sdCanEditTicket() {
+      return canEditTicket(
+        getUserPermissions(
+          this.$store.getters.getCurrentUser,
+          this.$store.getters.getCurrentAccountId
+        )
+      );
+    },
     ...mapGetters({
       accountId: 'getCurrentAccountId',
       isFeatureEnabledonAccount: 'accounts/isFeatureEnabledonAccount',
@@ -269,8 +289,12 @@ export default {
 </script>
 
 <template>
-  <div class="flex justify-between p-3" :class="wrapClass">
+  <div class="flex items-end justify-between gap-2 p-3" :class="wrapClass">
     <div class="left-wrap">
+      <ApplyMacroMenu
+        v-if="!newConversationModalActive"
+        @apply="$emit('executeMacro', $event)"
+      />
       <NextButton
         v-if="!isEditorDisabled"
         v-tooltip.top-end="$t('CONVERSATION.REPLYBOX.TIP_EMOJI_ICON')"
@@ -391,7 +415,13 @@ export default {
         :color="isNote ? 'amber' : 'blue'"
         :disabled="isSendDisabled"
         class="flex-shrink-0"
+        :class="{ 'ltr:rounded-r-none rtl:rounded-l-none': !isNote }"
         @click="onSend"
+      />
+      <SubmitAsMenu
+        v-if="!isNote && !newConversationModalActive && sdCanEditTicket"
+        :disabled="isSendDisabled"
+        @submit="onSendAs"
       />
     </div>
   </div>
@@ -399,11 +429,11 @@ export default {
 
 <style lang="scss" scoped>
 .left-wrap {
-  @apply items-center flex gap-2;
+  @apply items-center flex flex-wrap gap-2 min-w-0;
 }
 
 .right-wrap {
-  @apply flex;
+  @apply flex shrink-0;
 }
 
 :deep(.file-uploads) {

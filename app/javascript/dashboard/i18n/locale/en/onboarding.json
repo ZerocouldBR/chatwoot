@@ -60,7 +60,7 @@
       "HELP_CENTER_SUMMARY": "Created {count} article across {categories} | Created {count} articles across {categories}"
     },
     "CHANNELS": {
-      "TITLE": "Connect all your conversation channels",
+      "TITLE": "Connect all your ticket channels",
       "HEADER": "We found a few channels you can connect",
       "CONNECT": "Connect",
       "CONNECTED": "Connected",

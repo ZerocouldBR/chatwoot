@@ -2,7 +2,7 @@
   "AGENT_BOTS": {
     "HEADER": "Robôs",
     "LOADING_EDITOR": "Carregando Editor...",
-    "DESCRIPTION": "Robôs agentes são como os membros mais fabulosos de seu time. Eles podem lidar com as pequenas coisas, assim você pode focar nas coisas que importam. Dê uma chance a eles. Você pode gerenciar seus robôs a partir desta página ou criar novos usando o botão 'Criar Robô'.",
+    "DESCRIPTION": "Robôs agentes são como os membros mais fabulosos de seu grupo. Eles podem lidar com as pequenas coisas, assim você pode focar nas coisas que importam. Dê uma chance a eles. Você pode gerenciar seus robôs a partir desta página ou criar novos usando o botão 'Criar Robô'.",
     "LEARN_MORE": "Aprenda sobre os robôs agentes",
     "COUNT": "{n} robô | {n} robôs",
     "SEARCH_PLACEHOLDER": "Pesquisar robôs...",

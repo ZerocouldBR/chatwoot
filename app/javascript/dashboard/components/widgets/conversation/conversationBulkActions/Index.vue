@@ -1,16 +1,13 @@
 <script setup>
-import { ref, computed, onMounted, onUnmounted, useAttrs } from 'vue';
+import { computed, onMounted, onUnmounted, useAttrs } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useMapGetter } from 'dashboard/composables/store.js';
-import { getUnixTime } from 'date-fns';
-import { findSnoozeTime } from 'dashboard/helper/snoozeHelpers';
 import { emitter } from 'shared/helpers/mitt';
 import { useBulkActions } from 'dashboard/composables/chatlist/useBulkActions.js';
 import { usePolicy } from 'dashboard/composables/usePolicy';
+import { useSdRolePermissions } from 'dashboard/servicedesk/roles/useSdRolePermissions';
 import { FEATURE_FLAGS } from 'dashboard/featureFlags';
-import wootConstants from 'dashboard/constants/globals';
 import {
-  CMD_BULK_ACTION_SNOOZE_CONVERSATION,
   CMD_BULK_ACTION_REOPEN_CONVERSATION,
   CMD_BULK_ACTION_RESOLVE_CONVERSATION,
 } from 'dashboard/helper/commandbar/events';
@@ -22,7 +19,6 @@ import BulkUpdateActions from './BulkUpdateActions.vue';
 import BulkLabelActions from './BulkLabelActions.vue';
 import BulkTeamActions from './BulkTeamActions.vue';
 import BulkMacroActions from './BulkMacroActions.vue';
-import CustomSnoozeModal from 'dashboard/components/CustomSnoozeModal.vue';
 
 const props = defineProps({
   conversations: {
@@ -36,18 +32,6 @@ const props = defineProps({
   selectedInboxes: {
     type: Array,
     default: () => [],
-  },
-  showOpenAction: {
-    type: Boolean,
-    default: false,
-  },
-  showResolvedAction: {
-    type: Boolean,
-    default: false,
-  },
-  showSnoozedAction: {
-    type: Boolean,
-    default: false,
   },
 });
 
@@ -71,6 +55,8 @@ const {
 } = useBulkActions();
 
 const { isFeatureFlagEnabled } = usePolicy();
+// ServiceDesk M13: o papel decide o que aparece (o backend devolve 403 do mesmo jeito)
+const { canEditTicket, canEditTags } = useSdRolePermissions();
 const isMacrosEnabled = computed(() =>
   isFeatureFlagEnabled(FEATURE_FLAGS.MACROS)
 );
@@ -92,35 +78,12 @@ const selectedLabel = computed(() =>
   })
 );
 
-const showCustomTimeSnoozeModal = ref(false);
-
-function onCmdSnoozeConversation(snoozeType) {
-  if (snoozeType === wootConstants.SNOOZE_OPTIONS.UNTIL_CUSTOM_TIME) {
-    showCustomTimeSnoozeModal.value = true;
-  } else if (typeof snoozeType === 'number') {
-    onUpdateConversations('snoozed', snoozeType);
-  } else {
-    onUpdateConversations('snoozed', findSnoozeTime(snoozeType) || null);
-  }
-}
-
 function onCmdReopenConversation() {
-  onUpdateConversations('open', null);
+  onUpdateConversations('open');
 }
 
 function onCmdResolveConversation() {
-  onUpdateConversations('resolved', null);
-}
-
-function customSnoozeTime(customSnoozedTime) {
-  showCustomTimeSnoozeModal.value = false;
-  if (customSnoozedTime) {
-    onUpdateConversations('snoozed', getUnixTime(customSnoozedTime));
-  }
-}
-
-function hideCustomSnoozeModal() {
-  showCustomTimeSnoozeModal.value = false;
+  onUpdateConversations('resolved');
 }
 
 // Computed property with getter/setter to enable v-model usage
@@ -132,13 +95,11 @@ const allSelected = computed({
 });
 
 onMounted(() => {
-  emitter.on(CMD_BULK_ACTION_SNOOZE_CONVERSATION, onCmdSnoozeConversation);
   emitter.on(CMD_BULK_ACTION_REOPEN_CONVERSATION, onCmdReopenConversation);
   emitter.on(CMD_BULK_ACTION_RESOLVE_CONVERSATION, onCmdResolveConversation);
 });
 
 onUnmounted(() => {
-  emitter.off(CMD_BULK_ACTION_SNOOZE_CONVERSATION, onCmdSnoozeConversation);
   emitter.off(CMD_BULK_ACTION_REOPEN_CONVERSATION, onCmdReopenConversation);
   emitter.off(CMD_BULK_ACTION_RESOLVE_CONVERSATION, onCmdResolveConversation);
 });
@@ -188,24 +149,25 @@ onUnmounted(() => {
           />
         </div>
         <div class="flex items-center gap-2 flex-shrink-0">
-          <BulkLabelActions @assign="onAssignLabels" />
+          <BulkLabelActions v-if="canEditTags" @assign="onAssignLabels" />
           <BulkLabelActions
+            v-if="canEditTags"
             action="remove"
             :applied-labels="appliedLabelsForSelection"
             @remove="onRemoveLabels"
           />
           <BulkUpdateActions
-            :show-resolve="!showResolvedAction"
-            :show-reopen="!showOpenAction"
-            :show-snooze="!showSnoozedAction"
+            v-if="canEditTicket"
             @update="onUpdateConversations"
           />
           <BulkAgentActions
+            v-if="canEditTicket"
             :selected-inboxes="selectedInboxes"
             :conversation-count="conversations.length"
             @select="onAssignAgent"
           />
           <BulkTeamActions
+            v-if="canEditTicket"
             :conversation-count="conversations.length"
             @select="onAssignTeam"
           />
@@ -218,13 +180,4 @@ onUnmounted(() => {
       </div>
     </div>
   </Transition>
-  <woot-modal
-    v-model:show="showCustomTimeSnoozeModal"
-    :on-close="hideCustomSnoozeModal"
-  >
-    <CustomSnoozeModal
-      @close="hideCustomSnoozeModal"
-      @choose-time="customSnoozeTime"
-    />
-  </woot-modal>
 </template>

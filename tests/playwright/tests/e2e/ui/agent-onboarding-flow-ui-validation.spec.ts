@@ -17,7 +17,7 @@ test.describe('Agent Onboarding - UI', () => {
     await loginComponent.navigate();
     await loginComponent.login(TEST_EMAIL, TEST_PASSWORD);
 
-    await expect(page).toHaveURL(/\/app\/accounts\/\d+\/dashboard/);
+    await expect(page).toHaveURL(/\/app\/accounts\/\d+\/home/);
     const accountId = Number(page.url().match(/\/app\/accounts\/(\d+)\//)![1]);
     await agentPage.navigate(accountId);
   });

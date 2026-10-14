@@ -1,0 +1,151 @@
+<%# ServiceDesk B2B: página da solicitação do Copenhagen: título, comentários públicos (cliente e equipe) com anexos,
+    "Adicionar à conversa" com anexos e "Marcar como resolvido", e a coluna "Detalhes da solicitação". %>
+<% subject = sd_request_subject(@conversation) %>
+<% content_for :head do %>
+  <title><%= subject %> | <%= @portal.display_title(@locale) %></title>
+  <meta name="robots" content="noindex">
+<% end %>
+<% max_files = PortalCustomers::CreateRequestService::MAX_ATTACHMENTS %>
+<% max_mb = [GlobalConfigService.load('MAXIMUM_FILE_UPLOAD_SIZE', 40).to_i, 1].max %>
+<% attrs = @conversation.custom_attributes || {} %>
+<% requester = @conversation.contact %>
+<div class="container">
+  <nav class="sub-nav">
+    <%= render 'public/api/v1/portals/servicedesk/breadcrumbs',
+               items: [[I18n.t('public_portal.sd.nav.my_activities'), portal_customer_requests_path(@portal.slug, @locale)],
+                       ["##{@conversation.display_id}", nil]] %>
+    <div class="search-container">
+      <%= render 'public/api/v1/portals/servicedesk/search' %>
+    </div>
+  </nav>
+
+  <% if params[:created] == '1' %>
+    <div class="notification notification-success" role="status"><%= I18n.t('public_portal.sd.requests.created', id: @conversation.display_id) %></div>
+  <% end %>
+  <%= render 'public/api/v1/portals/customer_requests/errors', errors: @errors %>
+
+  <div class="request-container">
+    <header class="request-title">
+      <h1 data-testid="sd-request-subject"><%= subject %></h1>
+    </header>
+
+    <div id="main-content" class="request-main">
+      <ul class="comment-list" data-testid="sd-request-comments">
+        <% @messages.each do |message| %>
+          <% author = sd_message_author(message) %>
+          <% from_customer = sd_message_from_customer?(message) %>
+          <li id="request_comment_<%= message.id %>" class="comment">
+            <div class="comment-wrapper">
+              <div class="comment-avatar">
+                <span class="user-avatar <%= 'agent' unless from_customer %>" aria-hidden="true"><%= sd_initial(author) %></span>
+              </div>
+              <div class="comment-info">
+                <div class="comment-author">
+                  <div class="comment-meta">
+                    <span class="author-name" title="<%= author %>"><%= author %></span>
+                    <% unless from_customer %><span class="badge"><%= I18n.t('public_portal.sd.requests.support_badge') %></span><% end %>
+                    <span class="meta-data"><time datetime="<%= message.created_at.iso8601 %>"><%= sd_time(message.created_at) %></time></span>
+                  </div>
+                </div>
+                <% if message.content.present? %>
+                  <section class="comment-body"><%= sd_message_html(message) %></section>
+                <% end %>
+                <% if message.attachments.any? %>
+                  <ul class="attachments">
+                    <% message.attachments.each do |attachment| %>
+                      <% next unless attachment.file.attached? %>
+                      <li class="attachment-item">
+                        <a href="<%= attachment.file_url %>" target="_blank" rel="noopener noreferrer"><%= attachment.file.filename %></a>
+                        <% if attachment.file_type == 'image' %>
+                          <img src="<%= attachment.file_url %>" alt="<%= attachment.file.filename %>" loading="lazy">
+                        <% end %>
+                      </li>
+                    <% end %>
+                  </ul>
+                <% end %>
+              </div>
+            </div>
+          </li>
+        <% end %>
+      </ul>
+
+      <% if @can_reply %>
+        <% if @status.closed? %>
+          <p class="comment-callout" data-testid="sd-request-followup-notice"><%= I18n.t('public_portal.sd.requests.closed_reply_notice') %></p>
+        <% end %>
+        <%= form_tag(portal_customer_request_comments_path(@portal.slug, @locale, @conversation.display_id), method: :post, multipart: true,
+                     data: { turbo: false, sd_submit_once: true }, class: 'comment-form', id: 'sd-reply') do %>
+          <div class="avatar comment-avatar">
+            <span class="user-avatar" aria-hidden="true"><%= sd_initial(portal_contact.name.presence || portal_contact.email) %></span>
+          </div>
+          <div class="comment-container">
+            <label class="visibility-hidden" for="request_comment_body"><%= I18n.t('public_portal.sd.requests.reply_title') %></label>
+            <textarea name="content" id="request_comment_body" maxlength="20000" rows="7"
+                      placeholder="<%= I18n.t('public_portal.sd.requests.reply_title') %>"></textarea>
+            <div class="sd-files" style="margin-top: 10px;">
+              <div class="upload-dropzone">
+                <input type="file" class="upload-input" name="attachments[]" multiple aria-label="<%= I18n.t('public_portal.sd.requests.attachments') %>"
+                       data-sd-attachments data-max-files="<%= max_files %>" data-max-bytes="<%= max_mb.megabytes %>">
+                <span class="upload-link" aria-hidden="true"><%= I18n.t('public_portal.sd.requests.add_files') %></span>
+              </div>
+              <ul class="upload-list" data-sd-attachments-list></ul>
+              <p class="upload-error" data-sd-attachments-error hidden></p>
+            </div>
+            <div class="comment-form-controls">
+              <% if @conversation.resolved? || @conversation.closed? %>
+                <span></span>
+              <% else %>
+                <label class="comment-mark-as-solved">
+                  <input type="checkbox" name="solve" value="1">
+                  <span><%= I18n.t('public_portal.sd.requests.solve') %></span>
+                </label>
+              <% end %>
+              <input type="submit" value="<%= I18n.t('public_portal.sd.requests.send_reply') %>">
+            </div>
+          </div>
+        <% end %>
+      <% elsif @status.closed? %>
+        <div class="request-follow-up">
+          <p class="comment-callout"><%= I18n.t('public_portal.sd.requests.closed_notice') %>
+            <a href="<%= portal_customer_new_request_path(@portal.slug, @locale, subject: "Re: #{subject}") %>"><%= I18n.t('public_portal.sd.requests.follow_up') %></a>
+          </p>
+        </div>
+      <% end %>
+    </div>
+
+    <section class="request-sidebar" data-testid="sd-request-details">
+      <h2 class="collapsible-sidebar-title"><%= I18n.t('public_portal.sd.requests.details') %></h2>
+      <dl class="request-details">
+        <dt><%= I18n.t('public_portal.sd.requests.requester') %></dt>
+        <dd><%= requester&.name.presence || requester&.email %></dd>
+        <dt><%= I18n.t('public_portal.sd.requests.created_at') %></dt>
+        <dd><%= sd_time(@conversation.created_at) %></dd>
+        <dt><%= I18n.t('public_portal.sd.requests.last_activity') %></dt>
+        <dd><%= sd_time(@conversation.last_activity_at || @conversation.updated_at) %></dd>
+      </dl>
+      <dl class="request-details">
+        <dt><%= I18n.t('public_portal.sd.requests.assignee') %></dt>
+        <dd><%= sd_assignee_name(@conversation) %></dd>
+        <dt><%= I18n.t('public_portal.sd.requests.id') %></dt>
+        <dd>#<%= @conversation.display_id %></dd>
+        <dt><%= I18n.t('public_portal.sd.requests.status_column') %></dt>
+        <dd><%= sd_status_badge(@conversation) %></dd>
+        <% if attrs['zd_formulario'].present? %>
+          <dt><%= I18n.t('public_portal.sd.requests.form') %></dt>
+          <dd><%= attrs['zd_formulario'] %></dd>
+        <% end %>
+        <% PortalCustomers::RequestForms.new(portal: @portal).all.flat_map(&:fields).uniq { |field| PortalCustomers::RequestForms.attribute_key_for(field) }.each do |field| %>
+          <% value = attrs[PortalCustomers::RequestForms.attribute_key_for(field)] %>
+          <% next if value.blank? %>
+          <dt><%= field.label %></dt>
+          <dd><%= value %></dd>
+        <% end %>
+      </dl>
+      <% if @csat_url.present? && @conversation.resolved? %>
+        <div class="satisfaction-box">
+          <a class="button" href="<%= @csat_url %>" target="_blank" rel="noopener"><%= I18n.t('public_portal.sd.requests.rate') %></a>
+        </div>
+      <% end %>
+    </section>
+  </div>
+</div>

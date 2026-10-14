@@ -1,5 +1,6 @@
 import { createApp } from 'vue';
 import { createI18n } from 'vue-i18n';
+import { brandMessages } from 'shared/helpers/brandName';
 
 import VueDOMPurifyHTML from 'vue-dompurify-html';
 import store from '../widget/store';
@@ -19,7 +20,7 @@ import {
 const i18n = createI18n({
   legacy: false, // https://github.com/intlify/vue-i18n/issues/1902
   locale: 'en',
-  messages: i18nMessages,
+  messages: brandMessages(i18nMessages),
 });
 
 const app = createApp(App);

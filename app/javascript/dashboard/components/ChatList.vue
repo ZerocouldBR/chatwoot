@@ -17,9 +17,6 @@ import DeleteCustomViews from 'dashboard/routes/dashboard/customviews/DeleteCust
 import ConversationBulkActions from './widgets/conversation/conversationBulkActions/Index.vue';
 import TeleportWithDirection from 'dashboard/components-next/TeleportWithDirection.vue';
 import ConversationResolveAttributesModal from 'dashboard/components-next/ConversationWorkflow/ConversationResolveAttributesModal.vue';
-import TicketTable from 'dashboard/servicedesk/ticketList/TicketTable.vue';
-import { toNativeStatus } from 'dashboard/servicedesk/statusFilter';
-import { useTicketListMode } from 'dashboard/servicedesk/ticketList/useTicketListMode';
 
 import { useUISettings } from 'dashboard/composables/useUISettings';
 import { useAlert } from 'dashboard/composables';
@@ -51,6 +48,11 @@ import {
 import { createFiltersMatcher } from '../store/modules/conversations/helpers/filterHelpers';
 import { sortComparator } from '../store/modules/conversations/helpers';
 import { CONVERSATION_EVENTS } from '../helper/AnalyticsHelper/events';
+import {
+  buildViewColumns,
+  viewSort as buildViewSort,
+  serverSortFor,
+} from 'dashboard/servicedesk/views/viewColumns';
 import { ASSIGNEE_TYPE_TAB_PERMISSIONS } from 'dashboard/constants/permissions.js';
 
 const props = defineProps({
@@ -74,14 +76,8 @@ const { buildConversationPath, buildConversationListPath } =
 
 const resolveAttributesModalRef = ref(null);
 
-// ServiceDesk: modo tabela (estilo Views) so no layout expandido.
-const { isTableMode } = useTicketListMode();
-const showTicketTable = computed(
-  () => isTableMode.value && props.isOnExpandedLayout
-);
-
 const activeAssigneeTab = ref(wootConstants.ASSIGNEE_TYPE.ME);
-const activeStatus = ref(wootConstants.STATUS_TYPE.OPEN);
+const activeStatus = ref(wootConstants.STATUS_TYPE.UNSOLVED);
 const activeSortBy = ref(wootConstants.SORT_BY_TYPE.LAST_ACTIVITY_AT_DESC);
 const showAdvancedFilters = ref(false);
 // chatsOnView is to store the chats that are currently visible on the screen,
@@ -166,6 +162,35 @@ const folderContactId = useMapGetter('customViews/getActiveFolderContactId');
 const activeFolderName = computed(() => {
   return activeFolder.value?.name;
 });
+
+// ServiceDesk: colunas e ordenação da view do Zendesk (views.json), como no
+// Zendesk. A ordenação do servidor vai em appliedFiltersSortBy (busca e ordem
+// da store); o clique no cabeçalho troca só a ordenação desta view, sem salvar
+// na preferência do usuário. Sem colunas, a lista por assunto continua igual.
+const attributesByModel = useMapGetter('attributes/getAttributesByModel');
+const conversationAttributeDefinitions = computed(
+  () => attributesByModel.value?.('conversation_attribute') || []
+);
+const activeViewColumns = computed(() =>
+  activeFolder.value
+    ? buildViewColumns(
+        activeFolder.value.columns,
+        conversationAttributeDefinitions.value
+      )
+    : []
+);
+const sdViewSortOverride = ref(null);
+const activeViewSort = computed(
+  () =>
+    sdViewSortOverride.value ||
+    (activeFolder.value
+      ? buildViewSort(
+          activeFolder.value,
+          conversationAttributeDefinitions.value
+        )
+      : null)
+);
+const activeViewSortBy = computed(() => activeViewSort.value?.sortBy || '');
 
 const hasActiveFolders = computed(() => {
   return Boolean(activeFolder.value && props.foldersId !== 0);
@@ -387,7 +412,7 @@ const uniqueInboxes = computed(() => {
 function setFiltersFromUISettings() {
   const { conversations_filter_by: filterBy = {} } = uiSettings.value;
   const { status, order_by: orderBy } = filterBy;
-  activeStatus.value = status || wootConstants.STATUS_TYPE.OPEN;
+  activeStatus.value = status || wootConstants.STATUS_TYPE.UNSOLVED;
   activeSortBy.value = Object.values(wootConstants.SORT_BY_TYPE).includes(
     orderBy
   )
@@ -515,9 +540,8 @@ function setParamsForEditFolderModal() {
 }
 
 function initializeExistingFilterToModal() {
-  // ServiceDesk: Pendente/Em espera viram o status nativo (snoozed) no modal
   const statusFilter = initializeStatusAndAssigneeFilterToModal(
-    toNativeStatus(activeStatus.value),
+    activeStatus.value,
     currentUserDetails.value,
     activeAssigneeTab.value
   );
@@ -606,6 +630,9 @@ function resetAndFetchData() {
   store.dispatch('emptyAllConversations');
   store.dispatch('clearConversationFilters');
   if (hasActiveFolders.value) {
+    if (activeViewSortBy.value) {
+      store.dispatch('setConversationFiltersSort', activeViewSortBy.value);
+    }
     const payload = activeFolder.value.query;
     fetchSavedFilteredConversations(payload);
   }
@@ -654,6 +681,21 @@ function updateAssigneeTab(selectedTab) {
       store.dispatch('updateChatListFilters', conversationFilters.value);
     }
   }
+}
+
+// ServiceDesk: clique no cabeçalho da tabela da view
+function onViewSortChange({ column, direction }) {
+  sdViewSortOverride.value = {
+    column,
+    direction,
+    sortBy: serverSortFor(column, direction),
+  };
+  if (!activeViewSortBy.value || !hasActiveFolders.value) return;
+  resetBulkActions();
+  store.dispatch('setConversationFiltersSort', activeViewSortBy.value);
+  store.dispatch('conversationPage/reset');
+  store.dispatch('emptyAllConversations');
+  fetchSavedFilteredConversations(activeFolder.value.query);
 }
 
 function onBasicFilterChange(value, type) {
@@ -760,13 +802,11 @@ async function onAssignTeam(team, conversationId = null) {
 function toggleConversationStatus(
   conversationId,
   status,
-  snoozedUntil,
   customAttributes = null
 ) {
   const payload = {
     conversationId,
     status,
-    snoozedUntil,
   };
 
   if (customAttributes) {
@@ -778,9 +818,9 @@ function toggleConversationStatus(
   });
 }
 
-function handleResolveConversation(conversationId, status, snoozedUntil) {
+function handleResolveConversation(conversationId, status) {
   if (status !== wootConstants.STATUS_TYPE.RESOLVED) {
-    toggleConversationStatus(conversationId, status, snoozedUntil);
+    toggleConversationStatus(conversationId, status);
     return;
   }
 
@@ -793,17 +833,14 @@ function handleResolveConversation(conversationId, status, snoozedUntil) {
 
   if (hasMissing) {
     // Pass conversation context through the modal's API
-    const conversationContext = {
-      id: conversationId,
-      snoozedUntil,
-    };
+    const conversationContext = { id: conversationId };
     resolveAttributesModalRef.value?.open(
       missing,
       currentCustomAttributes,
       conversationContext
     );
   } else {
-    toggleConversationStatus(conversationId, status, snoozedUntil);
+    toggleConversationStatus(conversationId, status);
   }
 }
 
@@ -817,17 +854,9 @@ function handleResolveWithAttributes({ attributes, context }) {
     toggleConversationStatus(
       context.id,
       wootConstants.STATUS_TYPE.RESOLVED,
-      context.snoozedUntil,
       mergedAttributes
     );
   }
-}
-
-function allSelectedConversationsStatus(status) {
-  if (!selectedConversations.value.length) return false;
-  return selectedConversations.value.every(item => {
-    return getConversationById.value(item)?.status === status;
-  });
 }
 
 function toggleSelectAll(check) {
@@ -902,6 +931,7 @@ watch(activeFolder, (newVal, oldVal) => {
   if (newVal !== oldVal) {
     store.dispatch('customViews/setActiveConversationFolder', newVal || null);
   }
+  if (newVal?.id !== oldVal?.id) sdViewSortOverride.value = null;
   resetAndFetchData();
 });
 
@@ -977,28 +1007,10 @@ watch(appliedFilters, () => resetBulkActions());
       :conversations="selectedConversations"
       :all-conversations-selected="allConversationsSelected"
       :selected-inboxes="uniqueInboxes"
-      :show-open-action="allSelectedConversationsStatus('open')"
-      :show-resolved-action="allSelectedConversationsStatus('resolved')"
-      :show-snoozed-action="allSelectedConversationsStatus('snoozed')"
       :class="isOnExpandedLayout && 'sm:!w-[24rem] !w-full'"
       @select-all-conversations="toggleSelectAll"
     />
-    <TicketTable
-      v-if="showTicketTable"
-      :conversation-list="conversationList"
-      :is-loading="chatListLoading"
-      :show-end-of-list-message="showEndOfListMessage"
-      :all-conversations-selected="allConversationsSelected"
-      :label="label"
-      :team-id="teamId"
-      :folders-id="foldersId"
-      :conversation-type="conversationType"
-      @load-more="loadMoreConversations"
-      @select-all="toggleSelectAll"
-      @sort-change="value => onBasicFilterChange(value, 'sort')"
-    />
     <ConversationList
-      v-else
       :conversation-list="conversationList"
       :is-loading="chatListLoading"
       :show-end-of-list-message="showEndOfListMessage"
@@ -1008,7 +1020,10 @@ watch(appliedFilters, () => resetBulkActions());
       :conversation-type="conversationType"
       :show-assignee="showAssigneeInConversationCard"
       :is-on-expanded-layout="isOnExpandedLayout"
+      :view-columns="activeViewColumns"
+      :view-sort="activeViewSort"
       @load-more="loadMoreConversations"
+      @view-sort="onViewSortChange"
     />
     <Dialog
       ref="deleteConversationDialogRef"

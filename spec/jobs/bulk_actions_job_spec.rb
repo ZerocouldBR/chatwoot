@@ -33,7 +33,7 @@ RSpec.describe BulkActionsJob do
     it 'bulk updates the status' do
       params = {
         type: 'Conversation',
-        fields: { status: 'snoozed', assignee_id: agent.id },
+        fields: { status: 'on_hold', assignee_id: agent.id },
         ids: conversation_ids
       }
 
@@ -41,15 +41,15 @@ RSpec.describe BulkActionsJob do
 
       described_class.perform_now(account: account, params: params, user: agent)
 
-      expect(conversation_1.reload.status).to eq('snoozed')
-      expect(conversation_2.reload.status).to eq('snoozed')
-      expect(conversation_3.reload.status).to eq('snoozed')
+      expect(conversation_1.reload.status).to eq('on_hold')
+      expect(conversation_2.reload.status).to eq('on_hold')
+      expect(conversation_3.reload.status).to eq('on_hold')
     end
 
     it 'bulk updates the assignee_id' do
       params = {
         type: 'Conversation',
-        fields: { status: 'snoozed', assignee_id: agent.id },
+        fields: { status: 'on_hold', assignee_id: agent.id },
         ids: conversation_ids
       }
 
@@ -62,20 +62,12 @@ RSpec.describe BulkActionsJob do
       expect(conversation_3.reload.assignee_id).to eq(agent.id)
     end
 
-    it 'bulk updates the snoozed_until' do
-      params = {
-        type: 'Conversation',
-        fields: { status: 'snoozed', snoozed_until: Time.zone.now },
-        ids: conversation_ids
-      }
-
-      expect(conversation_1.snoozed_until).to be_nil
+    it 'assigns the agent to unassigned tickets it resolves' do
+      params = { type: 'Conversation', fields: { status: 'resolved' }, ids: conversation_ids }
 
       described_class.perform_now(account: account, params: params, user: agent)
 
-      expect(conversation_1.reload.snoozed_until).to be_present
-      expect(conversation_2.reload.snoozed_until).to be_present
-      expect(conversation_3.reload.snoozed_until).to be_present
+      expect(conversation_1.reload).to have_attributes(status: 'resolved', assignee_id: agent.id)
     end
 
     it 'skips conversations whose inbox the agent does not belong to' do

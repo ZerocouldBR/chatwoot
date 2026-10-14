@@ -2,10 +2,12 @@ import { frontendURL } from '../../../helper/URLHelper';
 import ContactsIndex from './pages/ContactsIndex.vue';
 import ContactManageView from './pages/ContactManageView.vue';
 import { FEATURE_FLAGS } from '../../../featureFlags';
+import { SD_ROUTE_PERMISSIONS } from 'dashboard/servicedesk/roles/permissions';
 
 const commonMeta = {
   featureFlag: FEATURE_FLAGS.CRM,
-  permissions: ['administrator', 'agent', 'contact_manage'],
+  // ServiceDesk M13: some para quem não tem a lista de usuários finais (contacts.list)
+  permissions: SD_ROUTE_PERMISSIONS.contacts,
 };
 
 export const routes = [

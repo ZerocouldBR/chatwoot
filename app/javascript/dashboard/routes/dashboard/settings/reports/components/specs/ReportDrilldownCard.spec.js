@@ -115,7 +115,7 @@ describe('ReportDrilldownCard.vue', () => {
     await wrapper.find('[role="link"]').trigger('click');
 
     expect(window.open).toHaveBeenCalledWith(
-      '/app/accounts/1/conversations/42?messageId=99',
+      '/app/accounts/1/tickets/42?messageId=99',
       '_blank',
       'noopener,noreferrer'
     );

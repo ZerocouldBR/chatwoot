@@ -10,7 +10,7 @@
       "FALLBACK": "Este ano não foi sobre números. Foi sobre estar presente.",
       "COMPARISON": {
         "0_50": "Você esteve presente e é assim que toda boa caixa de entrada começa.",
-        "50_100": "Você manteve as respostas fluindo e os tickets em andamento.",
+        "50_100": "Você manteve as respostas fluindo e os tickets vivos.",
         "100_500": "Você lidou com um grande volume e manteve tudo em ordem.",
         "500_2000": "Você manteve tudo em movimento enquanto o volume continuava crescendo.",
         "2000_10000": "Você lidou com alto tráfego na sua caixa de entrada com tranquilidade.",
@@ -48,8 +48,8 @@
       "PREPARING": "Preparando sua imagem...",
       "DOWNLOAD": "Baixar",
       "SHARE_TITLE": "Minha retrospectiva de {year}",
-      "SHARE_TEXT": "Confira minha retrospectiva de {year} com o ServiceDesk!",
-      "BRANDING": "Feito com ServiceDesk"
+      "SHARE_TEXT": "Confira minha retrospectiva de {year} com o Chatwoot!",
+      "BRANDING": "Feito com Chatwoot"
     },
     "BANNER": {
       "TITLE": "Sua retrospectiva de {year} chegou",

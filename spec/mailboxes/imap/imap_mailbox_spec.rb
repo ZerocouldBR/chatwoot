@@ -150,12 +150,68 @@ RSpec.describe Imap::ImapMailbox do
       end
     end
 
+    context 'when the email copies other people' do
+      let(:inbound_mail) do
+        create_inbound_email_from_mail(from: 'email@gmail.com', to: [channel.email, 'diretor@example.com'], cc: 'gerente@example.com',
+                                       subject: 'Reserva com cópia')
+      end
+
+      it 'adds the copied people as ticket CCs' do
+        class_instance.process(inbound_mail.mail, channel)
+
+        expect(Tickets::CcList.new(conversation).emails).to contain_exactly('diretor@example.com', 'gerente@example.com')
+      end
+    end
+
+    context 'when a CC replies on the thread' do
+      let(:ticket) { create(:conversation, account: account, inbox: channel.inbox, contact: contact) }
+      let(:reply_mail) do
+        create_inbound_email_from_mail(from: 'gerente@example.com', to: channel.email, subject: 'Re: Reserva', in_reply_to: 'agent-reply-id')
+      end
+
+      before do
+        create(:message, message_type: 'outgoing', inbox: inbox, account: account, conversation: ticket, source_id: 'agent-reply-id')
+      end
+
+      it 'adds the reply to the same ticket as written by the CC' do
+        class_instance.process(reply_mail.mail, channel)
+
+        expect(ticket.messages.incoming.last.sender.email).to eq('gerente@example.com')
+        expect(Tickets::CcList.new(ticket).emails).to eq(['gerente@example.com'])
+      end
+    end
+
+    context 'when the email was sent from the support address itself' do
+      let(:inbound_mail) { create_inbound_email_from_mail(from: channel.email, to: 'cliente@example.com', subject: 'Re: Hello!') }
+
+      it 'ignores it instead of adding it to a ticket' do
+        expect { class_instance.process(inbound_mail.mail, channel) }.not_to change(Conversation, :count)
+        expect(Message.where(inbox: channel.inbox)).to be_empty
+      end
+    end
+
     context 'when an auto reply email' do
       let(:auto_reply_mail) { create_inbound_email_from_fixture('auto_reply.eml') }
 
-      it 'does not create a new conversation' do
-        expect { class_instance.process(auto_reply_mail.mail, channel) }.to change(Conversation, :count)
-        expect(Conversation.last.additional_attributes['auto_reply']).to be true
+      it 'holds it as a suspended ticket instead of creating a ticket' do
+        expect { class_instance.process(auto_reply_mail.mail, channel) }.not_to change(Conversation, :count)
+        expect(SuspendedTicket.last).to have_attributes(reason: 'automated_response', inbox_id: channel.inbox.id)
+        expect(SuspendedTicket.last.raw_email).to be_attached
+      end
+    end
+
+    context 'when the sender is blocked' do
+      let(:inbound_mail) { create_inbound_email_from_mail(from: 'blocked@example.com', to: 'imap@gmail.com', subject: 'Spam!') }
+
+      before { create(:contact, email: 'blocked@example.com', account: channel.account, blocked: true) }
+
+      it 'holds the e-mail and creates the ticket once an agent recovers it' do
+        expect { class_instance.process(inbound_mail.mail, channel) }.not_to change(Conversation, :count)
+        held = SuspendedTicket.last
+        expect(held).to have_attributes(reason: 'blocked_sender', from_email: 'blocked@example.com', subject: 'Spam!')
+
+        expect { held.recover! }.to change(Conversation, :count).by(1)
+        expect(held.reload.recovered_at).to be_present
       end
     end
 
@@ -203,6 +259,33 @@ RSpec.describe Imap::ImapMailbox do
         expect(prev_conversation.messages.last.content_attributes['email']['to']).to eq(reply_mail.mail.to)
         expect(prev_conversation.messages.last.content_attributes['email']['subject']).to eq(reply_mail.mail.subject)
         expect(prev_conversation.messages.last.content_attributes['email']['in_reply_to']).to eq(reply_mail.mail.in_reply_to)
+      end
+    end
+
+    context 'when a reply arrives for a closed ticket' do
+      let(:closed_ticket) do
+        create(:conversation, account: account, inbox: channel.inbox, contact: contact, assignee: agent, priority: :high,
+                              subject: 'Cartão recusado', label_list: ['vip'])
+      end
+      let(:reply_mail) do
+        create_inbound_email_from_mail(from: 'email@gmail.com', to: 'imap@gmail.com', subject: 'Re: Cartão recusado', in_reply_to: 'closed-reply-id')
+      end
+
+      before do
+        create(:message, message_type: 'outgoing', inbox: inbox, account: account, conversation: closed_ticket, source_id: 'closed-reply-id')
+        closed_ticket.update!(status: :closed)
+      end
+
+      it 'opens a follow-up ticket linked to the closed one' do
+        expect { class_instance.process(reply_mail.mail, channel) }.to change(Conversation, :count).by(1)
+
+        followup = Conversation.order(:id).last
+        expect(followup).to have_attributes(followup_source_id: closed_ticket.id, status: 'new_ticket', subject: 'Cartão recusado',
+                                            contact_id: contact.id, priority: nil, assignee_id: nil)
+        expect(followup.label_list).to eq(['vip'])
+        expect(followup.messages.last.content_attributes['email']['in_reply_to']).to eq('closed-reply-id')
+        expect(closed_ticket.reload.status).to eq('closed')
+        expect(closed_ticket.messages.count).to eq(1)
       end
     end
 

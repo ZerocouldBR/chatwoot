@@ -7,6 +7,7 @@ import {
   getDefaultSubject,
 } from './helpers/emailHeadHelper';
 import ButtonV4 from 'dashboard/components-next/button/Button.vue';
+import TicketCcChips from 'dashboard/components-next/Conversation/TicketCcChips.vue';
 
 const ccEmails = defineModel('ccEmails', { type: String, default: '' });
 const bccEmails = defineModel('bccEmails', { type: String, default: '' });
@@ -17,13 +18,24 @@ const currentChat = useMapGetter('getSelectedChat');
 const defaultSubject = computed(() => getDefaultSubject(currentChat.value));
 if (!subject.value) subject.value = defaultSubject.value;
 
-const showCc = ref(false);
 const showBcc = ref(false);
+const isEditingTo = ref(false);
 const ccEmailsVal = ref(ccEmails.value);
 const bccEmailsVal = ref(bccEmails.value);
 const toEmailsVal = ref(toEmails.value);
 
-const isCcVisible = computed(() => showCc.value || !!ccEmails.value);
+// Zendesk shows the recipient as a chip with a pencil; editing switches to the address field.
+const requesterLabel = computed(
+  () =>
+    currentChat.value?.meta?.sender?.name ||
+    currentChat.value?.meta?.sender?.email
+);
+const showToChip = computed(
+  () =>
+    !isEditingTo.value &&
+    (!toEmails.value ||
+      toEmails.value === currentChat.value?.meta?.sender?.email)
+);
 const isBccVisible = computed(() => showBcc.value || !!bccEmails.value);
 
 const emailRules = { hasValidEmails: validEmailsByComma };
@@ -35,10 +47,6 @@ const v$ = useVuelidate(
   },
   { ccEmailsVal, bccEmailsVal, toEmailsVal }
 );
-
-watch(ccEmails, value => {
-  ccEmailsVal.value = value;
-});
 
 watch(bccEmails, value => {
   bccEmailsVal.value = value;
@@ -62,80 +70,62 @@ const onBlur = () => {
 </script>
 
 <template>
-  <div>
-    <div>
-      <div
-        class="flex items-center gap-2 my-1 border-b border-solid input-group small"
-        :class="
-          v$.toEmailsVal.$error ? 'error border-n-ruby-8' : 'border-n-weak'
-        "
+  <div data-testid="reply-email-head">
+    <div
+      class="flex items-center gap-2 my-1 border-b border-solid input-group small"
+      :class="v$.toEmailsVal.$error ? 'error border-n-ruby-8' : 'border-n-weak'"
+    >
+      <label
+        class="w-8 text-sm font-normal shrink-0"
+        :class="v$.toEmailsVal.$error ? 'text-n-ruby-8' : 'text-n-slate-11'"
       >
-        <label
-          class="text-sm font-normal"
-          :class="v$.toEmailsVal.$error ? 'text-n-ruby-8' : 'text-n-slate-11'"
+        {{ $t('CONVERSATION.REPLYBOX.EMAIL_HEAD.TO') }}
+      </label>
+      <div v-if="showToChip" class="flex-1 min-w-0 py-1">
+        <span
+          data-testid="reply-to-chip"
+          class="inline-flex items-center gap-1 py-0.5 ps-1 pe-1.5 text-xs font-medium rounded-full bg-n-alpha-2 text-n-slate-12"
         >
-          {{ $t('CONVERSATION.REPLYBOX.EMAIL_HEAD.TO') }}
-        </label>
-        <div class="flex-1 min-w-0 m-0 rounded-none whitespace-nowrap">
-          <woot-input
-            v-model="v$.toEmailsVal.$model"
-            type="text"
-            class="[&>input]:!mb-0 [&>input]:border-transparent [&>input]:!outline-none [&>input]:h-8 [&>input]:!text-sm [&>input]:!border-0 [&>input]:border-none [&>input]:!bg-transparent dark:[&>input]:!bg-transparent"
-            :class="{ error: v$.toEmailsVal.$error }"
-            :placeholder="$t('CONVERSATION.REPLYBOX.EMAIL_HEAD.CC.PLACEHOLDER')"
-            @blur="onBlur"
-          />
-        </div>
-        <ButtonV4
-          v-if="!isCcVisible && !isBccVisible"
-          :label="$t('CONVERSATION.REPLYBOX.EMAIL_HEAD.CC.LABEL')"
-          link
-          xs
-          @click="showCc = true"
-        />
-        <ButtonV4
-          v-if="!isCcVisible && !isBccVisible"
-          :label="$t('CONVERSATION.REPLYBOX.EMAIL_HEAD.BCC.LABEL')"
-          link
-          xs
-          @click="showBcc = true"
+          <span class="i-lucide-circle-user-round size-4 text-n-slate-10" />
+          {{ requesterLabel }}
+          <button
+            type="button"
+            class="flex items-center text-n-slate-10 hover:text-n-slate-12"
+            :aria-label="$t('CONVERSATION.REPLYBOX.EMAIL_HEAD.EDIT_TO')"
+            @click="isEditingTo = true"
+          >
+            <span class="i-lucide-pencil size-3" />
+          </button>
+        </span>
+      </div>
+      <div v-else class="flex-1 min-w-0 m-0 rounded-none whitespace-nowrap">
+        <woot-input
+          v-model="v$.toEmailsVal.$model"
+          type="text"
+          class="[&>input]:!mb-0 [&>input]:border-transparent [&>input]:!outline-none [&>input]:h-8 [&>input]:!text-sm [&>input]:!border-0 [&>input]:border-none [&>input]:!bg-transparent dark:[&>input]:!bg-transparent"
+          :class="{ error: v$.toEmailsVal.$error }"
+          :placeholder="$t('CONVERSATION.REPLYBOX.EMAIL_HEAD.CC.PLACEHOLDER')"
+          @blur="onBlur"
         />
       </div>
     </div>
-    <div v-if="isCcVisible">
-      <div
-        class="flex items-center gap-2 my-1 border-b border-solid input-group small"
-        :class="
-          v$.ccEmailsVal.$error ? 'error border-n-ruby-8' : 'border-n-weak'
-        "
-      >
-        <label
-          class="text-sm font-normal"
-          :class="v$.ccEmailsVal.$error ? 'text-n-ruby-8' : 'text-n-slate-11'"
-        >
-          {{ $t('CONVERSATION.REPLYBOX.EMAIL_HEAD.CC.LABEL') }}
-        </label>
-        <div class="flex-1 min-w-0 m-0 rounded-none whitespace-nowrap">
-          <woot-input
-            v-model="v$.ccEmailsVal.$model"
-            class="[&>input]:!mb-0 [&>input]:border-transparent [&>input]:!outline-none [&>input]:h-8 [&>input]:!text-sm [&>input]:!border-0 [&>input]:border-none [&>input]:!bg-transparent dark:[&>input]:!bg-transparent"
-            type="text"
-            :class="{ error: v$.ccEmailsVal.$error }"
-            :placeholder="$t('CONVERSATION.REPLYBOX.EMAIL_HEAD.CC.PLACEHOLDER')"
-            @blur="onBlur"
-          />
-        </div>
-        <ButtonV4
-          v-if="!isBccVisible"
-          :label="$t('CONVERSATION.REPLYBOX.EMAIL_HEAD.BCC.LABEL')"
-          link
-          xs
-          @click="showBcc = true"
-        />
-      </div>
-      <span v-if="v$.ccEmailsVal.$error" class="text-sm text-n-ruby-8">
-        {{ $t('CONVERSATION.REPLYBOX.EMAIL_HEAD.CC.ERROR') }}
-      </span>
+    <div
+      class="flex items-center gap-2 my-1 border-b border-solid border-n-weak input-group small"
+    >
+      <label class="w-8 text-sm font-normal shrink-0 text-n-slate-11">
+        {{ $t('CONVERSATION.REPLYBOX.EMAIL_HEAD.CC.LABEL') }}
+      </label>
+      <TicketCcChips
+        :conversation-id="currentChat.id"
+        :emails="currentChat.cc_emails || []"
+      />
+      <ButtonV4
+        v-if="!isBccVisible"
+        :label="$t('CONVERSATION.REPLYBOX.EMAIL_HEAD.BCC.LABEL')"
+        link
+        xs
+        @click="showBcc = true"
+      />
     </div>
     <div v-if="isBccVisible">
       <div
@@ -145,7 +135,7 @@ const onBlur = () => {
         "
       >
         <label
-          class="text-sm font-normal"
+          class="w-8 text-sm font-normal shrink-0"
           :class="v$.bccEmailsVal.$error ? 'text-n-ruby-8' : 'text-n-slate-11'"
         >
           {{ $t('CONVERSATION.REPLYBOX.EMAIL_HEAD.BCC.LABEL') }}
@@ -162,34 +152,10 @@ const onBlur = () => {
             @blur="onBlur"
           />
         </div>
-        <ButtonV4
-          v-if="!isCcVisible"
-          :label="$t('CONVERSATION.REPLYBOX.EMAIL_HEAD.CC.LABEL')"
-          link
-          xs
-          @click="showCc = true"
-        />
       </div>
       <span v-if="v$.bccEmailsVal.$error" class="text-sm text-n-ruby-8">
         {{ $t('CONVERSATION.REPLYBOX.EMAIL_HEAD.BCC.ERROR') }}
       </span>
-    </div>
-    <div
-      class="flex items-center gap-2 my-1 border-b border-solid border-n-weak input-group small"
-    >
-      <label class="text-sm font-normal text-n-slate-11">
-        {{ $t('CONVERSATION.REPLYBOX.EMAIL_HEAD.SUBJECT.LABEL') }}
-      </label>
-      <div class="flex-1 min-w-0 m-0 rounded-none whitespace-nowrap">
-        <woot-input
-          v-model="subject"
-          type="text"
-          class="[&>input]:!mb-0 [&>input]:border-transparent [&>input]:!outline-none [&>input]:h-8 [&>input]:!text-sm [&>input]:!border-0 [&>input]:border-none [&>input]:!bg-transparent dark:[&>input]:!bg-transparent"
-          :placeholder="
-            $t('CONVERSATION.REPLYBOX.EMAIL_HEAD.SUBJECT.PLACEHOLDER')
-          "
-        />
-      </div>
     </div>
   </div>
 </template>

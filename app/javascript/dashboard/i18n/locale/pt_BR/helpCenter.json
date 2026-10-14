@@ -430,7 +430,7 @@
         "SLUG": {
           "LABEL": "Slug",
           "PLACEHOLDER": "Categoria de slug para URLs",
-          "HELP_TEXT": "app.chatwoot.com/hc/my-portal/en-US/categories/my-slug",
+          "HELP_TEXT": "help.example.com/hc/my-portal/en-US/categories/my-slug",
           "ERROR": "Slug é obrigatório"
         },
         "DESCRIPTION": {
@@ -461,7 +461,7 @@
         "SLUG": {
           "LABEL": "Slug",
           "PLACEHOLDER": "Categoria de slug para URLs",
-          "HELP_TEXT": "app.chatwoot.com/hc/my-portal/en-US/categories/my-slug",
+          "HELP_TEXT": "help.example.com/hc/my-portal/en-US/categories/my-slug",
           "ERROR": "Slug é obrigatório"
         },
         "DESCRIPTION": {
@@ -839,7 +839,11 @@
         "META_TITLE": "Meta título",
         "META_TITLE_PLACEHOLDER": "Adicionar meta título",
         "META_TAGS": "Meta tags",
-        "META_TAGS_PLACEHOLDER": "Adicionar meta tags"
+        "META_TAGS_PLACEHOLDER": "Adicionar meta tags",
+        "VISIBILITY": "Visível para",
+        "VISIBILITY_PUBLIC": "Todos (público)",
+        "VISIBILITY_STAFF": "só equipe",
+        "VISIBILITY_HINT": "Artigo restrito só aparece no portal para o cliente logado que pertence ao segmento."
       },
       "API": {
         "ERROR": "Erro ao salvar artigo"
@@ -859,7 +863,7 @@
       "CONFIRM_BUTTON_LABEL": "Criar",
       "NAME": {
         "LABEL": "Nome",
-        "PLACEHOLDER": "Guia do Usuário | ServiceDesk",
+        "PLACEHOLDER": "Guia do Usuário | Chatwoot",
         "MESSAGE": "Escolha um nome para o seu portal.",
         "ERROR": "O nome é obrigatório"
       },
@@ -933,7 +937,7 @@
           },
           "DNS_CONFIGURATION_DIALOG": {
             "HEADER": "Configuração de DNS",
-            "DESCRIPTION": "Faça o login na conta que você tem com seu provedor DNS e adicione um registro CNAME para subdomínio apontando para chatwoot.help",
+            "DESCRIPTION": "Faça o login na conta que você tem com seu provedor DNS e adicione um registro CNAME para subdomínio apontando para {domain}",
             "COPY": "CNAME copiado com sucesso",
             "SEND_INSTRUCTIONS": {
               "HEADER": "Enviar instruções",
@@ -982,7 +986,7 @@
         "HEADER": "Integrações",
         "DESCRIPTION": "Conecte ferramentas que ampliam os recursos da sua central de ajuda.",
         "LIVE_CHAT": {
-          "TITLE": "Chat ao vivo com o ServiceDesk",
+          "TITLE": "Chat ao vivo com o Chatwoot",
           "DESCRIPTION": "Exiba um widget de chat ao vivo na sua central de ajuda para que os visitantes possam entrar em contato enquanto leem.",
           "PLACEHOLDER": "Selecionar widget de chat ao vivo",
           "NONE_OPTION": "Sem widget"

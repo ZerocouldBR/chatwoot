@@ -1,6 +1,8 @@
 <script setup>
-import { reactive, watch, onMounted } from 'vue';
+import { reactive, ref, watch, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { useRoute } from 'vue-router';
+import PortalsAPI from 'dashboard/api/helpCenter/portals';
 import { debounce } from '@chatwoot/utils';
 
 import InlineInput from 'dashboard/components-next/inline-input/InlineInput.vue';
@@ -18,6 +20,7 @@ const props = defineProps({
 
 const emit = defineEmits([
   'saveArticle',
+  'saveSegment',
   'saveSlug',
   'previewArticle',
   'close',
@@ -51,8 +54,40 @@ watch(
   { deep: true }
 );
 
+// ServiceDesk B2B: "Visível para" (segmento do artigo restrito)
+const route = useRoute();
+const segments = ref([]);
+const segmentId = ref(null);
+
+const segmentLabel = segment =>
+  segment.user_type === 'staff'
+    ? `${segment.name} (${t('HELP_CENTER.EDIT_ARTICLE_PAGE.ARTICLE_PROPERTIES.VISIBILITY_STAFF')})`
+    : segment.name;
+
+const fetchSegments = async () => {
+  const portalSlug = route?.params?.portalSlug;
+  if (!portalSlug) return;
+  try {
+    const { data } = await new PortalsAPI().getUserSegments(portalSlug);
+    segments.value = data?.payload || [];
+  } catch {
+    segments.value = [];
+  }
+};
+
+const onSegmentChange = event => {
+  const value = event.target.value;
+  segmentId.value = value ? Number(value) : null;
+  emit('saveSegment', segmentId.value);
+};
+
 onMounted(() => {
   updateState();
+  segmentId.value =
+    props.article.portalUserSegmentId ??
+    props.article.portal_user_segment_id ??
+    null;
+  fetchSegments();
 });
 </script>
 
@@ -121,6 +156,50 @@ onMounted(() => {
             "
             custom-label-class="min-w-[7.5rem]"
           />
+        </div>
+        <div
+          v-if="segments.length"
+          class="flex justify-between w-full gap-3 py-2"
+          data-testid="article-visibility"
+        >
+          <label
+            for="article-visibility-select"
+            class="text-sm font-medium whitespace-nowrap min-w-[7.5rem] text-n-slate-12"
+          >
+            {{
+              t('HELP_CENTER.EDIT_ARTICLE_PAGE.ARTICLE_PROPERTIES.VISIBILITY')
+            }}
+          </label>
+          <div class="flex flex-col w-[14rem] gap-1">
+            <select
+              id="article-visibility-select"
+              class="!mb-0 text-sm"
+              :value="segmentId ?? ''"
+              @change="onSegmentChange"
+            >
+              <option value="">
+                {{
+                  t(
+                    'HELP_CENTER.EDIT_ARTICLE_PAGE.ARTICLE_PROPERTIES.VISIBILITY_PUBLIC'
+                  )
+                }}
+              </option>
+              <option
+                v-for="segment in segments"
+                :key="segment.id"
+                :value="segment.id"
+              >
+                {{ segmentLabel(segment) }}
+              </option>
+            </select>
+            <span class="text-xs text-n-slate-11">
+              {{
+                t(
+                  'HELP_CENTER.EDIT_ARTICLE_PAGE.ARTICLE_PROPERTIES.VISIBILITY_HINT'
+                )
+              }}
+            </span>
+          </div>
         </div>
         <div class="flex justify-between w-full gap-3 py-2">
           <label

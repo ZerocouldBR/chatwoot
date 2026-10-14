@@ -2,7 +2,7 @@
   "STRIPE_INTEGRATION": {
     "UNAVAILABLE": "Stripe is unavailable for this account. Contact your administrator to check the integration configuration.",
     "TITLE": "Stripe",
-    "DESCRIPTION": "View customer details, subscriptions, and invoices alongside your conversations.",
+    "DESCRIPTION": "View customer details, subscriptions, and invoices alongside your tickets.",
     "CONNECT": "Connect",
     "DISCONNECT": "Disconnect from Chatwoot",
     "DISCONNECT_NOTE": "Disconnecting removes the saved credentials from Chatwoot. Uninstall the app in Stripe to revoke its access there.",
@@ -67,7 +67,7 @@
       },
       "HELP_TEXT": {
         "TITLE": "How to use the Shopify Integration?",
-        "BODY": "With this integration, your Shopify store ***{storeDomain}*** is connected to your Chatwoot workspace. Here's what you can do:\n\n**Track orders in conversations:** When you open a conversation, the Shopify sidebar will automatically display recent orders for the customer based on their email address. This gives your support team instant context without switching tabs.\n\n**Access order details:** View order status, fulfillment status, and total amount directly within the conversation panel."
+        "BODY": "With this integration, your Shopify store ***{storeDomain}*** is connected to your Chatwoot workspace. Here's what you can do:\n\n**Track orders in tickets:** When you open a ticket, the Shopify sidebar will automatically display recent orders for the customer based on their email address. This gives your support group instant context without switching tabs.\n\n**Access order details:** View order status, fulfillment status, and total amount directly within the ticket panel."
       },
       "ERROR": "There was an error connecting to Shopify. Please try again or contact support if the issue persists.",
       "PENDING_INSTALL": {
@@ -81,7 +81,7 @@
       }
     },
     "HEADER": "Integrations",
-    "DESCRIPTION": "Chatwoot integrates with multiple tools and services to improve your team's efficiency. Explore the list below to configure your favorite apps.",
+    "DESCRIPTION": "Chatwoot integrates with multiple tools and services to improve your group's efficiency. Explore the list below to configure your favorite apps.",
     "LEARN_MORE": "Learn more about integrations",
     "LOADING": "Fetching integrations",
     "SEARCH_PLACEHOLDER": "Search integrations...",
@@ -119,16 +119,16 @@
         "SUBSCRIPTIONS": {
           "LABEL": "Events",
           "EVENTS": {
-            "CONVERSATION_CREATED": "Conversation Created",
-            "CONVERSATION_STATUS_CHANGED": "Conversation Status Changed",
-            "CONVERSATION_UPDATED": "Conversation Updated",
+            "CONVERSATION_CREATED": "Ticket Created",
+            "CONVERSATION_STATUS_CHANGED": "Ticket Status Changed",
+            "CONVERSATION_UPDATED": "Ticket Updated",
             "MESSAGE_CREATED": "Message created",
             "MESSAGE_UPDATED": "Message updated",
             "WEBWIDGET_TRIGGERED": "Live chat widget opened by the user",
             "CONTACT_CREATED": "Contact created",
             "CONTACT_UPDATED": "Contact updated",
-            "CONVERSATION_TYPING_ON": "Conversation Typing On",
-            "CONVERSATION_TYPING_OFF": "Conversation Typing Off",
+            "CONVERSATION_TYPING_ON": "Ticket Typing On",
+            "CONVERSATION_TYPING_OFF": "Ticket Typing Off",
             "INBOX_UPDATED": "Inbox updated"
           }
         },
@@ -194,12 +194,12 @@
       "DELETE": "Delete",
       "DELETE_CONFIRMATION": {
         "TITLE": "Delete the integration",
-        "MESSAGE": "Are you sure you want to delete the integration? Doing so will result in the loss of access to conversations on your Slack workspace."
+        "MESSAGE": "Are you sure you want to delete the integration? Doing so will result in the loss of access to tickets on your Slack workspace."
       },
       "HELP_TEXT": {
         "TITLE": "How to use the Slack Integration?",
-        "BODY": "With this integration, all of your incoming conversations will be synced to the ***{selectedChannelName}*** channel in your Slack workspace. You can manage all your customer conversations right within the channel and never miss a message.\n\nHere are the main features of the integration:\n\n**Respond to conversations from within Slack:** To respond to a conversation in the ***{selectedChannelName}*** Slack channel, simply type out your message and send it as a thread. This will create a response back to the customer through Chatwoot. It's that simple!\n\n **Create private notes:** If you want to create private notes instead of replies, start your message with ***`note:`***. This ensures that your message is kept private and won't be visible to the customer.\n\n**Associate an agent profile:** If the person who replied on Slack has an agent profile in Chatwoot under the same email, the replies will be associated with that agent profile automatically. This means you can easily track who said what and when. On the other hand, when the replier doesn't have an associated agent profile, the replies will appear from the bot profile to the customer.",
-        "BODY_ALERT": "With this integration, all of your incoming conversations will be synced to the ***{selectedChannelName}*** channel in your Slack workspace, so your team can pick them up as soon as they come in.\n\nThis integration is set to **Alerts only**, which means the Slack thread is a safe space for internal discussion. Anything your team posts there stays in Slack and is never sent to the customer.\n\n**Respond to the customer from Chatwoot:** Open the conversation from the link shared in the thread and reply from the Chatwoot dashboard. Replies and private notes added in Chatwoot keep appearing in the Slack thread, so everyone stays in the loop.",
+        "BODY": "With this integration, all of your incoming tickets will be synced to the ***{selectedChannelName}*** channel in your Slack workspace. You can manage all your customer tickets right within the channel and never miss a message.\n\nHere are the main features of the integration:\n\n**Respond to tickets from within Slack:** To respond to a ticket in the ***{selectedChannelName}*** Slack channel, simply type out your message and send it as a thread. This will create a response back to the customer through Chatwoot. It's that simple!\n\n **Create private notes:** If you want to create private notes instead of replies, start your message with ***`note:`***. This ensures that your message is kept private and won't be visible to the customer.\n\n**Associate an agent profile:** If the person who replied on Slack has an agent profile in Chatwoot under the same email, the replies will be associated with that agent profile automatically. This means you can easily track who said what and when. On the other hand, when the replier doesn't have an associated agent profile, the replies will appear from the bot profile to the customer.",
+        "BODY_ALERT": "With this integration, all of your incoming tickets will be synced to the ***{selectedChannelName}*** channel in your Slack workspace, so your group can pick them up as soon as they come in.\n\nThis integration is set to **Alerts only**, which means the Slack thread is a safe space for internal discussion. Anything your group posts there stays in Slack and is never sent to the customer.\n\n**Respond to the customer from Chatwoot:** Open the ticket from the link shared in the thread and reply from the Chatwoot dashboard. Replies and private notes added in Chatwoot keep appearing in the Slack thread, so everyone stays in the loop.",
         "SELECTED": "selected"
       },
       "MESSAGE_MODE": {
@@ -212,7 +212,7 @@
           },
           "ALERT": {
             "LABEL": "Alerts only",
-            "DESCRIPTION": "Conversations are posted to Slack for internal discussion only. Nothing in the thread reaches the customer."
+            "DESCRIPTION": "Tickets are posted to Slack for internal discussion only. Nothing in the thread reaches the customer."
           }
         },
         "UPDATE_SUCCESS": "The Slack thread behaviour is updated successfully"
@@ -269,7 +269,7 @@
         },
         "GRAMMAR": "Fix grammar & spelling",
         "SUGGESTION": "Suggest a reply",
-        "SUMMARIZE": "Summarize the conversation",
+        "SUMMARIZE": "Summarize the ticket",
         "ASK_COPILOT": "Ask Copilot"
       },
       "ASSISTANCE_MODAL": {
@@ -323,7 +323,7 @@
     "DASHBOARD_APPS": {
       "TITLE": "Dashboard Apps",
       "HEADER_BTN_TXT": "Add a new dashboard app",
-      "SIDEBAR_TXT": "<p><b>Dashboard Apps</b></p><p>Dashboard Apps allow organizations to embed an application inside the Chatwoot dashboard to provide the context for customer support agents. This feature allows you to create an application independently and embed that inside the dashboard to provide user information, their orders, or their previous payment history.</p><p>When you embed your application using the dashboard in Chatwoot, your application will get the context of the conversation and contact as a window event. Implement a listener for the message event on your page to receive the context.</p><p>To add a new dashboard app, click on the button 'Add a new dashboard app'.</p>",
+      "SIDEBAR_TXT": "<p><b>Dashboard Apps</b></p><p>Dashboard Apps allow organizations to embed an application inside the Chatwoot dashboard to provide the context for customer support agents. This feature allows you to create an application independently and embed that inside the dashboard to provide user information, their orders, or their previous payment history.</p><p>When you embed your application using the dashboard in Chatwoot, your application will get the context of the ticket and contact as a window event. Implement a listener for the message event on your page to receive the context.</p><p>To add a new dashboard app, click on the button 'Add a new dashboard app'.</p>",
       "DESCRIPTION": "Dashboard Apps allow organizations to embed an application inside the dashboard to provide the context for customer support agents. This feature allows you to create an application independently and embed that to provide user information, their orders, or their previous payment history.",
       "LEARN_MORE": "Learn more about Dashboard Apps",
       "COUNT": "{n} dashboard app | {n} dashboard apps",
@@ -386,11 +386,11 @@
         "ERROR": "There was an error fetching the linear issues, please try again",
         "LINK_SUCCESS": "Issue linked successfully",
         "LINK_ERROR": "There was an error linking the issue, please try again",
-        "LINK_TITLE": "Conversation (#{conversationId}) with {name}"
+        "LINK_TITLE": "Ticket (#{conversationId}) with {name}"
       },
       "ADD_OR_LINK": {
         "TITLE": "Create/link linear issue",
-        "DESCRIPTION": "Create Linear issues from conversations, or link existing ones for seamless tracking.",
+        "DESCRIPTION": "Create Linear issues from tickets, or link existing ones for seamless tracking.",
         "FORM": {
           "TITLE": {
             "LABEL": "Title",
@@ -402,10 +402,10 @@
             "PLACEHOLDER": "Enter description"
           },
           "TEAM": {
-            "LABEL": "Team",
-            "PLACEHOLDER": "Select team",
-            "SEARCH": "Search team",
-            "REQUIRED_ERROR": "Team is required"
+            "LABEL": "Group",
+            "PLACEHOLDER": "Select group",
+            "SEARCH": "Search group",
+            "REQUIRED_ERROR": "Group is required"
           },
           "ASSIGNEE": {
             "LABEL": "Assignee",
@@ -418,9 +418,9 @@
             "SEARCH": "Search priority"
           },
           "LABEL": {
-            "LABEL": "Label",
-            "PLACEHOLDER": "Select label",
-            "SEARCH": "Search label"
+            "LABEL": "Tag",
+            "PLACEHOLDER": "Select tag",
+            "SEARCH": "Search tag"
           },
           "STATUS": {
             "LABEL": "Status",
@@ -437,14 +437,14 @@
         "CANCEL": "Cancel",
         "CREATE_SUCCESS": "Issue created successfully",
         "CREATE_ERROR": "There was an error creating the issue, please try again",
-        "LOADING_TEAM_ERROR": "There was an error fetching the teams, please try again",
-        "LOADING_TEAM_ENTITIES_ERROR": "There was an error fetching the team entities, please try again"
+        "LOADING_TEAM_ERROR": "There was an error fetching the groups, please try again",
+        "LOADING_TEAM_ENTITIES_ERROR": "There was an error fetching the group entities, please try again"
       },
       "ISSUE": {
         "STATUS": "Status",
         "PRIORITY": "Priority",
         "ASSIGNEE": "Assignee",
-        "LABELS": "Labels",
+        "LABELS": "Tags",
         "CREATED_AT": "Created at {createdAt}"
       },
       "UNLINK": {
@@ -486,7 +486,7 @@
         "LOADING": "Generating summary…"
       },
       "INBOX_BANNER": {
-        "TEXT": "This assistant isn't connected to any inbox yet, so it won't respond to conversations.",
+        "TEXT": "This assistant isn't connected to any inbox yet, so it won't respond to tickets.",
         "ACTION": "Connect inbox",
         "DISMISS": "Dismiss"
       },
@@ -505,16 +505,16 @@
       },
       "METRICS": {
         "HANDLED": {
-          "LABEL": "Conversations handled",
-          "HINT": "Conversations where Captain replied to the customer or handed the conversation to your team."
+          "LABEL": "Tickets handled",
+          "HINT": "Tickets where Captain replied to the customer or handed the ticket to your group."
         },
         "AUTO_RESOLUTION": {
           "LABEL": "Auto-resolution rate",
-          "HINT": "The share of handled conversations Captain resolved without help from your team. Higher means Captain resolved more on its own."
+          "HINT": "The share of handled tickets Captain resolved without help from your group. Higher means Captain resolved more on its own."
         },
         "HANDOFF": {
           "LABEL": "Handoff rate",
-          "HINT": "The share of handled conversations Captain passed to your team. Lower means fewer conversations needed an agent."
+          "HINT": "The share of handled tickets Captain passed to your group. Lower means fewer tickets needed an agent."
         },
         "HOURS_SAVED": {
           "LABEL": "Time saved",
@@ -523,12 +523,12 @@
         },
         "REOPEN": {
           "LABEL": "Reopen rate",
-          "HINT": "The share of Captain-resolved conversations that customers returned to later.",
+          "HINT": "The share of Captain-resolved tickets that customers returned to later.",
           "NOTE": "Lower means more resolutions stayed resolved."
         },
         "DEPTH": {
-          "LABEL": "Messages / conversation",
-          "HINT": "The average number of replies Captain sent in each conversation it handled.",
+          "LABEL": "Messages / ticket",
+          "HINT": "The average number of replies Captain sent in each ticket it handled.",
           "NOTE": "A lower number can mean quicker answers, but complex questions may need more replies."
         }
       },
@@ -536,7 +536,7 @@
         "EMPTY": "No records found for this metric.",
         "ERROR": "Could not load records. Please try again.",
         "LOAD_MORE": "Load more",
-        "RESULT_COUNT_CONVERSATION": "{count} conversation | {count} conversations"
+        "RESULT_COUNT_CONVERSATION": "{count} ticket | {count} tickets"
       },
       "KNOWLEDGE": {
         "TITLE": "Knowledge coverage",
@@ -571,7 +571,7 @@
           "STAYED_CLOSED": "Captain-resolved episodes with no reopen recorded within seven days. Recent resolutions are included.",
           "HANDOFF_REASON": "Episodes handed off for this reason: {reason}.",
           "COUNT": "No episodes | 1 episode | {count} episodes",
-          "EPISODES_HINT": "A conversation can appear more than once if Captain handled it in separate episodes. Episodes are grouped by when they started.",
+          "EPISODES_HINT": "A ticket can appear more than once if Captain handled it in separate episodes. Episodes are grouped by when they started.",
           "STARTED_AT": "Episode started {time}",
           "RETRY": "Try again"
         },
@@ -595,26 +595,26 @@
           "DURABLE": {
             "LABEL": "Captain resolutions remained closed",
             "NOT_APPLICABLE_HINT": "No resolutions in this period have seven days of follow-up yet. Durability is unavailable.",
-            "HINT": "The share of Captain-resolved conversations that were still closed seven days later.",
+            "HINT": "The share of Captain-resolved tickets that were still closed seven days later.",
             "NOTE": "Only resolutions old enough to observe for seven days are included."
           },
           "MEDIAN_RESOLUTION": {
             "LABEL": "Median resolution time",
-            "HINT": "The typical time from when a conversation reached Captain until it was resolved.",
+            "HINT": "The typical time from when a ticket reached Captain until it was resolved.",
             "NOTE": "Lower means customers generally got resolved sooner."
           },
           "DEPTH": {
-            "LABEL": "Messages per conversation"
+            "LABEL": "Messages per ticket"
           },
           "OF_TOTAL": "of {total}"
         },
         "RESOLUTION_FLOW": {
-          "ARIA_LABEL": "Flow of handled conversations through Captain and team outcomes",
+          "ARIA_LABEL": "Flow of handled tickets through Captain and group outcomes",
           "NODES": {
             "HANDLED": "Handled",
             "RESOLVED_BY_CAPTAIN": "Resolved by Captain",
             "HANDED_OFF": "Handed off",
-            "CLOSED_WITH_TEAM": "Closed with team",
+            "CLOSED_WITH_TEAM": "Closed with group",
             "REOPENED": "Reopened in 7d",
             "STAYED_CLOSED": "Stayed closed",
             "OTHER_REASONS": "Other reasons"
@@ -637,21 +637,21 @@
           "COMPARISON_LABEL": "Weekday-aligned comparison",
           "COMPARISON_HINT": "Compare resolution rates on matching weekdays, such as Monday with Monday.",
           "COMPARISON_NOTE": "Today is compared up to the same time of day.",
-          "CONVERSATION_COUNT": "Conversation count",
+          "CONVERSATION_COUNT": "Ticket count",
           "RESOLUTION_RATE": "Resolution rate",
           "CURRENT_PERIOD": "Current period",
           "PREVIOUS_PERIOD": "Previous period",
           "HANDLED": "Handled",
           "RESOLVED": "Resolved by Captain",
-          "ARIA_LABEL": "Handled and Captain-resolved conversations by reporting period",
+          "ARIA_LABEL": "Handled and Captain-resolved tickets by reporting period",
           "RATE_ARIA_LABEL": "Current and previous Captain resolution rates"
         },
         "CSAT": {
           "TITLE": "Captain CSAT",
-          "AUTONOMOUS": "Captain-resolved conversations",
-          "AUTONOMOUS_HINT": "The average customer rating for conversations Captain resolved without help from your team.",
-          "ASSISTED": "Captain-assisted conversations",
-          "ASSISTED_HINT": "The average customer rating when Captain helped before your team resolved the conversation.",
+          "AUTONOMOUS": "Captain-resolved tickets",
+          "AUTONOMOUS_HINT": "The average customer rating for tickets Captain resolved without help from your group.",
+          "ASSISTED": "Captain-assisted tickets",
+          "ASSISTED_HINT": "The average customer rating when Captain helped before your group resolved the ticket.",
           "VS_HUMANS": "{value} vs humans"
         },
         "USAGE": {
@@ -679,7 +679,7 @@
       "TITLE": "Copilot",
       "TRY_THESE_PROMPTS": "Try these prompts",
       "PANEL_TITLE": "Get started with Copilot",
-      "KICK_OFF_MESSAGE": "Need a quick summary, want to check past conversations, or draft a better reply? Copilot’s here to speed things up.",
+      "KICK_OFF_MESSAGE": "Need a quick summary, want to check past tickets, or draft a better reply? Copilot’s here to speed things up.",
       "SEND_MESSAGE": "Send message...",
       "EMPTY_MESSAGE": "There was an error generating the response. Please try again.",
       "LOADER": "Captain is thinking",
@@ -696,7 +696,7 @@
       "SELECT_ASSISTANT": "Select Assistant",
       "PROMPTS": {
         "SUMMARIZE": {
-          "LABEL": "Summarize this conversation",
+          "LABEL": "Summarize this ticket",
           "CONTENT": "Summarize the key points discussed between the customer and the support agent, including the customer's concerns, questions, and the solutions or responses provided by the support agent"
         },
         "SUGGEST": {
@@ -704,12 +704,12 @@
           "CONTENT": "Analyze the customer's inquiry, and draft a response that effectively addresses their concerns or questions. Ensure the reply is clear, concise, and provides helpful information."
         },
         "RATE": {
-          "LABEL": "Rate this conversation",
-          "CONTENT": "Review the conversation to see how well it meets the customer's needs. Share a rating out of 5 based on tone, clarity, and effectiveness."
+          "LABEL": "Rate this ticket",
+          "CONTENT": "Review the ticket to see how well it meets the customer's needs. Share a rating out of 5 based on tone, clarity, and effectiveness."
         },
         "HIGH_PRIORITY": {
-          "LABEL": "High priority conversations",
-          "CONTENT": "Give me a summary of all high priority open conversations. Include the conversation ID, customer name (if available), last message content, and assigned agent. Group by status if relevant."
+          "LABEL": "High priority tickets",
+          "CONTENT": "Give me a summary of all high priority open tickets. Include the ticket ID, customer name (if available), last message content, and assigned agent. Group by status if relevant."
         },
         "LIST_CONTACTS": {
           "LABEL": "List contacts",
@@ -725,7 +725,7 @@
       "HEADER": "Playground",
       "DESCRIPTION": "Use this playground to send messages to your assistant and check if it responds accurately, quickly, and in the tone you expect.",
       "CREDIT_NOTE": "Messages sent here will count toward your Captain credits.",
-      "CLEAR_CONVERSATION": "Clear conversation",
+      "CLEAR_CONVERSATION": "Clear ticket",
       "RESPONSE_ERROR": "Captain could not complete this test run. Review the setup and try again.",
       "SETUP": {
         "TITLE": "Test setup",
@@ -885,28 +885,28 @@
         },
         "INACTIVITY_RESOLUTION": {
           "TITLE": "When customers stop replying",
-          "DESCRIPTION": "Choose how Captain handles the conversation.",
+          "DESCRIPTION": "Choose how Captain handles the ticket.",
           "MODE_LABEL": "Action when the customer stops replying",
           "REVIEW_AFTER": "Review after",
           "RESOLVE_AFTER": "Resolve after",
-          "ALWAYS_WARNING": "Captain will resolve every conversation after the selected time without reviewing it. Some conversations that still need help may be closed.",
-          "PENDING_INFO": "The conversation remains pending until the customer replies.",
+          "ALWAYS_WARNING": "Captain will resolve every ticket after the selected time without reviewing it. Some tickets that still need help may be closed.",
+          "PENDING_INFO": "The ticket remains pending until the customer replies.",
           "RESOLUTION_MESSAGE": {
             "TITLE": "Send a message when resolving",
-            "DESCRIPTION": "Captain sends this closing message before it resolves the conversation."
+            "DESCRIPTION": "Captain sends this closing message before it resolves the ticket."
           },
           "MODES": {
             "DISABLED": {
               "LABEL": "Wait for the customer",
-              "DESCRIPTION": "Captain does not resolve the conversation. Captain can still hand it off if the customer asks."
+              "DESCRIPTION": "Captain does not resolve the ticket. Captain can still hand it off if the customer asks."
             },
             "LEGACY": {
               "LABEL": "Always resolve",
-              "DESCRIPTION": "Captain resolves every conversation after the selected time."
+              "DESCRIPTION": "Captain resolves every ticket after the selected time."
             },
             "EVALUATED": {
               "LABEL": "Let Captain review it (recommended)",
-              "DESCRIPTION": "Captain decides whether to resolve the conversation or hand it off."
+              "DESCRIPTION": "Captain decides whether to resolve the ticket or hand it off."
             }
           },
           "DURATION_HOURS_ARIA_LABEL": "Hours before action",
@@ -920,7 +920,7 @@
         },
         "FEATURES": {
           "TITLE": "Features",
-          "ALLOW_CONVERSATION_FAQS": "Generate FAQs from resolved conversations",
+          "ALLOW_CONVERSATION_FAQS": "Generate FAQs from resolved tickets",
           "ALLOW_MEMORIES": "Capture key details as memories from customer interactions.",
           "ALLOW_CITATIONS": "Include source citations in responses",
           "ALLOW_CONTACT_ATTRIBUTES": "Allow access to contact information"
@@ -928,7 +928,7 @@
         "AUDIENCE": {
           "EVERYONE": {
             "LABEL": "Everyone",
-            "DESC": "Captain responds to every conversation in connected inboxes."
+            "DESC": "Captain responds to every ticket in connected inboxes."
           },
           "SPECIFIC": {
             "LABEL": "Specific audience",
@@ -944,7 +944,7 @@
           "MATCH_ALL": "all",
           "MATCH_ANY": "any",
           "GROUP_CONTACT": "Contact attributes",
-          "GROUP_CONVERSATION": "Conversation",
+          "GROUP_CONVERSATION": "Ticket",
           "GROUP_CUSTOM": "Custom attributes",
           "BROWSER_LANGUAGE": "Browser language",
           "CONVERSATION_LANGUAGE": "First message language",
@@ -955,7 +955,7 @@
         "SCHEDULE": {
           "ALWAYS": {
             "LABEL": "Anytime",
-            "DESC": "Captain responds to every conversation, regardless of time."
+            "DESC": "Captain responds to every ticket, regardless of time."
           },
           "BUSINESS_HOURS": {
             "LABEL": "During business hours",
@@ -978,11 +978,11 @@
         "HEADER": "Settings",
         "BASIC_SETTINGS": {
           "TITLE": "Basic settings",
-          "DESCRIPTION": "Customize what the assistant says when ending a conversation or transferring to a human."
+          "DESCRIPTION": "Customize what the assistant says when ending a ticket or transferring to a human."
         },
         "SYSTEM_SETTINGS": {
           "TITLE": "System settings",
-          "DESCRIPTION": "Customize what the assistant says when ending a conversation or transferring to a human.",
+          "DESCRIPTION": "Customize what the assistant says when ending a ticket or transferring to a human.",
           "DESCRIPTION_V2": "Manage what Captain does when customers stop replying and set the handoff message."
         },
         "AUDIENCE": {
@@ -991,7 +991,7 @@
         },
         "SCHEDULE": {
           "TITLE": "Schedule",
-          "DESCRIPTION": "Choose when Captain replies. Outside this window, conversations are handed to your team."
+          "DESCRIPTION": "Choose when Captain replies. Outside this window, tickets are handed to your group."
         },
         "CONTROL_ITEMS": {
           "TITLE": "The Fun Stuff",
@@ -1020,10 +1020,10 @@
       },
       "EMPTY_STATE": {
         "TITLE": "No assistants available",
-        "SUBTITLE": "Create an assistant to provide quick and accurate responses to your users. It can learn from your help articles and past conversations.",
+        "SUBTITLE": "Create an assistant to provide quick and accurate responses to your users. It can learn from your help articles and past tickets.",
         "FEATURE_SPOTLIGHT": {
           "TITLE": "Captain Assistant",
-          "NOTE": "Captain Assistant engages directly with customers, learns from your help docs and past conversations, and delivers instant, accurate responses. It handles the initial queries, providing quick resolutions before  transferring to an agent when needed."
+          "NOTE": "Captain Assistant engages directly with customers, learns from your help docs and past tickets, and delivers instant, accurate responses. It handles the initial queries, providing quick resolutions before  transferring to an agent when needed."
         }
       },
       "GUARDRAILS": {
@@ -1195,8 +1195,8 @@
       "HEADER": "Documents",
       "ADD_NEW": "Create a new document",
       "FAQ_COUNT": "{n} FAQ | {n} FAQs",
-      "USED_IN_CONVERSATIONS": "Used in {n} conversation | Used in {n} conversations",
-      "NO_USED_CONVERSATIONS": "No conversations found for this document.",
+      "USED_IN_CONVERSATIONS": "Used in {n} ticket | Used in {n} tickets",
+      "NO_USED_CONVERSATIONS": "No tickets found for this document.",
       "SELECTED": "{count} selected",
       "SELECT_ALL": "Select all ({count})",
       "UNSELECT_ALL": "Unselect all ({count})",
@@ -1235,7 +1235,7 @@
         "SORT": {
           "RECENTLY_UPDATED": "Recently updated",
           "RECENTLY_CREATED": "Recently created",
-          "MOST_USED": "Most used in conversations"
+          "MOST_USED": "Most used in tickets"
         },
         "SEARCH_PLACEHOLDER": "Search..."
       },
@@ -1263,7 +1263,7 @@
         "DESCRIPTION": "Review the crawled content and the FAQs generated from this source.",
         "SOURCE": "Source",
         "GENERATED_FAQS": "Generated FAQs",
-        "USED_IN_CONVERSATIONS": "Used in conversations",
+        "USED_IN_CONVERSATIONS": "Used in tickets",
         "LAST_UPDATED": "Last updated",
         "NOT_AVAILABLE": "Not available",
         "CONTENT_TAB": "Crawled content",
@@ -1549,9 +1549,9 @@
     "RESPONSES": {
       "HEADER": "FAQs",
       "ADD_NEW": "Create new FAQ",
-      "NO_USED_CONVERSATIONS": "No conversations found for this FAQ.",
+      "NO_USED_CONVERSATIONS": "No tickets found for this FAQ.",
       "DOCUMENTABLE": {
-        "CONVERSATION": "Conversation #{id}"
+        "CONVERSATION": "Ticket #{id}"
       },
       "SELECTED": "{count} selected",
       "SELECT_ALL": "Select all ({count})",
@@ -1623,7 +1623,7 @@
       "SEARCH_PLACEHOLDER": "Search suggestions...",
       "QUEUE_COUNT": "{count} suggestion to review | {count} suggestions to review",
       "QUEUE_HINT": "Ranked by customer demand",
-      "SOURCE_COUNT": "{count} conversation | {count} conversations",
+      "SOURCE_COUNT": "{count} ticket | {count} tickets",
       "REVIEW": "Review sources",
       "APPROVE": "Approve",
       "APPROVE_FAQ": "Approve FAQ",
@@ -1631,10 +1631,10 @@
       "SAVE": "Save changes",
       "DETAILS": {
         "TITLE": "Review FAQ suggestion",
-        "DESCRIPTION": "Captain grouped {count} conversation into this suggestion. Review the evidence and refine the FAQ before approval. | Captain grouped {count} conversations into this suggestion. Review the evidence and refine the FAQ before approval.",
-        "SOURCES": "Source conversations",
+        "DESCRIPTION": "Captain grouped {count} ticket into this suggestion. Review the evidence and refine the FAQ before approval. | Captain grouped {count} tickets into this suggestion. Review the evidence and refine the FAQ before approval.",
+        "SOURCES": "Source tickets",
         "SOURCE_PROGRESS": "{visible} of {total}",
-        "NO_SOURCES": "No accessible source conversations were found.",
+        "NO_SOURCES": "No accessible source tickets were found.",
         "RETRY": "Retry"
       },
       "EMPTY_STATE": {
@@ -1649,7 +1649,7 @@
       },
       "ERRORS": {
         "LOAD": "There was an error loading FAQ suggestions. Please try again.",
-        "LOAD_DETAILS": "There was an error loading the source conversations.",
+        "LOAD_DETAILS": "There was an error loading the source tickets.",
         "APPROVE": "There was an error approving the FAQ. Please try again.",
         "DISMISS": "There was an error dismissing the suggestion. Please try again.",
         "SAVE": "There was an error saving the suggestion. Please try again."

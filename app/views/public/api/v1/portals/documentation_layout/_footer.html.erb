@@ -15,26 +15,10 @@
     handle = socials[social[:key]].to_s.strip
     social.merge(url: "#{social[:base_url]}#{handle}") if handle.present?
   end
-  show_branding = !portal.account.feature_enabled?('disable_branding')
 %>
 
-<% if show_branding || active_socials.any? %>
-  <footer class="mt-auto px-6 md:px-10 py-6 border-t border-solid border-n-weak flex items-center gap-4 flex-wrap <%= show_branding ? 'justify-between' : 'justify-end' %>">
-    <% if show_branding %>
-      <a href="<%= generate_portal_brand_url(global_config['BRAND_URL'], request.referer) %>"
-         target="_blank"
-         rel="noopener noreferrer nofollow"
-         class="inline-flex items-center gap-2 text-xs text-n-slate-10 hover:text-n-slate-12 transition">
-        <%= I18n.t('public_portal.footer.made_with') %>
-        <span class="inline-flex items-center gap-1.5 font-medium text-n-slate-11">
-          <% if global_config['LOGO_THUMBNAIL'].present? %>
-            <img class="w-3.5 h-3.5 rounded-sm" alt="<%= global_config['BRAND_NAME'] %>" src="<%= global_config['LOGO_THUMBNAIL'] %>">
-          <% end %>
-          <%= global_config['INSTALLATION_NAME'] %>
-        </span>
-      </a>
-    <% end %>
-
+<% if active_socials.any? %>
+  <footer class="mt-auto px-6 md:px-10 py-6 border-t border-solid border-n-weak flex items-center gap-4 flex-wrap justify-end">
     <% if active_socials.any? %>
       <div class="flex items-center gap-0.5">
         <% active_socials.each do |social| %>

@@ -30,7 +30,7 @@ import login from './login.json';
 import macros from './macros.json';
 import report from './report.json';
 import resetPassword from './resetPassword.json';
-import sdTheme from './sdTheme.json';
+import sdRoles from './sdRoles.json';
 import sdTelephony from './sdTelephony.json';
 import search from './search.json';
 import setNewPassword from './setNewPassword.json';
@@ -46,8 +46,7 @@ import mfa from './mfa.json';
 import onboarding from './onboarding.json';
 import sessionLimit from './sessionLimit.json';
 import yearInReview from './yearInReview.json';
-import sdTicketTable from './sdTicketTable.json';
-import servicedeskTicketPanel from './servicedeskTicketPanel.json';
+import sdViewTable from './sdViewTable.json';
 
 export default {
   ...advancedFilters,
@@ -82,7 +81,7 @@ export default {
   ...macros,
   ...report,
   ...resetPassword,
-  ...sdTheme,
+  ...sdRoles,
   ...sdTelephony,
   ...search,
   ...setNewPassword,
@@ -98,6 +97,5 @@ export default {
   ...onboarding,
   ...sessionLimit,
   ...yearInReview,
-  ...sdTicketTable,
-  ...servicedeskTicketPanel,
+  ...sdViewTable,
 };

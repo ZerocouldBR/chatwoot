@@ -12,13 +12,12 @@ const state = {
   allConversations: [],
   attachments: {},
   listLoadingStatus: true,
-  chatStatusFilter: wootConstants.STATUS_TYPE.OPEN,
+  chatStatusFilter: wootConstants.STATUS_TYPE.UNSOLVED,
   chatSortFilter: wootConstants.SORT_BY_TYPE.LATEST,
   currentInbox: null,
   selectedChatId: null,
   appliedFilters: [],
   appliedFiltersSortBy: null,
-  contextMenuChatId: null,
   conversationParticipants: [],
   conversationLastSeen: null,
   syncConversationsMessages: {},
@@ -186,13 +185,9 @@ export const mutations = {
     }
   },
 
-  [types.CHANGE_CONVERSATION_STATUS](
-    _state,
-    { conversationId, status, snoozedUntil }
-  ) {
+  [types.CHANGE_CONVERSATION_STATUS](_state, { conversationId, status }) {
     const conversation =
       getters.getConversationById(_state)(conversationId) || {};
-    conversation.snoozed_until = snoozedUntil;
     conversation.status = status;
   },
 
@@ -397,10 +392,6 @@ export const mutations = {
     { conversationId, messageId }
   ) {
     _state.syncConversationsMessages[conversationId] = messageId;
-  },
-
-  [types.SET_CONTEXT_MENU_CHAT_ID](_state, chatId) {
-    _state.contextMenuChatId = chatId;
   },
 
   [types.SET_CHAT_LIST_FILTERS](_state, data) {

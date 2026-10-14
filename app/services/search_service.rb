@@ -30,10 +30,15 @@ class SearchService
     @search_query ||= params[:q].to_s.strip
   end
 
+  # ServiceDesk M13: a mesma restrição de acesso do papel (ticket.access) da lista de tickets
+  def sd_ticket_scope
+    @sd_ticket_scope ||= Servicedesk::Roles::TicketScope.new(current_user, current_account, account_user: account_user)
+  end
+
   def filter_conversations
-    conversations_query = current_account.conversations.where(inbox_id: accessable_inbox_ids)
-                                         .joins('INNER JOIN contacts ON conversations.contact_id = contacts.id')
-                                         .where("cast(conversations.display_id as text) ILIKE :search OR contacts.name ILIKE :search OR contacts.email
+    visible = sd_ticket_scope.apply(current_account.conversations.where(inbox_id: accessable_inbox_ids))
+    conversations_query = visible.joins('INNER JOIN contacts ON conversations.contact_id = contacts.id')
+                                 .where("cast(conversations.display_id as text) ILIKE :search OR contacts.name ILIKE :search OR contacts.email
                             ILIKE :search OR contacts.phone_number ILIKE :search OR contacts.identifier ILIKE :search
                             OR conversations.additional_attributes->>'mail_subject' ILIKE :search", search: "%#{search_query}%")
 
@@ -108,6 +113,7 @@ class SearchService
   def message_base_query
     query = current_account.messages.where('created_at >= ?', 3.months.ago)
     query = query.where(inbox_id: accessable_inbox_ids) unless should_skip_inbox_filtering?
+    query = query.where(conversation_id: sd_ticket_scope.apply(current_account.conversations).select(:id)) if sd_ticket_scope.restricted?
     query
   end
 
@@ -163,6 +169,9 @@ class SearchService
   end
 
   def filter_contacts
+    # ServiceDesk M13: sem acesso à lista de usuários finais (contacts.list = none), a busca não devolve contatos
+    return @contacts = current_account.contacts.none.page(params[:page]).per(15) unless sd_ticket_scope.access.can?('contacts.list')
+
     contacts_query = current_account.contacts.where(
       "name ILIKE :search OR email ILIKE :search OR phone_number
       ILIKE :search OR identifier ILIKE :search", search: "%#{search_query}%"

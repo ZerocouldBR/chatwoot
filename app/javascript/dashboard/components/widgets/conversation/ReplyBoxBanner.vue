@@ -76,7 +76,6 @@ const onClickBotHandoff = async () => {
     store.commit('CHANGE_CONVERSATION_STATUS', {
       conversationId,
       status: 'open',
-      snoozedUntil: null,
     });
     useAlert(t('CONVERSATION.BOT_HANDOFF_SUCCESS'));
   } catch (error) {

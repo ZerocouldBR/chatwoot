@@ -13,6 +13,7 @@ import {
   requiresShopifyBilling,
 } from 'v3/helpers/AuthHelper';
 import AnalyticsHelper from '../helper/AnalyticsHelper';
+import { INSTALLATION_TYPES } from 'dashboard/constants/installationTypes';
 
 const ONBOARDING_STEPS = ['account_details', 'enrichment', 'inbox_setup'];
 const routes = [...dashboard.routes];
@@ -28,6 +29,22 @@ const shopifyBillingRedirect = query => {
   if (planHandle) params.set('plan_handle', planHandle);
   if (shop) params.set('shop', shop);
   return `settings/billing?${params.toString()}`;
+};
+
+// Blocks direct access to routes restricted to enterprise/cloud installations,
+// so community builds never land on upsell or enterprise-only pages.
+const isInstallationTypeAllowed = to => {
+  const allowed = {
+    [INSTALLATION_TYPES.ENTERPRISE]:
+      window.chatwootConfig?.isEnterprise === 'true',
+    [INSTALLATION_TYPES.CLOUD]: store.getters['globalConfig/isOnChatwootCloud'],
+    [INSTALLATION_TYPES.COMMUNITY]: true,
+  };
+  return (to.matched || []).every(({ meta }) => {
+    const types = meta?.installationTypes;
+    if (!Array.isArray(types) || !types.length) return true;
+    return types.some(type => allowed[type]);
+  });
 };
 
 export const router = createRouter({ history: createWebHistory(), routes });
@@ -164,6 +181,10 @@ export const validateAuthenticateRoutePermission = async (to, next) => {
     );
   }
   if (!needsOnboarding && isOnOnboardingView(to)) {
+    return next(frontendURL(`accounts/${routeAccountId}/dashboard`));
+  }
+
+  if (!isInstallationTypeAllowed(to)) {
     return next(frontendURL(`accounts/${routeAccountId}/dashboard`));
   }
 

@@ -571,20 +571,19 @@ describe('#actions', () => {
         data: {
           payload: {
             conversation_id: 1,
-            current_status: 'snoozed',
-            snoozed_until: null,
+            current_status: 'on_hold',
           },
         },
       });
       await actions.toggleStatus(
         { commit },
-        { conversationId: 1, status: 'snoozed' }
+        { conversationId: 1, status: 'on_hold' }
       );
       expect(commit).toHaveBeenCalledTimes(1);
       expect(commit.mock.calls).toEqual([
         [
           'CHANGE_CONVERSATION_STATUS',
-          { conversationId: 1, status: 'snoozed', snoozedUntil: null },
+          { conversationId: 1, status: 'on_hold' },
         ],
       ]);
     });
@@ -970,13 +969,6 @@ describe('#addMentions', () => {
           },
         ],
       ]);
-    });
-  });
-
-  describe('#setContextMenuChatId', () => {
-    it('sets the context menu chat id', () => {
-      actions.setContextMenuChatId({ commit }, 1);
-      expect(commit.mock.calls).toEqual([[types.SET_CONTEXT_MENU_CHAT_ID, 1]]);
     });
   });
 

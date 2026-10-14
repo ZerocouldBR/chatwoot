@@ -17,7 +17,7 @@
       "ERROR": "Ocorreu um erro ao tentar conectar com o Shopify. Por favor, tente novamente ou entre em contato com o suporte se o problema persistir."
     },
     "HEADER": "Integrações",
-    "DESCRIPTION": "ServiceDesk se integra com várias ferramentas e serviços para melhorar a eficiência de seu time. Explore a lista abaixo para configurar seus aplicativos favoritos.",
+    "DESCRIPTION": "Chatwoot se integra com várias ferramentas e serviços para melhorar a eficiência de seu grupo. Explore a lista abaixo para configurar seus aplicativos favoritos.",
     "LEARN_MORE": "Aprenda mais sobre integrações",
     "LOADING": "Obtendo integrações",
     "SEARCH_PLACEHOLDER": "Pesquisar integrações...",
@@ -33,7 +33,7 @@
       "LEARN_MORE": "Saiba mais sobre webhooks",
       "PAYWALL": {
         "TITLE": "Webhooks estão disponíveis nos planos pagos",
-        "AVAILABLE_ON": "Use webhooks para receber eventos em tempo real de sua conta ServiceDesk.",
+        "AVAILABLE_ON": "Use webhooks para receber eventos em tempo real de sua conta Chatwoot.",
         "UPGRADE_PROMPT": "Atualize para o plano Startups, Business ou Enterprise para usar webhooks.",
         "UPGRADE_NOW": "Atualizar agora",
         "CANCEL_ANYTIME": "Altere ou cancele seu plano a qualquer momento."
@@ -51,12 +51,12 @@
       "NO_RESULTS": "Nenhum webhook encontrado correspondente à sua busca",
       "FORM": {
         "CANCEL": "Cancelar",
-        "DESC": "Webhook Os eventos fornecem informações em tempo real sobre o que está acontecendo na sua conta do ServiceDesk. Digite um URL válido para configurar um retorno de chamada.",
+        "DESC": "Webhook Os eventos fornecem informações em tempo real sobre o que está acontecendo na sua conta do Chatwoot. Digite um URL válido para configurar um retorno de chamada.",
         "SUBSCRIPTIONS": {
           "LABEL": "Eventos",
           "EVENTS": {
             "CONVERSATION_CREATED": "Ticket Criado",
-            "CONVERSATION_STATUS_CHANGED": "Status do ticket alterado",
+            "CONVERSATION_STATUS_CHANGED": "Status de ticket alterado",
             "CONVERSATION_UPDATED": "Ticket Atualizado",
             "MESSAGE_CREATED": "Mensagem criada",
             "MESSAGE_UPDATED": "Mensagem atualizada",
@@ -86,7 +86,7 @@
       "HEADER_BTN_TXT": "Adicionar novo Webhook",
       "LOADING": "Buscando Webhooks anexados",
       "SEARCH_404": "Não existem itens correspondentes a esta consulta",
-      "SIDEBAR_TXT": "<p><b>Webhooks</b> </p> <p>Webhooks são retornos de chamada HTTP que podem ser definidos para todas as contas. Eles são acionados por eventos como a criação de mensagens no ServiceDesk. Você pode criar mais de um webhook para esta conta. <br /> <br /> Para criar um <b> webhook </b>, clique no botão <b> Adicionar novo webhook </b>. Você também pode remover qualquer webhook existente clicando no botão Excluir.</p>",
+      "SIDEBAR_TXT": "<p><b>Webhooks</b> </p> <p>Webhooks são retornos de chamada HTTP que podem ser definidos para todas as contas. Eles são acionados por eventos como a criação de mensagens no Chatwoot. Você pode criar mais de um webhook para esta conta. <br /> <br /> Para criar um <b> webhook </b>, clique no botão <b> Adicionar novo webhook </b>. Você também pode remover qualquer webhook existente clicando no botão Excluir.</p>",
       "LIST": {
         "404": "Não há webhooks configurados para esta conta.",
         "TITLE": "Gerenciar webhooks",
@@ -130,12 +130,12 @@
       "DELETE": "Excluir",
       "DELETE_CONFIRMATION": {
         "TITLE": "Excluir integração",
-        "MESSAGE": "Tem certeza que deseja excluir a integração? Isso resultará na perda de acesso a tickets no seu espaço de trabalho Slack."
+        "MESSAGE": "Tem certeza que deseja excluir a integração? Isso resultará na perda de acesso o tickets no seu espaço de trabalho Slack."
       },
       "HELP_TEXT": {
         "TITLE": "Usando a integração com Slack",
-        "BODY": "Com essa integração, todos os seus tickets recebidos serão sincronizados com o canal ***{selectedChannelName}*** em seu espaço de trabalho Slack. Você pode gerenciar todos os seus tickets com clientes diretamente no canal e nunca perder uma mensagem.\n\nAqui estão os principais recursos da integração:\n\n**Responda a tickets de dentro do Slack:** Para responder a um ticket no canal ***{selectedChannelName}*** Slack, simplesmente digite a sua mensagem e envie-a como um tópico. Isso criará uma resposta ao cliente por meio do ServiceDesk. Simples assim!\n\n **Crie notas privadas:** Se você quiser criar notas privadas em vez de respostas, inicie sua mensagem com ***`nota:`***. Isso garante que sua mensagem seja privada e não seja visível para o cliente.\n\n**Associar um perfil de agente:** Se a pessoa que respondeu no Slack tem um perfil de agente no ServiceDesk sob o mesmo e-mail, as respostas serão associadas automaticamente com esse perfil de agente. Isso significa que você pode facilmente controlar quem disse o quê e quando. Por outro lado, quando o respondente não tiver um perfil de agente associado, as respostas aparecerão do perfil do bot para o cliente.",
-        "BODY_ALERT": "Com esta integração, todos os seus tickets recebidos serão sincronizados com o canal ***{selectedChannelName}*** no seu workspace do Slack, para que seu time possa atendê-los assim que chegarem.\n\nEsta integração está configurada como **Somente alertas**, o que significa que a thread do Slack é um espaço seguro para discussões internas. Tudo o que seu time publicar nela permanecerá no Slack e nunca será enviado ao cliente.\n\n**Responda ao cliente pelo ServiceDesk:** Abra o ticket pelo link compartilhado na thread e responda pelo painel do ServiceDesk. As respostas e notas privadas adicionadas no ServiceDesk continuarão aparecendo na thread do Slack, mantendo todos informados.",
+        "BODY": "Com essa integração, todos os seus tickets recebidos serão sincronizados com o canal ***{selectedChannelName}*** em seu espaço de trabalho Slack. Você pode gerenciar todos os seus tickets com clientes diretamente no canal e nunca perder uma mensagem.\n\nAqui estão os principais recursos da integração:\n\n**Responda aos tickets de dentro do Slack:** Para responder a um ticket no canal ***{selectedChannelName}*** Slack, simplesmente digite a sua mensagem e envie-a como um tópico. Isso criará uma resposta ao cliente por meio do Chatwoot. Simples assim!\n\n **Crie notas privadas:** Se você quiser criar notas privadas em vez de respostas, inicie sua mensagem com ***`nota:`***. Isso garante que sua mensagem seja privada e não seja visível para o cliente.\n\n**Associar um perfil de agente:** Se a pessoa que respondeu no Slack tem um perfil de agente no Chatwoot sob o mesmo e-mail, as respostas serão associados automaticamente com esse perfil de agente. Isso significa que você pode facilmente controlar quem disse o quê e quando. Por outro lado, quando o respondente não tiver um perfil de agente associado, as respostas aparecerão do perfil do bot para o cliente.",
+        "BODY_ALERT": "Com esta integração, todos os seus tickets recebidos serão sincronizados com o canal ***{selectedChannelName}*** no seu workspace do Slack, para que seu grupo possa atendê-los assim que chegarem.\n\nEsta integração está configurada como **Somente alertas**, o que significa que a thread do Slack é um espaço seguro para discussões internas. Tudo o que seu grupo publicar nela permanecerá no Slack e nunca será enviado ao cliente.\n\n**Responda ao cliente pelo Chatwoot:** Abra o ticket pelo link compartilhado na thread e responda pelo painel do Chatwoot. As respostas e notas privadas adicionadas no Chatwoot continuarão aparecendo na thread do Slack, mantendo todos informados.",
         "SELECTED": "selecionar"
       },
       "MESSAGE_MODE": {
@@ -157,7 +157,7 @@
         "OPTION_LABEL": "Selecione um canal",
         "UPDATE": "Atualizar",
         "BUTTON_TEXT": "Conectar canal",
-        "DESCRIPTION": "Seu espaço de trabalho Slack agora está ligado com o ServiceDesk. No entanto, a integração está inativa no momento. Para ativar a integração e conectar um canal ao ServiceDesk, por favor, clique no botão abaixo.\n\n**Nota:** Se você está tentando conectar-se a um canal privado, adicione o aplicativo ServiceDesk no canal do Slack antes de prosseguir com esta etapa.",
+        "DESCRIPTION": "Seu espaço de trabalho Slack agora está ligado com o Chatwoot. No entanto, a integração está inativa no momento. Para ativar a integração e conectar um canal ao Chatwoot, por favor, clique no botão abaixo.\n\n**Nota:** Se você está tentando conectar-se a um canal privado, adicione o aplicativo Chatwoot no canal do Slack antes de prosseguir com esta etapa.",
         "ATTENTION_REQUIRED": "Atenção necessária",
         "EXPIRED": "Sua integração com o Slack expirou. Para continuar recebendo mensagens no Slack, exclua a integração e conecte seu espaço de trabalho novamente."
       },
@@ -259,7 +259,7 @@
     "DASHBOARD_APPS": {
       "TITLE": "Painel de Aplicativos",
       "HEADER_BTN_TXT": "Adicionar um novo aplicativo",
-      "SIDEBAR_TXT": "<p><b>Painel de Aplicativos</b></p><p>O Painel de Aplicativos permite que as organizações incorporem um aplicativo dentro do Painel de Aplicativos do ServiceDesk para fornecer o contexto para agentes de suporte ao cliente. Este recurso permite-lhe criar uma aplicação independente e incorporá-la dentro da dashboard para fornecer informações do usuário, seus pedidos ou seu histórico de pagamentos anteriores.</p><p>Quando você incorpora seu aplicativo usando o Painel de Aplicativos do ServiceDesk, sua aplicação irá obter o contexto do ticket e entrar em contato como um evento de janela. Implementar um ouvinte para o evento de mensagem em sua página receber o contexto.</p><p>Para adicionar um novo aplicativo no Painel de Aplicativos, clique no botão 'Adicionar um novo aplicativo'.</p>",
+      "SIDEBAR_TXT": "<p><b>Painel de Aplicativos</b></p><p>O Painel de Aplicativos permite que as organizações incorporem um aplicativo dentro do Painel de Aplicativos do Chatwoot para fornecer o contexto para agentes de suporte ao cliente. Este recurso permite-lhe criar uma aplicação independente e incorporá-la dentro da dashboard para fornecer informações do usuário, seus pedidos ou seu histórico de pagamentos anteriores.</p><p>Quando você incorpora seu aplicativo usando o Painel de Aplicativos do Chatwoot, sua aplicação irá obter o contexto do ticket e entrar em contato como um evento de janela. Implementar um ouvinte para o evento de mensagem em sua página receber o contexto.</p><p>Para adicionar um novo aplicativo no Painel de Aplicativos, clique no botão 'Adicionar um novo aplicativo'.</p>",
       "DESCRIPTION": "O Painel de Aplicativos permite que organizações incorporem um aplicativo dentro do painel para fornecer o contexto para agentes de suporte ao cliente. Este recurso permite que você crie uma aplicação independente e incorpore para fornecer informações de usuário, seus pedidos ou seu histórico de pagamentos anteriores.",
       "LEARN_MORE": "Saiba mais sobre o Painel de Aplicativos",
       "COUNT": "{n} painel de aplicativo | {n} painéis de aplicativos",
@@ -311,7 +311,7 @@
       "HEADER": "Linear",
       "ADD_OR_LINK_BUTTON": "Criar/Ligar Issue Linear",
       "LOADING": "Buscando problemas lineares...",
-      "LOADING_ERROR": "Houve um erro ao buscar as entidades do time, por favor, tente novamente",
+      "LOADING_ERROR": "Houve um erro ao buscar as entidades do grupo, por favor, tente novamente",
       "CREATE": "Criar",
       "LINK": {
         "SEARCH": "Pesquisar issues",
@@ -338,10 +338,10 @@
             "PLACEHOLDER": "Insira a descrição"
           },
           "TEAM": {
-            "LABEL": "Times",
-            "PLACEHOLDER": "Selecionar time",
-            "SEARCH": "Pesquisar time",
-            "REQUIRED_ERROR": "O time é obrigatório"
+            "LABEL": "Grupos",
+            "PLACEHOLDER": "Selecionar grupo",
+            "SEARCH": "Pesquisar grupo",
+            "REQUIRED_ERROR": "O grupo é obrigatório"
           },
           "ASSIGNEE": {
             "LABEL": "Responsável",
@@ -355,8 +355,8 @@
           },
           "LABEL": {
             "LABEL": "Nome do campo",
-            "PLACEHOLDER": "Selecione a etiqueta",
-            "SEARCH": "Pesquisar etiqueta"
+            "PLACEHOLDER": "Selecione a tag",
+            "SEARCH": "Pesquisar tag"
           },
           "STATUS": {
             "LABEL": "Status",
@@ -373,14 +373,14 @@
         "CANCEL": "Cancelar",
         "CREATE_SUCCESS": "Pasta criada com sucesso",
         "CREATE_ERROR": "Houve um erro ao criar a questão, por favor, tente novamente",
-        "LOADING_TEAM_ERROR": "Houve um erro ao buscar os times, por favor, tente novamente",
-        "LOADING_TEAM_ENTITIES_ERROR": "Houve um erro ao buscar as entidades do time, por favor, tente novamente"
+        "LOADING_TEAM_ERROR": "Houve um erro ao buscar os grupos, por favor, tente novamente",
+        "LOADING_TEAM_ENTITIES_ERROR": "Houve um erro ao buscar as entidades do grupo, por favor, tente novamente"
       },
       "ISSUE": {
         "STATUS": "Status",
         "PRIORITY": "Prioridade",
         "ASSIGNEE": "Responsável",
-        "LABELS": "Etiquetas",
+        "LABELS": "Tags",
         "CREATED_AT": "Criado em {createdAt}"
       },
       "UNLINK": {
@@ -422,7 +422,7 @@
         "LOADING": "Gerando resumo…"
       },
       "INBOX_BANNER": {
-        "TEXT": "Este assistente ainda não está conectado a nenhuma caixa de entrada, por isso ele não responderá a tickets.",
+        "TEXT": "Este assistente ainda não está conectado a nenhuma caixa de entrada, por isso ele não responderá o tickets.",
         "ACTION": "Conectar caixa de entrada",
         "DISMISS": "Recusar"
       },
@@ -439,15 +439,15 @@
       "METRICS": {
         "HANDLED": {
           "LABEL": "Tickets atendidos",
-          "HINT": "Tickets em que o Captain respondeu ao cliente ou transferiu o ticket para o seu time."
+          "HINT": "Tickets em que o Captain respondeu ao cliente ou transferiu o ticket para o seu grupo."
         },
         "AUTO_RESOLUTION": {
           "LABEL": "Taxa de resolução automática",
-          "HINT": "A proporção de tickets atendidos que o Captain resolveu sem a ajuda do seu time. Quanto maior, mais tickets o Captain resolveu sozinho."
+          "HINT": "A proporção de tickets atendidos que o Captain resolveu sem a ajuda do seu grupo. Quanto maior, mais tickets o Captain resolveu sozinho."
         },
         "HANDOFF": {
           "LABEL": "Taxa de transferência para atendente",
-          "HINT": "A proporção de tickets atendidos que o Captain transferiu para o seu time. Quanto menor, menos tickets precisaram de um agente."
+          "HINT": "A proporção de tickets atendidos que o Captain transferiu para o seu grupo. Quanto menor, menos tickets precisaram de um agente."
         },
         "HOURS_SAVED": {
           "LABEL": "Tempo economizado",
@@ -526,12 +526,12 @@
           "OF_TOTAL": "de {total}"
         },
         "RESOLUTION_FLOW": {
-          "ARIA_LABEL": "Fluxo de tickets atendidos pelo Captain e resultados do time",
+          "ARIA_LABEL": "Fluxo de conversas atendidas pelo Captain e resultados do time",
           "NODES": {
             "HANDLED": "Atendidas",
             "RESOLVED_BY_CAPTAIN": "Resolvidas pelo Captain",
             "HANDED_OFF": "Transferidas",
-            "CLOSED_WITH_TEAM": "Encerradas com o time",
+            "CLOSED_WITH_TEAM": "Encerradas com o grupo",
             "REOPENED": "Reabertas em 7 dias",
             "STAYED_CLOSED": "Permaneceram encerradas",
             "OTHER_REASONS": "Outros motivos"
@@ -563,7 +563,7 @@
         "CSAT": {
           "TITLE": "CSAT do Captain",
           "AUTONOMOUS": "Tickets resolvidos pelo Captain",
-          "AUTONOMOUS_HINT": "A avaliação média dos clientes nos tickets que o Captain resolveu sem a ajuda do seu time.",
+          "AUTONOMOUS_HINT": "A avaliação média dos clientes nos tickets que o Captain resolveu sem a ajuda do seu grupo.",
           "ASSISTED": "Tickets assistidos pelo Captain",
           "ASSISTED_HINT": "A avaliação média dos clientes quando o Captain ajudou antes de sua equipe resolver o ticket.",
           "VS_HUMANS": "{value} vs humanos"
@@ -620,7 +620,7 @@
         },
         "LIST_CONTACTS": {
           "LABEL": "Listar contatos",
-          "CONTENT": "Mostre-me a lista dos 10 contatos mais frequentes. Inclua nome, e-mail ou número de telefone (se disponível), visto por última vez, etiquetas (se houver)."
+          "CONTENT": "Mostre-me a lista dos 10 contatos mais frequentes. Inclua nome, e-mail ou número de telefone (se disponível), visto por última vez, tags (se houver)."
         }
       }
     },
@@ -846,7 +846,7 @@
         "SUBTITLE": "Crie um assistente para fornecer respostas rápidas e precisas aos seus usuários. Ele pode aprender com seus artigos de ajuda e tickets passados.",
         "FEATURE_SPOTLIGHT": {
           "TITLE": "Assistente Capitão",
-          "NOTE": "O Assistente Capitão interage diretamente com os clientes, aprende com seus documentos de ajuda e tickets anteriores e fornece respostas instantâneas e precisas. Ele lida com as solicitações iniciais, oferecendo resoluções rápidas antes de transferir para um agente quando necessário."
+          "NOTE": "O Assistente Capitão interage diretamente com os clientes, aprende com seus documentos de ajuda e tickets anteriores e fornece respostas instantâneas e precisas. Ele lido com as solicitações iniciais, oferecendo resoluções rápidas antes de transferir para um agente quando necessário."
         }
       },
       "GUARDRAILS": {
@@ -1019,7 +1019,7 @@
       "ADD_NEW": "Criar um novo documento",
       "FAQ_COUNT": "{n} FAQ | {n} FAQs",
       "USED_IN_CONVERSATIONS": "Usado em {n} ticket | Usado em {n} tickets",
-      "NO_USED_CONVERSATIONS": "Não foi encontrado nenhum ticket para este documento.",
+      "NO_USED_CONVERSATIONS": "Não foi encontrada nenhum ticket para este documento.",
       "SELECTED": "{count} selecionado",
       "SELECT_ALL": "Selecionar todos ({count})",
       "UNSELECT_ALL": "Desmarcar todos ({count})",
@@ -1305,9 +1305,9 @@
     "RESPONSES": {
       "HEADER": "FAQs",
       "ADD_NEW": "Criar nova FAQ",
-      "NO_USED_CONVERSATIONS": "Não foi encontrado nenhum ticket para este FAQ.",
+      "NO_USED_CONVERSATIONS": "Não foi encontrada nenhum ticket para este FAQ.",
       "DOCUMENTABLE": {
-        "CONVERSATION": "Ticket #{id}"
+        "CONVERSATION": "Conversação #{id}"
       },
       "SELECTED": "{count} selecionado",
       "SELECT_ALL": "Selecionar todos ({count})",

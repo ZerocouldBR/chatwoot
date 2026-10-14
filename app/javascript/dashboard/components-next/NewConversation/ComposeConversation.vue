@@ -181,7 +181,7 @@ const createConversation = async ({ payload, isFromWhatsApp }) => {
     });
     const action = {
       type: 'link',
-      to: `/app/accounts/${data.account_id}/conversations/${data.id}`,
+      to: `/app/accounts/${data.account_id}/tickets/${data.id}`,
       message: t('COMPOSE_NEW_CONVERSATION.FORM.GO_TO_CONVERSATION'),
     };
     discardCompose();

@@ -41,6 +41,13 @@ class ApplicationPolicy
     Pundit.policy_scope!(user_context, record.class)
   end
 
+  private
+
+  # ServiceDesk M13: permissões efetivas do papel do usuário na conta (ver Servicedesk::Roles::Access)
+  def sd_access
+    Servicedesk::Roles::Access.for(@account_user)
+  end
+
   class Scope
     attr_reader :user_context, :user, :scope, :account, :account_user
 

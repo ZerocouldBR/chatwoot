@@ -39,6 +39,7 @@
 #
 
 class Message < ApplicationRecord
+  COMMENT_VIA_BY_SENDER = { 'Contact' => 'customer', 'User' => 'agent', 'AgentBot' => 'bot' }.freeze
   searchkick callbacks: false if ChatwootApp.advanced_search_allowed?
 
   include MessageFilterHelpers
@@ -79,6 +80,7 @@ class Message < ApplicationRecord
   validates :content_type, presence: true
   validates :content, length: { maximum: 150_000 }
   validates :processed_message_content, length: { maximum: 150_000 }
+  validate :conversation_accepts_messages, on: :create
 
   # when you have a temperory id in your frontend and want it echoed back via action cable
   attr_accessor :echo_id
@@ -330,13 +332,37 @@ class Message < ApplicationRecord
 
   def execute_after_create_commit_callbacks
     # rails issue with order of active record callbacks being executed https://github.com/rails/rails/issues/20911
+    record_ticket_comment
+    conversation.offer_satisfaction! if input_csat?
     reopen_conversation
+    fill_conversation_subject
     mark_pending_conversation_as_open_for_human_response
     set_conversation_activity
     dispatch_create_events
     send_reply
     execute_message_template_hooks
     update_contact_activity
+  end
+
+  # A closed ticket only records system activity; replies go to a follow-up or a new ticket.
+  def conversation_accepts_messages
+    errors.add(:base, I18n.t('errors.conversations.closed')) if conversation&.closed? && !activity?
+  end
+
+  def record_ticket_comment
+    return unless incoming? || outgoing?
+
+    conversation.record_ticket_event(event_type: 'comment', author: sender, via: COMMENT_VIA_BY_SENDER.fetch(sender_type, 'system'),
+                                     value: { message_id: id, public: !private? })
+    conversation.schedule_sla_update unless private?
+  end
+
+  # Chat channels have no e-mail subject: the first customer or agent message names the ticket.
+  def fill_conversation_subject
+    return if conversation.subject.present? || private? || content.blank?
+    return unless incoming? || outgoing?
+
+    conversation.update(subject: content.squish.truncate(150))
   end
 
   def update_contact_activity
@@ -413,7 +439,7 @@ class Message < ApplicationRecord
     return if conversation.muted?
     return unless incoming?
 
-    conversation.open! if conversation.snoozed?
+    conversation.open! if conversation.waiting_on_customer? || conversation.on_hold?
 
     reopen_resolved_conversation if conversation.resolved?
   end

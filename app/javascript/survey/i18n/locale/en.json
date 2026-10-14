@@ -13,6 +13,10 @@
     "API": {
       "SUCCESS_MESSAGE": "Survey updated successfully",
       "ERROR_MESSAGE": "Could not connect to Woot Server, Please try again later"
+    },
+    "GOOD_BAD": {
+      "GOOD": "Good, I'm satisfied",
+      "BAD": "Bad, I'm unsatisfied"
     }
   },
   "POWERED_BY": "Powered by Chatwoot"

@@ -37,7 +37,7 @@
       },
       "INTERFACE_SECTION": {
         "TITLE": "Interface",
-        "NOTE": "Personalize a aparência do seu painel do ServiceDesk.",
+        "NOTE": "Personalize a aparência do seu painel do Chatwoot.",
         "FONT_SIZE": {
           "TITLE": "Tamanho da fonte",
           "NOTE": "Ajuste o tamanho do texto do painel com base na sua preferência.",
@@ -312,12 +312,12 @@
     "CURRENTLY_VIEWING_ACCOUNT": "Visualização atual:",
     "SWITCH": "Trocar",
     "INBOX_VIEW": "Caixa de entrada",
-    "CONVERSATIONS": "Tickets",
+    "CONVERSATIONS": "Visualizações",
     "INBOX": "Caixa de Entrada",
     "ALL_CONVERSATIONS": "Todos os tickets",
     "MENTIONED_CONVERSATIONS": "Menções",
-    "PARTICIPATING_CONVERSATIONS": "Participantes",
-    "UNATTENDED_CONVERSATIONS": "Não atendidas",
+    "PARTICIPATING_CONVERSATIONS": "Seguindo",
+    "UNATTENDED_CONVERSATIONS": "Aguardando",
     "REPORTS": "Relatórios",
     "SETTINGS": "Configurações",
     "CONTACTS": "Contatos",
@@ -348,18 +348,18 @@
     "PROFILE_SETTINGS": "Configurações do Perfil",
     "ACCOUNT_SETTINGS": "Conta",
     "APPLICATIONS": "Aplicações",
-    "LABELS": "Etiquetas",
+    "LABELS": "Tags",
     "CUSTOM_ATTRIBUTES": "Atributos Personalizados",
-    "AUTOMATION": "Automação",
+    "AUTOMATION": "Automação (legado)",
     "MACROS": "Macros",
-    "TEAMS": "Times",
+    "TEAMS": "Grupos",
     "BILLING": "Cobrança",
     "CUSTOM_VIEWS_FOLDER": "Pastas",
     "CUSTOM_VIEWS_SEGMENTS": "Segmentos",
     "ALL_CONTACTS": "Todos os Contatos",
     "TAGGED_WITH": "Marcado com",
-    "NEW_LABEL": "Nova etiqueta",
-    "NEW_TEAM": "Novo time",
+    "NEW_LABEL": "Nova tag",
+    "NEW_TEAM": "Novo grupo",
     "NEW_INBOX": "Nova caixa de entrada",
     "REPORTS_CONVERSATION": "Tickets",
     "CSAT": "CSAT",
@@ -372,9 +372,9 @@
     "REPORTS_SLA": "SLA",
     "REPORTS_BOT": "Robôs",
     "REPORTS_AGENT": "Agentes",
-    "REPORTS_LABEL": "Etiquetas",
+    "REPORTS_LABEL": "Tags",
     "REPORTS_INBOX": "Caixa de Entrada",
-    "REPORTS_TEAM": "Time",
+    "REPORTS_TEAM": "Grupo",
     "AGENT_ASSIGNMENT": "Atribuição de Agentes",
     "SET_AVAILABILITY_TITLE": "Defina como",
     "SET_YOUR_AVAILABILITY": "Disponibilidade",
@@ -415,7 +415,15 @@
     "SECURITY": "Segurança",
     "SD_TELEPHONY": "Telefonia 55PBX",
     "CAPTAIN_AI": "Capitão",
-    "CONVERSATION_WORKFLOW": "Fluxo de Tickets"
+    "CONVERSATION_WORKFLOW": "Fluxo de Conversa",
+    "TICKET_HOME": "Página inicial",
+    "BUSINESS_HOURS": "Horário comercial",
+    "TICKET_TRIGGERS": "Gatilhos",
+    "TICKET_AUTOMATIONS": "Automações",
+    "SUSPENDED_TICKETS": "Suspensos",
+    "DELETED_TICKETS": "Excluídos",
+    "COLLAPSE": "Recolher menu",
+    "EXPAND": "Expandir menu"
   },
   "DATA_IMPORTS": {
     "HEADER": "Dados",
@@ -567,10 +575,10 @@
         "DESCRIPTION": "Use IA para realizar buscas com reconhecimento de contexto nos artigos da sua central de ajuda."
       },
       "LABEL_SUGGESTION": {
-        "TITLE": "Sugestão de Etiquetas",
-        "DESCRIPTION": "Sugere automaticamente rótulos e etiquetas relevantes para os tickets, com base na análise de conteúdo e no contexto.",
-        "MODEL_TITLE": "Modelo de Sugestão de Etiquetas",
-        "MODEL_DESCRIPTION": "Selecione o modelo de IA a ser utilizado para analisar os tickets e sugerir etiquetas apropriadas"
+        "TITLE": "Sugestão de Tags",
+        "DESCRIPTION": "Sugere automaticamente rótulos e tags relevantes para os tickets, com base na análise de conteúdo e no contexto.",
+        "MODEL_TITLE": "Modelo de Sugestão de Tags",
+        "MODEL_DESCRIPTION": "Selecione o modelo de IA a ser utilizado para analisar os tickets e sugerir tags apropriadas"
       }
     },
     "API": {
@@ -580,7 +588,7 @@
   },
   "BILLING_SETTINGS": {
     "TITLE": "Cobrança",
-    "DESCRIPTION": "Gerencie sua assinatura aqui, faça o upgrade do seu plano e obtenha mais para seu time.",
+    "DESCRIPTION": "Gerencie sua assinatura aqui, faça o upgrade do seu plano e obtenha mais para seu grupo.",
     "CURRENT_PLAN": {
       "TITLE": "Plano Atual",
       "PLAN_NOTE": "Você está atualmente inscrito no plano **{plan}** com **{quantity}** licenças",
@@ -674,7 +682,7 @@
       "SP_ENTITY_ID": {
         "LABEL": "SP Entity ID",
         "HELP": "Identificador exclusivo desta aplicação como provedor de serviço (gerado automaticamente).",
-        "TOOLTIP": "Identificador exclusivo do ServiceDesk como Provedor de Serviço - configure-o nas configurações do seu IdP"
+        "TOOLTIP": "Identificador exclusivo do Chatwoot como Provedor de Serviço - configure-o nas configurações do seu IdP"
       },
       "IDP_ENTITY_ID": {
         "LABEL": "ID da Entidade do Provedor de Identidade",
@@ -719,7 +727,7 @@
   "CONVERSATION_WORKFLOW": {
     "INDEX": {
       "HEADER": {
-        "TITLE": "Fluxos de Tickets",
+        "TITLE": "Fluxos de Conversa",
         "DESCRIPTION": "Configure regras e campos obrigatórios para a resolução de tickets."
       }
     },
@@ -762,7 +770,7 @@
         "CANCEL_ANYTIME": "Você pode alterar ou cancelar seu plano a qualquer momento"
       },
       "ENTERPRISE_PAYWALL": {
-        "AVAILABLE_ON": "O recurso de atributos obrigatórios do ticket está disponível nos planos pagos.",
+        "AVAILABLE_ON": "O recurso de atributos obrigatórios de ticket está disponível nos planos pagos.",
         "UPGRADE_PROMPT": "Atualize para um plano pago para exigir atributos obrigatórios antes da resolução do ticket.",
         "ASK_ADMIN": "Entre em contato com seu administrador para fazer a atualização."
       }
@@ -793,7 +801,7 @@
       "RESOLVE_AND_NEXT": "Resolver e ir para o próximo",
       "NAVIGATE_DROPDOWN": "Navegar pelos itens suspensos",
       "RESOLVE_CONVERSATION": "Resolver Ticket",
-      "GO_TO_CONVERSATION_DASHBOARD": "Ir para Painel de Tickets",
+      "GO_TO_CONVERSATION_DASHBOARD": "Ir para Painel de Conversação",
       "ADD_ATTACHMENT": "Adicionar anexo",
       "GO_TO_CONTACTS_DASHBOARD": "Ir para Painel de Contatos",
       "TOGGLE_SIDEBAR": "Alternar barra lateral",
@@ -936,7 +944,7 @@
         },
         "EXCLUDE_OLDER_THAN": {
           "LABEL": "Ignorar tickets inativos",
-          "DESCRIPTION": "Ignore tickets não atribuídos mais antigos do que este período. O padrão é 7 dias; deixe em branco para desativar."
+          "DESCRIPTION": "Ignore tickets não atribuídos mais antigas do que este período. O padrão é 7 dias; deixe em branco para desativar."
         },
         "INBOXES": {
           "LABEL": "Caixas de entrada adicionadas",
@@ -1044,14 +1052,14 @@
           "DESCRIPTION": "Tickets que atendam às seguintes condições não serão contabilizados na capacidade do agente",
           "TAGS": {
             "LABEL": "Excluir tickets marcados com rótulos específicos",
-            "ADD_TAG": "adicionar etiqueta",
+            "ADD_TAG": "adicionar tag",
             "DROPDOWN": {
-              "SEARCH_PLACEHOLDER": "Pesquise e selecione etiquetas para adicionar"
+              "SEARCH_PLACEHOLDER": "Pesquise e selecione tags para adicionar"
             },
-            "EMPTY_STATE": "Nenhuma etiqueta adicionada a esta política."
+            "EMPTY_STATE": "Nenhuma tag adicionada a esta política."
           },
           "DURATION": {
-            "LABEL": "Excluir tickets mais antigos que um período especificado",
+            "LABEL": "Excluir tickets mais antigas que um período especificado",
             "PLACEHOLDER": "Definir duração"
           }
         },
@@ -1081,5 +1089,224 @@
       "CONFIRM_BUTTON_LABEL": "Excluir",
       "CANCEL_BUTTON_LABEL": "Cancelar"
     }
+  },
+  "BUSINESS_HOURS": {
+    "TITLE": "Horário comercial",
+    "DESCRIPTION": "Defina quando sua equipe trabalha. Metas de SLA em horário comercial e regras por horas úteis só contam o tempo dentro deste horário, pulando os feriados.",
+    "NEW": "Novo horário",
+    "NAME": "Nome",
+    "TIME_ZONE": "Fuso horário",
+    "DEFAULT": "Horário padrão",
+    "DEFAULT_BADGE": "Padrão",
+    "HOURS": "Horário semanal",
+    "CLOSED": "Fechado",
+    "ADD_INTERVAL": "Adicionar horário",
+    "REMOVE": "Remover",
+    "HOLIDAYS": "Feriados",
+    "HOLIDAY_NAME": "Nome do feriado",
+    "START_DATE": "Início",
+    "END_DATE": "Fim",
+    "ADD_HOLIDAY": "Adicionar feriado",
+    "SAVE": "Salvar",
+    "DELETE": "Excluir",
+    "SAVED": "Horário salvo",
+    "DELETED": "Horário excluído",
+    "ERROR": "Não foi possível salvar o horário. Confira os horários e feriados.",
+    "EMPTY": "Nenhum horário ainda",
+    "DAYS": [
+      "Domingo",
+      "Segunda",
+      "Terça",
+      "Quarta",
+      "Quinta",
+      "Sexta",
+      "Sábado"
+    ]
+  },
+  "TICKET_SLA": {
+    "TITLE": "Políticas de SLA",
+    "DESCRIPTION": "As políticas são verificadas em ordem: vale a primeira cujas condições casam com o ticket. Cada política define metas por prioridade para cada métrica, em horas corridas ou comerciais. Tickets sem prioridade não têm SLA.",
+    "NEW": "Nova política",
+    "EMPTY": "Nenhuma política de SLA ainda",
+    "NAME": "Nome",
+    "DESCRIPTION_FIELD": "Descrição",
+    "CONDITIONS": "Condições",
+    "CONDITIONS_HINT": "Deixe vazio para valer em todos os tickets com prioridade.",
+    "ALL": "Atender a todas",
+    "ANY": "Atender a qualquer uma",
+    "ADD_CONDITION": "Adicionar condição",
+    "VALUE": "Valor",
+    "TARGETS": "Metas (minutos)",
+    "METRIC": "Métrica",
+    "BUSINESS_HOURS": "Horário comercial",
+    "SAVE": "Salvar",
+    "DELETE": "Excluir",
+    "MOVE_UP": "Subir",
+    "MOVE_DOWN": "Descer",
+    "SAVED": "Política salva",
+    "DELETED": "Política excluída",
+    "ERROR": "Não foi possível salvar a política",
+    "REMOVE": "Remover",
+    "OPERATORS": {
+      "is": "é",
+      "is_not": "não é",
+      "includes": "inclui",
+      "not_includes": "não inclui"
+    },
+    "FIELDS": {
+      "status": "Status",
+      "priority": "Prioridade",
+      "ticket_type": "Tipo",
+      "team_id": "Grupo",
+      "inbox_id": "Canal",
+      "company_id": "Empresa",
+      "labels": "Tags"
+    },
+    "METRICS": {
+      "first_reply_time": "Tempo de primeira resposta",
+      "next_reply_time": "Tempo de próxima resposta",
+      "periodic_update": "Atualizações periódicas",
+      "pausable_update": "Atualizações pausáveis",
+      "requester_wait_time": "Tempo de espera do solicitante",
+      "agent_work_time": "Tempo de trabalho do agente",
+      "total_resolution_time": "Tempo total de resolução"
+    },
+    "PRIORITIES": {
+      "urgent": "Urgente",
+      "high": "Alta",
+      "medium": "Normal",
+      "low": "Baixa"
+    }
+  },
+  "TICKET_RULES": {
+    "TRIGGER": {
+      "TITLE": "Gatilhos",
+      "DESCRIPTION": "Os gatilhos rodam, em ordem, sempre que um ticket é criado ou atualizado. Quando um dispara, a lista é verificada de novo do início; cada gatilho dispara no máximo uma vez por atualização.",
+      "NEW": "Novo gatilho",
+      "EMPTY": "Nenhum gatilho ainda"
+    },
+    "AUTOMATION": {
+      "TITLE": "Automações",
+      "DESCRIPTION": "As automações rodam a cada hora nos tickets que não estão fechados, com base em condições de tempo. Cada uma precisa mudar algo que suas condições verificam, para agir só uma vez por ticket.",
+      "NEW": "Nova automação",
+      "EMPTY": "Nenhuma automação ainda"
+    },
+    "NAME": "Título",
+    "DESCRIPTION_FIELD": "Descrição",
+    "ACTIVE": "Ativo",
+    "INACTIVE": "Inativo",
+    "ALL": "Atender a todas as condições a seguir",
+    "ANY": "Atender a qualquer uma das condições a seguir",
+    "ADD_CONDITION": "Adicionar condição",
+    "ACTIONS": "Ações",
+    "ADD_ACTION": "Adicionar ação",
+    "REMOVE": "Remover",
+    "VALUE": "Valor",
+    "HOURS": "Horas",
+    "BUSINESS_HOURS": "Horário comercial",
+    "SUBJECT": "Assunto do e-mail",
+    "BODY": "Corpo do e-mail",
+    "PLACEHOLDERS": "Placeholders",
+    "SAVE": "Salvar",
+    "DELETE": "Excluir",
+    "MOVE_UP": "Subir",
+    "MOVE_DOWN": "Descer",
+    "SAVED": "Salvo",
+    "DELETED": "Excluído",
+    "ERROR": "Não foi possível salvar",
+    "FIELDS": {
+      "status": "Status",
+      "priority": "Prioridade",
+      "ticket_type": "Tipo",
+      "team_id": "Grupo",
+      "assignee_id": "Atribuído",
+      "inbox_id": "Caixa de entrada",
+      "channel": "Canal",
+      "labels": "Tags",
+      "subject": "Assunto",
+      "ticket": "Ticket",
+      "comment": "Comentário",
+      "comment_text": "Texto do comentário",
+      "update_via": "Atualizado por",
+      "within_business_hours": "Dentro do horário comercial",
+      "hours_since_created": "Horas desde a criação",
+      "hours_since_updated": "Horas desde a atualização",
+      "hours_since_open": "Horas desde aberto",
+      "hours_since_waiting_on_customer": "Horas desde pendente",
+      "hours_since_on_hold": "Horas desde em espera",
+      "hours_since_resolved": "Horas desde resolvido",
+      "hours_since_assigned": "Horas desde a atribuição",
+      "hours_since_requester_update": "Horas desde a atualização do solicitante",
+      "hours_since_assignee_update": "Horas desde a atualização do atribuído",
+      "hours_until_due_date": "Horas até o vencimento",
+      "satisfaction": "Satisfação"
+    },
+    "OPERATORS": {
+      "is": "é",
+      "is_not": "não é",
+      "less_than": "menor que",
+      "greater_than": "maior que",
+      "changed": "mudou",
+      "changed_to": "mudou para",
+      "changed_from": "mudou de",
+      "not_changed": "não mudou",
+      "includes": "contém pelo menos uma de",
+      "not_includes": "não contém nenhuma de",
+      "contains": "contém",
+      "not_contains": "não contém"
+    },
+    "ACTION_FIELDS": {
+      "status": "Status",
+      "priority": "Prioridade",
+      "ticket_type": "Tipo",
+      "team_id": "Grupo",
+      "assignee_id": "Atribuído",
+      "add_tags": "Adicionar tags",
+      "remove_tags": "Remover tags",
+      "set_tags": "Definir tags",
+      "add_cc": "Adicionar CC",
+      "add_follower": "Adicionar seguidor",
+      "email_requester": "Enviar e-mail ao solicitante",
+      "email_requester_and_ccs": "Enviar e-mail ao solicitante e CCs",
+      "email_assignee": "Enviar e-mail ao atribuído",
+      "email_group": "Enviar e-mail ao grupo",
+      "email_user": "Enviar e-mail a um usuário",
+      "notify_webhook": "Notificar webhook",
+      "request_satisfaction": "Solicitar avaliação de satisfação"
+    },
+    "VALUES": {
+      "NONE": "(nenhum)",
+      "TICKET_GROUP": "(grupo do ticket)",
+      "created": "Criado",
+      "updated": "Atualizado",
+      "public": "Público",
+      "private": "Privado",
+      "present": "Presente",
+      "true": "Sim",
+      "false": "Não",
+      "agent": "Agente",
+      "customer": "Solicitante",
+      "rule": "Regra",
+      "bot": "Bot",
+      "system": "Sistema",
+      "CHANNELS": {
+        "email": "E-mail",
+        "api": "API",
+        "web_widget": "Widget do site",
+        "whatsapp": "WhatsApp",
+        "telegram": "Telegram",
+        "sms": "SMS",
+        "facebook_page": "Facebook",
+        "instagram": "Instagram",
+        "twilio_sms": "Twilio SMS",
+        "line": "LINE",
+        "tiktok": "TikTok"
+      }
+    }
+  },
+  "NOTIFICATIONS_BELL": {
+    "TITLE": "Notificações",
+    "READ_ALL": "Marcar todas como lidas",
+    "EMPTY": "Nenhuma notificação"
   }
 }

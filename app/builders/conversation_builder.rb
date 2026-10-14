@@ -10,7 +10,7 @@ class ConversationBuilder
   def look_up_exising_conversation
     return unless @contact_inbox.inbox.lock_to_single_conversation?
 
-    @contact_inbox.conversations.last
+    @contact_inbox.conversations.not_closed.last
   end
 
   def create_new_conversation
@@ -32,9 +32,17 @@ class ConversationBuilder
       contact_inbox_id: @contact_inbox.id,
       additional_attributes: additional_attributes,
       custom_attributes: custom_attributes,
-      snoozed_until: params[:snoozed_until],
       assignee_id: params[:assignee_id],
       team_id: params[:team_id]
-    }.merge(status)
+    }.merge(status, ticket_params)
+  end
+
+  def ticket_params
+    {
+      subject: params[:subject],
+      ticket_type: params[:ticket_type],
+      due_at: params[:due_at],
+      submitter_id: Current.user.is_a?(User) ? Current.user.id : nil
+    }
   end
 end

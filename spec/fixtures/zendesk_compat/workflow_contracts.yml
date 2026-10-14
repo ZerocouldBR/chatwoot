@@ -1,0 +1,162 @@
+# Contrato por workflow do n8n (exportação de 2026-10-13, workflows ATIVOS que chamam o Zendesk).
+# Cada chamada: o que o workflow manda (método, caminho, query, corpo; corpos reais da exportação com dados fictícios)
+# e os campos que ele lê da resposta (levantados nos nós seguintes: expressões $('nó').json.x e código).
+# Placeholders: {ticket_id} (ticket de e-mail), {chat_ticket_id} (ticket de chat), {ai_agent_id}, {agent_id},
+# {group_id}, {requester_id}, {conversation_id} (Sunshine), {sunco_user_id}, {upload_token}, {content_url}.
+# Caminhos: "x[]" = todo item da lista tem o campo; "x[*]" = algum item tem (ex.: só eventos Change têm field_name).
+# Todas as chamadas passam pelo prefixo /b2b-reservas.zendesk.com (como o n8n chama depois da migração).
+# n8n_node: "zendesk" = nó nativo Zendesk (o n8n devolve só o objeto "ticket"); "http" = HTTP Request.
+workflows:
+  - name: Retorna Emails/Roles de tickets
+    calls:
+      - { node: get_ticket_info, n8n_node: zendesk, method: GET, path: '/api/v2/tickets/{ticket_id}.json', reads: [ticket.email_cc_ids, ticket.collaborator_ids, ticket.via.source.from.address] }
+      - { node: get_users_info, method: GET, path: '/api/v2/users/show_many.json', query: { ids: '{cc_user_id}' }, reads: ['users[].id', 'users[].email', 'users[].role'] }
+  - name: CC Agent
+    calls:
+      - { node: get_ticket, n8n_node: zendesk, method: GET, path: '/api/v2/tickets/{ticket_id}.json', reads: [ticket.id, ticket.requester_id] }
+      - { node: email_notifications_get_invalid, method: GET, path: '/api/v2/email_notifications', query: { 'filter[ticket_id]': '{ticket_id}', per_page: '100' }, reads: ['email_notifications[].notification_id', 'email_notifications[].recipients[].user_id', 'email_notifications[].recipients[].email_address', 'email_notifications[].recipients[].delivery_status.id', 'email_notifications[].recipients[].delivery_status.name'] }
+      - { node: puxa_CCs, method: GET, path: '/api/v2/tickets/{ticket_id}/email_ccs.json', reads: ['users[].id', 'users[].email', 'users[].name'] }
+      - { node: nota_interna_remocao_cc, n8n_node: zendesk, method: PUT, path: '/api/v2/tickets/{ticket_id}.json', body: { ticket: { comment: { body: 'CC removido: agencia@agencia-exemplo.com.br (e-mail inválido).', public: false } } }, reads: [ticket.id] }
+  - name: Despacha Inatividade Chat - Cema
+    calls:
+      - { node: puxa_mensagens_sunshine, method: GET, path: '/sc/v2/apps/app-b2b/conversations/{conversation_id}/messages', reads: ['messages[].author.type', 'messages[].received', 'messages[].content.type'] }
+      - { node: envia_aviso, method: POST, path: '/sc/v2/apps/app-b2b/conversations/{conversation_id}/messages', status: 201, body: { author: { type: business, displayName: Cema, avatarUrl: 'https://example.com/cema.png' }, content: { type: text, text: 'Olá! Ainda está por aí?' } }, reads: ['messages[].id'] }
+  - name: Monitor Intervenção Humana - Cancelamento e TNA - Prod
+    calls:
+      - { node: puxa_membros_suporte, method: GET, path: '/api/v2/groups/{group_id}/memberships.json', query: { per_page: '100' }, reads: ['group_memberships[].user_id', next_page] }
+      - { node: busca_tickets_cema, method: GET, path: '/api/v2/search.json', query: { query: 'type:ticket assignee:{ai_agent_id} status<solved updated>2020-01-01', per_page: '100' }, reads: ['results[].id', 'results[].status', next_page] }
+      - { node: puxa_audits, method: GET, path: '/api/v2/tickets/{ticket_id}/audits.json', query: { 'page[size]': '100' }, reads: ['audits[].id', 'audits[].created_at', 'audits[].author_id', 'audits[].events[].type', meta.has_more, links.next] }
+      - { node: puxa_autores, method: GET, path: '/api/v2/users/show_many.json', query: { ids: '{ai_agent_id},{agent_id}' }, reads: ['users[].id', 'users[].role', 'users[].name'] }
+  - name: Fluxo Principal - Agente IA - TNA - Produção
+    calls:
+      - { node: get_ticket, n8n_node: zendesk, method: GET, path: '/api/v2/tickets/{ticket_id}.json', reads: [ticket.requester_id, ticket.assignee_id] }
+      - { node: puxa_comentarios, method: GET, path: '/api/v2/tickets/{ticket_id}/comments.json', query: { include: users }, reads: ['comments[].author_id', 'comments[].created_at', 'comments[].html_body', 'comments[].plain_body', 'comments[].public', 'users[].id', 'users[].email', 'users[].role'] }
+      - { node: puxa_conversation_log_tna, method: GET, path: '/api/v2/tickets/{chat_ticket_id}/conversation_log', reads: ['events[].type', 'events[].author.type', 'events[].content', 'events[].created_at'] }
+      - { node: puxa_audits, method: GET, path: '/api/v2/tickets/{ticket_id}/audits.json', query: { 'page[size]': '100' }, reads: ['audits[].events[].type', 'audits[*].events[*].field_name', 'audits[*].events[*].value', 'audits[].created_at', meta.has_more] }
+      - { node: sinaliza_digitando, method: POST, path: '/sc/v2/apps/app-b2b/conversations/{conversation_id}/activity', body: { author: { type: business, displayName: Cema }, type: 'typing:start' }, reads: [] }
+  - name: DEV - Analisa recusa cancelamento (SSO)
+    calls:
+      - { node: get_ticket, n8n_node: zendesk, method: GET, path: '/api/v2/tickets/{ticket_id}.json', reads: [ticket.subject, ticket.raw_subject, ticket.requester_id] }
+      - { node: puxa_comentarios, method: GET, path: '/api/v2/tickets/{ticket_id}/comments.json', query: { include: users }, reads: ['comments[].author_id', 'comments[].plain_body', 'comments[].public', 'comments[].created_at', 'users[].id', 'users[].email', 'users[].name'] }
+  - name: Consulta cobrança - Tool - Prod
+    calls:
+      - { node: get_ticket, n8n_node: zendesk, method: GET, path: '/api/v2/tickets/{ticket_id}.json', reads: ['ticket.custom_fields[].id', 'ticket.custom_fields[].value'] }
+  - name: Consulta Reserva/Soliticitações - Homolog
+    calls:
+      - { node: get_ticket, n8n_node: zendesk, method: GET, path: '/api/v2/tickets/{ticket_id}.json', reads: ['ticket.custom_fields[].id', 'ticket.custom_fields[].value'] }
+  - name: Email Roles - Mapping
+    calls:
+      - { node: get_ticket_info, n8n_node: zendesk, method: GET, path: '/api/v2/tickets/{ticket_id}.json', reads: [ticket.requester_id, ticket.submitter_id, ticket.assignee_id, ticket.email_cc_ids, ticket.collaborator_ids, ticket.via.source.to] }
+      - { node: busca_comentarios3, method: GET, path: '/api/v2/tickets/{ticket_id}/comments.json', reads: ['comments[].author_id', 'comments[].public', 'comments[].created_at', 'comments[].html_body', 'comments[].plain_body', 'comments[].via.source'] }
+      - { node: get_users_info, method: GET, path: '/api/v2/users/show_many.json', query: { ids: '{requester_id},{ai_agent_id},{cc_user_id}' }, reads: ['users[].id', 'users[].email', 'users[].role'] }
+  - name: Consulta Reserva/Soliticitações - Prod
+    calls:
+      - { node: get_ticket, n8n_node: zendesk, method: GET, path: '/api/v2/tickets/{ticket_id}.json', reads: ['ticket.custom_fields[].id', 'ticket.custom_fields[].value'] }
+  - name: Usuários e Autenticação - B2B HUB - Homologação
+    calls:
+      - { node: get_ticket_info, n8n_node: zendesk, method: GET, path: '/api/v2/tickets/{ticket_id}.json', reads: [ticket.email_cc_ids, ticket.collaborator_ids, ticket.via.source.from.address] }
+      - { node: get_users_info, method: GET, path: '/api/v2/users/show_many.json', query: { ids: '{cc_user_id}' }, reads: ['users[].email', 'users[].phone', 'users[].role'] }
+  - name: Encerra Cancelamentos Pendentes
+    calls:
+      - { node: puxa_comentarios, method: GET, path: '/api/v2/tickets/{ticket_id}/comments.json', query: { include: users, sort_order: desc }, reads: ['comments[].id', 'comments[].author_id', 'comments[].public', 'comments[].created_at', 'users[].id', 'users[].email'] }
+      - { node: marca_conferido_zendesk, method: PUT, path: '/api/v2/tickets/{ticket_id}/tags.json', body: { tags: [cancelamento_pos_follow_up_conferido] }, reads: [tags] }
+  - name: Alerta e Escala Falha de Consulta
+    calls:
+      - { node: marca_no_ai, method: POST, path: '/api/v2/tickets/{ticket_id}/tags.json', body: { tags: [no_ai, erro_consulta_checkout] }, reads: [tags] }
+  - name: Recebe Mensagens Zendesk
+    calls:
+      - { node: puxa_infos_ticket, n8n_node: zendesk, method: GET, path: '/api/v2/tickets/{chat_ticket_id}.json', reads: [ticket.assignee_id, ticket.group_id, ticket.status, ticket.tags] }
+      - { node: puxa_conversation_log, method: GET, path: '/api/v2/tickets/{chat_ticket_id}/conversation_log', reads: ['events[].type', 'events[].author.type'] }
+      - { node: puxa_conversation_id, method: GET, path: '/sc/v2/apps/app-b2b/conversations', query: { 'filter[userId]': '{sunco_user_id}' }, reads: ['conversations[].id'] }
+      - { node: puxa_mensagem_sunshine, method: GET, path: '/sc/v2/apps/app-b2b/conversations/{conversation_id}/messages', reads: ['messages[].id', 'messages[].author.type', 'messages[].content.type', 'messages[].received'] }
+      - { node: reatribui_cema, n8n_node: zendesk, method: PUT, path: '/api/v2/tickets/{chat_ticket_id}.json', body: { ticket: { assignee_id: '{ai_agent_id}' } }, reads: [ticket.assignee_id] }
+  - name: Fallback Tabulação Solved
+    calls:
+      - { node: get_ticket, n8n_node: zendesk, method: GET, path: '/api/v2/tickets/{ticket_id}.json', reads: [ticket.id, ticket.status, ticket.assignee_id, 'ticket.custom_fields[].id', 'ticket.custom_fields[].value'] }
+  - name: Tratamento Inicial
+    calls:
+      - { node: puxa_ticket, n8n_node: zendesk, method: GET, path: '/api/v2/tickets/{ticket_id}.json', reads: [ticket.assignee_id, ticket.tags, ticket.via.source.to.address, ticket.organization_id, ticket.requester_id, ticket.priority, ticket.status, ticket.subject] }
+      - { node: puxa_comentarios_anexos, method: GET, path: '/api/v2/tickets/{ticket_id}/comments.json', query: { include: users }, reads: ['comments[].author_id', 'comments[].attachments', 'comments[].html_body', 'comments[].plain_body', 'users[].id', 'users[].name', 'users[].email', 'users[].phone', 'users[].organization_id', 'users[].role'] }
+      - { node: puxa_CCs, method: GET, path: '/api/v2/tickets/{ticket_id}/email_ccs.json', reads: ['users[].email', 'users[].name'] }
+      - { node: baixa_arquivos, method: GET, path: '{content_url}', status: 302, reads: [] }
+  - name: Restaura Tabulação Pós Sem Retorno
+    calls:
+      - { node: puxa_autor_comentario, method: GET, path: '/api/v2/users/{agent_id}.json', reads: [user.id, user.role] }
+      - { node: puxa_audits, method: GET, path: '/api/v2/tickets/{ticket_id}/audits.json', query: { 'page[size]': '100' }, reads: ['audits[*].events[*].field_name', 'audits[*].events[*].value', 'audits[*].events[*].previous_value', 'audits[].author_id', 'audits[].created_at', meta.has_more] }
+  - name: Despacha tickets ociosos que não puderam ser atendidos
+    calls:
+      - { node: puxa_users_grupo_suporte, method: GET, path: '/api/v2/groups/{group_id}/users', reads: ['users[].id', 'users[].name'] }
+  - name: Reatribuição de Tickets
+    calls:
+      - { node: puxa_agentes_suporte, method: GET, path: '/api/v2/agent_availabilities', query: { 'filter[group_id]': '{group_id}' }, reads: ['data[].attributes.agent_id', 'data[].attributes.agent_status.name', 'included[].id', 'included[].type', 'included[].attributes.max_capacity', 'included[].attributes.work_item_count'] }
+      - { node: puxa_infos_ticket, n8n_node: zendesk, method: GET, path: '/api/v2/tickets/{ticket_id}.json', reads: [ticket.status, ticket.via.channel] }
+      - { node: atualiza_assignee, n8n_node: zendesk, method: PUT, path: '/api/v2/tickets/{ticket_id}.json', body: { ticket: { assignee_id: '{agent_id}' } }, reads: [ticket.assignee_id] }
+  - name: Checkout - Chamada api - v2
+    calls:
+      - { node: get_ticket_info, n8n_node: zendesk, method: GET, path: '/api/v2/tickets/{ticket_id}.json', reads: [ticket.email_cc_ids, ticket.collaborator_ids, ticket.via.source.from.address] }
+      - { node: get_users_info, method: GET, path: '/api/v2/users/show_many.json', query: { ids: '{cc_user_id}' }, reads: ['users[].email', 'users[].phone'] }
+  - name: Atualiza CC - Prod
+    calls:
+      - { node: atualiza_ccs, n8n_node: zendesk, method: PUT, path: '/api/v2/tickets/{ticket_id}.json', body: { ticket: { email_ccs: [{ user_email: financeiro@agencia-exemplo.com.br, action: put }] } }, reads: [ticket.email_cc_ids] }
+  - name: Tool prod - Rollback
+    calls:
+      - { node: get_ticket, n8n_node: zendesk, method: GET, path: '/api/v2/tickets/{ticket_id}.json', reads: ['ticket.custom_fields[].id', 'ticket.custom_fields[].value'] }
+  - name: Checkout - Chamada api - v2 - Ambiente de homologação
+    calls:
+      - { node: get_ticket_info, n8n_node: zendesk, method: GET, path: '/api/v2/tickets/{ticket_id}.json', reads: [ticket.email_cc_ids, ticket.collaborator_ids] }
+      - { node: get_users_info, method: GET, path: '/api/v2/users/show_many.json', query: { ids: '{cc_user_id}' }, reads: ['users[].email'] }
+  - name: Gateway - Prod
+    calls:
+      - { node: puxa_infos_ticket, n8n_node: zendesk, method: GET, path: '/api/v2/tickets/{ticket_id}.json', reads: [ticket.id, ticket.status, ticket.assignee_id, ticket.group_id, ticket.tags, ticket.organization_id] }
+      - { node: puxa_infos_ticket (inexistente), n8n_node: zendesk, method: GET, path: '/api/v2/tickets/999999999.json', status: 404, reads: [error, description] }
+  - name: Cataloga Tickets Zendesk
+    calls:
+      - { node: atualiza_ticket_, n8n_node: zendesk, method: PUT, path: '/api/v2/tickets/{ticket_id}.json', body: { ticket: { status: solved, custom_fields: [{ id: 21537600796443, value: cancelamento_interno }], comment: { body: 'Tabulação automática: cancelamento interno.', public: false } } }, reads: [ticket.status, 'ticket.custom_fields[].value'] }
+  - name: Usuários e Autenticação - B2B HUB
+    calls:
+      - { node: get_ticket_info, n8n_node: zendesk, method: GET, path: '/api/v2/tickets/{ticket_id}.json', reads: [ticket.email_cc_ids, ticket.collaborator_ids, ticket.via.source.from.address] }
+      - { node: get_users_info, method: GET, path: '/api/v2/users/show_many.json', query: { ids: '{cc_user_id}' }, reads: ['users[].email', 'users[].phone', 'users[].role'] }
+  - name: Prod - Consultar Info - Tool (Chat TNA)
+    calls:
+      - { node: get_ticket, n8n_node: zendesk, method: GET, path: '/api/v2/tickets/{chat_ticket_id}.json', reads: ['ticket.custom_fields[].id', 'ticket.custom_fields[].value'] }
+  - name: CC Remove Hibrido
+    calls:
+      - { node: puxa_comentarios, method: GET, path: '/api/v2/tickets/{ticket_id}/comments.json', query: { include: users, sort_order: desc, per_page: '100' }, reads: ['comments[].id', 'comments[].author_id', 'comments[].plain_body', 'comments[].public', 'comments[].created_at', 'users[].id', 'users[].email', 'users[].role'] }
+  - name: Encerra Pendentes Sem Retorno
+    calls:
+      - { node: puxa_ticket_zd, n8n_node: zendesk, method: GET, path: '/api/v2/tickets/{ticket_id}.json', reads: [ticket.assignee_id, ticket.status] }
+      - { node: puxa_comentarios_enc, method: GET, path: '/api/v2/tickets/{ticket_id}/comments.json', query: { include: users, sort_order: desc }, reads: ['comments[].author_id', 'comments[].public', 'comments[].created_at', 'users[].id', 'users[].role'] }
+  - name: Tratamento Envio
+    calls:
+      - { node: puxa_ticket, n8n_node: zendesk, method: GET, path: '/api/v2/tickets/{ticket_id}.json', reads: [ticket.tags] }
+      - { node: retorna_token, method: POST, path: '/api/v2/uploads.json', query: { filename: comprovante.pdf }, upload: true, status: 201, reads: [upload.token, upload.attachment.content_url] }
+      - { node: atualiza_ticket, n8n_node: zendesk, method: PUT, path: '/api/v2/tickets/{ticket_id}.json', body: { ticket: { status: pending, comment: { html_body: '<p>Olá!<br>Segue o comprovante do cancelamento.</p>', public: true, uploads: ['{upload_token}'] }, email_ccs: [{ user_email: agencia@agencia-exemplo.com.br, action: put }] } }, reads: [ticket.status, ticket.id] }
+      - { node: upload_sunshine, method: POST, path: '/sc/v2/apps/app-b2b/attachments', query: { access: public, for: message, conversationId: '{conversation_id}' }, sunshine_upload: true, status: 201, reads: [attachment.mediaUrl] }
+      - { node: realiza_delay, method: POST, path: '/sc/v2/apps/app-b2b/conversations/{conversation_id}/activity', body: { author: { type: business, displayName: Cema }, type: 'typing:start' }, reads: [] }
+      - { node: envia_msg, method: POST, path: '/sc/v2/apps/app-b2b/conversations/{conversation_id}/messages', status: 201, body: { author: { type: business, displayName: Cema }, content: { type: text, text: 'Seu cancelamento foi concluído.' } }, reads: ['messages[].id'] }
+  - name: Auth  Callback  SSO -  Homolog
+    calls:
+      - { node: puxa_ticket, n8n_node: zendesk, method: GET, path: '/api/v2/tickets/{ticket_id}.json', reads: [ticket.status, ticket.id] }
+  - name: Checa estado - Ticket/Conversa
+    calls:
+      - { node: get_ticket, n8n_node: zendesk, method: GET, path: '/api/v2/tickets/{ticket_id}.json', reads: [ticket.status, ticket.assignee_id, ticket.requester_id, ticket.email_cc_ids] }
+      - { node: puxa_comentarios, method: GET, path: '/api/v2/tickets/{ticket_id}/comments.json', query: { include: users }, reads: ['comments[].author_id', 'comments[].public', 'comments[].created_at', 'comments[].html_body', 'comments[].plain_body', 'users[].id', 'users[].email', 'users[].role', 'users[].name'] }
+      - { node: get_group_users, method: GET, path: '/api/v2/groups/{group_id}/memberships', query: { per_page: '100' }, reads: ['group_memberships[].user_id'] }
+      - { node: puxa_conversation_log, method: GET, path: '/api/v2/tickets/{chat_ticket_id}/conversation_log', reads: ['events[].type', 'events[].author.type', 'events[].created_at'] }
+      - { node: puxa_audits, method: GET, path: '/api/v2/tickets/{ticket_id}/audits.json', query: { 'page[size]': '100' }, reads: ['audits[].id', 'audits[].created_at', 'audits[].events[].type', 'audits[*].events[*].field_name', 'audits[*].events[*].value', meta.has_more] }
+      - { node: get_ticket (inexistente), n8n_node: zendesk, method: GET, path: '/api/v2/tickets/999999999.json', status: 404, reads: [error] }
+  - name: Gateway - Prod - V2
+    calls:
+      - { node: puxa_infos_ticket_chat, n8n_node: zendesk, method: GET, path: '/api/v2/tickets/{chat_ticket_id}.json', reads: [ticket.id, ticket.status, ticket.assignee_id, ticket.tags, ticket.group_id] }
+  - name: '[DEV] Consulta cobrança - Tool - ALPHA-36 (60 dias)'
+    calls:
+      - { node: get_ticket, n8n_node: zendesk, method: GET, path: '/api/v2/tickets/{ticket_id}.json', reads: ['ticket.custom_fields[].id', 'ticket.custom_fields[].value'] }
+  - name: Tratamento de Erros - Produção
+    calls:
+      - { node: puxa_ticket, n8n_node: zendesk, method: GET, path: '/api/v2/tickets/{ticket_id}.json', reads: [ticket.assignee_id] }
+  - name: Auth - Callback SSO - Prod
+    calls:
+      - { node: puxa_ticket, n8n_node: zendesk, method: GET, path: '/api/v2/tickets/{ticket_id}.json', reads: [ticket.status] }
+  - name: Credencial "Zendesk API" do n8n (teste de conexão)
+    calls:
+      - { node: credential test, method: GET, path: '/api/v2/ticket_fields.json', reads: ['ticket_fields[].id', 'ticket_fields[].type'] }

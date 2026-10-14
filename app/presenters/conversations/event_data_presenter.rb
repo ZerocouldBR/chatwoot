@@ -11,8 +11,8 @@ class Conversations::EventDataPresenter < SimpleDelegator
       labels: label_list,
       meta: push_meta,
       status: status,
+      **push_ticket_fields,
       custom_attributes: custom_attributes,
-      snoozed_until: snoozed_until,
       unread_count: unread_incoming_messages.count,
       first_reply_created_at: first_reply_created_at,
       priority: priority,
@@ -37,6 +37,22 @@ class Conversations::EventDataPresenter < SimpleDelegator
 
   def webhook_push_messages
     [messages.where(account_id: account_id).chat.last&.webhook_push_event_data].compact
+  end
+
+  def push_ticket_fields
+    {
+      subject: subject,
+      ticket_type: ticket_type,
+      due_at: due_at&.to_i,
+      submitter_id: submitter_id,
+      company_id: company_id,
+      company_name: company&.name,
+      followup_source_id: followup_source&.display_id,
+      cc_emails: conversation_ccs.map(&:email),
+      sla_policy_id: sla_policy_id,
+      next_sla_breach_at: next_sla_breach_at&.to_i,
+      sla_breached: sla_breached
+    }
   end
 
   def push_meta

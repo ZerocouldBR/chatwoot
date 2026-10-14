@@ -1,5 +1,6 @@
 import { createApp } from 'vue';
 import { createI18n } from 'vue-i18n';
+import { brandMessages } from 'shared/helpers/brandName';
 
 import axios from 'axios';
 // Global Components
@@ -37,7 +38,7 @@ import '@chatwoot/viz/style.css';
 const i18n = createI18n({
   legacy: false, // https://github.com/intlify/vue-i18n/issues/1902
   locale: 'en',
-  messages: i18nMessages,
+  messages: brandMessages(i18nMessages),
 });
 
 sync(store, router);

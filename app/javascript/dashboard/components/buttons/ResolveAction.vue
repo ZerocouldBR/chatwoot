@@ -12,6 +12,10 @@ import WootDropdownItem from 'shared/components/ui/dropdown/DropdownItem.vue';
 import WootDropdownMenu from 'shared/components/ui/dropdown/DropdownMenu.vue';
 import wootConstants from 'dashboard/constants/globals';
 import {
+  STATUS_ICONS,
+  UNSOLVED_STATUSES,
+} from 'dashboard/constants/ticketStatuses';
+import {
   CMD_REOPEN_CONVERSATION,
   CMD_RESOLVE_CONVERSATION,
 } from 'dashboard/helper/commandbar/events';
@@ -35,26 +39,20 @@ const openDropdown = () => toggleDropdown(true);
 
 const currentChat = computed(() => getters.getSelectedChat.value);
 
-const isOpen = computed(
-  () => currentChat.value.status === wootConstants.STATUS_TYPE.OPEN
+const { STATUS_TYPE } = wootConstants;
+const status = computed(() => currentChat.value.status);
+const isUnsolved = computed(() => UNSOLVED_STATUSES.includes(status.value));
+const isResolved = computed(() => status.value === STATUS_TYPE.RESOLVED);
+// The bot is handling the ticket; the agent can only take it over.
+const isWithBot = computed(() => status.value === STATUS_TYPE.PENDING);
+const showStatusMenu = computed(() => isUnsolved.value || isResolved.value);
+const otherStatuses = computed(() =>
+  [
+    STATUS_TYPE.OPEN,
+    STATUS_TYPE.WAITING_ON_CUSTOMER,
+    STATUS_TYPE.ON_HOLD,
+  ].filter(item => item !== status.value)
 );
-const isPending = computed(
-  () => currentChat.value.status === wootConstants.STATUS_TYPE.PENDING
-);
-const isResolved = computed(
-  () => currentChat.value.status === wootConstants.STATUS_TYPE.RESOLVED
-);
-const isSnoozed = computed(
-  () => currentChat.value.status === wootConstants.STATUS_TYPE.SNOOZED
-);
-
-const showAdditionalActions = computed(
-  () => !isPending.value && !isSnoozed.value
-);
-
-const showOpenButton = computed(() => {
-  return isPending.value || isSnoozed.value;
-});
 
 const getConversationParams = () => {
   const allConversations = document.querySelectorAll(
@@ -76,19 +74,13 @@ const getConversationParams = () => {
   };
 };
 
-const openSnoozeModal = () => {
-  const ninja = document.querySelector('ninja-keys');
-  ninja.open({ parent: 'snooze_conversation' });
-};
-
-const toggleStatus = (status, snoozedUntil, customAttributes = null) => {
+const toggleStatus = (newStatus, customAttributes = null) => {
   closeDropdown();
   isLoading.value = true;
 
   const payload = {
     conversationId: currentChat.value.id,
-    status,
-    snoozedUntil,
+    status: newStatus,
   };
 
   if (customAttributes) {
@@ -105,16 +97,12 @@ const handleResolveWithAttributes = ({ attributes, context }) => {
   if (context) {
     const currentCustomAttributes = currentChat.value.custom_attributes || {};
     const mergedAttributes = { ...currentCustomAttributes, ...attributes };
-    toggleStatus(
-      wootConstants.STATUS_TYPE.RESOLVED,
-      context.snoozedUntil,
-      mergedAttributes
-    );
+    toggleStatus(STATUS_TYPE.RESOLVED, mergedAttributes);
   }
 };
 
 const onCmdOpenConversation = () => {
-  toggleStatus(wootConstants.STATUS_TYPE.OPEN);
+  toggleStatus(STATUS_TYPE.OPEN);
 };
 
 const onCmdResolveConversation = () => {
@@ -124,17 +112,14 @@ const onCmdResolveConversation = () => {
   );
 
   if (hasMissing) {
-    const conversationContext = {
-      id: currentChat.value.id,
-      snoozedUntil: null,
-    };
+    const conversationContext = { id: currentChat.value.id };
     resolveAttributesModalRef.value?.open(
       missing,
       currentCustomAttributes,
       conversationContext
     );
   } else {
-    toggleStatus(wootConstants.STATUS_TYPE.RESOLVED);
+    toggleStatus(STATUS_TYPE.RESOLVED);
   }
 };
 
@@ -179,10 +164,10 @@ useEmitter(CMD_RESOLVE_CONVERSATION, onCmdResolveConversation);
   <div class="flex relative justify-end items-center resolve-actions">
     <ButtonGroup
       class="flex-shrink-0 rounded-lg shadow outline-1 outline"
-      :class="!showOpenButton ? 'outline-n-container' : 'outline-transparent'"
+      :class="showStatusMenu ? 'outline-n-container' : 'outline-transparent'"
     >
       <Button
-        v-if="isOpen"
+        v-if="isUnsolved"
         :label="t('CONVERSATION.HEADER.RESOLVE_ACTION')"
         size="sm"
         color="slate"
@@ -202,7 +187,7 @@ useEmitter(CMD_RESOLVE_CONVERSATION, onCmdResolveConversation);
         @click="onCmdOpenConversation"
       />
       <Button
-        v-else-if="showOpenButton"
+        v-else-if="isWithBot"
         :label="t('CONVERSATION.HEADER.OPEN_ACTION')"
         size="sm"
         color="slate"
@@ -211,8 +196,9 @@ useEmitter(CMD_RESOLVE_CONVERSATION, onCmdResolveConversation);
         @click="onCmdOpenConversation"
       />
       <Button
-        v-if="showAdditionalActions"
+        v-if="showStatusMenu"
         ref="arrowDownButtonRef"
+        data-testid="ticket-status-menu"
         icon="i-lucide-chevron-down"
         :disabled="isLoading"
         size="sm"
@@ -229,28 +215,16 @@ useEmitter(CMD_RESOLVE_CONVERSATION, onCmdResolveConversation);
       class="border rounded-lg shadow-lg border-n-strong dark:border-n-strong box-content p-2 w-fit z-10 bg-n-alpha-3 backdrop-blur-[100px] absolute block left-auto top-full mt-0.5 start-0 xl:start-auto xl:end-0 max-w-[12.5rem] min-w-[9.75rem] [&_ul>li]:mb-0"
     >
       <WootDropdownMenu class="mb-0">
-        <WootDropdownItem v-if="!isPending">
+        <WootDropdownItem v-for="item in otherStatuses" :key="item">
           <Button
-            :label="t('CONVERSATION.RESOLVE_DROPDOWN.SNOOZE_UNTIL')"
+            :label="t(`CONVERSATION.TICKET_STATUS.${item}`)"
             ghost
             slate
             sm
             start
-            icon="i-lucide-alarm-clock-minus"
+            :icon="STATUS_ICONS[item]"
             class="w-full"
-            @click="() => openSnoozeModal()"
-          />
-        </WootDropdownItem>
-        <WootDropdownItem v-if="!isPending">
-          <Button
-            :label="t('CONVERSATION.RESOLVE_DROPDOWN.MARK_PENDING')"
-            ghost
-            slate
-            sm
-            start
-            icon="i-lucide-circle-dot-dashed"
-            class="w-full"
-            @click="() => toggleStatus(wootConstants.STATUS_TYPE.PENDING)"
+            @click="() => toggleStatus(item)"
           />
         </WootDropdownItem>
       </WootDropdownMenu>

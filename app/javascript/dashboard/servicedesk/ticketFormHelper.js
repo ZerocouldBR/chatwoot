@@ -177,6 +177,31 @@ export const buildFormFieldGroups = ({
   return { formFields, otherFields, metaFields, hiddenCount };
 };
 
+/**
+ * Campos obrigatórios para resolver ("required to solve" do Zendesk) que estão
+ * vazios: os campos visíveis do formulário marcados com `*` no painel. Campo
+ * condicional com a condição não atendida e campo inativo vazio não aparecem,
+ * então não são exigidos. Espelha Servicedesk::TicketFormRequirements (backend).
+ * @returns {Array} definições de atributo (snake_case) na ordem do formulário
+ */
+export const getMissingRequiredFields = ({
+  attributes = [],
+  values = {},
+  forms = ticketForms,
+  meta = ticketFormsMeta,
+}) => {
+  const formName = resolveFormName(values[FORM_ATTRIBUTE_KEY], forms, meta);
+  if (!formName) return [];
+  const { formFields } = buildFormFieldGroups({
+    formName,
+    attributes,
+    values,
+    forms,
+    meta,
+  });
+  return formFields.filter(field => field.isRequired && !hasValue(field.value));
+};
+
 export const getStatusMeta = (label, meta = ticketFormsMeta) =>
   (meta.statuses || {})[label] || null;
 
@@ -184,8 +209,27 @@ export const getStatusMeta = (label, meta = ticketFormsMeta) =>
 export const nativeStatusFor = (label, meta = ticketFormsMeta) =>
   getStatusMeta(label, meta)?.native || null;
 
-/** Status personalizado padrão de um status nativo (open/snoozed/resolved). */
+/** Status personalizado padrão de um status nativo (enum da v3: open/waiting_on_customer/on_hold/resolved). */
 export const defaultCustomStatusFor = (nativeStatus, meta = ticketFormsMeta) =>
   (meta.native_status_default || {})[nativeStatus] || null;
+
+// Status personalizado padrão de cada categoria (custom_statuses.json, default: true).
+// "Em espera" (hold) = Desenvolvimento na B2B.
+const CATEGORY_DEFAULT_FALLBACK = Object.freeze({
+  new: 'Novo',
+  open: 'Aberto',
+  pending: 'Pendente',
+  hold: 'Desenvolvimento',
+  solved: 'Resolvido',
+});
+
+/** Status personalizado padrão de uma categoria (new, open, pending, hold, solved). */
+export const defaultCustomStatusForCategory = (
+  category,
+  meta = ticketFormsMeta
+) =>
+  (meta.category_default || {})[category] ||
+  CATEGORY_DEFAULT_FALLBACK[category] ||
+  null;
 
 export { ticketForms, ticketFormsMeta };

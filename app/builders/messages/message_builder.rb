@@ -101,13 +101,23 @@ class Messages::MessageBuilder
     bcc_emails = process_email_string(@params[:bcc_emails])
     to_emails = process_email_string(@params[:to_emails])
 
-    all_email_addresses = cc_emails + bcc_emails + to_emails
-    validate_email_addresses(all_email_addresses)
+    validate_email_addresses(cc_emails + bcc_emails + to_emails)
+    assign_email_recipients(ticket_cc_emails(cc_emails), bcc_emails, to_emails)
+  end
 
+  def assign_email_recipients(cc_emails, bcc_emails, to_emails)
     @message.content_attributes[:cc_emails] = cc_emails
     @message.content_attributes[:bcc_emails] = bcc_emails
     @message.content_attributes[:to_emails] = to_emails
     @message.content_attributes[:email] = { subject: @params[:subject] } if @params[:subject].present? && !@private
+  end
+
+  # Public replies go to every ticket CC; CCs the agent adds on the reply join the ticket's CC list.
+  def ticket_cc_emails(cc_emails)
+    return cc_emails if @private
+
+    author, via = TicketAuditable.current_actor
+    (cc_emails + Tickets::CcList.new(@conversation).add(cc_emails, author: author, via: via)).map(&:downcase).uniq
   end
 
   def process_email_content

@@ -16,6 +16,7 @@ class Imap::ImapMailbox
 
     # Skip processing email if it belongs to any of the edge cases
     return unless incoming_email_from_valid_email?
+    return if SuspendedTicket.hold_if_needed(@inbox, @processed_mail, @inbound_mail.to_s)
 
     ActiveRecord::Base.transaction do
       find_or_create_contact
@@ -44,7 +45,7 @@ class Imap::ImapMailbox
     return if in_reply_to.blank?
 
     message = @inbox.messages.find_by(source_id: in_reply_to)
-    return @inbox.conversations.find(message.conversation_id) if message.present? && !message.forwarded?
+    return @inbox.conversations.find_by(id: message.conversation_id) if message.present? && !message.forwarded?
 
     @contact.conversations.where(inbox: @inbox).find_by("additional_attributes->>'in_reply_to' = ?", in_reply_to)
   end
@@ -86,23 +87,26 @@ class Imap::ImapMailbox
   end
 
   def find_or_create_conversation
-    @conversation = find_conversation_by_in_reply_to || find_conversation_by_reference_ids || ::Conversation.create!(
-      {
-        account_id: @account.id,
-        inbox_id: @inbox.id,
-        contact_id: @contact.id,
-        contact_inbox_id: @contact_inbox.id,
-        additional_attributes: {
-          source: 'email',
-          in_reply_to: in_reply_to,
-          auto_reply: @processed_mail.auto_reply?,
-          mail_subject: sanitize_mailbox_value(@processed_mail.subject),
-          initiated_at: {
-            timestamp: Time.now.utc
-          }
-        }
-      }
-    )
+    existing = find_conversation_by_in_reply_to || find_conversation_by_reference_ids
+    @conversation = if existing.nil?
+                      ::Conversation.create!(account_id: @account.id, inbox_id: @inbox.id, contact_id: @contact.id,
+                                             contact_inbox_id: @contact_inbox.id, additional_attributes: email_conversation_attributes)
+                    elsif existing.closed?
+                      # A reply to a closed ticket opens a linked follow-up ticket.
+                      Tickets::FollowupBuilder.new(source: existing, additional_attributes: email_conversation_attributes).build.tap(&:save!)
+                    else
+                      existing
+                    end
+  end
+
+  def email_conversation_attributes
+    {
+      source: 'email',
+      in_reply_to: in_reply_to,
+      auto_reply: @processed_mail.auto_reply?,
+      mail_subject: sanitize_mailbox_value(@processed_mail.subject),
+      initiated_at: { timestamp: Time.now.utc }
+    }
   end
 
   def find_or_create_contact

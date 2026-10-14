@@ -49,7 +49,7 @@ export default {
         });
         this.$emit('closeAccountCreateModal');
         useAlert(this.$t('CREATE_ACCOUNT.API.SUCCESS_MESSAGE'));
-        window.location = `/app/accounts/${account_id}/dashboard`;
+        window.location = `/app/accounts/${account_id}/home`;
       } catch (error) {
         if (error.response.status === 422) {
           useAlert(this.$t('CREATE_ACCOUNT.API.EXIST_MESSAGE'));

@@ -1,5 +1,5 @@
 <script setup>
-import { computed, useTemplateRef } from 'vue';
+import { computed } from 'vue';
 import { getLastMessage } from 'dashboard/helper/conversationHelper';
 import CardAvatar from './CardAvatar.vue';
 import CardContent from './CardContent.vue';
@@ -8,7 +8,7 @@ import CardPriorityIcon from './CardPriorityIcon.vue';
 import InboxName from 'dashboard/components-next/Conversation/InboxName.vue';
 import Avatar from 'next/avatar/Avatar.vue';
 import TimeAgo from 'dashboard/components/ui/TimeAgo.vue';
-import SLACardLabel from 'dashboard/components-next/Conversation/Sla/SLACardLabel.vue';
+import TicketSlaBadge from 'dashboard/components-next/Conversation/Sla/TicketSlaBadge.vue';
 import CardStatusIcon from './CardStatusIcon.vue';
 import Checkbox from 'dashboard/components-next/checkbox/Checkbox.vue';
 import Icon from 'dashboard/components-next/icon/Icon.vue';
@@ -74,12 +74,8 @@ const voiceCallData = computed(() => {
 
 const unreadCount = computed(() => props.chat.unread_count);
 
-const slaCardLabel = useTemplateRef('slaCardLabel');
-
 const hasSlaPolicyId = computed(
-  () =>
-    !props.currentContact?.blocked &&
-    (props.chat?.applied_sla?.id || slaCardLabel.value?.hasSlaThreshold)
+  () => !props.currentContact?.blocked && !!props.chat?.sla_policy_id
 );
 
 const selectedModel = computed({
@@ -220,7 +216,20 @@ const selectedModel = computed({
         {{ currentContact.name }}
       </h4>
 
+      <!-- Views list tickets by subject, like Zendesk; tickets without one show the last message. -->
+      <span
+        v-if="chat.subject"
+        data-testid="ticket-list-subject"
+        class="flex-1 min-w-0 truncate text-sm"
+        :class="[
+          orderClass('content'),
+          unreadCount > 0 ? 'font-semibold text-n-slate-12' : 'text-n-slate-12',
+        ]"
+      >
+        {{ chat.subject }}
+      </span>
       <CardContent
+        v-else
         :class="orderClass('content')"
         :last-message="lastMessageInChat"
         :voice-call-status="voiceCallData.status"
@@ -252,7 +261,10 @@ const selectedModel = computed({
         class="flex-shrink-0"
         :class="orderClass('sla')"
       >
-        <SLACardLabel ref="slaCardLabel" :chat="chat" />
+        <TicketSlaBadge
+          :next-breach-at="chat.next_sla_breach_at"
+          :breached="chat.sla_breached"
+        />
       </div>
 
       <div

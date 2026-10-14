@@ -1,18 +1,13 @@
 import { ref } from 'vue';
 import { flushPromises, mount } from '@vue/test-utils';
 import { emitter } from 'shared/helpers/mitt';
-import { CMD_SNOOZE_CONVERSATION } from 'dashboard/helper/commandbar/events';
+import { CMD_SNOOZE_NOTIFICATION } from 'dashboard/helper/commandbar/events';
 import { GENERAL_EVENTS } from 'dashboard/helper/AnalyticsHelper/events';
 import CommandBar from '../commandbar.vue';
 
 vi.mock('@chatwoot/ninja-keys', () => ({}));
 
-const dispatch = vi.fn();
 const track = vi.fn();
-
-vi.mock('dashboard/composables/store', () => ({
-  useStore: () => ({ dispatch }),
-}));
 
 vi.mock('dashboard/composables', () => ({
   useTrack: (...args) => track(...args),
@@ -22,13 +17,9 @@ const hotKeySources = {
   goToAppearanceHotKeys: [{ id: 'appearance' }],
   inboxHotKeys: [{ id: 'inbox' }],
   goToCommandHotKeys: [{ id: 'goto' }],
-  bulkActionsHotKeys: [
-    { id: 'bulk' },
-    { id: 'until_tomorrow', parent: 'bulk_action_snooze_conversation' },
-  ],
+  bulkActionsHotKeys: [{ id: 'bulk' }],
   conversationHotKeys: [
     { id: 'conversation' },
-    { id: 'until_tomorrow', parent: 'snooze_conversation' },
     { id: 'until_tomorrow', parent: 'snooze_notification' },
     { id: 'until_tomorrow', parent: 'other_menu' },
   ],
@@ -141,13 +132,7 @@ describe('commandbar', () => {
     await flushPromises();
   };
 
-  const emitClosed = async () => {
-    element.dispatchEvent(new CustomEvent('closed'));
-    await flushPromises();
-  };
-
   beforeEach(() => {
-    dispatch.mockClear();
     track.mockClear();
   });
 
@@ -175,9 +160,7 @@ describe('commandbar', () => {
       await mountCommandBar();
 
       expect(presetSnoozeParents()).toEqual([
-        'bulk_action_snooze_conversation',
         'other_menu',
-        'snooze_conversation',
         'snooze_notification',
       ]);
     });
@@ -218,7 +201,7 @@ describe('commandbar', () => {
     it('switches to the snooze prompt inside a snooze menu', async () => {
       await mountCommandBar();
 
-      element.open({ parent: 'snooze_conversation' });
+      element.open({ parent: 'snooze_notification' });
       await flushPromises();
 
       expect(element.getAttribute('placeholder')).toBe(
@@ -229,7 +212,7 @@ describe('commandbar', () => {
 
   describe('dynamic snooze suggestions', () => {
     const enterSnoozeMenu = () =>
-      emitChange('', [{ id: 'until_tomorrow', parent: 'snooze_conversation' }]);
+      emitChange('', [{ id: 'until_tomorrow', parent: 'snooze_notification' }]);
 
     it('builds a suggestion from the search inside a snooze menu', async () => {
       await mountCommandBar();
@@ -269,8 +252,8 @@ describe('commandbar', () => {
       await mountCommandBar();
       await enterSnoozeMenu();
       await emitChange('tomorrow', [
-        { id: 'until_tomorrow', parent: 'snooze_conversation' },
-        { id: 'bulk', parent: 'bulk_action_snooze_conversation' },
+        { id: 'until_tomorrow', parent: 'snooze_notification' },
+        { id: 'other', parent: 'other_menu' },
       ]);
 
       expect(commandIds()).not.toContain('dynamic_snooze_0');
@@ -278,7 +261,7 @@ describe('commandbar', () => {
 
     it('emits the resolved date when a suggestion is picked', async () => {
       const onSnooze = vi.fn();
-      emitter.on(CMD_SNOOZE_CONVERSATION, onSnooze);
+      emitter.on(CMD_SNOOZE_NOTIFICATION, onSnooze);
 
       await mountCommandBar();
       await enterSnoozeMenu();
@@ -286,7 +269,7 @@ describe('commandbar', () => {
       element.data.find(action => action.id === 'dynamic_snooze_0').handler();
 
       expect(onSnooze).toHaveBeenCalledWith('resolved-date');
-      emitter.off(CMD_SNOOZE_CONVERSATION, onSnooze);
+      emitter.off(CMD_SNOOZE_NOTIFICATION, onSnooze);
     });
 
     it('drops the suggestions when the bar closes', async () => {
@@ -321,30 +304,13 @@ describe('commandbar', () => {
     it('enters a submenu when the command has children', async () => {
       await mountCommandBar();
       await emitSelected({
-        id: 'snooze_conversation',
+        id: 'snooze_notification',
         children: ['until_tomorrow'],
       });
 
       expect(element.getAttribute('placeholder')).toBe(
         'COMMAND_BAR.SNOOZE_PLACEHOLDER'
       );
-    });
-  });
-
-  describe('closing the bar', () => {
-    it('clears the context menu conversation', async () => {
-      await mountCommandBar();
-      await emitClosed();
-
-      expect(dispatch).toHaveBeenCalledWith('setContextMenuChatId', null);
-    });
-
-    it('keeps the context menu conversation for a custom snooze', async () => {
-      await mountCommandBar();
-      await emitSelected({ id: 'until_custom_time' });
-      await emitClosed();
-
-      expect(dispatch).not.toHaveBeenCalled();
     });
   });
 });

@@ -3,12 +3,10 @@ tags:
 operationId: toggle-status-of-a-conversation
 summary: Toggle Status
 description: |-
-  Toggle the status of a conversation. Pass `status` to explicitly set the
-  conversation state. Use `snoozed` along with `snoozed_until` to snooze a
-  conversation until a specific time. If `snoozed_until` is omitted, the
-  conversation is snoozed until the next reply from the contact. Regardless
-  of the value provided, snoozed conversations always reopen on the next
-  reply from the contact.
+  Toggle the status of a ticket. Pass `status` to set it explicitly. Agents can set `open`,
+  `waiting_on_customer` (Pending), `on_hold`, `resolved` and `pending` (hand the ticket to the bot);
+  `new_ticket` and `closed` are set by the system and return 422. Resolving an unassigned ticket
+  assigns it to the agent who resolved it.
 security:
   - userBearerAuth: []
   - agentBotBearerAuth: []
@@ -25,16 +23,9 @@ requestBody:
         properties:
           status:
             type: string
-            enum: ['open', 'resolved', 'pending', 'snoozed']
-            description: The status of the conversation
+            enum: ['open', 'waiting_on_customer', 'on_hold', 'resolved', 'pending']
+            description: The ticket status
             example: open
-          snoozed_until:
-            type: number
-            description: When status is `snoozed`, schedule the reopen time as a Unix timestamp in seconds.
-              If not provided, the conversation is snoozed until the next
-              customer reply. The conversation always reopens when the
-              customer replies.
-            example: 1757506877
 responses:
   '200':
     description: Success
@@ -52,7 +43,7 @@ responses:
                   type: boolean
                 current_status:
                   type: string
-                  enum: ['open', 'resolved', 'pending', 'snoozed']
+                  enum: ['new_ticket', 'open', 'waiting_on_customer', 'on_hold', 'resolved', 'closed', 'pending']
                 conversation_id:
                   type: number
   '404':

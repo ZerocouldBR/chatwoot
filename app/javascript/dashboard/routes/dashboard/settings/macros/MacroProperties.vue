@@ -1,6 +1,7 @@
 <script>
 import NextButton from 'dashboard/components-next/button/Button.vue';
 import Icon from 'dashboard/components-next/icon/Icon.vue';
+import { mapGetters } from 'vuex';
 
 export default {
   components: {
@@ -17,6 +18,11 @@ export default {
       type: String,
       default: 'global',
     },
+    // Group whose agents can use the macro when visibility is "team".
+    macroTeamId: {
+      type: Number,
+      default: null,
+    },
     canManagePublicMacros: {
       type: Boolean,
       default: true,
@@ -26,8 +32,9 @@ export default {
       default: false,
     },
   },
-  emits: ['update:name', 'update:visibility', 'submit'],
+  emits: ['update:name', 'update:visibility', 'update:teamId', 'submit'],
   computed: {
+    ...mapGetters({ teams: 'teams/getTeams' }),
     isPublicVisibilityDisabled() {
       return !this.canManagePublicMacros;
     },
@@ -60,7 +67,7 @@ export default {
     },
     onUpdateVisibility(value) {
       if (this.readOnly) return;
-      if (value === 'global' && this.isPublicVisibilityDisabled) return;
+      if (value !== 'personal' && this.isPublicVisibilityDisabled) return;
 
       this.$emit('update:visibility', value);
     },
@@ -137,6 +144,41 @@ export default {
           </p>
         </button>
       </div>
+      <button
+        type="button"
+        data-testid="macro-visibility-team"
+        class="mt-3 w-full p-2 relative rounded-md border border-solid items-start gap-2 flex flex-col text-start"
+        :class="isActive('team')"
+        :disabled="isPublicVisibilityDisabled || readOnly"
+        @click="onUpdateVisibility('team')"
+      >
+        <div class="flex items-center gap-2 min-w-0 justify-between w-full">
+          <p class="block m-0 text-heading-3 text-n-slate-12 line-clamp-1">
+            {{ $t('MACROS.EDITOR.VISIBILITY.TEAM.LABEL') }}
+          </p>
+          <Icon
+            v-if="macroVisibility === 'team'"
+            icon="i-lucide-circle-check-big"
+            class="text-n-brand size-4"
+          />
+        </div>
+        <p class="text-n-slate-11 text-label-small">
+          {{ $t('MACROS.EDITOR.VISIBILITY.TEAM.DESCRIPTION') }}
+        </p>
+      </button>
+      <select
+        v-if="macroVisibility === 'team'"
+        data-testid="macro-team"
+        class="mt-2"
+        :value="macroTeamId"
+        :disabled="readOnly"
+        :aria-label="$t('MACROS.EDITOR.VISIBILITY.TEAM.LABEL')"
+        @change="$emit('update:teamId', Number($event.target.value))"
+      >
+        <option v-for="team in teams" :key="team.id" :value="team.id">
+          {{ team.name }}
+        </option>
+      </select>
       <div
         class="mt-2 flex items-start p-2 bg-n-alpha-1 gap-2 dark:bg-n-solid-3 rounded-md"
       >

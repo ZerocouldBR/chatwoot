@@ -13,7 +13,7 @@ module AutoAssignmentHandler
   # assignee commit as one change-set; a follow-up save would reset saved_changes and
   # hide the status change from the after_commit callbacks (no conversation.opened).
   def run_legacy_auto_assignment
-    return unless status_changed? && open?
+    return unless status_changed? && new_or_open?
     return if inbox.auto_assignment_v2_enabled?
     return if will_save_change_to_assignee_id? && assignee_id.present?
     return unless should_run_auto_assignment?
@@ -22,9 +22,9 @@ module AutoAssignmentHandler
   end
 
   def run_auto_assignment
-    # Assignment V2: Also trigger assignment when conversation is resolved or snoozed,
+    # Assignment V2: Also trigger assignment when a ticket is resolved or put on hold,
     # bypassing the open-only condition so the AssignmentJob can redistribute capacity.
-    return unless conversation_status_changed_to_open? || conversation_status_changed_to_resolved_or_snoozed?
+    return unless conversation_status_changed_to_open? || conversation_status_changed_to_resolved_or_on_hold?
     return unless should_run_auto_assignment?
 
     if inbox.auto_assignment_v2_enabled?
@@ -45,8 +45,8 @@ module AutoAssignmentHandler
     team_id.present? ? team_member_ids_with_capacity : inbox.member_ids_with_assignment_capacity
   end
 
-  def conversation_status_changed_to_resolved_or_snoozed?
-    inbox.auto_assignment_v2_enabled? && saved_change_to_status? && (resolved? || snoozed?)
+  def conversation_status_changed_to_resolved_or_on_hold?
+    inbox.auto_assignment_v2_enabled? && saved_change_to_status? && (resolved? || on_hold?)
   end
 
   def team_member_ids_with_capacity
@@ -57,9 +57,9 @@ module AutoAssignmentHandler
 
   def should_run_auto_assignment?
     return false unless inbox.enable_auto_assignment?
-    # Assignment V2: Resolved/snoozed conversations still have an assignee, so bypass the
+    # Assignment V2: Resolved/on-hold tickets still have an assignee, so bypass the
     # assignee-blank check below. The AssignmentJob needs to run to rebalance assignments.
-    return true if conversation_status_changed_to_resolved_or_snoozed?
+    return true if conversation_status_changed_to_resolved_or_on_hold?
     return false if assignee_agent_bot_id.present?
 
     # run only if assignee is blank or doesn't have access to inbox

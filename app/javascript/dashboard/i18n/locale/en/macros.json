@@ -1,7 +1,7 @@
 {
   "MACROS": {
     "HEADER": "Macros",
-    "DESCRIPTION": "A macro is a set of saved actions that help customer service agents easily complete tasks. The agents can define a set of actions like tagging a conversation with a label, sending an email transcript, updating a custom attribute, etc., and they can run these actions in a single click.",
+    "DESCRIPTION": "A macro is a set of saved actions that help customer service agents easily complete tasks. The agents can define a set of actions like tagging a ticket with a tag, sending an email transcript, updating a custom attribute, etc., and they can run these actions in a single click.",
     "LEARN_MORE": "Learn more about macros",
     "COUNT": "{n} macro | {n} macros",
     "HEADER_BTN_TXT": "Add a new macro",
@@ -76,6 +76,10 @@
         "PERSONAL": {
           "LABEL": "Private",
           "DESCRIPTION": "This macro will be private to you and not be available to others."
+        },
+        "TEAM": {
+          "LABEL": "Group",
+          "DESCRIPTION": "Available to the agents of one group."
         }
       }
     },
@@ -83,9 +87,9 @@
       "BUTTON_TOOLTIP": "Execute",
       "PREVIEW": "Preview Macro",
       "EXECUTED_SUCCESSFULLY": "Macro executed successfully",
-      "EXECUTED_WITHOUT_RESOLVING": "Macro executed. The conversation was not resolved because required attributes are missing.",
+      "EXECUTED_WITHOUT_RESOLVING": "Macro executed. The ticket was not resolved because required attributes are missing.",
       "FILLED_EDITOR": "Macro applied. Review the text in the editor and send it.",
-      "FILLED_EDITOR_WITHOUT_RESOLVING": "Macro applied. Review the text in the editor and send it. The conversation was not resolved because required attributes are missing.",
+      "FILLED_EDITOR_WITHOUT_RESOLVING": "Macro applied. Review the text in the editor and send it. The ticket was not resolved because required attributes are missing.",
       "ATTACHMENT_FAILED": "Some macro attachments could not be added to the editor.",
       "CLEAR_VALUE": "(clear)"
     },
@@ -99,16 +103,16 @@
       "ATLEAST_ONE_ACTION_REQUIRED": "At least one action is required"
     },
     "ACTIONS": {
-      "ASSIGN_TEAM": "Assign a Team",
+      "ASSIGN_TEAM": "Assign a Group",
       "ASSIGN_AGENT": "Assign an Agent",
-      "ADD_LABEL": "Add a Label",
-      "REMOVE_LABEL": "Remove a Label",
+      "ADD_LABEL": "Add a Tag",
+      "REMOVE_LABEL": "Remove a Tag",
       "REMOVE_ASSIGNED_AGENT": "Remove Assigned Agent",
-      "REMOVE_ASSIGNED_TEAM": "Remove Assigned Team",
+      "REMOVE_ASSIGNED_TEAM": "Remove Assigned Group",
       "SEND_EMAIL_TRANSCRIPT": "Send an Email Transcript",
-      "MUTE_CONVERSATION": "Mute Conversation",
-      "SNOOZE_CONVERSATION": "Snooze Conversation",
-      "RESOLVE_CONVERSATION": "Resolve Conversation",
+      "MUTE_CONVERSATION": "Mute Ticket",
+      "SNOOZE_CONVERSATION": "Put Ticket On-hold",
+      "RESOLVE_CONVERSATION": "Resolve Ticket",
       "CHANGE_STATUS": "Change Status",
       "SEND_ATTACHMENT": "Send Attachment",
       "SEND_MESSAGE": "Send a Message",
@@ -122,7 +126,7 @@
     "PRIORITY_TYPES": {
       "NONE": "None",
       "LOW": "Low",
-      "MEDIUM": "Medium",
+      "MEDIUM": "Normal",
       "HIGH": "High",
       "URGENT": "Urgent"
     }

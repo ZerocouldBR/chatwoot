@@ -1,7 +1,6 @@
 import { useBulkActionsHotKeys } from '../useBulkActionsHotKeys';
 import { useStore, useMapGetter } from 'dashboard/composables/store';
 import { useI18n } from 'vue-i18n';
-import wootConstants from 'dashboard/constants/globals';
 import { emitter } from 'shared/helpers/mitt';
 
 vi.mock('dashboard/composables/store');
@@ -34,13 +33,6 @@ describe('useBulkActionsHotKeys', () => {
     expect(bulkActionsHotKeys.value.length).toBeGreaterThan(0);
     expect(bulkActionsHotKeys.value).toContainEqual(
       expect.objectContaining({
-        id: 'bulk_action_snooze_conversation',
-        title: 'COMMAND_BAR.COMMANDS.SNOOZE_CONVERSATION',
-        section: 'COMMAND_BAR.SECTIONS.BULK_ACTIONS',
-      })
-    );
-    expect(bulkActionsHotKeys.value).toContainEqual(
-      expect.objectContaining({
         id: 'bulk_action_reopen_conversation',
         title: 'COMMAND_BAR.COMMANDS.REOPEN_CONVERSATION',
         section: 'COMMAND_BAR.SECTIONS.BULK_ACTIONS',
@@ -52,19 +44,6 @@ describe('useBulkActionsHotKeys', () => {
         title: 'COMMAND_BAR.COMMANDS.RESOLVE_CONVERSATION',
         section: 'COMMAND_BAR.SECTIONS.BULK_ACTIONS',
       })
-    );
-  });
-
-  it('should include snooze options in bulk actions', () => {
-    store.getters['bulkActions/getSelectedConversationIds'] = [1, 2, 3];
-    const { bulkActionsHotKeys } = useBulkActionsHotKeys();
-
-    const snoozeAction = bulkActionsHotKeys.value.find(
-      action => action.id === 'bulk_action_snooze_conversation'
-    );
-    expect(snoozeAction).toBeDefined();
-    expect(snoozeAction.children).toEqual(
-      Object.values(wootConstants.SNOOZE_OPTIONS)
     );
   });
 

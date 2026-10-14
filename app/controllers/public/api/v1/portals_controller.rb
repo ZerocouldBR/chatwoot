@@ -7,6 +7,7 @@ class Public::Api::V1::PortalsController < Public::Api::V1::Portals::BaseControl
   before_action :set_portal_layout
   before_action :set_view_variant
   before_action :ensure_portal_feature_enabled
+  before_action :enforce_portal_sign_in, only: [:show]
   before_action :load_home_data, only: [:show], unless: -> { @is_plain_layout_enabled }
   layout 'portal'
 

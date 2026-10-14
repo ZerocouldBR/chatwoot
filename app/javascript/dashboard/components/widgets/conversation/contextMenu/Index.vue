@@ -1,6 +1,5 @@
 <script>
 import { mapGetters } from 'vuex';
-import { useAdmin } from 'dashboard/composables/useAdmin';
 import { useAlert } from 'dashboard/composables';
 import { copyTextToClipboard } from 'shared/helpers/clipboard';
 import {
@@ -8,6 +7,8 @@ import {
   getAgentsByUpdatedPresence,
 } from 'dashboard/helper/agentHelper.js';
 import { picoSearch } from '@chatwoot/pico-search';
+import { getUserPermissions } from 'dashboard/helper/permissionsHelper';
+import { deniedConversationMenuKeys } from 'dashboard/servicedesk/roles/permissions';
 import MenuItem from './menuItem.vue';
 import MenuItemWithSubmenu from './menuItemWithSubmenu.vue';
 import wootConstants from 'dashboard/constants/globals';
@@ -20,7 +21,6 @@ const MENU = {
   MARK_AS_UNREAD: 'mark-as-unread',
   PRIORITY: 'priority',
   STATUS: 'status',
-  SNOOZE: 'snooze',
   AGENT: 'agent',
   TEAM: 'team',
   LABEL: 'label',
@@ -83,12 +83,6 @@ export default {
     'deleteConversation',
     'close',
   ],
-  setup() {
-    const { isAdmin } = useAdmin();
-    return {
-      isAdmin,
-    };
-  },
   data() {
     return {
       MENU,
@@ -105,25 +99,25 @@ export default {
       statusMenuConfig: [
         {
           key: wootConstants.STATUS_TYPE.RESOLVED,
-          label: this.$t('CONVERSATION.CARD_CONTEXT_MENU.RESOLVED'),
+          label: this.$t('CONVERSATION.TICKET_STATUS.resolved'),
           icon: 'checkmark',
         },
         {
           key: wootConstants.STATUS_TYPE.OPEN,
-          label: this.$t('CONVERSATION.CARD_CONTEXT_MENU.REOPEN'),
+          label: this.$t('CONVERSATION.TICKET_STATUS.open'),
           icon: 'arrow-redo',
         },
         {
-          key: wootConstants.STATUS_TYPE.PENDING,
-          label: this.$t('CONVERSATION.CARD_CONTEXT_MENU.PENDING'),
+          key: wootConstants.STATUS_TYPE.WAITING_ON_CUSTOMER,
+          label: this.$t('CONVERSATION.TICKET_STATUS.waiting_on_customer'),
           icon: 'book-clock',
         },
+        {
+          key: wootConstants.STATUS_TYPE.ON_HOLD,
+          label: this.$t('CONVERSATION.TICKET_STATUS.on_hold'),
+          icon: 'snooze',
+        },
       ],
-      snoozeOption: {
-        key: wootConstants.STATUS_TYPE.SNOOZED,
-        label: this.$t('CONVERSATION.CARD_CONTEXT_MENU.SNOOZE.TITLE'),
-        icon: 'snooze',
-      },
       priorityConfig: {
         key: MENU.PRIORITY,
         label: this.$t('CONVERSATION.PRIORITY.TITLE'),
@@ -218,10 +212,6 @@ export default {
         ...this.filteredAgentOnAvailability,
       ];
     },
-    showSnooze() {
-      // Don't show snooze if the conversation is already snoozed/resolved/pending
-      return this.status === wootConstants.STATUS_TYPE.OPEN;
-    },
     filteredLabels() {
       const labels = this.labelSearchQuery
         ? picoSearch(this.labels, this.labelSearchQuery, ['title'])
@@ -236,16 +226,16 @@ export default {
   },
   methods: {
     isAllowed(keys) {
-      if (!this.allowedOptions.length) return true;
-      return keys.some(key => this.allowedOptions.includes(key));
+      // ServiceDesk M13: some o que o papel não pode fazer (editar, etiquetar, excluir)
+      const denied = deniedConversationMenuKeys(
+        getUserPermissions(this.currentUser, this.currentAccountId)
+      );
+      const roleKeys = keys.filter(key => !denied.includes(key));
+      if (!this.allowedOptions.length) return roleKeys.length > 0;
+      return roleKeys.some(key => this.allowedOptions.includes(key));
     },
-    toggleStatus(status, snoozedUntil) {
-      this.$emit('updateConversation', status, snoozedUntil);
-    },
-    async snoozeConversation() {
-      await this.$store.dispatch('setContextMenuChatId', this.chatId);
-      const ninja = document.querySelector('ninja-keys');
-      ninja.open({ parent: 'snooze_conversation' });
+    toggleStatus(status) {
+      this.$emit('updateConversation', status);
     },
     assignPriority(priority) {
       this.$emit('assignPriority', priority);
@@ -312,22 +302,16 @@ export default {
       />
       <hr class="m-1 rounded border-b border-n-weak dark:border-n-weak" />
     </template>
-    <template v-if="isAllowed([MENU.STATUS, MENU.SNOOZE])">
+    <template v-if="isAllowed([MENU.STATUS])">
       <template v-for="option in statusMenuConfig">
         <MenuItem
           v-if="show(option.key) && isAllowed([MENU.STATUS])"
           :key="option.key"
           :option="option"
           variant="icon"
-          @click.stop="toggleStatus(option.key, null)"
+          @click.stop="toggleStatus(option.key)"
         />
       </template>
-      <MenuItem
-        v-if="showSnooze && isAllowed([MENU.SNOOZE])"
-        :option="snoozeOption"
-        variant="icon"
-        @click.stop="snoozeConversation()"
-      />
       <hr class="m-1 rounded border-b border-n-weak dark:border-n-weak" />
     </template>
     <template
@@ -437,7 +421,7 @@ export default {
         @click.stop="copyConversationLink"
       />
     </template>
-    <template v-if="isAdmin && isAllowed([MENU.DELETE])">
+    <template v-if="isAllowed([MENU.DELETE])">
       <hr class="m-1 rounded border-b border-n-weak dark:border-n-weak" />
       <MenuItem
         :option="deleteOption"

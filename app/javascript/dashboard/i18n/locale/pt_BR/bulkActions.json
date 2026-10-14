@@ -9,7 +9,7 @@
     "CANCEL": "Cancelar",
     "SEARCH_INPUT_PLACEHOLDER": "Pesquisar",
     "ASSIGN_AGENT_TOOLTIP": "Atribuir Agente",
-    "ASSIGN_TEAM_TOOLTIP": "Atribuir time",
+    "ASSIGN_TEAM_TOOLTIP": "Atribuir grupo",
     "ASSIGN_SUCCESFUL": "Tickets atribuídos com sucesso.",
     "ASSIGN_FAILED": "Falha ao atribuir tickets. Por favor, tente novamente.",
     "RESOLVE_SUCCESFUL": "Tickets resolvidos com sucesso.",
@@ -17,7 +17,6 @@
     "ALL_CONVERSATIONS_SELECTED_ALERT": "Tickets visíveis nesta página só estão selecionados.",
     "UPDATE": {
       "CHANGE_STATUS": "Alterar status",
-      "SNOOZE_UNTIL": "Adiar",
       "UPDATE_SUCCESFUL": "Status do ticket atualizado com sucesso.",
       "UPDATE_FAILED": "Falha ao atualizar tickets. Por favor, tente novamente."
     },
@@ -27,27 +26,23 @@
     },
     "LABELS": {
       "ASSIGN_LABELS": "Atribuir rótulo",
-      "REMOVE_LABELS": "Remover etiquetas",
-      "ASSIGN_SELECTED_LABELS": "Atribuir etiquetas selecionadas",
-      "REMOVE_SELECTED_LABELS": "Remover etiquetas selecionadas",
+      "REMOVE_LABELS": "Remover tags",
+      "ASSIGN_SELECTED_LABELS": "Atribuir tags selecionadas",
+      "REMOVE_SELECTED_LABELS": "Remover tags selecionadas",
       "ASSIGN_SUCCESFUL": "Rótulos atribuídos com sucesso.",
-      "ASSIGN_FAILED": "Falha ao atribuir etiquetas. Por favor, tente novamente.",
-      "REMOVE_SUCCESFUL": "Etiquetas removidas com sucesso.",
-      "REMOVE_FAILED": "Falha ao remover etiquetas. Por favor, tente novamente."
+      "ASSIGN_FAILED": "Falha ao atribuir tags. Por favor, tente novamente.",
+      "REMOVE_SUCCESFUL": "Tags removidas com sucesso.",
+      "REMOVE_FAILED": "Falha ao remover tags. Por favor, tente novamente."
     },
     "TEAMS": {
       "NONE": "Nenhum",
-      "ASSIGN_TEAM_CONFIRMATION_LABEL": "Tem certeza de que deseja atribuir {n} ticket ao time {teamName}? | Tem certeza de que deseja atribuir {n} tickets ao time {teamName}?",
+      "ASSIGN_TEAM_CONFIRMATION_LABEL": "Tem certeza de que deseja atribuir {n} ticket ao grupo {teamName}? | Tem certeza de que deseja atribuir {n} tickets ao grupo {teamName}?",
       "UNASSIGN_TEAM_CONFIRMATION_LABEL": "Tem certeza de que deseja remover a atribuição de {n} ticket? | Tem certeza de que deseja remover a atribuição de {n} tickets?",
-      "ASSIGN_SUCCESFUL": "Times atribuídos com sucesso.",
-      "ASSIGN_FAILED": "Falha ao atribuir time. Por favor, tente novamente."
+      "ASSIGN_SUCCESFUL": "Grupos atribuídos com sucesso.",
+      "ASSIGN_FAILED": "Falha ao atribuir grupo. Por favor, tente novamente."
     },
     "MACROS": {
-      "EXECUTE_MACRO": "Executar macro",
-      "EXECUTE_CONFIRMATION_LABEL": "Executar {macroName} em {n} ticket? | Executar {macroName} em {n} tickets?",
-      "QUEUED": "Macro enfileirada para {count} ticket. | Macro enfileirada para {count} tickets.",
-      "QUEUED_WITH_MISSING_ATTRIBUTES": "Macro enfileirada para {count} ticket. Faltam campos obrigatórios e ele pode continuar aberto. | Macro enfileirada para {count} tickets. Ao menos um tem campos obrigatórios faltando e pode continuar aberto.",
-      "QUEUED_WITHOUT_REPLY": "Macro enfileirada para {count} ticket. A resposta da macro não foi aplicada: aplique a macro dentro do ticket para revisar e enviar. | Macro enfileirada para {count} tickets. A resposta da macro não foi aplicada: aplique a macro dentro de cada ticket para revisar e enviar."
+      "QUEUED_WITHOUT_REPLY": "Macro enviada para {count} ticket. A resposta da macro não foi aplicada: aplique a macro dentro do ticket para revisar e enviar. | Macro enviada para {count} tickets. A resposta da macro não foi aplicada: aplique a macro dentro de cada ticket para revisar e enviar."
     }
   }
 }

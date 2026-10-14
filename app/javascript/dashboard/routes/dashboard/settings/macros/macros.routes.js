@@ -1,10 +1,7 @@
 import { FEATURE_FLAGS } from '../../../../featureFlags';
 import { frontendURL } from 'dashboard/helper/URLHelper';
 
-import {
-  ROLES,
-  CONVERSATION_PERMISSIONS,
-} from 'dashboard/constants/permissions.js';
+import { SD_ROUTE_PERMISSIONS } from 'dashboard/servicedesk/roles/permissions';
 import SettingsContent from '../Wrapper.vue';
 import SettingsWrapper from '../SettingsWrapper.vue';
 import Macros from './Index.vue';
@@ -22,7 +19,8 @@ export default {
           component: Macros,
           meta: {
             featureFlag: FEATURE_FLAGS.MACROS,
-            permissions: [...ROLES, ...CONVERSATION_PERMISSIONS],
+            // ServiceDesk M13: só quem cria macros (pessoais ou compartilhadas); readonly só aplica no ticket
+            permissions: SD_ROUTE_PERMISSIONS.macros,
           },
         },
       ],
@@ -44,7 +42,8 @@ export default {
           component: MacroEditor,
           meta: {
             featureFlag: FEATURE_FLAGS.MACROS,
-            permissions: [...ROLES, ...CONVERSATION_PERMISSIONS],
+            // ServiceDesk M13: só quem cria macros (pessoais ou compartilhadas); readonly só aplica no ticket
+            permissions: SD_ROUTE_PERMISSIONS.macros,
           },
         },
         {
@@ -53,7 +52,8 @@ export default {
           component: MacroEditor,
           meta: {
             featureFlag: FEATURE_FLAGS.MACROS,
-            permissions: [...ROLES, ...CONVERSATION_PERMISSIONS],
+            // ServiceDesk M13: só quem cria macros (pessoais ou compartilhadas); readonly só aplica no ticket
+            permissions: SD_ROUTE_PERMISSIONS.macros,
           },
         },
       ],

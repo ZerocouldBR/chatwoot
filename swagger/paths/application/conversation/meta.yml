@@ -15,8 +15,8 @@ get:
       in: query
       schema:
         type: string
-        enum: ['all', 'open', 'resolved', 'pending', 'snoozed']
-        default: 'open'
+        enum: ['unsolved', 'all', 'new_ticket', 'open', 'waiting_on_customer', 'on_hold', 'resolved', 'closed', 'pending']
+        default: 'unsolved'
       description: Filter by conversation status.
     - name: q
       in: query

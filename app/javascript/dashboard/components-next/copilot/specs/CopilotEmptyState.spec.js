@@ -7,7 +7,7 @@ vi.mock('vue-i18n', () => ({
 }));
 
 vi.mock('vue-router', () => ({
-  useRoute: () => ({ path: '/app/accounts/1/conversations/1' }),
+  useRoute: () => ({ path: '/app/accounts/1/tickets/1' }),
 }));
 
 const mountComponent = (props = {}) =>

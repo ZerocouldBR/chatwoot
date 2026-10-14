@@ -71,13 +71,13 @@
         "HELP": "To add your TikTok profile as a channel, you need to authenticate your TikTok Profile by clicking on 'Continue with TikTok' ",
         "ERROR_MESSAGE": "There was an error connecting to TikTok, please try again",
         "ERROR_AUTH": "There was an error connecting to TikTok, please try again",
-        "NORTH_AMERICA_WARNING": "TikTok connections for North American accounts are temporarily unavailable while we wait for an update from the TikTok team."
+        "NORTH_AMERICA_WARNING": "TikTok connections for North American accounts are temporarily unavailable while we wait for an update from the TikTok group."
       },
       "TWITTER": {
         "HELP": "To add your Twitter profile as a channel, you need to authenticate your Twitter Profile by clicking on 'Sign in with Twitter' ",
         "ERROR_MESSAGE": "There was an error connecting to Twitter, please try again",
         "TWEETS": {
-          "ENABLE": "Create conversations from mentioned Tweets"
+          "ENABLE": "Create tickets from mentioned Tweets"
         }
       },
       "WEBSITE_CHANNEL": {
@@ -118,7 +118,7 @@
         },
         "CHANNEL_GREETING_TOGGLE": {
           "LABEL": "Enable channel greeting",
-          "HELP_TEXT": "Auto-send greeting messages when customers start a conversation and send their first message.",
+          "HELP_TEXT": "Auto-send greeting messages when customers start a ticket and send their first message.",
           "ENABLED": "Enabled",
           "DISABLED": "Disabled"
         },
@@ -616,7 +616,7 @@
           "TIKTOK": {
             "TITLE": "TikTok",
             "DESCRIPTION": "Connect your TikTok account",
-            "ACCESS_REQUEST_DESCRIPTION": "Contact our support team to request TikTok access"
+            "ACCESS_REQUEST_DESCRIPTION": "Contact our support group to request TikTok access"
           },
           "VOICE": {
             "TITLE": "Voice",
@@ -636,7 +636,7 @@
       },
       "FINISH": {
         "TITLE": "Nailed It!",
-        "DESC": "You have successfully finished integrating your Facebook Page with Chatwoot. Next time a customer messages your Page, the conversation will automatically appear on your inbox.<br>We are also providing you with a widget script that you can easily add to your website. Once this is live on your website, customers can message you right from your website without the help of any external tool and the conversation will appear right here, on Chatwoot.<br>Cool, huh? Well, we sure try to be :)"
+        "DESC": "You have successfully finished integrating your Facebook Page with Chatwoot. Next time a customer messages your Page, the ticket will automatically appear on your inbox.<br>We are also providing you with a widget script that you can easily add to your website. Once this is live on your website, customers can message you right from your website without the help of any external tool and the ticket will appear right here, on Chatwoot.<br>Cool, huh? Well, we sure try to be :)"
       },
       "EMAIL_PROVIDER": {
         "TITLE": "Select your email provider",
@@ -677,7 +677,7 @@
       "MESSAGE": "You can now engage with your customers through your new Channel. Happy supporting",
       "BUTTON_TEXT": "Take me there",
       "MORE_SETTINGS": "More settings",
-      "WEBSITE_SUCCESS": "You have successfully finished creating a website channel. Copy the code shown below and paste it on your website. Next time a customer use the live chat, the conversation will automatically appear on your inbox.",
+      "WEBSITE_SUCCESS": "You have successfully finished creating a website channel. Copy the code shown below and paste it on your website. Next time a customer use the live chat, the ticket will automatically appear on your inbox.",
       "WHATSAPP_QR_INSTRUCTION": "Scan the QR code above to quickly test your WhatsApp inbox",
       "SMS_QR_INSTRUCTION": "Scan the QR code above to quickly test your SMS inbox",
       "SMS_QR_ALT": "QR code to test the SMS inbox",
@@ -729,10 +729,10 @@
         "DISABLED": "Disabled"
       },
       "LOCK_TO_SINGLE_CONVERSATION": {
-        "ENABLED": "Reopen same conversation",
-        "DISABLED": "Create new conversations",
-        "ENABLED_DESCRIPTION": "When a contact messages again, the previous conversation will be reopened.",
-        "DISABLED_DESCRIPTION": "A new conversation will be created each time after the previous one is resolved."
+        "ENABLED": "Reopen same ticket",
+        "DISABLED": "Create new tickets",
+        "ENABLED_DESCRIPTION": "When a contact messages again, the previous ticket will be reopened.",
+        "DISABLED_DESCRIPTION": "A new ticket will be created each time after the previous one is resolved."
       },
       "ENABLE_HMAC": {
         "LABEL": "Enable"
@@ -779,11 +779,11 @@
       },
       "INBOUND": {
         "LABEL": "Allow incoming calls",
-        "DESCRIPTION": "Let customers call this number. When turned off, incoming calls are declined automatically — agents aren't notified and no conversation is created. Agents can still place outgoing calls."
+        "DESCRIPTION": "Let customers call this number. When turned off, incoming calls are declined automatically — agents aren't notified and no ticket is created. Agents can still place outgoing calls."
       },
       "RECORDING": {
         "LABEL": "Record calls",
-        "DESCRIPTION": "Record calls and attach the recording to the conversation. Turn this off where recording calls isn't permitted."
+        "DESCRIPTION": "Record calls and attach the recording to the ticket. Turn this off where recording calls isn't permitted."
       },
       "TRANSCRIPTION": {
         "LABEL": "Transcribe recordings",
@@ -807,7 +807,7 @@
       "PERMISSION_REQUEST_BODY": {
         "LABEL": "Call permission request message",
         "HELP_TEXT": "Shown to the contact when they haven't yet consented to receive calls. Leave blank to use the default.",
-        "PLACEHOLDER": "We would like to call you regarding your conversation."
+        "PLACEHOLDER": "We would like to call you regarding your ticket."
       }
     },
     "CHANNEL_PREFERENCES": "Channel Preferences",
@@ -1090,7 +1090,7 @@
       "LABEL": "Features",
       "DISPLAY_FILE_PICKER": "Display file picker on the widget",
       "DISPLAY_EMOJI_PICKER": "Display emoji picker on the widget",
-      "ALLOW_END_CONVERSATION": "Allow users to end conversation from the widget",
+      "ALLOW_END_CONVERSATION": "Allow users to end ticket from the widget",
       "USE_INBOX_AVATAR_FOR_BOT": "Use inbox name and avatar for the bot"
     },
     "SETTINGS_POPUP": {
@@ -1110,14 +1110,14 @@
         "DESCRIPTION": "Verify user authenticity by generating secure tokens. This prevents unauthorized users from impersonating others in your chat.",
         "SECRET_KEY": "Secret Key",
         "VIEW_DOCS": "View documentation",
-        "REQUIRE_LABEL": "Require identity validation for all conversations",
-        "REQUIRE_DESCRIPTION": "When enabled, users must provide a valid identity token to start conversations. Requests without valid tokens will be rejected.",
+        "REQUIRE_LABEL": "Require identity validation for all tickets",
+        "REQUIRE_DESCRIPTION": "When enabled, users must provide a valid identity token to start tickets. Requests without valid tokens will be rejected.",
         "ROTATE": {
           "BUTTON": "Rotate key",
           "TITLE": "Rotate secret key?",
           "WARNING": "The current key is revoked the instant you rotate it.",
           "WARNING_DETAIL": "There is no overlap period and it cannot be restored.",
-          "IMPACT": "Your servers must sign users with the new key. Anyone still signed with the old one fails verification. If identity validation is required, they cannot start a conversation.",
+          "IMPACT": "Your servers must sign users with the new key. Anyone still signed with the old one fails verification. If identity validation is required, they cannot start a ticket.",
           "CONFIRM": "Rotate key",
           "CANCEL": "Cancel",
           "SUCCESS": "Secret key rotated successfully",
@@ -1126,22 +1126,22 @@
       },
       "INBOX_AGENTS": "Agents",
       "INBOX_AGENTS_SUB_TEXT": "Add or remove agents from this inbox",
-      "AGENT_ASSIGNMENT": "Conversation Assignment",
-      "AGENT_ASSIGNMENT_SUB_TEXT": "Update conversation assignment settings",
+      "AGENT_ASSIGNMENT": "Ticket Assignment",
+      "AGENT_ASSIGNMENT_SUB_TEXT": "Update ticket assignment settings",
       "UPDATE": "Update",
       "ENABLE_EMAIL_COLLECT_BOX": "Enable email collect box",
-      "ENABLE_EMAIL_COLLECT_BOX_SUB_TEXT": "Enable or disable email collect box on new conversation",
+      "ENABLE_EMAIL_COLLECT_BOX_SUB_TEXT": "Enable or disable email collect box on new ticket",
       "AUTO_ASSIGNMENT": "Enable auto assignment",
       "SENDER_NAME_SECTION": "Enable Agent Name in Email",
       "SENDER_NAME_SECTION_TEXT": "Enable/Disable showing Agent's name in email, if disabled it will show business name",
-      "ENABLE_CONTINUITY_VIA_EMAIL": "Enable conversation continuity via email",
-      "ENABLE_CONTINUITY_VIA_EMAIL_SUB_TEXT": "Conversations will continue over email if the contact email address is available.",
-      "ENABLE_CONTINUITY_VIA_EMAIL_DISABLED_TEXT": "This feature is available on a paid plan. Upgrade to enable conversation continuity via email.",
-      "LOCK_TO_SINGLE_CONVERSATION": "Conversation Routing",
-      "LOCK_TO_SINGLE_CONVERSATION_SUB_TEXT": "Configure conversation creation for existing contacts",
+      "ENABLE_CONTINUITY_VIA_EMAIL": "Enable ticket continuity via email",
+      "ENABLE_CONTINUITY_VIA_EMAIL_SUB_TEXT": "Tickets will continue over email if the contact email address is available.",
+      "ENABLE_CONTINUITY_VIA_EMAIL_DISABLED_TEXT": "This feature is available on a paid plan. Upgrade to enable ticket continuity via email.",
+      "LOCK_TO_SINGLE_CONVERSATION": "Ticket Routing",
+      "LOCK_TO_SINGLE_CONVERSATION_SUB_TEXT": "Configure ticket creation for existing contacts",
       "INBOX_UPDATE_TITLE": "Inbox Settings",
       "INBOX_UPDATE_SUB_TEXT": "Update your inbox settings",
-      "AUTO_ASSIGNMENT_SUB_TEXT": "Enable or disable the automatic assignment of new conversations to the agents added to this inbox.",
+      "AUTO_ASSIGNMENT_SUB_TEXT": "Enable or disable the automatic assignment of new tickets to the agents added to this inbox.",
       "HMAC_VERIFICATION": "User Identity Validation",
       "HMAC_DESCRIPTION": "With this key you can generate a secret token that can be used to verify the identity of your users.",
       "HMAC_LINK_TO_DOCS": "You can read more here.",
@@ -1152,8 +1152,8 @@
       "FORWARD_EMAIL_TITLE": "Forward to Email",
       "FORWARD_EMAIL_SUB_TEXT": "Start forwarding your emails to the following email address.",
       "FORWARD_EMAIL_NOT_CONFIGURED": "Forwarding emails to your inbox is currently disabled on this installation. To use this feature, it must be enabled by your administrator. Please get in touch with them to proceed.",
-      "ALLOW_MESSAGES_AFTER_RESOLVED": "Allow messages after conversation resolved",
-      "ALLOW_MESSAGES_AFTER_RESOLVED_SUB_TEXT": "Allow the end-users to send messages even after the conversation is resolved.",
+      "ALLOW_MESSAGES_AFTER_RESOLVED": "Allow messages after ticket resolved",
+      "ALLOW_MESSAGES_AFTER_RESOLVED_SUB_TEXT": "Allow the end-users to send messages even after the ticket is resolved.",
       "WHATSAPP_SECTION_SUBHEADER": "This API Key is used for the integration with the WhatsApp APIs.",
       "WHATSAPP_SECTION_UPDATE_SUBHEADER": "Enter the new API key to be used for the integration with the WhatsApp APIs.",
       "WHATSAPP_SECTION_TITLE": "API Key",
@@ -1215,7 +1215,7 @@
           "ACTION_REQUIRED_DESCRIPTION": "Inboxes connected through your own Meta app are not affected by restrictions on the shared embedded signup app. This guided flow updates the WhatsApp API connection without creating a new inbox.",
           "GUIDE_LINK": "Open the manual setup guide",
           "PRESERVED_TITLE": "Preserved",
-          "PRESERVED_DESCRIPTION": "Conversations, contacts, collaborators, routing, business hours, and inbox settings.",
+          "PRESERVED_DESCRIPTION": "Tickets, contacts, collaborators, routing, business hours, and inbox settings.",
           "UPDATED_TITLE": "Updated",
           "UPDATED_DESCRIPTION": "WABA ID, phone number ID, access token, and webhook configuration.",
           "WABA_ID": "WABA ID",
@@ -1248,7 +1248,7 @@
         "STEPS": {
           "BEFORE_YOU_START": {
             "TITLE": "Before you start",
-            "DESCRIPTION": "This reconnects the WhatsApp API details for this inbox. Conversations, collaborators, routing, business hours, CSAT, and bot settings will be preserved."
+            "DESCRIPTION": "This reconnects the WhatsApp API details for this inbox. Tickets, collaborators, routing, business hours, CSAT, and bot settings will be preserved."
           },
           "BUSINESS_DETAILS": {
             "TITLE": "Business details",
@@ -1281,15 +1281,15 @@
     "AUTO_ASSIGNMENT": {
       "MAX_ASSIGNMENT_LIMIT": "Auto assignment limit",
       "MAX_ASSIGNMENT_LIMIT_RANGE_ERROR": "Please enter a value greater than 0",
-      "MAX_ASSIGNMENT_LIMIT_SUB_TEXT": "Limit the maximum number of conversations from this inbox that can be auto assigned to an agent"
+      "MAX_ASSIGNMENT_LIMIT_SUB_TEXT": "Limit the maximum number of tickets from this inbox that can be auto assigned to an agent"
     },
     "ASSIGNMENT": {
-      "TITLE": "Conversation Assignment",
-      "DESCRIPTION": "Automatically assign incoming conversations to available agents based on assignment policies",
-      "ENABLE_AUTO_ASSIGNMENT": "Enable automatic conversation assignment",
+      "TITLE": "Ticket Assignment",
+      "DESCRIPTION": "Automatically assign incoming tickets to available agents based on assignment policies",
+      "ENABLE_AUTO_ASSIGNMENT": "Enable automatic ticket assignment",
       "DEFAULT_RULES_TITLE": "Default assignment rules",
-      "DEFAULT_RULES_DESCRIPTION": "Using the default assignment behavior for all conversations",
-      "DEFAULT_RULE_1": "Earliest created conversations first",
+      "DEFAULT_RULES_DESCRIPTION": "Using the default assignment behavior for all tickets",
+      "DEFAULT_RULE_1": "Earliest created tickets first",
       "DEFAULT_RULE_2": "Round robin distribution",
       "CUSTOMIZE_WITH_POLICY": "Customize with assignment policy",
       "USING_POLICY": "Using custom assignment policy for this inbox",
@@ -1313,7 +1313,7 @@
       "UPGRADE_PROMPT": "Custom assignment policies are available on the Business plan",
       "UPGRADE_TO_BUSINESS": "Upgrade to Business",
       "DEFAULT_POLICY_LINKED": "Default policy linked",
-      "DEFAULT_POLICY_DESCRIPTION": "Link a custom assignment policy to customize how conversations are assigned to agents in this inbox.",
+      "DEFAULT_POLICY_DESCRIPTION": "Link a custom assignment policy to customize how tickets are assigned to agents in this inbox.",
       "LINK_EXISTING_POLICY": "Link existing policy",
       "CREATE_NEW_POLICY": "Create new policy",
       "NO_POLICIES": "No assignment policies found",
@@ -1337,7 +1337,7 @@
       "MESSAGE_ERROR": "There was an error, please try again"
     },
     "PRE_CHAT_FORM": {
-      "DESCRIPTION": "Pre chat forms enable you to capture user information before they start conversation with you.",
+      "DESCRIPTION": "Pre chat forms enable you to capture user information before they start a ticket with you.",
       "SET_FIELDS": "Pre chat form fields",
       "SET_FIELDS_HEADER": {
         "FIELDS": "Fields",
@@ -1364,7 +1364,7 @@
     },
     "CSAT": {
       "TITLE": "Enable CSAT",
-      "SUBTITLE": "Automatically trigger CSAT surveys at the end of conversations to understand how customers feel about their support experience. Track satisfaction trends and identify areas for improvement over time.",
+      "SUBTITLE": "Automatically trigger CSAT surveys at the end of tickets to understand how customers feel about their support experience. Track satisfaction trends and identify areas for improvement over time.",
       "DISPLAY_TYPE": {
         "LABEL": "Display type"
       },
@@ -1417,16 +1417,16 @@
       },
       "SURVEY_RULE": {
         "LABEL": "Survey rule",
-        "DESCRIPTION_PREFIX": "Send the survey if the conversation",
-        "DESCRIPTION_SUFFIX": "any of the labels",
+        "DESCRIPTION_PREFIX": "Send the survey if the ticket",
+        "DESCRIPTION_SUFFIX": "any of the tags",
         "OPERATOR": {
           "CONTAINS": "contains",
           "DOES_NOT_CONTAINS": "does not contain"
         },
-        "SELECT_PLACEHOLDER": "select labels"
+        "SELECT_PLACEHOLDER": "select tags"
       },
-      "NOTE": "Note: CSAT surveys are sent only once per conversation",
-      "WHATSAPP_NOTE": "Note: When you save, the system creates a dedicated CSAT template in WhatsApp (used to capture rating and feedback in reports) and submits it as Utility for approval. Meta may still classify it as Marketing based on content. After approval, surveys are sent only once per conversation as per the survey rule.",
+      "NOTE": "Note: CSAT surveys are sent only once per ticket",
+      "WHATSAPP_NOTE": "Note: When you save, the system creates a dedicated CSAT template in WhatsApp (used to capture rating and feedback in reports) and submits it as Utility for approval. Meta may still classify it as Marketing based on content. After approval, surveys are sent only once per ticket as per the survey rule.",
       "API": {
         "SUCCESS_MESSAGE": "CSAT settings updated successfully",
         "ERROR_MESSAGE": "We couldn't update CSAT settings. Please try again later."
@@ -1592,7 +1592,7 @@
         "IN_A_DAY": "Typically replies in a day"
       },
       "FOOTER": {
-        "START_CONVERSATION_BUTTON_TEXT": "Start Conversation",
+        "START_CONVERSATION_BUTTON_TEXT": "Start Ticket",
         "CHAT_INPUT_PLACEHOLDER": "Type your message"
       },
       "BODY": {

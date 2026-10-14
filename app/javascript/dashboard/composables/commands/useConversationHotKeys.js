@@ -31,12 +31,12 @@ import {
 
 import {
   OPEN_CONVERSATION_ACTIONS,
-  SNOOZE_CONVERSATION_ACTIONS,
   RESOLVED_CONVERSATION_ACTIONS,
   SEND_TRANSCRIPT_ACTION,
   UNMUTE_ACTION,
   MUTE_ACTION,
 } from 'dashboard/helper/commandbar/actions';
+import { UNSOLVED_STATUSES } from 'dashboard/constants/ticketStatuses';
 import {
   isAConversationRoute,
   isAInboxViewRoute,
@@ -151,7 +151,6 @@ export function useConversationHotKeys() {
 
   const currentChat = useMapGetter('getSelectedChat');
   const replyMode = useMapGetter('draftMessages/getReplyEditorMode');
-  const contextMenuChatId = useMapGetter('getContextMenuChatId');
   const teams = useMapGetter('teams/getTeams');
   const getDraftMessage = useMapGetter('draftMessages/get');
 
@@ -193,16 +192,11 @@ export function useConversationHotKeys() {
   };
 
   const statusActions = computed(() => {
-    const isOpen = currentChat.value?.status === wootConstants.STATUS_TYPE.OPEN;
-    const isSnoozed =
-      currentChat.value?.status === wootConstants.STATUS_TYPE.SNOOZED;
-    const isResolved =
-      currentChat.value?.status === wootConstants.STATUS_TYPE.RESOLVED;
-
+    const status = currentChat.value?.status;
     let actions = [];
-    if (isOpen) {
-      actions = [...OPEN_CONVERSATION_ACTIONS, ...SNOOZE_CONVERSATION_ACTIONS];
-    } else if (isResolved || isSnoozed) {
+    if (UNSOLVED_STATUSES.includes(status)) {
+      actions = OPEN_CONVERSATION_ACTIONS;
+    } else if (status === wootConstants.STATUS_TYPE.RESOLVED) {
       actions = RESOLVED_CONVERSATION_ACTIONS;
     }
     return prepareActions(actions, t);
@@ -366,12 +360,6 @@ export function useConversationHotKeys() {
     return isAConversationRoute(route.name) || isAInboxViewRoute(route.name);
   });
 
-  const shouldShowSnoozeOption = computed(() => {
-    return (
-      isAConversationRoute(route.name, true, false) && contextMenuChatId.value
-    );
-  });
-
   const getDefaultConversationHotKeys = computed(() => {
     const defaultConversationHotKeys = [
       ...statusActions.value,
@@ -388,9 +376,6 @@ export function useConversationHotKeys() {
   });
 
   const conversationHotKeys = computed(() => {
-    if (shouldShowSnoozeOption.value) {
-      return prepareActions(SNOOZE_CONVERSATION_ACTIONS, t);
-    }
     if (isConversationOrInboxRoute.value) {
       return getDefaultConversationHotKeys.value;
     }

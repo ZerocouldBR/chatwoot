@@ -12,21 +12,21 @@ export const conversationUrl = ({
   conversationType = '',
   foldersId,
 }) => {
-  let url = `accounts/${accountId}/conversations/${id}`;
+  let url = `accounts/${accountId}/tickets/${id}`;
   if (activeInbox) {
-    url = `accounts/${accountId}/inbox/${activeInbox}/conversations/${id}`;
+    url = `accounts/${accountId}/inbox/${activeInbox}/tickets/${id}`;
   } else if (label) {
-    url = `accounts/${accountId}/label/${label}/conversations/${id}`;
+    url = `accounts/${accountId}/label/${label}/tickets/${id}`;
   } else if (teamId) {
-    url = `accounts/${accountId}/team/${teamId}/conversations/${id}`;
+    url = `accounts/${accountId}/team/${teamId}/tickets/${id}`;
   } else if (foldersId && foldersId !== 0) {
-    url = `accounts/${accountId}/custom_view/${foldersId}/conversations/${id}`;
+    url = `accounts/${accountId}/custom_view/${foldersId}/tickets/${id}`;
   } else if (conversationType === 'mention') {
-    url = `accounts/${accountId}/mentions/conversations/${id}`;
+    url = `accounts/${accountId}/mentions/tickets/${id}`;
   } else if (conversationType === 'participating') {
-    url = `accounts/${accountId}/participating/conversations/${id}`;
+    url = `accounts/${accountId}/participating/tickets/${id}`;
   } else if (conversationType === 'unattended') {
-    url = `accounts/${accountId}/unattended/conversations/${id}`;
+    url = `accounts/${accountId}/unattended/tickets/${id}`;
   }
   return url;
 };
@@ -50,9 +50,9 @@ export const conversationListPageURL = ({
     url = `accounts/${accountId}/custom_view/${customViewId}`;
   } else if (conversationType) {
     const urlMap = {
-      mention: 'mentions/conversations',
-      participating: 'participating/conversations',
-      unattended: 'unattended/conversations',
+      mention: 'mentions/tickets',
+      participating: 'participating/tickets',
+      unattended: 'unattended/tickets',
     };
     url = `accounts/${accountId}/${urlMap[conversationType]}`;
   }

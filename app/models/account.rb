@@ -32,7 +32,7 @@ class Account < ApplicationRecord
   include CaptainFeaturable
   include AccountEmailRateLimitable
   include AccountSettingsSchema
-  include Servicedesk::AccountMacroSettings
+  include Servicedesk::AccountExtensions
 
   DEFAULT_QUERY_SETTING = {
     flag_query_mode: :bit_operator,
@@ -59,6 +59,10 @@ class Account < ApplicationRecord
   store_accessor :settings, :captain_models, :captain_features
   store_accessor :settings, :reporting_timezone
   store_accessor :settings, :keep_pending_on_bot_failure
+  store_accessor :settings, :close_solved_after_hours
+
+  # Solved tickets close after 96 hours unless the account sets another delay (Zendesk default).
+  def close_solved_after = (close_solved_after_hours || 96).to_i.hours
   store_accessor :settings, :captain_auto_resolve_mode
   store_accessor :settings, :enforce_mfa
   include AccountCaptainAutoResolve

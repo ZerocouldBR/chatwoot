@@ -9,6 +9,14 @@ module AccountSettingsSchema
     'properties':
       {
         'auto_resolve_after': { 'type': %w[integer null], 'minimum': 10, 'maximum': 1_439_856 },
+        # Zendesk closes solved tickets after 4 days by default and never later than 28 days.
+        'close_solved_after_hours': { 'type': %w[integer null], 'minimum': 1, 'maximum': 672 },
+        # Fields agents see in a ticket's left column, in order (the requester is always shown).
+        'ticket_panel_fields': {
+          'type': %w[array null],
+          'items': { 'type': 'string', 'enum': %w[assignee team followers ticket_type priority labels] },
+          'uniqueItems': true
+        },
         'auto_resolve_message': { 'type': %w[string null] },
         'auto_resolve_ignore_waiting': { 'type': %w[boolean null] },
         'audio_transcriptions': { 'type': %w[boolean null] },

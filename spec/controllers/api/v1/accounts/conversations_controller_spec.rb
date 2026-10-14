@@ -189,7 +189,7 @@ RSpec.describe 'Conversations API', type: :request do
             as: :json
 
         expect(response).to have_http_status(:forbidden)
-        expect(response.parsed_body['error']).to eq('Conversation unread counts feature not enabled for this account')
+        expect(response.parsed_body['error']).to eq('Ticket unread counts feature not enabled for this account')
       end
     end
   end
@@ -407,6 +407,35 @@ RSpec.describe 'Conversations API', type: :request do
 
         expect(response).to have_http_status(:success)
         expect(JSON.parse(response.body, symbolize_names: true)[:priority]).to eq('high')
+      end
+
+      it 'updates the ticket subject, type and due date' do
+        due_at = 3.days.from_now.change(usec: 0)
+        patch "/api/v1/accounts/#{account.id}/conversations/#{conversation.display_id}",
+              params: { subject: 'Cancelamento de reserva', ticket_type: 'task', due_at: due_at.iso8601 },
+              headers: administrator.create_new_auth_token,
+              as: :json
+
+        expect(response).to have_http_status(:success)
+        expect(conversation.reload).to have_attributes(subject: 'Cancelamento de reserva', ticket_type: 'task', due_at: due_at)
+      end
+
+      it 'rejects an unknown ticket type' do
+        patch "/api/v1/accounts/#{account.id}/conversations/#{conversation.display_id}",
+              params: { ticket_type: 'bug' },
+              headers: administrator.create_new_auth_token,
+              as: :json
+
+        expect(response).to have_http_status(:unprocessable_entity)
+      end
+
+      it 'rejects a due date on a ticket that is not a task' do
+        patch "/api/v1/accounts/#{account.id}/conversations/#{conversation.display_id}",
+              params: { due_at: 1.day.from_now.iso8601 },
+              headers: administrator.create_new_auth_token,
+              as: :json
+
+        expect(response).to have_http_status(:unprocessable_entity)
       end
     end
   end
@@ -666,17 +695,38 @@ RSpec.describe 'Conversations API', type: :request do
         expect(conversation.reload.status).to eq('pending')
       end
 
-      it 'toggles the conversation status to snoozed when parameter is passed' do
-        expect(conversation.status).to eq('open')
-        snoozed_until = (DateTime.now.utc + 2.days).to_i
+      it 'puts the ticket on hold when the parameter is passed' do
         post "/api/v1/accounts/#{account.id}/conversations/#{conversation.display_id}/toggle_status",
              headers: agent.create_new_auth_token,
-             params: { status: 'snoozed', snoozed_until: snoozed_until },
+             params: { status: 'on_hold' },
              as: :json
 
         expect(response).to have_http_status(:success)
-        expect(conversation.reload.status).to eq('snoozed')
-        expect(conversation.reload.snoozed_until.to_i).to eq(snoozed_until)
+        expect(conversation.reload.status).to eq('on_hold')
+      end
+
+      it 'rejects statuses only the system can set' do
+        %w[new_ticket closed snoozed].each do |status|
+          post "/api/v1/accounts/#{account.id}/conversations/#{conversation.display_id}/toggle_status",
+               headers: agent.create_new_auth_token,
+               params: { status: status },
+               as: :json
+
+          expect(response).to have_http_status(:unprocessable_entity)
+        end
+        expect(conversation.reload.status).to eq('open')
+      end
+
+      it 'assigns the solving agent when an unassigned ticket is resolved' do
+        conversation.update!(assignee: nil)
+
+        post "/api/v1/accounts/#{account.id}/conversations/#{conversation.display_id}/toggle_status",
+             headers: agent.create_new_auth_token,
+             params: { status: 'resolved' },
+             as: :json
+
+        expect(response).to have_http_status(:success)
+        expect(conversation.reload).to have_attributes(status: 'resolved', assignee_id: agent.id)
       end
     end
 
@@ -688,15 +738,14 @@ RSpec.describe 'Conversations API', type: :request do
 
         conversation.update!(status: 'open')
         expect(conversation.reload.status).to eq('open')
-        snoozed_until = (DateTime.now.utc + 2.days).to_i
 
         post "/api/v1/accounts/#{account.id}/conversations/#{conversation.display_id}/toggle_status",
              headers: { api_access_token: agent_bot.access_token.token },
-             params: { status: 'snoozed', snoozed_until: snoozed_until },
+             params: { status: 'on_hold' },
              as: :json
 
         expect(response).to have_http_status(:success)
-        expect(conversation.reload.status).to eq('snoozed')
+        expect(conversation.reload.status).to eq('on_hold')
       end
 
       it 'triggers handoff event when moving from pending to open' do
@@ -709,7 +758,7 @@ RSpec.describe 'Conversations API', type: :request do
              as: :json
 
         expect(response).to have_http_status(:success)
-        expect(pending_conversation.reload.status).to eq('open')
+        expect(pending_conversation.reload.status).to eq('new_ticket')
         expect(Rails.configuration.dispatcher).to have_received(:dispatch)
           .with(Events::Types::CONVERSATION_BOT_HANDOFF, kind_of(Time), conversation: pending_conversation, notifiable_assignee_change: false,
                                                                         changed_attributes: anything, performed_by: anything)
@@ -751,29 +800,16 @@ RSpec.describe 'Conversations API', type: :request do
         expect(conversation.reload.priority).to eq('low')
       end
 
-      it 'clears the conversation priority when priority is missing' do
+      it 'keeps the priority when a cleared priority is requested' do
         conversation.update!(priority: 'low')
-
-        post "/api/v1/accounts/#{account.id}/conversations/#{conversation.display_id}/toggle_priority",
-             headers: agent.create_new_auth_token,
-             as: :json
-
-        expect(response).to have_http_status(:success)
-        expect(conversation.reload.priority).to be_nil
-      end
-
-      it 'clears the conversation priority when priority is nil' do
-        conversation.priority = 'low'
-        conversation.save!
-        expect(conversation.reload.priority).to eq('low')
 
         post "/api/v1/accounts/#{account.id}/conversations/#{conversation.display_id}/toggle_priority",
              headers: agent.create_new_auth_token,
              params: { priority: nil },
              as: :json
 
-        expect(response).to have_http_status(:success)
-        expect(conversation.reload.priority).to be_nil
+        expect(response).to have_http_status(:unprocessable_entity)
+        expect(conversation.reload.priority).to eq('low')
       end
 
       it 'returns unprocessable entity for invalid priority values' do
@@ -1477,27 +1513,25 @@ RSpec.describe 'Conversations API', type: :request do
         create(:inbox_member, user: administrator, inbox: conversation.inbox)
       end
 
-      it 'successfully deletes the conversation' do
-        expect do
-          delete "/api/v1/accounts/#{account.id}/conversations/#{conversation.display_id}",
-                 headers: administrator.create_new_auth_token,
-                 as: :json
-        end.to have_enqueued_job(DeleteObjectJob).with(conversation, administrator, anything)
+      it 'moves the ticket to the trash' do
+        delete "/api/v1/accounts/#{account.id}/conversations/#{conversation.display_id}",
+               headers: administrator.create_new_auth_token,
+               as: :json
 
         expect(response).to have_http_status(:ok)
+        expect(Conversation.trashed.find(conversation.id)).to be_present
       end
 
       it 'can delete conversations from inboxes without direct access' do
         other_inbox = create(:inbox, account: account)
         other_conversation = create(:conversation, account: account, inbox: other_inbox)
 
-        expect do
-          delete "/api/v1/accounts/#{account.id}/conversations/#{other_conversation.display_id}",
-                 headers: administrator.create_new_auth_token,
-                 as: :json
-        end.to have_enqueued_job(DeleteObjectJob).with(other_conversation, administrator, anything)
+        delete "/api/v1/accounts/#{account.id}/conversations/#{other_conversation.display_id}",
+               headers: administrator.create_new_auth_token,
+               as: :json
 
         expect(response).to have_http_status(:ok)
+        expect(Conversation.trashed.find(other_conversation.id)).to be_present
       end
     end
   end

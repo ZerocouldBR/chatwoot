@@ -6,19 +6,31 @@ import { useConversationRequiredAttributes } from 'dashboard/composables/useConv
 import { CONVERSATION_EVENTS } from 'dashboard/helper/AnalyticsHelper/events';
 import { BUS_EVENTS } from 'shared/constants/busEvents';
 import { emitter } from 'shared/helpers/mitt';
-import {
-  CATEGORY_TO_NATIVE_STATUS,
-  categoryForCustomStatus,
-} from 'dashboard/servicedesk/statusTokens';
+import ticketFormsMeta from 'dashboard/servicedesk/ticketFormsMeta.json';
 
 // change_status is not offered by the macro builder, but the API accepts it and
 // it resolves the conversation just like resolve_conversation does. Its param is
 // stored as raw JSON, so the status can be the enum name or its integer value.
 const RESOLVED_STATUSES = ['resolved', 1];
 
-// ServiceDesk: set_ticket_status resolves when the label is in a solved/closed category.
+// ServiceDesk: set_ticket_status resolves when the label maps to the native
+// `resolved` status (ticketFormsMeta.json, same table as ticket_statuses.yml).
+const normalizeLabel = label =>
+  String(label || '')
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .trim()
+    .toLowerCase();
+const nativeForTicketStatus = label => {
+  const statuses = ticketFormsMeta.statuses || {};
+  if (statuses[label]) return statuses[label].native;
+  const key = Object.keys(statuses).find(
+    name => normalizeLabel(name) === normalizeLabel(label)
+  );
+  return key ? statuses[key].native : undefined;
+};
 const resolvesTicketStatus = label =>
-  CATEGORY_TO_NATIVE_STATUS[categoryForCustomStatus(label)] === 'resolved';
+  nativeForTicketStatus(label) === 'resolved';
 
 export const resolvesConversation = macro =>
   macro.actions.some(

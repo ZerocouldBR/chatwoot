@@ -11,6 +11,25 @@ module MailboxHelper
     return if @conversation.messages.find_by(source_id: source_id).present?
 
     @message = @conversation.messages.create!(sanitized_message_attributes(source_id))
+    collect_ticket_ccs
+  end
+
+  # The person who wrote the e-mail: the requester, or a CC replying on the thread.
+  def message_sender
+    from = sanitize_mailbox_value(processed_mail.original_sender).to_s.downcase
+    requester = @conversation.contact
+    return requester if from.blank? || requester.email.to_s.casecmp?(from)
+
+    contacts = @conversation.account.contacts
+    contacts.from_email(from) || contacts.create!(email: from, name: sanitize_mailbox_value(processed_mail.sender_name) || from.split('@').first)
+  end
+
+  # Everyone else on the e-mail (Cc, extra To recipients, a CC who replied) becomes a ticket CC.
+  def collect_ticket_ccs
+    return if @message.blank?
+
+    addresses = [processed_mail.cc, processed_mail.to, @message.sender.try(:email)]
+    Tickets::CcList.new(@conversation).add(addresses, author: @message.sender, via: 'customer')
   end
 
   def add_attachments_to_message

@@ -30,7 +30,6 @@ describe('useConversationHotKeys', () => {
       getters: {
         getSelectedChat: mockCurrentChat,
         'draftMessages/getReplyEditorMode': REPLY_EDITOR_MODES.REPLY,
-        getContextMenuChatId: null,
         'teams/getTeams': mockTeamsList,
         'draftMessages/get': vi.fn(),
       },
@@ -103,20 +102,6 @@ describe('useConversationHotKeys', () => {
         });
       }
     }
-  });
-
-  it('should return snooze actions when in snooze context', () => {
-    store.getters.getContextMenuChatId = 1;
-    useMapGetter.mockImplementation(key => ({
-      value: store.getters[key],
-    }));
-    useRoute.mockReturnValue({ name: 'inbox_conversation' });
-
-    const { conversationHotKeys } = useConversationHotKeys();
-    const snoozeAction = conversationHotKeys.value.find(action =>
-      action.id.includes('snooze_conversation')
-    );
-    expect(snoozeAction).toBeDefined();
   });
 
   it('should return the correct label actions when there are active labels', () => {

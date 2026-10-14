@@ -1,10 +1,12 @@
 <script setup>
+import NotificationsBell from './NotificationsBell.vue';
 import { h, ref, computed, onMounted, watch } from 'vue';
 import { provideSidebarContext, useSidebarResize } from './provider';
 import { useAccount } from 'dashboard/composables/useAccount';
 import { useConfig } from 'dashboard/composables/useConfig';
 import { useKbd } from 'dashboard/composables/utils/useKbd';
 import { useMapGetter } from 'dashboard/composables/store';
+import { useSdRolePermissions } from 'dashboard/servicedesk/roles/useSdRolePermissions';
 import { useStore } from 'vuex';
 import { useI18n } from 'vue-i18n';
 import { useSidebarKeyboardShortcuts } from './useSidebarKeyboardShortcuts';
@@ -15,10 +17,6 @@ import { useWindowSize, useEventListener } from '@vueuse/core';
 import Button from 'dashboard/components-next/button/Button.vue';
 import SidebarGroup from './SidebarGroup.vue';
 import SidebarProfileMenu from './SidebarProfileMenu.vue';
-import SidebarChangelogCard from './SidebarChangelogCard.vue';
-import SidebarChangelogButton from './SidebarChangelogButton.vue';
-import ChannelLeaf from './ChannelLeaf.vue';
-import ChannelIcon from 'next/icon/ChannelIcon.vue';
 import EmojiIcon from 'next/emoji-icon-picker/EmojiIcon.vue';
 import SidebarAccountSwitcher from './SidebarAccountSwitcher.vue';
 import Logo from 'next/icon/Logo.vue';
@@ -55,10 +53,9 @@ const isCallsAvailable = computed(
 );
 const searchShortcut = useKbd([`$mod`, 'k']);
 const { t } = useI18n();
+const { canManageSuspendedTickets, canViewDeletedTickets } =
+  useSdRolePermissions();
 
-const isACustomBrandedInstance = useMapGetter(
-  'globalConfig/isACustomBrandedInstance'
-);
 const isRTL = useMapGetter('accounts/isRTL');
 
 const { width: windowWidth } = useWindowSize();
@@ -219,13 +216,9 @@ useEventListener(document, 'mouseup', onResizeEnd);
 useEventListener(document, 'touchmove', onResizeMove, { passive: false });
 useEventListener(document, 'touchend', onResizeEnd);
 
-const inboxes = useMapGetter('inboxes/getInboxes');
 const labels = useMapGetter('labels/getLabelsOnSidebar');
 const allUnreadCount = useMapGetter(
   'conversationUnreadCounts/getAllUnreadCount'
-);
-const getInboxUnreadCount = useMapGetter(
-  'conversationUnreadCounts/getInboxUnreadCount'
 );
 const getLabelUnreadCount = useMapGetter(
   'conversationUnreadCounts/getLabelUnreadCount'
@@ -303,27 +296,28 @@ const buildSortConfig = section => ({
   onSortChange: sortBy => updateSortPreference(section, sortBy),
 });
 
-const sortedFolders = computed(() =>
-  sortSidebarItems(conversationCustomViews.value, {
-    sortBy: getSortForSection(SIDEBAR_SORT_SECTIONS.FOLDERS),
-    labelKey: view => view.name,
-    unreadCountKey: view => getFolderUnreadCount.value(view.id),
-  })
-);
+// ServiceDesk: as views compartilhadas do Zendesk ficam na ordem do Zendesk
+// (posição, já ordenadas pela API servicedesk/views); os filtros pessoais
+// seguem a ordenação escolhida no menu.
+const sortedFolders = computed(() => {
+  const views = conversationCustomViews.value || [];
+  const shared = views.filter(view => view.shared);
+  const personal = sortSidebarItems(
+    views.filter(view => !view.shared),
+    {
+      sortBy: getSortForSection(SIDEBAR_SORT_SECTIONS.FOLDERS),
+      labelKey: view => view.name,
+      unreadCountKey: view => getFolderUnreadCount.value(view.id),
+    }
+  );
+  return [...shared, ...personal];
+});
 
 const sortedTeams = computed(() =>
   sortSidebarItems(teams.value, {
     sortBy: getSortForSection(SIDEBAR_SORT_SECTIONS.TEAMS),
     labelKey: team => team.name,
     unreadCountKey: team => getTeamUnreadCount.value(team.id),
-  })
-);
-
-const sortedInboxes = computed(() =>
-  sortSidebarItems(inboxes.value, {
-    sortBy: getSortForSection(SIDEBAR_SORT_SECTIONS.CHANNELS),
-    labelKey: inbox => inbox.name,
-    unreadCountKey: inbox => getInboxUnreadCount.value(inbox.id),
   })
 );
 
@@ -371,24 +365,21 @@ const reportRoutes = computed(() => newReportRoutes());
 const menuItems = computed(() => {
   return [
     {
-      name: 'Inbox',
-      label: t('SIDEBAR.INBOX'),
-      icon: 'i-lucide-inbox',
-      to: accountScopedRoute('inbox_view'),
-      activeOn: ['inbox_view', 'inbox_view_conversation'],
-      getterKeys: {
-        count: 'notifications/getUnreadCount',
-      },
+      name: 'TicketHome',
+      label: t('SIDEBAR.TICKET_HOME'),
+      icon: 'i-lucide-house',
+      to: accountScopedRoute('ticket_home'),
+      activeOn: ['ticket_home'],
     },
     {
       name: 'Conversation',
       label: t('SIDEBAR.CONVERSATIONS'),
-      icon: 'i-lucide-message-circle',
+      icon: 'i-lucide-layout-list',
       children: [
         {
           name: 'All',
           label: t('SIDEBAR.ALL_CONVERSATIONS'),
-          icon: 'i-lucide-inbox',
+          icon: 'i-lucide-ticket',
           badgeCount: allUnreadCount.value,
           activeOn: ['inbox_conversation'],
           to: accountScopedRoute('home'),
@@ -406,7 +397,7 @@ const menuItems = computed(() => {
         {
           name: 'Participating',
           label: t('SIDEBAR.PARTICIPATING_CONVERSATIONS'),
-          icon: 'i-lucide-user-round-check',
+          icon: 'i-lucide-eye',
           badgeCount: hasFilteredUnreadCounts.value
             ? participatingUnreadCount.value
             : 0,
@@ -417,12 +408,35 @@ const menuItems = computed(() => {
           name: 'Unattended',
           activeOn: ['conversation_through_unattended'],
           label: t('SIDEBAR.UNATTENDED_CONVERSATIONS'),
-          icon: 'i-lucide-clock-alert',
+          icon: 'i-lucide-hourglass',
           badgeCount: hasFilteredUnreadCounts.value
             ? unattendedUnreadCount.value
             : 0,
           to: accountScopedRoute('conversation_unattended'),
         },
+        // ServiceDesk M13: suspensos e lixeira conforme o papel (suspended_tickets.manage, ticket.view_deleted)
+        ...(canManageSuspendedTickets.value
+          ? [
+              {
+                name: 'Suspended Tickets',
+                label: t('SIDEBAR.SUSPENDED_TICKETS'),
+                icon: 'i-lucide-mail-warning',
+                activeOn: ['suspended_tickets'],
+                to: accountScopedRoute('suspended_tickets'),
+              },
+            ]
+          : []),
+        ...(canViewDeletedTickets.value
+          ? [
+              {
+                name: 'Deleted Tickets',
+                label: t('SIDEBAR.DELETED_TICKETS'),
+                icon: 'i-lucide-trash-2',
+                activeOn: ['deleted_tickets'],
+                to: accountScopedRoute('deleted_tickets'),
+              },
+            ]
+          : []),
         {
           name: 'Folders',
           label: t('SIDEBAR.CUSTOM_VIEWS_FOLDER'),
@@ -460,29 +474,6 @@ const menuItems = computed(() => {
                 })
               : undefined,
             to: accountScopedRoute('team_conversations', { teamId: team.id }),
-          })),
-        },
-        {
-          name: 'Channels',
-          label: t('SIDEBAR.CHANNELS'),
-          icon: 'i-lucide-mailbox',
-          activeOn: ['conversation_through_inbox'],
-          ...buildSortConfig(SIDEBAR_SORT_SECTIONS.CHANNELS),
-          collapsible: true,
-          showTreeLine: true,
-          children: sortedInboxes.value.map(inbox => ({
-            name: `${inbox.name}-${inbox.id}`,
-            label: inbox.name,
-            badgeCount: getInboxUnreadCount.value(inbox.id),
-            icon: h(ChannelIcon, { inbox, class: 'size-[16px]' }),
-            to: accountScopedRoute('inbox_dashboard', { inbox_id: inbox.id }),
-            component: leafProps =>
-              h(ChannelLeaf, {
-                label: leafProps.label,
-                active: leafProps.active,
-                inbox,
-                badgeCount: leafProps.badgeCount,
-              }),
           })),
         },
         {
@@ -604,7 +595,7 @@ const menuItems = computed(() => {
     {
       name: 'Contacts',
       label: t('SIDEBAR.CONTACTS'),
-      icon: 'i-lucide-contact',
+      icon: 'i-lucide-contact-round',
       children: [
         {
           name: 'All Contacts',
@@ -800,12 +791,12 @@ const menuItems = computed(() => {
     {
       name: 'Settings',
       label: t('SIDEBAR.SETTINGS'),
-      icon: 'i-lucide-bolt',
+      icon: 'i-lucide-settings',
       children: [
         {
           name: 'Settings Account Settings',
           label: t('SIDEBAR.ACCOUNT_SETTINGS'),
-          icon: 'i-lucide-briefcase',
+          icon: 'i-lucide-building',
           to: accountScopedRoute('general_settings_index'),
         },
         // {
@@ -819,6 +810,13 @@ const menuItems = computed(() => {
           label: t('SIDEBAR.AGENTS'),
           icon: 'i-lucide-square-user',
           to: accountScopedRoute('agent_list'),
+        },
+        {
+          // ServiceDesk M13: papéis (Admin Center > Pessoas > Papéis no Zendesk)
+          name: 'Settings Papeis',
+          label: t('SD_ROLES.MENU'),
+          icon: 'i-lucide-shield-check',
+          to: accountScopedRoute('sd_roles_list'),
         },
         {
           name: 'Settings Teams',
@@ -858,7 +856,7 @@ const menuItems = computed(() => {
         {
           name: 'Settings Inboxes',
           label: t('SIDEBAR.INBOXES'),
-          icon: 'i-lucide-inbox',
+          icon: 'i-lucide-mailbox',
           activeOn: [
             'settings_inbox_list',
             'settings_inbox_show',
@@ -884,8 +882,20 @@ const menuItems = computed(() => {
         {
           name: 'Settings Custom Attributes',
           label: t('SIDEBAR.CUSTOM_ATTRIBUTES'),
-          icon: 'i-lucide-code',
+          icon: 'i-lucide-text-cursor-input',
           to: accountScopedRoute('attributes_list'),
+        },
+        {
+          name: 'Settings Ticket Triggers',
+          label: t('SIDEBAR.TICKET_TRIGGERS'),
+          icon: 'i-lucide-zap',
+          to: accountScopedRoute('ticket_triggers_index'),
+        },
+        {
+          name: 'Settings Ticket Automations',
+          label: t('SIDEBAR.TICKET_AUTOMATIONS'),
+          icon: 'i-lucide-timer',
+          to: accountScopedRoute('ticket_automations_index'),
         },
         {
           name: 'Settings Automation',
@@ -902,7 +912,7 @@ const menuItems = computed(() => {
         {
           name: 'Settings Macros',
           label: t('SIDEBAR.MACROS'),
-          icon: 'i-lucide-toy-brick',
+          icon: 'i-lucide-wand-sparkles',
           to: accountScopedRoute('macros_wrapper'),
         },
         {
@@ -930,7 +940,7 @@ const menuItems = computed(() => {
         {
           name: 'Settings Audit Logs',
           label: t('SIDEBAR.AUDIT_LOGS'),
-          icon: 'i-lucide-briefcase',
+          icon: 'i-lucide-scroll-text',
           to: accountScopedRoute('auditlogs_list'),
         },
         {
@@ -942,13 +952,19 @@ const menuItems = computed(() => {
         {
           name: 'Settings Sla',
           label: t('SIDEBAR.SLA'),
-          icon: 'i-lucide-clock-alert',
+          icon: 'i-lucide-gauge',
           to: accountScopedRoute('sla_list'),
+        },
+        {
+          name: 'Business Hours',
+          label: t('SIDEBAR.BUSINESS_HOURS'),
+          icon: 'i-lucide-calendar-clock',
+          to: accountScopedRoute('business_hours_index'),
         },
         {
           name: 'Conversation Workflow',
           label: t('SIDEBAR.CONVERSATION_WORKFLOW'),
-          icon: 'i-lucide-workflow',
+          icon: 'i-lucide-sliders-horizontal',
           to: accountScopedRoute('conversation_workflow_index'),
         },
         {
@@ -977,8 +993,6 @@ const menuItems = computed(() => {
 </script>
 
 <template>
-  <!-- ServiceDesk: barra lateral escura (Garden kale) nos dois temas; a classe
-       `dark` aplica a paleta escura só aqui dentro (ver _servicedesk-theme.scss) -->
   <aside
     v-on-click-outside="[
       closeMobileSidebar,
@@ -990,7 +1004,7 @@ const menuItems = computed(() => {
         ],
       },
     ]"
-    class="sd-nav-kale dark bg-n-background flex flex-col text-sm pb-px fixed top-0 ltr:left-0 rtl:right-0 h-full z-40 w-[200px] md:w-auto md:relative md:flex-shrink-0 md:ltr:translate-x-0 md:rtl:translate-x-0 ltr:border-r rtl:border-l border-n-weak"
+    class="bg-n-background flex flex-col text-sm pb-px overflow-x-clip fixed top-0 ltr:left-0 rtl:right-0 h-full z-40 w-[200px] md:w-auto md:relative md:flex-shrink-0 md:ltr:translate-x-0 md:rtl:translate-x-0 ltr:border-r rtl:border-l border-n-weak"
     :class="[
       {
         'shadow-lg md:shadow-none': isMobileSidebarOpen,
@@ -1036,10 +1050,10 @@ const menuItems = computed(() => {
         <RouterLink
           v-if="!isEffectivelyCollapsed"
           :to="{ name: 'search' }"
-          class="flex gap-2 items-center px-2 py-1 w-full h-7 rounded-lg outline outline-1 outline-n-weak bg-n-button-color transition-all duration-100 ease-out"
+          class="flex flex-1 min-w-0 gap-2 items-center px-2 py-1 h-7 rounded-lg outline outline-1 outline-n-weak bg-n-button-color transition-all duration-100 ease-out"
         >
           <span class="flex-shrink-0 i-lucide-search size-4 text-n-slate-10" />
-          <span class="flex-grow text-start text-n-slate-10">
+          <span class="flex-grow min-w-0 truncate text-start text-n-slate-10">
             {{ t('COMBOBOX.SEARCH_PLACEHOLDER') }}
           </span>
           <span
@@ -1056,7 +1070,11 @@ const menuItems = computed(() => {
         >
           <span class="i-lucide-search size-4 text-n-slate-11" />
         </RouterLink>
-        <ComposeConversation align="start">
+        <NotificationsBell
+          class="shrink-0"
+          :collapsed="isEffectivelyCollapsed"
+        />
+        <ComposeConversation class="shrink-0" align="start">
           <template #trigger="{ isOpen }">
             <Button
               icon="i-lucide-pen-line"
@@ -1095,20 +1113,6 @@ const menuItems = computed(() => {
       <div
         class="pointer-events-none absolute inset-x-0 -top-[1.938rem] h-8 bg-gradient-to-t from-n-background to-transparent"
       />
-      <SidebarChangelogCard
-        v-if="
-          isOnChatwootCloud &&
-          !isACustomBrandedInstance &&
-          !isEffectivelyCollapsed
-        "
-      />
-      <SidebarChangelogButton
-        v-if="
-          isOnChatwootCloud &&
-          !isACustomBrandedInstance &&
-          isEffectivelyCollapsed
-        "
-      />
       <div
         class="px-1 py-1.5 flex-shrink-0 flex w-full z-50 gap-2 items-center border-t border-n-weak shadow-[0px_-2px_4px_0px_rgba(27,28,29,0.02)]"
         :class="isEffectivelyCollapsed ? 'justify-center' : 'justify-between'"
@@ -1117,7 +1121,29 @@ const menuItems = computed(() => {
           :is-collapsed="isEffectivelyCollapsed"
           @open-key-shortcut-modal="emit('openKeyShortcutModal')"
         />
+        <Button
+          v-if="!isMobile && !isEffectivelyCollapsed"
+          data-testid="sidebar-collapse-toggle"
+          icon="i-lucide-panel-left-close"
+          ghost
+          slate
+          sm
+          class="shrink-0 rtl:rotate-180"
+          :aria-label="t('SIDEBAR.COLLAPSE')"
+          @click="snapToCollapsed"
+        />
       </div>
+      <Button
+        v-if="!isMobile && isEffectivelyCollapsed"
+        data-testid="sidebar-expand-toggle"
+        icon="i-lucide-panel-left-open"
+        ghost
+        slate
+        sm
+        class="self-center mb-2 rtl:rotate-180"
+        :aria-label="t('SIDEBAR.EXPAND')"
+        @click="snapToExpanded"
+      />
     </section>
     <!-- Resize Handle (desktop only) -->
     <div

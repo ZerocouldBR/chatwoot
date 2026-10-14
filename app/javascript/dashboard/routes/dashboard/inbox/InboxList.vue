@@ -11,7 +11,6 @@ import { INBOX_EVENTS } from 'dashboard/helper/AnalyticsHelper/events';
 import InboxCard from 'dashboard/components-next/Inbox/InboxCard.vue';
 import InboxListHeader from './components/InboxListHeader.vue';
 import IntersectionObserver from 'dashboard/components/IntersectionObserver.vue';
-import CmdBarConversationSnooze from 'dashboard/routes/dashboard/commands/CmdBarConversationSnooze.vue';
 import Spinner from 'dashboard/components-next/spinner/Spinner.vue';
 
 const { t } = useI18n();
@@ -271,6 +270,5 @@ onMounted(() => {
       </div>
     </div>
     <router-view />
-    <CmdBarConversationSnooze />
   </section>
 </template>

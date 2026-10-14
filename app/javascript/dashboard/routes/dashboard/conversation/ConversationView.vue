@@ -11,21 +11,18 @@ import ChatList from '../../../components/ChatList.vue';
 import ConversationBox from '../../../components/widgets/conversation/ConversationBox.vue';
 import wootConstants from 'dashboard/constants/globals';
 import { BUS_EVENTS } from 'shared/constants/busEvents';
-import CmdBarConversationSnooze from 'dashboard/routes/dashboard/commands/CmdBarConversationSnooze.vue';
 import { emitter } from 'shared/helpers/mitt';
 import SidepanelSwitch from 'dashboard/components-next/Conversation/SidepanelSwitch.vue';
 import ConversationSidebar from 'dashboard/components/widgets/conversation/ConversationSidebar.vue';
-import TicketWorkspaceProperties from './ticketPanel/TicketWorkspaceProperties.vue';
-import { useTicketWorkspace } from 'dashboard/servicedesk/workspace/useTicketWorkspace';
+import TicketPropertiesPanel from './TicketPropertiesPanel.vue';
 
 export default {
   components: {
     ChatList,
     ConversationBox,
-    CmdBarConversationSnooze,
     SidepanelSwitch,
     ConversationSidebar,
-    TicketWorkspaceProperties,
+    TicketPropertiesPanel,
   },
   beforeRouteLeave(to, from, next) {
     // Clear selected state if navigating away from a conversation to a route without a conversationId to prevent stale data issues
@@ -65,8 +62,6 @@ export default {
     const { uiSettings, updateUISettings, isOnExpandedLayout } =
       useUISettings();
     const { accountId } = useAccount();
-    // ServiceDesk: propriedades à esquerda quando há largura (Agent Workspace)
-    const { isWorkspaceLayout } = useTicketWorkspace();
     provide(
       CONTACT_CONVERSATION_NAVIGATION,
       useContactConversationNavigation()
@@ -77,7 +72,6 @@ export default {
       updateUISettings,
       isOnExpandedLayout,
       accountId,
-      isWorkspaceLayout,
     };
   },
   data() {
@@ -95,11 +89,6 @@ export default {
     },
     showMessageView() {
       return this.conversationId ? true : !this.isOnExpandedLayout;
-    },
-    shouldShowPropertiesColumn() {
-      return (
-        !!this.currentChat.id && this.showMessageView && this.isWorkspaceLayout
-      );
     },
     shouldShowSidebar() {
       if (!this.currentChat.id) {
@@ -219,10 +208,9 @@ export default {
       :is-on-expanded-layout="isOnExpandedLayout"
       @conversation-load="onConversationLoad"
     />
-    <TicketWorkspaceProperties
-      v-if="shouldShowPropertiesColumn"
-      :key="currentChat.id"
-      :conversation-id="currentChat.id"
+    <TicketPropertiesPanel
+      v-if="showMessageView && currentChat.id"
+      :conversation="currentChat"
     />
     <ConversationBox
       v-if="showMessageView"
@@ -232,6 +220,5 @@ export default {
       <SidepanelSwitch v-if="currentChat.id" />
     </ConversationBox>
     <ConversationSidebar v-if="shouldShowSidebar" :current-chat="currentChat" />
-    <CmdBarConversationSnooze />
   </section>
 </template>

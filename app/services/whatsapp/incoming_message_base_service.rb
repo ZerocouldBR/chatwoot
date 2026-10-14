@@ -119,9 +119,9 @@ class Whatsapp::IncomingMessageBaseService
     conversations = addressable_identifiers? ? @contact_inbox.conversations : @contact.conversations.where(inbox_id: @inbox.id)
     # if lock to single conversation is disabled, we will create a new conversation if previous conversation is resolved
     @conversation = if @inbox.lock_to_single_conversation
-                      conversations.last
+                      conversations.not_closed.last
                     else
-                      conversations.where.not(status: :resolved).last
+                      conversations.unfinished.last
                     end
     return if @conversation
 

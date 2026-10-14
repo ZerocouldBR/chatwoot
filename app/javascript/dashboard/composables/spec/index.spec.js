@@ -31,7 +31,7 @@ describe('useAlert', () => {
     const message = 'Toast message';
     const action = {
       type: 'link',
-      to: '/app/accounts/1/conversations/1',
+      to: '/app/accounts/1/tickets/1',
       message: 'Navigate',
     };
     useAlert(message, action);

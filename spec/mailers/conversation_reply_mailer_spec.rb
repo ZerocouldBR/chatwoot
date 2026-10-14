@@ -50,7 +50,7 @@ RSpec.describe ConversationReplyMailer do
       let(:cc_mail) { described_class.reply_with_summary(cc_message.conversation, message.id).deliver_now }
 
       it 'renders the default subject' do
-        expect(mail.subject).to eq("[##{message.conversation.display_id}] New messages on this conversation")
+        expect(mail.subject).to eq("[##{message.conversation.display_id}] New messages on this ticket")
       end
 
       it 'renders the subject in conversation as reply' do
@@ -85,7 +85,7 @@ RSpec.describe ConversationReplyMailer do
 
         body = mail.body.decoded
         expect(body).to include("Hi #{conversation.contact.name},")
-        expect(body).to include('You have new messages on your conversation.')
+        expect(body).to include('You have new messages on your ticket.')
         expect(body).to include('<b>You</b>')
         expect(body).to include("<b>#{agent.available_name}</b>")
       end
@@ -94,7 +94,7 @@ RSpec.describe ConversationReplyMailer do
         create(:message, message_type: 'template', content_type: 'input_csat', account: account, conversation: conversation, sender: agent)
 
         body = mail.body.decoded
-        expect(body).to include(%(Click <a target="_blank" href="#{conversation.csat_survey_link}">here</a> to rate the conversation.))
+        expect(body).to include(%(Click <a target="_blank" href="#{conversation.csat_survey_link}">here</a> to rate the ticket.))
       end
     end
 
@@ -126,7 +126,7 @@ RSpec.describe ConversationReplyMailer do
       end
 
       it 'renders the default subject' do
-        expect(mail.subject).to eq("[##{message_2.conversation.display_id}] New messages on this conversation")
+        expect(mail.subject).to eq("[##{message_2.conversation.display_id}] New messages on this ticket")
       end
 
       it 'renders the subject in conversation' do
@@ -281,7 +281,7 @@ RSpec.describe ConversationReplyMailer do
       let(:mail) { described_class.email_reply(message).deliver_now }
 
       it 'renders the subject' do
-        expect(mail.subject).to eq("[##{message.conversation.display_id}] New messages on this conversation")
+        expect(mail.subject).to eq("[##{message.conversation.display_id}] New messages on this ticket")
       end
 
       it 'renders the body' do

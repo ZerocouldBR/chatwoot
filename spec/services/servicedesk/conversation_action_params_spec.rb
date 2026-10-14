@@ -46,15 +46,6 @@ RSpec.describe Servicedesk::ConversationActionParams do
       expect(params.custom_attribute('zd_ref', 'abc').error).to include('formato')
     end
 
-    it 'rejects the value when the text regex times out (backtracking pattern)' do
-      create(:custom_attribute_definition, account: account, attribute_key: 'zd_lento', attribute_display_type: 'text',
-                                           regex_pattern: '^(a|a)*\1$')
-      stub_const("#{described_class}::REGEX_TIMEOUT", 0.05)
-
-      expect(params.custom_attribute('zd_lento', "#{'a' * 40}!").error).to include('tempo de validação esgotado')
-      expect(params.custom_attribute('zd_lento', 'aaa').value).to eq('aaa')
-    end
-
     it 'clears the attribute with a blank value' do
       result = params.custom_attribute('zd_tabulacao', '')
 

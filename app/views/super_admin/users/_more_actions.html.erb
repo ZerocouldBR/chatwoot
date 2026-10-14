@@ -91,7 +91,7 @@
     <h2 class="text-heading-2" id="unblock-email-dialog-title">
       <%= t("super_admin.users.email_suppression.clear_dialog.title", email: user.email) %>
     </h2>
-    <p class="mt-2 text-body-main text-n-slate-11"><%= t("super_admin.users.email_suppression.clear_dialog.body", brand_name: GlobalConfig.get_value("BRAND_NAME").presence || "Chatwoot") %></p>
+    <p class="mt-2 text-body-main text-n-slate-11"><%= t("super_admin.users.email_suppression.clear_dialog.body", brand_name: GlobalConfig.get_value("BRAND_NAME").presence || "Helpdesk") %></p>
     <div class="mt-6 flex justify-end gap-2">
       <form method="dialog">
         <%= render "button", label: t("super_admin.users.email_suppression.clear_dialog.cancel"), variant: :secondary, type: "submit" %>

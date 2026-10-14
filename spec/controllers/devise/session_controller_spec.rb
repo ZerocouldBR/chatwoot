@@ -66,7 +66,10 @@ RSpec.describe 'Session', type: :request do
              as: :json
 
         expect(response).to have_http_status(:success)
-        expect(response.parsed_body['data']['accounts'].first['permissions']).to eq(['agent'])
+        # ServiceDesk M13: além do papel base vêm as permissões efetivas do papel SD ('sd:<chave>')
+        permissions = response.parsed_body['data']['accounts'].first['permissions']
+        expect(permissions.first).to eq('agent')
+        expect(permissions - ['agent']).to all(match(/\Asd(_role)?:/))
       end
 
       [true, false].each do |shopify_enabled|

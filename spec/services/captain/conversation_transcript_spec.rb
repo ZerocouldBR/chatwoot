@@ -34,7 +34,7 @@ RSpec.describe Captain::ConversationTranscript do
     end
 
     it 'is nil for a message that is neither from the customer nor from an agent' do
-      message = create_message(message_type: :template, content: 'Give the team a way to reach you.')
+      message = create_message(message_type: :template, content: 'Give the group a way to reach you.')
 
       expect(described_class.entry(message, 100)).to be_nil
     end
@@ -62,7 +62,7 @@ RSpec.describe Captain::ConversationTranscript do
     it 'lists only what Captain may read, oldest first' do
       create_message(message_type: :incoming, content: 'I want my money back')
       create_message(message_type: :outgoing, private: true, content: 'Customer is on the legacy plan')
-      create_message(message_type: :template, content: 'Give the team a way to reach you.')
+      create_message(message_type: :template, content: 'Give the group a way to reach you.')
       create_message(message_type: :outgoing, content: 'Note to supplier', content_attributes: { forwarded_message_id: 1 })
       create_message(message_type: :outgoing, content: 'Let me check that for you')
 

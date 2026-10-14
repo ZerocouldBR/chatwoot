@@ -287,7 +287,7 @@ RSpec.describe Conversation do
       expect(Conversations::ActivityMessageJob)
         .to(have_been_enqueued.at_least(:once)
         .with(conversation, { account_id: conversation.account_id, inbox_id: conversation.inbox_id, message_type: :activity,
-                              content: "Conversation was marked resolved by #{old_assignee.name}",
+                              content: "Ticket was marked resolved by #{old_assignee.name}",
                               content_attributes: { activity: { type: 'conversation_status_changed', status: 'resolved' } } }))
       expect(Conversations::ActivityMessageJob)
         .to(have_been_enqueued.at_least(:once)
@@ -307,7 +307,7 @@ RSpec.describe Conversation do
                      else
                        { key: 'auto_resolved_minutes', count: account.auto_resolve_after }
                      end
-      system_resolved_message = "Conversation was marked resolved by system due to #{message_data[:count]} days of inactivity"
+      system_resolved_message = "Ticket was marked resolved by system due to #{message_data[:count]} days of inactivity"
       expect { conversation2.update(status: :resolved) }
         .to have_enqueued_job(Conversations::ActivityMessageJob)
         .with(conversation2, { account_id: conversation2.account_id, inbox_id: conversation2.inbox_id, message_type: :activity,
@@ -390,10 +390,121 @@ RSpec.describe Conversation do
       expect(conversation.reload.status).to eq('open')
     end
 
-    it 'toggles conversation status to open when snoozed' do
-      conversation = create(:conversation, status: 'snoozed')
+    it 'toggles conversation status to open when on hold' do
+      conversation = create(:conversation, status: 'on_hold')
       expect(conversation.toggle_status).to be(true)
       expect(conversation.reload.status).to eq('open')
+    end
+  end
+
+  describe 'ticket fields' do
+    let(:account) { create(:account) }
+    let(:company) { create(:company, account: account) }
+    let(:contact) { create(:contact, account: account, company: company) }
+    let(:inbox) { create(:inbox, account: account) }
+    let(:contact_inbox) { create(:contact_inbox, contact: contact, inbox: inbox) }
+    let(:conversation) do
+      create(:conversation, account: account, inbox: inbox, contact: contact, contact_inbox: contact_inbox,
+                            additional_attributes: { 'mail_subject' => 'Cartão não autorizado' })
+    end
+
+    it 'copies the requester company and the e-mail subject on creation' do
+      expect(conversation).to have_attributes(company_id: company.id, subject: 'Cartão não autorizado')
+    end
+
+    it 'only accepts the requester company' do
+      conversation.company = create(:company, account: account)
+
+      expect(conversation).not_to be_valid
+      expect(conversation.errors[:company_id]).to be_present
+    end
+
+    it 'allows a due date only on tasks' do
+      conversation.due_at = 2.days.from_now
+      expect(conversation).not_to be_valid
+
+      conversation.ticket_type = :task
+      expect(conversation).to be_valid
+    end
+
+    it 'does not clear a ticket type once set' do
+      conversation.update!(ticket_type: :incident)
+
+      expect(conversation.update(ticket_type: nil)).to be(false)
+    end
+
+    it 'names chat tickets after the first message' do
+      chat = create(:conversation, account: account, inbox: inbox, contact: contact, contact_inbox: contact_inbox)
+
+      create(:message, conversation: chat, account: account, inbox: inbox, message_type: :incoming, content: "  Reserva   negada\n hoje ")
+
+      expect(chat.reload.subject).to eq('Reserva negada hoje')
+    end
+  end
+
+  describe 'closed tickets' do
+    let(:conversation) { create(:conversation, status: :resolved) }
+
+    before { conversation.update!(status: :closed) }
+
+    it 'cannot be reopened or edited' do
+      expect(conversation.update(status: :open)).to be(false)
+      expect(conversation.reload.update(priority: :high)).to be(false)
+      expect(conversation.errors[:base]).to include(I18n.t('errors.conversations.closed'))
+    end
+
+    it 'still accepts tags' do
+      expect(conversation.update(label_list: ['billing'])).to be(true)
+    end
+
+    it 'rejects new replies but keeps system activity' do
+      reply = build(:message, conversation: conversation, account: conversation.account, inbox: conversation.inbox, message_type: :incoming)
+      activity = build(:message, conversation: conversation, account: conversation.account, inbox: conversation.inbox, message_type: :activity)
+
+      expect(reply).not_to be_valid
+      expect(activity).to be_valid
+    end
+  end
+
+  describe 'ticket status rules' do
+    let(:account) { create(:account) }
+    let(:inbox) { create(:inbox, account: account) }
+    let(:contact) { create(:contact, account: account) }
+    let(:contact_inbox) { create(:contact_inbox, contact: contact, inbox: inbox) }
+    let(:agent) { create(:user, account: account, role: :agent) }
+
+    it 'creates tickets as new when no status is given' do
+      conversation = described_class.create!(account: account, inbox: inbox, contact: contact, contact_inbox: contact_inbox)
+
+      expect(conversation.status).to eq('new_ticket')
+    end
+
+    it 'opens a new ticket when it gets an assignee' do
+      conversation = described_class.create!(account: account, inbox: inbox, contact: contact, contact_inbox: contact_inbox)
+
+      conversation.update!(assignee: agent)
+
+      expect(conversation.reload.status).to eq('open')
+    end
+
+    it 'sets the group from the assignee when the ticket has none' do
+      team = create(:team, account: account)
+      create(:team_member, team: team, user: agent)
+      conversation = create(:conversation, account: account, inbox: inbox, contact: contact, contact_inbox: contact_inbox)
+
+      conversation.update!(assignee: agent)
+
+      expect(conversation.reload.team).to eq(team)
+    end
+
+    it 'keeps the existing group when assigning' do
+      team = create(:team, account: account)
+      create(:team_member, team: create(:team, account: account), user: agent)
+      conversation = create(:conversation, account: account, inbox: inbox, contact: contact, contact_inbox: contact_inbox, team: team)
+
+      conversation.update!(assignee: agent)
+
+      expect(conversation.reload.team).to eq(team)
     end
   end
 
@@ -426,7 +537,13 @@ RSpec.describe Conversation do
       end
     end
 
-    it 'changes status to open' do
+    it 'changes status to new when nobody is assigned' do
+      conversation.bot_handoff!
+      expect(conversation.reload.status).to eq('new_ticket')
+    end
+
+    it 'changes status to open when the ticket has an assignee' do
+      conversation.update!(assignee: create(:user, account: conversation.account, role: :agent), status: :pending)
       conversation.bot_handoff!
       expect(conversation.reload.status).to eq('open')
     end
@@ -460,10 +577,10 @@ RSpec.describe Conversation do
       expect(conversation.priority).to be_nil
     end
 
-    it 'toggles the priority to nil if nothing is passed' do
+    it 'does not clear a priority once set' do
       conversation = create(:conversation, status: 'open', priority: 'high')
-      expect(conversation.toggle_priority).to be(true)
-      expect(conversation.reload.priority).to be_nil
+      expect(conversation.toggle_priority).to be(false)
+      expect(conversation.reload.priority).to eq('high')
     end
 
     it 'sets the priority to low' do
@@ -495,15 +612,6 @@ RSpec.describe Conversation do
     end
   end
 
-  describe '#ensure_snooze_until_reset' do
-    it 'resets the snoozed_until when status is toggled' do
-      conversation = create(:conversation, status: 'snoozed', snoozed_until: 2.days.from_now)
-      expect(conversation.snoozed_until).not_to be_nil
-      expect(conversation.toggle_status).to be(true)
-      expect(conversation.reload.snoozed_until).to be_nil
-    end
-  end
-
   describe '#mute!' do
     subject(:mute!) { conversation.mute! }
 
@@ -529,7 +637,7 @@ RSpec.describe Conversation do
       mute!
       expect(Conversations::ActivityMessageJob)
         .to(have_been_enqueued.at_least(:once).with(conversation, { account_id: conversation.account_id, inbox_id: conversation.inbox_id,
-                                                                    message_type: :activity, content: "#{user.name} has muted the conversation" }))
+                                                                    message_type: :activity, content: "#{user.name} has muted the ticket" }))
     end
 
     context 'when contact is missing' do
@@ -571,7 +679,7 @@ RSpec.describe Conversation do
       unmute!
       expect(Conversations::ActivityMessageJob)
         .to(have_been_enqueued.at_least(:once).with(conversation, { account_id: conversation.account_id, inbox_id: conversation.inbox_id,
-                                                                    message_type: :activity, content: "#{user.name} has unmuted the conversation" }))
+                                                                    message_type: :activity, content: "#{user.name} has unmuted the ticket" }))
     end
 
     context 'when contact is missing' do
@@ -717,11 +825,21 @@ RSpec.describe Conversation do
         last_activity_at: conversation.last_activity_at.to_i,
         inbox_id: conversation.inbox_id,
         status: conversation.status,
+        subject: nil,
+        ticket_type: nil,
+        due_at: nil,
+        submitter_id: nil,
+        company_id: nil,
+        company_name: nil,
+        followup_source_id: nil,
+        cc_emails: [],
+        sla_policy_id: nil,
+        next_sla_breach_at: nil,
+        sla_breached: false,
         contact_inbox: conversation.contact_inbox,
         timestamp: conversation.last_activity_at.to_i,
         can_reply: true,
         channel: 'Channel::WebWidget',
-        snoozed_until: conversation.snoozed_until,
         custom_attributes: conversation.custom_attributes,
         first_reply_created_at: nil,
         contact_last_seen_at: conversation.contact_last_seen_at.to_i,
@@ -941,7 +1059,7 @@ RSpec.describe Conversation do
             account_id: conversation_1.account_id,
             inbox_id: conversation_1.inbox_id,
             message_type: :activity,
-            content: 'Conversation was marked resolved by system due to days of inactivity'
+            content: 'Ticket was marked resolved by system due to days of inactivity'
           )
         end
         records = described_class.sort_on_last_activity_at

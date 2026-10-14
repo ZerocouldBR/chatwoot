@@ -148,7 +148,7 @@ export const getLoginRedirectURL = ({
     if (ssoConversationId) {
       return frontendURL(`${accountPath}/conversations/${ssoConversationId}`);
     }
-    return frontendURL(`${accountPath}/dashboard`);
+    return frontendURL(`${accountPath}/home`);
   }
   return DEFAULT_REDIRECT_URL;
 };

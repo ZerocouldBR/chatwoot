@@ -22,7 +22,7 @@
       "CONVERSATION_CREATION": "Novo ticket criado",
       "CONVERSATION_ASSIGNMENT": "Um ticket foi atribuído a você",
       "ASSIGNED_CONVERSATION_NEW_MESSAGE": "Nova mensagem em um ticket atribuído",
-      "PARTICIPATING_CONVERSATION_NEW_MESSAGE": "Nova mensagem em um ticket do qual você participa",
+      "PARTICIPATING_CONVERSATION_NEW_MESSAGE": "Nova mensagem em um ticket na qual você participa",
       "SLA_MISSED_FIRST_RESPONSE": "Primeira resposta da meta de SLA perdida no ticket",
       "SLA_MISSED_NEXT_RESPONSE": "Próxima resposta da meta de SLA perdida no ticket",
       "SLA_MISSED_RESOLUTION": "A resolução da meta de SLA foi perdida no ticket"
@@ -60,7 +60,7 @@
       "DISPLAY_OPTIONS": {
         "SNOOZED": "Adiadas",
         "READ": "Lida",
-        "LABELS": "Etiquetas",
+        "LABELS": "Tags",
         "CONVERSATION_ID": "ID do ticket"
       }
     },

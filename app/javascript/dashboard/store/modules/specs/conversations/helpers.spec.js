@@ -5,6 +5,7 @@ import {
   filterByTeam,
   filterByLabel,
   filterByUnattended,
+  filterByStatus,
 } from '../../conversations/helpers';
 
 const conversationList = [
@@ -120,6 +121,17 @@ describe('#applyPageFilters', () => {
         status: 'all',
       };
       expect(applyPageFilters(conversationList[1], filters)).toEqual(true);
+    });
+  });
+});
+
+describe('#filterByStatus', () => {
+  it('matches every not-yet-solved ticket for the unsolved filter', () => {
+    ['new_ticket', 'open', 'waiting_on_customer', 'on_hold'].forEach(status => {
+      expect(filterByStatus(status, 'unsolved')).toBe(true);
+    });
+    ['resolved', 'closed', 'pending'].forEach(status => {
+      expect(filterByStatus(status, 'unsolved')).toBe(false);
     });
   });
 });

@@ -49,6 +49,13 @@ RSpec.describe 'ServiceDesk CI image workflow' do # rubocop:disable RSpec/Descri
       expect(step_index.call('Strip enterprise')).to be < step_index.call('Build')
     end
 
+    it 'aceita o repositório sem enterprise/ (v3): o rm -rf não falha sem o diretório' do
+      strip = steps[step_index.call('Strip enterprise')]
+      expect(strip['run']).to include('rm -rf enterprise spec/enterprise')
+      expect(strip['run']).to include('test ! -e enterprise')
+      expect(File).not_to exist(File.join(root, 'enterprise'))
+    end
+
     it 'verifica a imagem antes de logar e publicar no GHCR' do
       verify = step_index.call('Verify CE image')
       expect(verify).to be > step_index.call('Build')

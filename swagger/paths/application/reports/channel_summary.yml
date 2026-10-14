@@ -7,7 +7,7 @@ security:
   - userApiKey: []
 description: |
   Get conversation counts grouped by channel type and status for a given date range.
-  Returns statistics for each channel type including open, resolved, pending, snoozed, and total conversation counts.
+  Returns statistics for each channel type including the count of tickets in each status and the total.
 
   **Note:** This API endpoint is available only in Chatwoot version 4.10.0 and above. The date range is limited to a maximum of 6 months.
 responses:

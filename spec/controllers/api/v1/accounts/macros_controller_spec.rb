@@ -51,6 +51,21 @@ RSpec.describe 'Api::V1::Accounts::MacrosController', type: :request do
       end
     end
 
+    context 'when a macro is restricted to a group' do
+      let(:team) { create(:team, account: account) }
+      let!(:group_macro) { create(:macro, account: account, created_by: administrator, visibility: :team, team: team) }
+
+      it 'lists it only for the agents of the group' do
+        create(:team_member, team: team, user: agent)
+
+        get "/api/v1/accounts/#{account.id}/macros", headers: agent.create_new_auth_token
+        expect(response.parsed_body['payload'].pluck('id')).to include(group_macro.id)
+
+        get "/api/v1/accounts/#{account.id}/macros", headers: agent_1.create_new_auth_token
+        expect(response.parsed_body['payload'].pluck('id')).not_to include(group_macro.id)
+      end
+    end
+
     context 'when it is an unauthenticated user' do
       it 'returns unauthorized' do
         post "/api/v1/accounts/#{account.id}/macros"
@@ -401,7 +416,7 @@ RSpec.describe 'Api::V1::Accounts::MacrosController', type: :request do
 
           expect(conversation.reload.messages.outgoing.where(private: false)).to be_empty
           expect(conversation.messages.outgoing.where(private: true).pluck(:content)).to eq(['We are sending greeting message to customer.'])
-          expect(conversation.status).to eq('snoozed')
+          expect(conversation.status).to eq('on_hold')
           expect(conversation.team_id).to eq(team.id)
         end
 
@@ -474,7 +489,7 @@ RSpec.describe 'Api::V1::Accounts::MacrosController', type: :request do
                  headers: administrator.create_new_auth_token
           end
 
-          expect(conversation.reload.status).to eql('snoozed')
+          expect(conversation.reload.status).to eql('on_hold')
         end
 
         it 'Remove selected label' do

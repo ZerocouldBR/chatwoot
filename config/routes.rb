@@ -1,4 +1,7 @@
 Rails.application.routes.draw do
+  # ServiceDesk (M7): compatibilidade com a API do Zendesk (config/routes/zendesk_compat.rb)
+  draw :zendesk_compat
+
   # AUTH STARTS
   mount_devise_token_auth_for 'User', at: 'auth', controllers: {
     confirmations: 'devise_overrides/confirmations',
@@ -135,7 +138,6 @@ Rails.application.routes.draw do
               post :follow_up
             end
           end
-          resource :saml_settings, only: [:show, :create, :update, :destroy]
           resources :agent_bots, only: [:index, :create, :show, :update, :destroy] do
             delete :avatar, on: :member
             post :reset_access_token, on: :member
@@ -147,7 +149,6 @@ Rails.application.routes.draw do
             end
           end
           resources :assignable_agents, only: [:index]
-          resource :audit_logs, only: [:show]
           resources :callbacks, only: [] do
             collection do
               post :register_facebook_page
@@ -157,19 +158,36 @@ Rails.application.routes.draw do
             end
           end
           resources :canned_responses, only: [:index, :create, :update, :destroy]
+          resources :business_schedules, only: [:index, :show, :create, :update, :destroy]
+          resources :sla_policies, only: [:index, :show, :create, :update, :destroy] do
+            post :reorder, on: :collection
+          end
+          resources :suspended_tickets, only: [:index, :destroy] do
+            post :recover, on: :member
+          end
+          resources :deleted_tickets, only: [:index, :destroy] do
+            post :restore, on: :member
+          end
+          resources :ticket_rules, only: [:index, :show, :create, :update, :destroy] do
+            post :reorder, on: :collection
+          end
+          resources :applied_slas, only: [:index] do
+            collection do
+              get :metrics
+              get :download
+            end
+          end
+          resources :ticket_home, only: [:index] do
+            get :stats, on: :collection
+          end
           resources :automation_rules, only: [:index, :create, :show, :update, :destroy] do
             post :clone
           end
           resources :macros, only: [:index, :create, :show, :update, :destroy] do
             post :execute, on: :member
           end
-          resources :sla_policies, only: [:index, :create, :show, :update, :destroy]
-          resources :custom_roles, only: [:index, :create, :show, :update, :destroy]
-          resources :agent_capacity_policies, only: [:index, :create, :show, :update, :destroy] do
-            scope module: :agent_capacity_policies do
-              resources :users, only: [:index, :create, :destroy]
-              resources :inbox_limits, only: [:create, :update, :destroy]
-            end
+          resources :sd_roles, only: [:index, :create, :show, :update, :destroy] do # ServiceDesk M13: papéis (CE)
+            get :me, on: :collection
           end
           resources :campaigns, only: [:index, :create, :show, :update, :destroy] do
             if ChatwootApp.enterprise?
@@ -195,10 +213,15 @@ Rails.application.routes.draw do
                   post :translate
                   post :retry
                 end
+                resource :redaction, only: [:create]
               end
               resource :contact_info_request, only: [:show, :create]
               resources :assignments, only: [:create]
               resources :labels, only: [:create, :index]
+              resources :events, only: [:index]
+              resource :merge, only: [:create]
+              resource :spam, only: [:create]
+              resource :ccs, only: [:show, :create, :destroy]
               resource :participants, only: [:show, :create, :update, :destroy]
               resource :direct_uploads, only: [:create]
               resource :draft_messages, only: [:show, :update, :destroy]
@@ -299,12 +322,6 @@ Rails.application.routes.draw do
               patch :update if ChatwootApp.enterprise?
             end
           end
-          resources :applied_slas, only: [:index] do
-            collection do
-              get :metrics
-              get :download
-            end
-          end
           resources :reporting_events, only: [:index] if ChatwootApp.enterprise?
 
           if ChatwootApp.enterprise?
@@ -324,6 +341,12 @@ Rails.application.routes.draw do
 
           resources :custom_attribute_definitions, only: [:index, :show, :create, :update, :destroy]
           resources :custom_filters, only: [:index, :show, :create, :update, :destroy]
+          # ServiceDesk: views compartilhadas do Zendesk (visibilidade por grupo) com contadores
+          namespace :servicedesk do
+            resources :views, only: [:index] do
+              get :counts, on: :collection
+            end
+          end
           resource :branded_email_layout, only: [:show, :update]
           resources :inboxes, only: [:index, :show, :create, :update, :destroy] do
             get :assignable_agents, on: :member
@@ -494,6 +517,8 @@ Rails.application.routes.draw do
             resources :articles do
               post :reorder, on: :collection
             end
+            # ServiceDesk B2B: segmentos de usuário (artigos restritos)
+            resources :user_segments, only: [:index], controller: 'portal_user_segments'
           end
 
           resources :upload, only: [:create]
@@ -505,9 +530,6 @@ Rails.application.routes.draw do
       namespace :integrations do
         resources :webhooks, only: [:create]
       end
-
-      # Frontend API endpoint to trigger SAML authentication flow
-      post 'auth/saml_login', to: 'auth#saml_login'
 
       resource :profile, only: [:show, :update] do
         delete :avatar, on: :collection
@@ -698,11 +720,27 @@ Rails.application.routes.draw do
                                             defaults: { format: :md }
   get 'hc/:slug/articles/:article_slug', to: 'public/api/v1/portals/articles#show', as: :public_portal_article
 
+  # ServiceDesk B2B: portal do cliente (login do contato e "Minhas solicitações"), ver docs/PORTAL-CLIENTE.md
+  scope 'hc/:slug/:locale', module: 'public/api/v1/portals', as: :portal_customer,
+                            constraints: { locale: /[a-z]{2,3}(?:[_-][A-Za-z]{2,4})?/ } do
+    get 'login', to: 'customer_sessions#new', as: :login
+    post 'login', to: 'customer_sessions#create'
+    get 'login/verify', to: 'customer_sessions#verify', as: :login_verify
+    post 'login/verify', to: 'customer_sessions#confirm'
+    get 'sso/jwt', to: 'customer_sessions#jwt', as: :sso_jwt
+    delete 'logout', to: 'customer_sessions#destroy', as: :logout
+    get 'requests', to: 'customer_requests#index', as: :requests
+    get 'requests/new', to: 'customer_requests#new', as: :new_request
+    post 'requests', to: 'customer_requests#create'
+    get 'requests/:display_id', to: 'customer_requests#show', as: :request, constraints: { display_id: /\d+/ }
+    post 'requests/:display_id/comments', to: 'customer_requests#reply', as: :request_comments, constraints: { display_id: /\d+/ }
+  end
+
   # ----------------------------------------------------------------------
   # Used in mailer templates
   resource :app, only: [:index] do
     resources :accounts do
-      resources :conversations, only: [:show]
+      resources :conversations, only: [:show], path: 'tickets'
     end
   end
 

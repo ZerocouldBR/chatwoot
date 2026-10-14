@@ -11,8 +11,9 @@ class ActionService
     @conversation.mute!
   end
 
+  # Kept as `snooze_conversation` so saved automation rules and macros keep working; tickets go On-hold.
   def snooze_conversation(_params)
-    @conversation.snoozed!
+    @conversation.on_hold!
   end
 
   def resolve_conversation(_params)

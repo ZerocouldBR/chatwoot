@@ -1,0 +1,100 @@
+<%# ServiceDesk B2B: "Minhas atividades > Solicitações" do Copenhagen: abas "Minhas solicitações" e "Solicitações da
+    organização" (só quando a empresa compartilha), pesquisa, filtro de status e a tabela Assunto | Id | Criado |
+    Última atividade | Status. %>
+<% content_for :head do %>
+  <title><%= I18n.t('public_portal.sd.requests.title') %> | <%= @portal.display_title(@locale) %></title>
+  <meta name="robots" content="noindex">
+<% end %>
+<div class="container">
+  <nav class="sub-nav">
+    <%= render 'public/api/v1/portals/servicedesk/breadcrumbs', items: [[I18n.t('public_portal.sd.nav.my_activities'), nil]] %>
+    <div class="search-container">
+      <%= render 'public/api/v1/portals/servicedesk/search' %>
+    </div>
+  </nav>
+
+  <h1 class="visibility-hidden"><%= I18n.t('public_portal.sd.nav.my_activities') %></h1>
+  <nav class="my-activities-nav collapsible-nav" aria-label="<%= I18n.t('public_portal.sd.nav.my_activities') %>">
+    <ul class="collapsible-nav-list" style="padding: 0 20px;">
+      <li aria-selected="true"><%= I18n.t('public_portal.sd.requests.requests_tab') %></li>
+    </ul>
+  </nav>
+
+  <nav class="my-activities-sub-nav collapsible-nav" aria-label="<%= I18n.t('public_portal.sd.requests.requests_tab') %>">
+    <ul class="collapsible-nav-list">
+      <% if @scope == 'mine' %>
+        <li aria-selected="true"><%= I18n.t('public_portal.sd.requests.mine') %></li>
+      <% else %>
+        <li><a href="<%= portal_customer_requests_path(@portal.slug, @locale) %>"><%= I18n.t('public_portal.sd.requests.mine') %></a></li>
+      <% end %>
+      <% if @organization_enabled %>
+        <% if @scope == 'organization' %>
+          <li aria-selected="true"><%= I18n.t('public_portal.sd.requests.organization') %></li>
+        <% else %>
+          <li><a href="<%= portal_customer_requests_path(@portal.slug, @locale, scope: 'organization') %>"><%= I18n.t('public_portal.sd.requests.organization') %></a></li>
+        <% end %>
+      <% end %>
+    </ul>
+  </nav>
+
+  <div id="main-content">
+    <%= form_tag(portal_customer_requests_path(@portal.slug, @locale), method: :get, class: 'requests-table-toolbar', data: { turbo: false }) do %>
+      <% if @scope == 'organization' %><%= hidden_field_tag :scope, 'organization' %><% end %>
+      <div class="search">
+        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" focusable="false" viewBox="0 0 12 12" class="search-icon" aria-hidden="true">
+          <circle cx="4.5" cy="4.5" r="4" fill="none" stroke="currentColor"/><path stroke="currentColor" stroke-linecap="round" d="M11 11L7.5 7.5"/>
+        </svg>
+        <input type="search" name="query" value="<%= @query %>" maxlength="100"
+               placeholder="<%= I18n.t('public_portal.sd.requests.search_placeholder') %>" aria-label="<%= I18n.t('public_portal.sd.requests.search_placeholder') %>">
+      </div>
+      <div class="request-table-filter">
+        <label for="request-status-select"><%= I18n.t('public_portal.sd.requests.filter_status') %>:</label>
+        <select id="request-status-select" name="status" data-sd-autosubmit="true">
+          <option value=""><%= I18n.t('public_portal.sd.requests.any_status') %></option>
+          <% PortalCustomers::RequestStatus::GROUPS.each do |group| %>
+            <option value="<%= group %>" <%= 'selected' if @status_filter == group %>><%= I18n.t("public_portal.sd.requests.status.#{group}") %></option>
+          <% end %>
+        </select>
+      </div>
+    <% end %>
+
+    <% if @requests.empty? %>
+      <p class="no-activities" data-testid="sd-requests-empty"><%= I18n.t('public_portal.sd.requests.empty') %></p>
+    <% else %>
+      <table class="table requests-table" data-testid="sd-requests-table">
+        <thead>
+          <tr>
+            <th style="width: 40%;"><%= I18n.t('public_portal.sd.requests.subject') %></th>
+            <th><%= I18n.t('public_portal.sd.requests.id') %></th>
+            <% if @scope == 'organization' %><th><%= I18n.t('public_portal.sd.requests.requester') %></th><% end %>
+            <th><%= I18n.t('public_portal.sd.requests.created_at') %></th>
+            <th><%= I18n.t('public_portal.sd.requests.last_activity') %></th>
+            <th><%= I18n.t('public_portal.sd.requests.status_column') %></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @requests.each do |conversation| %>
+            <tr>
+              <td class="requests-table-info">
+                <a class="requests-link" href="<%= portal_customer_request_path(@portal.slug, @locale, conversation.display_id) %>"><%= sd_request_subject(conversation) %></a>
+                <span class="request-info">#<%= conversation.display_id %> · <%= sd_time(conversation.created_at, with_time: false) %></span>
+              </td>
+              <td class="hide-sm">#<%= conversation.display_id %></td>
+              <% if @scope == 'organization' %><td class="hide-sm"><%= conversation.contact&.name %></td><% end %>
+              <td class="hide-sm"><%= sd_time(conversation.created_at, with_time: false) %></td>
+              <td class="hide-sm"><%= sd_time(conversation.last_activity_at || conversation.updated_at) %></td>
+              <td><%= sd_status_badge(conversation) %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+      <% if @requests.total_pages > 1 %>
+        <% base_params = { query: @query.presence, status: @status_filter, scope: (@scope == 'organization' ? 'organization' : nil) }.compact %>
+        <nav class="pagination">
+          <% if @requests.prev_page %><a href="<%= portal_customer_requests_path(@portal.slug, @locale, base_params.merge(page: @requests.prev_page)) %>"><%= I18n.t('public_portal.common.previous') %></a><% end %>
+          <% if @requests.next_page %><a href="<%= portal_customer_requests_path(@portal.slug, @locale, base_params.merge(page: @requests.next_page)) %>"><%= I18n.t('public_portal.common.next') %></a><% end %>
+        </nav>
+      <% end %>
+    <% end %>
+  </div>
+</div>

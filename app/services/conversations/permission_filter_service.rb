@@ -11,7 +11,8 @@ class Conversations::PermissionFilterService
   def perform
     return conversations if user_role == 'administrator'
 
-    accessible_conversations
+    # ServiceDesk M13: depois do filtro nativo por inbox, a restrição de acesso do papel (ticket.access)
+    Servicedesk::Roles::TicketScope.apply(accessible_conversations, user, account, account_user: account_user)
   end
 
   private
@@ -37,7 +38,7 @@ class Conversations::PermissionFilterService
   end
 
   def account_user
-    AccountUser.find_by(account_id: account.id, user_id: user.id)
+    @account_user ||= AccountUser.find_by(account_id: account.id, user_id: user.id)
   end
 
   def user_role

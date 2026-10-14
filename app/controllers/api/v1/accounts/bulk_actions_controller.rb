@@ -1,5 +1,5 @@
 class Api::V1::Accounts::BulkActionsController < Api::V1::Accounts::BaseController
-  before_action :validate_assignment_targets, only: :create, if: -> { normalized_type == 'Conversation' }
+  before_action :validate_conversation_fields, only: :create, if: -> { normalized_type == 'Conversation' }
 
   def create
     case normalized_type
@@ -21,8 +21,11 @@ class Api::V1::Accounts::BulkActionsController < Api::V1::Accounts::BaseControll
     params[:type].to_s.camelize
   end
 
-  def validate_assignment_targets
+  def validate_conversation_fields
     fields = conversation_params[:fields] || {}
+
+    status = fields[:status]
+    return render_could_not_create_error(I18n.t('errors.conversations.invalid_status')) if invalid_status?(status)
 
     assignee_id = fields[:assignee_id]
     return render_could_not_create_error('Invalid assignee_id') if !assignee_id.nil? && !@current_account.users.exists?(id: assignee_id)
@@ -32,6 +35,10 @@ class Api::V1::Accounts::BulkActionsController < Api::V1::Accounts::BaseControll
     return if [nil, 0, '0'].include?(team_id) || @current_account.teams.exists?(id: team_id)
 
     render_could_not_create_error('Invalid team_id')
+  end
+
+  def invalid_status?(status)
+    status.present? && Conversation::AGENT_SETTABLE_STATUSES.exclude?(status)
   end
 
   def enqueue_conversation_job
@@ -61,10 +68,7 @@ class Api::V1::Accounts::BulkActionsController < Api::V1::Accounts::BaseControll
   def conversation_params
     # TODO: Align conversation payloads with the `{ action_name, action_attributes }`
     # and then remove this method in favor of a common params method.
-    base = params.permit(
-      :snoozed_until,
-      fields: [:status, :assignee_id, :team_id]
-    )
+    base = params.permit(fields: [:status, :assignee_id, :team_id])
     append_common_bulk_attributes(base)
   end
 

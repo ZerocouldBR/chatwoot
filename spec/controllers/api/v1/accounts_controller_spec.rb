@@ -463,6 +463,15 @@ RSpec.describe 'Accounts API', type: :request do
     let(:agent) { create(:user, account: account, role: :agent) }
     let(:admin) { create(:user, account: account, role: :administrator) }
 
+    it 'saves the ticket fields shown to agents, in order, and rejects unknown fields' do
+      patch "/api/v1/accounts/#{account.id}", params: { ticket_panel_fields: %w[priority assignee] }, headers: admin.create_new_auth_token,
+                                              as: :json
+      expect(account.reload.settings['ticket_panel_fields']).to eq(%w[priority assignee])
+
+      patch "/api/v1/accounts/#{account.id}", params: { ticket_panel_fields: %w[shoe_size] }, headers: admin.create_new_auth_token, as: :json
+      expect(response).to have_http_status(:unprocessable_entity)
+    end
+
     context 'with mfa enforcement setting' do
       before do
         skip('Skipping since MFA is not configured in this environment') unless Chatwoot.encryption_configured?

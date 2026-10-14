@@ -1,6 +1,6 @@
 {
   "FILTER": {
-    "TITLE": "Filter conversations",
+    "TITLE": "Filter tickets",
     "SUBTITLE": "Add your filters below and hit 'Apply filters' to cut through the chat clutter.",
     "EDIT_CUSTOM_FILTER": "Edit Folder",
     "CUSTOM_VIEWS_SUBTITLE": "Add or remove filters and update your folder.",
@@ -13,7 +13,7 @@
     "FOLDER_LABEL": "Folder Name",
     "FOLDER_QUERY_LABEL": "Folder Query",
     "EMPTY_VALUE_ERROR": "Value is required.",
-    "TOOLTIP_LABEL": "Filter conversations",
+    "TOOLTIP_LABEL": "Filter tickets",
     "QUERY_DROPDOWN_LABELS": {
       "AND": "AND",
       "OR": "OR"
@@ -54,11 +54,11 @@
       "STATUS": "Status",
       "ASSIGNEE_NAME": "Assignee name",
       "INBOX_NAME": "Inbox name",
-      "TEAM_NAME": "Team name",
+      "TEAM_NAME": "Group name",
       "CONTACT": "Contact",
-      "CONVERSATION_IDENTIFIER": "Conversation identifier",
+      "CONVERSATION_IDENTIFIER": "Ticket identifier",
       "CAMPAIGN_NAME": "Campaign name",
-      "LABELS": "Labels",
+      "LABELS": "Tags",
       "BROWSER_LANGUAGE": "Browser language",
       "PRIORITY": "Priority",
       "COUNTRY_NAME": "Country name",

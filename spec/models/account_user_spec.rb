@@ -18,13 +18,17 @@ RSpec.describe AccountUser do
   end
 
   describe 'permissions' do
+    # ServiceDesk M13: depois do papel base vêm as permissões efetivas do papel SD ('sd:<chave>')
     it 'returns the right permissions' do
-      expect(account_user.permissions).to eq(['agent'])
+      expect(account_user.permissions.first).to eq('agent')
+      expect(account_user.permissions).to include('sd:ticket.comment_public')
+      expect(account_user.permissions).not_to include('administrator', 'sd:reports')
     end
 
     it 'returns the right permissions for administrator' do
       account_user.administrator!
-      expect(account_user.permissions).to eq(['administrator'])
+      expect(account_user.permissions.first).to eq('administrator')
+      expect(account_user.permissions).to include('sd:reports', 'sd:ticket.delete')
     end
   end
 

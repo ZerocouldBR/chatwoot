@@ -23,42 +23,41 @@
     "CALL_FAILED": "Não foi possível iniciar a chamada. Tente novamente.",
     "WHATSAPP_CALL_PERMISSION_REQUESTED": "Solicitação de permissão de chamada enviada ao contato. Tente novamente após a aceitação.",
     "WHATSAPP_CALL_PERMISSION_PENDING": "Uma solicitação de permissão de chamada já foi enviada recentemente. Tente novamente após o contato aceitar.",
-    "CLICK_TO_EDIT": "Clique para editar",
+    "CLICK_TO_EDIT": "Click to edit",
     "VOICE_INBOX_PICKER": {
       "TITLE": "Escolha uma caixa de entrada de voz"
     },
     "CONVERSATIONS": {
       "NO_RECORDS_FOUND": "Não há tickets anteriores associados a este contato.",
-      "TITLE": "Tickets anteriores",
-      "VIEW_ALL": "Ver todos os tickets"
+      "TITLE": "Tickets anteriores"
     },
     "LABELS": {
       "CONTACT": {
-        "TITLE": "Etiquetas de contato",
-        "ERROR": "Falha ao atualizar etiquetas"
+        "TITLE": "Tags de contato",
+        "ERROR": "Falha ao atualizar tags"
       },
       "CONVERSATION": {
-        "TITLE": "Etiquetas do ticket",
-        "ADD_BUTTON": "Adicionar etiquetas"
+        "TITLE": "Tags do ticket",
+        "ADD_BUTTON": "Adicionar tags"
       },
       "LABEL_SELECT": {
-        "TITLE": "Adicionar etiquetas",
-        "PLACEHOLDER": "Pesquisar etiquetas",
-        "NO_RESULT": "Nenhuma etiqueta encontrada",
-        "CREATE_LABEL": "Criar etiqueta"
+        "TITLE": "Adicionar tags",
+        "PLACEHOLDER": "Pesquisar tags",
+        "NO_RESULT": "Nenhuma tag encontrada",
+        "CREATE_LABEL": "Criar tag"
       }
     },
     "MERGE_CONTACT": "Mesclar contatos",
     "CONTACT_ACTIONS": "Ações de contatos",
     "MUTE_CONTACT": "Bloquear Contato",
     "UNMUTE_CONTACT": "Desbloquear Contato",
-    "MUTED_SUCCESS": "Este contato foi bloqueado com sucesso. Você não será notificado por nenhum ticket futuro.",
+    "MUTED_SUCCESS": "Este contato foi bloqueado com sucesso. Você não será notificado por nenhuma conversação futura.",
     "UNMUTED_SUCCESS": "Este contato foi desbloqueado com sucesso.",
     "SEND_TRANSCRIPT": "Enviar Transcrição",
     "EDIT_LABEL": "Alterar",
     "SIDEBAR_SECTIONS": {
       "CUSTOM_ATTRIBUTES": "Atributos Personalizados",
-      "CONTACT_LABELS": "Etiquetas de contato",
+      "CONTACT_LABELS": "Tags de contato",
       "PREVIOUS_CONVERSATIONS": "Tickets anteriores",
       "NO_RECORDS_FOUND": "Nenhum atributo encontrado"
     }
@@ -591,13 +590,13 @@
   },
   "CONTACTS_BULK_ACTIONS": {
     "ASSIGN_LABELS": "Atribuir rótulo",
-    "REMOVE_LABELS": "Remover Etiquetas",
+    "REMOVE_LABELS": "Remover Tags",
     "ASSIGN_LABELS_SUCCESS": "Rótulos atribuídos com sucesso.",
-    "ASSIGN_LABELS_FAILED": "Falha ao atribuir etiquetas",
-    "REMOVE_LABELS_SUCCESS": "Etiquetas removidas com sucesso.",
-    "REMOVE_LABELS_FAILED": "Falha ao remover etiquetas",
-    "DESCRIPTION": "Selecione as etiquetas que deseja adicionar aos contatos selecionados.",
-    "NO_LABELS_FOUND": "Nenhuma etiqueta disponível ainda.",
+    "ASSIGN_LABELS_FAILED": "Falha ao atribuir tags",
+    "REMOVE_LABELS_SUCCESS": "Tags removidas com sucesso.",
+    "REMOVE_LABELS_FAILED": "Falha ao remover tags",
+    "DESCRIPTION": "Selecione as tags que deseja adicionar aos contatos selecionados.",
+    "NO_LABELS_FOUND": "Nenhuma tag disponível ainda.",
     "SELECTED_COUNT": "{count} selecionado",
     "CLEAR_SELECTION": "Limpar seleção",
     "SELECT_ALL": "Selecionar todos ({count})",

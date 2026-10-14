@@ -12,15 +12,13 @@ import { FEATURE_FLAGS } from 'dashboard/featureFlags';
 import AccordionItem from 'dashboard/components/Accordion/AccordionItem.vue';
 import ContactConversations from './ContactConversations.vue';
 import ConversationAction from './ConversationAction.vue';
+import TicketEvents from './TicketEvents.vue';
 import ConversationParticipant from './ConversationParticipant.vue';
 import ContactInfo from './contact/ContactInfo.vue';
 import ContactNotes from './contact/ContactNotes.vue';
 import ConversationInfo from './ConversationInfo.vue';
 import CustomAttributes from './customAttributes/CustomAttributes.vue';
 import SharedFiles from './SharedFiles.vue';
-import TicketPropertiesPanel from './ticketPanel/TicketPropertiesPanel.vue';
-import { useTicketWorkspace } from 'dashboard/servicedesk/workspace/useTicketWorkspace';
-import { useI18n } from 'vue-i18n';
 import Draggable from 'vuedraggable';
 import MacrosList from './Macros/List.vue';
 import ShopifyOrdersList from 'dashboard/components/widgets/conversation/ShopifyOrdersList.vue';
@@ -48,21 +46,12 @@ const {
   isOnExpandedLayout,
 } = useUISettings();
 
-// ServiceDesk: com o layout Agent Workspace as propriedades ficam na coluna
-// da esquerda e este painel vira o CONTEXTO (contato/organização, tickets
-// anteriores, macros...). Sem largura, as propriedades ficam no topo daqui.
-const { t } = useI18n();
-const { isWorkspaceLayout } = useTicketWorkspace();
-const panelTitle = computed(() =>
-  isWorkspaceLayout.value
-    ? t('SERVICEDESK_TICKET_PANEL.WORKSPACE.CONTEXT')
-    : t('SERVICEDESK_TICKET_PANEL.WORKSPACE.PROPERTIES')
-);
-
-// No workspace, a seção "Ações do ticket" (grupo, responsável, prioridade,
-// tags) fica oculta: já está nas propriedades à esquerda. (Sem comentário no
-// template: o slot #item do Draggable aceita um único nó.)
-
+// Ticket properties, followers and macros live in the ticket's left column and footer instead.
+const MOVED_TO_TICKET_LAYOUT = [
+  'conversation_actions',
+  'conversation_participants',
+  'macros',
+];
 const dragging = ref(false);
 const conversationSidebarItems = ref([]);
 
@@ -112,6 +101,10 @@ const conversationAdditionalAttributes = computed(
 );
 
 const channelType = computed(() => currentChat.value.meta?.channel);
+// Bumps on every ticket update and new message, so the events trail refetches.
+const currentConversationRevision = computed(
+  () => `${currentChat.value.updated_at}-${currentChat.value.messages?.length}`
+);
 
 const contactGetter = useMapGetter('contacts/getContact');
 const contactId = computed(() => currentChat.value.meta?.sender?.id);
@@ -164,11 +157,9 @@ onMounted(() => {
 
 <template>
   <div class="w-full">
-    <SidebarActionsHeader :title="panelTitle" @close="closeContactPanel" />
-    <!-- ServiceDesk: propriedades no topo só sem a coluna da esquerda -->
-    <TicketPropertiesPanel
-      v-if="!isWorkspaceLayout"
-      :conversation-id="conversationId"
+    <SidebarActionsHeader
+      :title="$t('CONVERSATION.SIDEBAR.CONTACT')"
+      @close="closeContactPanel"
     />
     <ContactInfo :contact="contact" :channel-type="channelType" />
     <div class="px-2 pb-8 list-group">
@@ -184,8 +175,11 @@ onMounted(() => {
       >
         <template #item="{ element }">
           <div
-            v-if="element.name === 'conversation_actions'"
-            v-show="!isWorkspaceLayout"
+            v-if="MOVED_TO_TICKET_LAYOUT.includes(element.name)"
+            class="hidden"
+          />
+          <div
+            v-else-if="element.name === 'conversation_actions'"
             class="conversation--actions"
           >
             <AccordionItem
@@ -216,6 +210,21 @@ onMounted(() => {
               <ConversationParticipant
                 :conversation-id="conversationId"
                 :inbox-id="inboxId"
+              />
+            </AccordionItem>
+          </div>
+          <div v-else-if="element.name === 'ticket_events'">
+            <AccordionItem
+              :title="$t('CONVERSATION.TICKET_EVENTS.TITLE')"
+              :is-open="isContactSidebarItemOpen('is_ticket_events_open')"
+              compact
+              @toggle="
+                value => toggleSidebarUIState('is_ticket_events_open', value)
+              "
+            >
+              <TicketEvents
+                :conversation-id="conversationId"
+                :revision="currentConversationRevision"
               />
             </AccordionItem>
           </div>

@@ -9,7 +9,7 @@
     "COMPANY": "Company",
     "LOCATION": "Location",
     "BROWSER_LANGUAGE": "Browser Language",
-    "CONVERSATION_TITLE": "Conversation Details",
+    "CONVERSATION_TITLE": "Ticket Details",
     "VIEW_PROFILE": "View Profile",
     "BROWSER": "Browser",
     "OS": "Operating System",
@@ -28,38 +28,38 @@
       "TITLE": "Choose a voice inbox"
     },
     "CONVERSATIONS": {
-      "NO_RECORDS_FOUND": "There are no previous conversations associated to this contact.",
-      "TITLE": "Previous Conversations",
-      "VIEW_ALL": "View all conversations"
+      "NO_RECORDS_FOUND": "There are no previous tickets associated to this contact.",
+      "TITLE": "Previous Tickets",
+      "VIEW_ALL": "View all tickets"
     },
     "LABELS": {
       "CONTACT": {
-        "TITLE": "Contact Labels",
-        "ERROR": "Couldn't update labels"
+        "TITLE": "Contact Tags",
+        "ERROR": "Couldn't update tags"
       },
       "CONVERSATION": {
-        "TITLE": "Conversation Labels",
-        "ADD_BUTTON": "Add Labels"
+        "TITLE": "Ticket Tags",
+        "ADD_BUTTON": "Add Tags"
       },
       "LABEL_SELECT": {
-        "TITLE": "Add Labels",
-        "PLACEHOLDER": "Search labels",
-        "NO_RESULT": "No labels found",
-        "CREATE_LABEL": "Create new label"
+        "TITLE": "Add Tags",
+        "PLACEHOLDER": "Search tags",
+        "NO_RESULT": "No tags found",
+        "CREATE_LABEL": "Create new tag"
       }
     },
     "MERGE_CONTACT": "Merge contact",
     "CONTACT_ACTIONS": "Contact actions",
     "MUTE_CONTACT": "Block Contact",
     "UNMUTE_CONTACT": "Unblock Contact",
-    "MUTED_SUCCESS": "This contact is blocked successfully. You will not be notified of any future conversations.",
+    "MUTED_SUCCESS": "This contact is blocked successfully. You will not be notified of any future tickets.",
     "UNMUTED_SUCCESS": "This contact is unblocked successfully.",
     "SEND_TRANSCRIPT": "Send Transcript",
     "EDIT_LABEL": "Edit",
     "SIDEBAR_SECTIONS": {
       "CUSTOM_ATTRIBUTES": "Custom Attributes",
-      "CONTACT_LABELS": "Contact Labels",
-      "PREVIOUS_CONVERSATIONS": "Previous Conversations",
+      "CONTACT_LABELS": "Contact Tags",
+      "PREVIOUS_CONVERSATIONS": "Previous Tickets",
       "NO_RECORDS_FOUND": "No attributes found"
     }
   },
@@ -160,10 +160,10 @@
     "ERROR_MESSAGE": "There was an error, please try again"
   },
   "NEW_CONVERSATION": {
-    "BUTTON_LABEL": "Start conversation",
-    "TITLE": "New conversation",
-    "DESC": "Start a new conversation by sending a new message.",
-    "NO_INBOX": "Couldn't find an inbox to initiate a new conversation with this contact.",
+    "BUTTON_LABEL": "Start ticket",
+    "TITLE": "New ticket",
+    "DESC": "Start a new ticket by sending a new message.",
+    "NO_INBOX": "Couldn't find an inbox to initiate a new ticket with this contact.",
     "FORM": {
       "TO": {
         "LABEL": "To"
@@ -261,7 +261,7 @@
   },
   "MERGE_CONTACTS": {
     "TITLE": "Merge contacts",
-    "DESCRIPTION": "Merge contacts to combine two profiles into one, including all attributes and conversations. In case of conflict, the Primary contact’s attributes will take precedence.",
+    "DESCRIPTION": "Merge contacts to combine two profiles into one, including all attributes and tickets. In case of conflict, the Primary contact’s attributes will take precedence.",
     "PRIMARY": {
       "TITLE": "Primary contact",
       "HELP_LABEL": "To be deleted"
@@ -292,7 +292,6 @@
       "ID": "(ID: {identifier})"
     }
   },
-
   "CONTACTS_LAYOUT": {
     "HEADER": {
       "TITLE": "Contacts",
@@ -520,7 +519,7 @@
         "MERGE": "Merge"
       },
       "HISTORY": {
-        "EMPTY_STATE": "There are no previous conversations associated to this contact"
+        "EMPTY_STATE": "There are no previous tickets associated to this contact"
       },
       "ATTRIBUTES": {
         "SEARCH_PLACEHOLDER": "Search for attributes",
@@ -549,7 +548,7 @@
       },
       "MERGE": {
         "TITLE": "Merge contact",
-        "DESCRIPTION": "Combine two profiles into one, including all attributes and conversations. In case of conflict, the primary contact’s attributes will take precedence.",
+        "DESCRIPTION": "Combine two profiles into one, including all attributes and tickets. In case of conflict, the primary contact’s attributes will take precedence.",
         "PRIMARY": "Primary contact",
         "PRIMARY_HELP_LABEL": "To be saved",
         "PRIMARY_REQUIRED_ERROR": "Please select a contact to merge with before proceeding",
@@ -591,14 +590,14 @@
     "LOAD_MORE": "Load more"
   },
   "CONTACTS_BULK_ACTIONS": {
-    "ASSIGN_LABELS": "Assign Labels",
-    "REMOVE_LABELS": "Remove Labels",
-    "ASSIGN_LABELS_SUCCESS": "Labels assigned successfully.",
-    "ASSIGN_LABELS_FAILED": "Failed to assign labels",
-    "REMOVE_LABELS_SUCCESS": "Labels removed successfully.",
-    "REMOVE_LABELS_FAILED": "Failed to remove labels",
-    "DESCRIPTION": "Select the labels you want to add to the selected contacts.",
-    "NO_LABELS_FOUND": "No labels available yet.",
+    "ASSIGN_LABELS": "Assign Tags",
+    "REMOVE_LABELS": "Remove Tags",
+    "ASSIGN_LABELS_SUCCESS": "Tags assigned successfully.",
+    "ASSIGN_LABELS_FAILED": "Failed to assign tags",
+    "REMOVE_LABELS_SUCCESS": "Tags removed successfully.",
+    "REMOVE_LABELS_FAILED": "Failed to remove tags",
+    "DESCRIPTION": "Select the tags you want to add to the selected contacts.",
+    "NO_LABELS_FOUND": "No tags available yet.",
     "SELECTED_COUNT": "{count} selected",
     "CLEAR_SELECTION": "Clear selection",
     "SELECT_ALL": "Select all ({count})",
@@ -614,7 +613,6 @@
       "CONFIRM_SINGLE": "Delete contact"
     }
   },
-
   "COMPOSE_NEW_CONVERSATION": {
     "CONTACT_SEARCH": {
       "ERROR_MESSAGE": "We couldn’t complete the search. Please try again."
@@ -625,8 +623,8 @@
     "FORM": {
       "GO_TO_CONVERSATION": "View",
       "SUCCESS_MESSAGE": "The message was sent successfully!",
-      "ERROR_MESSAGE": "An error occurred while creating the conversation. Please try again later.",
-      "NO_INBOX_ALERT": "There are no available inboxes to start a conversation with this contact.",
+      "ERROR_MESSAGE": "An error occurred while creating the ticket. Please try again later.",
+      "NO_INBOX_ALERT": "There are no available inboxes to start a ticket with this contact.",
       "CONTACT_SELECTOR": {
         "LABEL": "To:",
         "TAG_INPUT_PLACEHOLDER": "Enter at least 2 characters to search by name, email, or phone number",
