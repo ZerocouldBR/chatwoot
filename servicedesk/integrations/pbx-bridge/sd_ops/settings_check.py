@@ -8,7 +8,7 @@ do Chatwoot. Cada item devolve status ok | error | warning | missing | skipped e
 - recordings: alcance HTTPS do host de gravações (qualquer resposta HTTP = alcançável; time-out = IP não liberado,
   §9 da INTEGRACAO-55PBX.md) e, se houver uma gravação recente, HEAD nela com a autenticação configurada.
 - dial: só com credenciais (client_code, api_key, JWT) e modo live. POST documentado com um ramal que não pode
-  existir (domínio reservado .invalid, RFC 2606): 404 {status:"ERROR"} = credenciais aceitas; 401/403 = recusadas.
+  existir (domínio reservado .test, RFC 2606): 404 {status:"ERROR"} = credenciais aceitas; 401/403 = recusadas.
   Nenhuma ligação é feita.
 - chatwoot: GET /api/v1/profile com o token do usuário de integração.
 - webhook, ura, n8n, storage: configuração local (+ alcance do n8n, se houver URL).
@@ -30,7 +30,7 @@ from pbx_bridge.pbx_api import PbxApi, PbxError
 from . import models as m
 from .config import OpsSettings
 
-DIAL_PROBE_EMAIL = "teste-conexao@sdops.invalid"
+DIAL_PROBE_EMAIL = "teste-conexao@ramal-inexistente.test"
 DIAL_PROBE_PHONE = "+5511900000000"
 
 
