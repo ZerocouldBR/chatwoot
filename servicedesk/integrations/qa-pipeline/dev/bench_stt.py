@@ -65,6 +65,24 @@ def main():
                 wer = jiwer.wer(norm(ref), norm(hyp))
                 wer_nn = jiwer.wer(norm(ref, True), norm(hyp, True))
                 confs = [s.confidence for s in res.segments if s.confidence is not None]
+                attrib = None
+                turns_path = os.path.join(args.dir, f"{name}.turns.json")
+                if res.diarization == "channel" and os.path.exists(turns_path):
+                    turns = json.load(open(turns_path, encoding="utf-8"))["turns"]
+                    ok = wrong = none = 0.0
+                    for sg in res.segments:
+                        dur = max(0.01, sg.end - sg.start)
+                        mid = (sg.start + sg.end) / 2
+                        t = next((t for t in turns if t["start"] - 0.3 <= mid <= t["end"] + 0.3), None)
+                        if sg.channel is None or t is None:
+                            none += dur
+                        elif (t["role"] == "A") == (sg.channel == 0):
+                            ok += dur
+                        else:
+                            wrong += dur
+                    tot = ok + wrong + none
+                    attrib = {"correto": round(ok / tot, 3), "errado": round(wrong / tot, 3),
+                              "sem_canal": round(none / tot, 3)}
                 row = {
                     "model": model, "audio": f"{name}.{fmt}", "audio_s": res.audio_duration_s,
                     "wall_s": round(wall, 1), "rtf": round(wall / res.audio_duration_s, 3),
@@ -73,6 +91,7 @@ def main():
                     "language": res.language, "lang_prob": round(res.language_probability or 0, 3),
                     "segments": len(res.segments), "diarization": res.diarization,
                     "avg_conf": round(sum(confs) / len(confs), 3) if confs else None,
+                    "atribuicao_canal": attrib,
                     "hyp": hyp,
                 }
                 results.append(row)
