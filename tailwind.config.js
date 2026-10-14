@@ -8,17 +8,18 @@ const {
   getIconCollections,
 } = require('@egoist/tailwindcss-icons');
 
-// ServiceDesk: pilha system-ui (Garden)
+// Apple-like: San Francisco where available, Inter everywhere else.
 const defaultSansFonts = [
-  'system-ui',
   '-apple-system',
+  'BlinkMacSystemFont',
+  '"SF Pro Text"',
+  'Inter',
+  'system-ui',
   'BlinkMacSystemFont',
   '"Segoe UI"',
   'Roboto',
-  'Oxygen-Sans',
-  'Ubuntu',
-  'Cantarell',
   '"Helvetica Neue"',
+  'Tahoma',
   'Arial',
   'sans-serif !important',
 ];
@@ -38,48 +39,36 @@ const tailwindConfig = {
     './app/javascript/dashboard/composables/**/*.js',
     './app/javascript/dashboard/components-next/**/*.js',
     './app/javascript/dashboard/routes/dashboard/**/**/*.js',
-    './app/javascript/dashboard/servicedesk/**/*.js',
     './app/views/**/*.erb',
   ],
   theme: {
     extend: {
       fontFamily: {
         sans: defaultSansFonts,
-        // ServiceDesk: `font-inter` passa a usar a pilha system-ui (Garden)
-        inter: defaultSansFonts,
-        interDisplay: defaultSansFonts,
-        mono: [
-          'SFMono-Regular',
-          'Consolas',
-          '"Liberation Mono"',
-          'Menlo',
-          'Courier',
-          'monospace',
-        ],
+        inter: ['Inter', ...defaultSansFonts],
+        interDisplay: ['"SF Pro Display"', 'InterDisplay', ...defaultSansFonts],
       },
-      // ServiceDesk: raios mais retos (Garden sm 2px / md 4px)
+      // Softer, Apple-like corners.
       borderRadius: {
-        sm: '2px',
-        DEFAULT: '4px',
-        md: '4px',
-        lg: '6px',
-        xl: '8px',
-        '2xl': '10px',
-        '3xl': '12px',
+        DEFAULT: '0.375rem',
+        md: '0.5rem',
+        lg: '0.625rem',
+        xl: '0.875rem',
+        '2xl': '1.125rem',
+        '3xl': '1.375rem',
       },
-      // ServiceDesk: sombras Garden (tom kale)
+      // Neutral, layered shadows (light from above).
       boxShadow: {
-        sm: '0 1px 2px 0 rgba(4, 68, 77, 0.08)',
-        DEFAULT: '0 4px 8px 0 rgba(4, 68, 77, 0.08)',
-        md: '0 8px 16px 0 rgba(4, 68, 77, 0.12)',
-        lg: '0 16px 28px 0 rgba(4, 68, 77, 0.15)',
-        xl: '0 20px 32px 0 rgba(4, 68, 77, 0.18)',
+        sm: '0 1px 2px rgb(11 22 34 / 0.06)',
+        DEFAULT:
+          '0 1px 2px rgb(11 22 34 / 0.06), 0 2px 8px rgb(11 22 34 / 0.06)',
+        md: '0 2px 4px rgb(11 22 34 / 0.05), 0 8px 20px rgb(11 22 34 / 0.08)',
+        lg: '0 4px 8px rgb(11 22 34 / 0.05), 0 16px 40px rgb(11 22 34 / 0.12)',
+        xl: '0 8px 16px rgb(11 22 34 / 0.06), 0 24px 56px rgb(11 22 34 / 0.16)',
       },
-      // ServiceDesk: densidade (linhas de lista/controles)
-      spacing: {
-        'sd-row': 'var(--sd-row-height)',
-        'sd-row-compact': 'var(--sd-row-height-compact)',
-        'sd-control': 'var(--sd-control-height)',
+      transitionTimingFunction: {
+        // iOS-like spring-ish ease for UI motion
+        smooth: 'cubic-bezier(0.32, 0.72, 0, 1)',
       },
       fontWeight: {
         420: '420',
@@ -255,6 +244,19 @@ const tailwindConfig = {
       body: slateDark.slate7,
     },
     keyframes: {
+      // Menus and popovers grow from their anchor; dialogs settle in.
+      'menu-in': {
+        from: { opacity: '0', transform: 'scale(0.96) translateY(-4px)' },
+        to: { opacity: '1', transform: 'scale(1) translateY(0)' },
+      },
+      'dialog-in': {
+        from: { opacity: '0', transform: 'scale(0.97) translateY(8px)' },
+        to: { opacity: '1', transform: 'scale(1) translateY(0)' },
+      },
+      'page-in': {
+        from: { opacity: '0', transform: 'translateY(4px)' },
+        to: { opacity: '1', transform: 'translateY(0)' },
+      },
       ...defaultTheme.keyframes,
       wiggle: {
         '0%': { transform: 'translateX(0)' },
@@ -319,6 +321,9 @@ const tailwindConfig = {
     },
     animation: {
       ...defaultTheme.animation,
+      'menu-in': 'menu-in 0.18s cubic-bezier(0.32, 0.72, 0, 1)',
+      'dialog-in': 'dialog-in 0.26s cubic-bezier(0.32, 0.72, 0, 1)',
+      'page-in': 'page-in 0.24s cubic-bezier(0.32, 0.72, 0, 1)',
       wiggle: 'wiggle 0.5s ease-in-out',
       'fade-in-up': 'fade-in-up 0.3s ease-out',
       'loader-pulse': 'loader-pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite',

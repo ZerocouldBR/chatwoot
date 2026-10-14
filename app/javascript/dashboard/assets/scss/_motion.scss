@@ -1,0 +1,73 @@
+// Apple-like motion and finish: quick, soft transitions on everything interactive, menus that grow from their
+// anchor, dialogs that settle in, and respect for reduced-motion preferences.
+:root {
+  --ease-smooth: cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+button,
+a,
+[role='button'],
+input,
+select,
+textarea {
+  transition-duration: 180ms;
+  transition-property: color, background-color, border-color, outline-color, box-shadow, opacity, transform;
+  transition-timing-function: var(--ease-smooth);
+}
+
+button:not(:disabled):active,
+[role='button']:active {
+  transform: scale(0.98);
+}
+
+// scss-lint:disable QualifyingElement
+dialog[open] {
+  animation: dialog-in 260ms var(--ease-smooth);
+}
+
+// scss-lint:enable QualifyingElement
+
+dialog::backdrop {
+  animation: backdrop-in 260ms var(--ease-smooth);
+  backdrop-filter: blur(6px);
+  background: rgb(11 22 34 / 0.28);
+}
+
+@keyframes dialog-in {
+  from {
+    opacity: 0;
+    transform: scale(0.97) translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes backdrop-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+// Thin, unobtrusive scrollbars.
+// scss-lint:disable PropertySpelling
+* {
+  scrollbar-color: rgb(var(--slate-6)) transparent;
+  scrollbar-width: thin;
+}
+// scss-lint:enable PropertySpelling
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}

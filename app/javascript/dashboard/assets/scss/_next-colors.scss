@@ -3,18 +3,18 @@
   // NEXT COLORS START
   :root {
     // slate
-    --slate-1: 252 252 253;
-    --slate-2: 249 249 251;
-    --slate-3: 240 240 243;
-    --slate-4: 232 232 236;
-    --slate-5: 224 225 230;
-    --slate-6: 217 217 224;
-    --slate-7: 205 206 214;
-    --slate-8: 185 187 198;
-    --slate-9: 139 141 152;
-    --slate-10: 128 131 141;
-    --slate-11: 96 100 108;
-    --slate-12: 28 32 36;
+    --slate-1: 252 253 253;
+    --slate-2: 247 249 248;
+    --slate-3: 240 243 242;
+    --slate-4: 232 236 235;
+    --slate-5: 224 229 228;
+    --slate-6: 215 221 220;
+    --slate-7: 200 208 207;
+    --slate-8: 177 187 187;
+    --slate-9: 128 141 145;
+    --slate-10: 116 129 134;
+    --slate-11: 84 98 106;
+    --slate-12: 11 22 34;
 
     --iris-1: 253 253 255;
     --iris-2: 248 248 255;
@@ -29,18 +29,18 @@
     --iris-11: 87 83 198;
     --iris-12: 39 41 98;
 
-    --blue-1: 251 253 255;
-    --blue-2: 245 249 255;
-    --blue-3: 233 243 255;
-    --blue-4: 218 236 255;
-    --blue-5: 201 226 255;
-    --blue-6: 181 213 255;
-    --blue-7: 155 195 252;
-    --blue-8: 117 171 247;
-    --blue-9: 39 129 246;
-    --blue-10: 16 115 233;
-    --blue-11: 8 109 224;
-    --blue-12: 11 50 101;
+    --blue-1: 250 254 253;
+    --blue-2: 240 251 248;
+    --blue-3: 222 246 240;
+    --blue-4: 200 240 231;
+    --blue-5: 176 231 220;
+    --blue-6: 147 218 205;
+    --blue-7: 110 199 184;
+    --blue-8: 60 174 158;
+    --blue-9: 15 118 110;
+    --blue-10: 13 104 97;
+    --blue-11: 15 110 102;
+    --blue-12: 10 50 47;
 
     --ruby-1: 255 252 253;
     --ruby-2: 255 247 248;
@@ -107,25 +107,25 @@
     --violet-11: 101 85 183;
     --violet-12: 47 38 95;
 
-    --background-color: 247 247 247;
-    --surface-1: 254 254 254;
+    --background-color: 245 247 246;
+    --surface-1: 250 251 251;
     --surface-2: 255 255 255;
     --surface-active: 255 255 255;
     --background-input-box: 0, 0, 0, 0.03;
-    --text-blue: 1 22 44;
+    --text-blue: 10 50 47;
     --text-purple: 2 4 49;
     --text-amber: 37 24 1;
-    --border-container: 236 236 236;
-    --border-strong: 226 227 231;
-    --border-weak: 234 234 234;
-    --border-blue-strong: 18 61 117;
+    --border-container: 228 233 231;
+    --border-strong: 218 224 222;
+    --border-weak: 232 236 235;
+    --border-blue-strong: 15 118 110;
     --solid-1: 255 255 255;
     --solid-2: 255 255 255;
     --solid-3: 255 255 255;
     --solid-active: 255 255 255;
     --solid-amber: 255 228 181;
-    --solid-blue: 218 236 255;
-    --solid-blue-2: 251 253 255;
+    --solid-blue: 222 246 240;
+    --solid-blue-2: 240 251 248;
     --solid-iris: 230 231 255;
     --solid-purple: 230 231 255;
     --solid-red: 254 200 201;
@@ -143,7 +143,7 @@
     --alpha-3: 255, 255, 255, 0.96;
     --black-alpha-1: 0, 0, 0, 0.12;
     --black-alpha-2: 0, 0, 0, 0.04;
-    --border-blue: 39, 129, 246, 0.5;
+    --border-blue: 15, 118, 110, 0.45;
     --white-alpha: 255, 255, 255, 0.8;
 
     // Voice call widget - light mode
@@ -155,18 +155,18 @@
 
   .dark {
     // slate
-    --slate-1: 17 17 19;
-    --slate-2: 24 25 27;
-    --slate-3: 33 34 37;
-    --slate-4: 39 42 45;
-    --slate-5: 46 49 53;
-    --slate-6: 54 58 63;
-    --slate-7: 67 72 78;
-    --slate-8: 90 97 105;
-    --slate-9: 105 110 119;
-    --slate-10: 119 123 132;
-    --slate-11: 176 180 186;
-    --slate-12: 237 238 240;
+    --slate-1: 14 15 17;
+    --slate-2: 20 21 24;
+    --slate-3: 28 29 33;
+    --slate-4: 34 36 40;
+    --slate-5: 41 43 48;
+    --slate-6: 49 51 57;
+    --slate-7: 61 64 71;
+    --slate-8: 82 86 95;
+    --slate-9: 112 117 127;
+    --slate-10: 128 133 143;
+    --slate-11: 172 176 184;
+    --slate-12: 237 238 241;
 
     --iris-1: 19 19 30;
     --iris-2: 23 22 37;
@@ -181,18 +181,18 @@
     --iris-11: 158 177 255;
     --iris-12: 224 223 254;
 
-    --blue-1: 10 17 28;
-    --blue-2: 15 24 38;
-    --blue-3: 15 39 72;
-    --blue-4: 10 49 99;
-    --blue-5: 18 61 117;
-    --blue-6: 29 84 134;
-    --blue-7: 40 89 156;
-    --blue-8: 48 106 186;
-    --blue-9: 39 129 246;
-    --blue-10: 21 116 231;
-    --blue-11: 126 182 255;
-    --blue-12: 205 227 255;
+    --blue-1: 13 20 20;
+    --blue-2: 14 28 28;
+    --blue-3: 12 46 45;
+    --blue-4: 10 60 58;
+    --blue-5: 12 74 71;
+    --blue-6: 18 90 86;
+    --blue-7: 24 112 106;
+    --blue-8: 28 140 132;
+    --blue-9: 13 148 136;
+    --blue-10: 20 166 152;
+    --blue-11: 94 234 212;
+    --blue-12: 204 251 241;
 
     --ruby-1: 25 17 19;
     --ruby-2: 30 21 23;
@@ -259,42 +259,42 @@
     --violet-11: 169 153 236;
     --violet-12: 226 221 254;
 
-    --background-color: 28 29 32;
-    --surface-1: 20 21 23;
-    --surface-2: 22 23 26;
-    --surface-active: 53 57 66;
+    --background-color: 14 15 17;
+    --surface-1: 20 21 24;
+    --surface-2: 24 25 28;
+    --surface-active: 41 43 48;
     --background-input-box: 255, 255, 255, 0.02;
-    --text-blue: 213 234 255;
+    --text-blue: 204 251 241;
     --text-purple: 232 233 254;
     --text-amber: 255 247 234;
-    --border-strong: 46 45 50;
-    --border-weak: 31 31 37;
-    --border-blue-strong: 201 226 255;
-    --solid-1: 23 23 26;
-    --solid-2: 29 30 36;
-    --solid-3: 44 45 54;
-    --solid-active: 53 57 66;
+    --border-strong: 52 55 61;
+    --border-weak: 38 40 45;
+    --border-blue-strong: 94 234 212;
+    --solid-1: 20 21 24;
+    --solid-2: 28 29 33;
+    --solid-3: 36 38 42;
+    --solid-active: 41 43 48;
     --solid-amber: 56 50 41;
-    --solid-blue: 15 57 102;
-    --solid-blue-2: 26 29 35;
+    --solid-blue: 12 46 45;
+    --solid-blue-2: 14 28 28;
     --solid-iris: 38 42 101;
     --solid-purple: 51 51 107;
     --solid-red: 90 33 34;
     --solid-amber-button: 255 221 141;
-    --card-color: 28 30 34;
+    --card-color: 22 23 26;
     --overlay: 0, 0, 0, 0.4;
     --overlay-avatar: 0, 0, 0, 0.05;
-    --button-color: 42 43 51;
+    --button-color: 34 36 40;
     --button-hover-color: 0, 0, 0, 0.15;
-    --label-background: 36 38 45;
+    --label-background: 34 36 40;
     --label-border: 255, 255, 255, 0.03;
 
-    --alpha-1: 35, 36, 42, 0.8;
-    --alpha-2: 147, 153, 176, 0.12;
-    --alpha-3: 33, 34, 38, 0.95;
+    --alpha-1: 28, 29, 33, 0.8;
+    --alpha-2: 160, 165, 175, 0.12;
+    --alpha-3: 22, 23, 26, 0.95;
     --black-alpha-1: 0, 0, 0, 0.3;
     --black-alpha-2: 0, 0, 0, 0.2;
-    --border-blue: 39, 129, 246, 0.5;
+    --border-blue: 94, 234, 212, 0.45;
     --border-container: 255, 255, 255, 0;
     --white-alpha: 255, 255, 255, 0.1;
 

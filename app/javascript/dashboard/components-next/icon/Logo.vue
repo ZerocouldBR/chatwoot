@@ -22,10 +22,19 @@ const globalConfig = useMapGetter('globalConfig/get');
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
   >
-    <rect width="64" height="64" rx="16" fill="#3B5BDB" />
-    <path
-      d="M18 22a6 6 0 0 1 6-6h16a6 6 0 0 1 6 6v12a6 6 0 0 1-6 6H30l-8 7v-7a4 4 0 0 1-4-4z"
-      fill="#fff"
-    />
+    <rect width="64" height="64" rx="15" fill="#13324A" />
+    <g transform="translate(6 5) scale(0.8125)">
+      <path
+        d="M18 10h28a10 10 0 0 1 10 10v16a10 10 0 0 1-10 10H38l-6 9-6-9h-8A10 10 0 0 1 8 36V20a10 10 0 0 1 10-10Z"
+        fill="#5EEAD4"
+      />
+      <path
+        d="M21 28.5l7.5 7.5L43 21.5"
+        stroke="#0B1622"
+        stroke-width="6"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+    </g>
   </svg>
 </template>

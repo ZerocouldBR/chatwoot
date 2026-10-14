@@ -17,14 +17,16 @@
 
 // Plugins
 @import 'plugins/date-picker';
+@import 'motion';
 
 html,
 body {
   font-family:
-    'Inter',
     -apple-system,
-    system-ui,
     BlinkMacSystemFont,
+    'SF Pro Text',
+    'Inter',
+    system-ui,
     'Segoe UI',
     Roboto,
     'Helvetica Neue',

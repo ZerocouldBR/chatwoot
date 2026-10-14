@@ -1,1 +1,5 @@
-<svg width="300" height="64" viewBox="0 0 300 64" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="64" height="64" rx="16" fill="#3B5BDB"/><path d="M18 22a6 6 0 0 1 6-6h16a6 6 0 0 1 6 6v12a6 6 0 0 1-6 6H30l-8 7v-7h0a4 4 0 0 1-4-4z" fill="#fff"/><text x="80" y="44" font-family="Inter, Helvetica, Arial, sans-serif" font-size="34" font-weight="700" fill="#F9FAFB">Helpdesk</text></svg>
+<svg width="262" height="64" viewBox="0 0 262 64" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="ServiceDesk">
+  <path d="M18 10h28a10 10 0 0 1 10 10v16a10 10 0 0 1-10 10H38l-6 9-6-9h-8A10 10 0 0 1 8 36V20a10 10 0 0 1 10-10Z" fill="#5EEAD4"/>
+  <path d="M21 28.5l7.5 7.5L43 21.5" stroke="#0B1622" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="70" y="43" fill="#F5F7F6" font-family="-apple-system, BlinkMacSystemFont, 'SF Pro Display', Inter, 'Segoe UI', Roboto, sans-serif" font-size="30" font-weight="700" letter-spacing="-0.6">ServiceDesk</text>
+</svg>
