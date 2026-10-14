@@ -132,6 +132,19 @@ def context(request: Request, conversation_id: int | None = None, authorization:
             "dial": {"available": True, "reason": None}}
 
 
+@app.get(P + "/capabilities")
+def capabilities(request: Request, authorization: str | None = Header(None)):
+    """Mesmo formato do sd-ops real (GET /capabilities, WEBHOOK_CONTRACTS.md §8.4)."""
+    principal(authorization, request)
+    return {"tenant_id": "dev55", "env": "dev", "integration_enabled": True, "capabilities": {
+        "dial": {"enabled": True, "mode": "mock", "reason": "MODO MOCK (DEV): nenhuma ligação real", "branch": "5005"},
+        "webphone": {"enabled": False, "mode": "external", "url": None,
+                     "reason": "webphone da 55PBX não configurado no sd-ops (PBX_WEBPHONE_URL)"},
+        "callbacks": {"enabled": True, "reason": None},
+        "recordings": {"enabled": True, "mode": "local", "reason": None},
+        "ura": {"enabled": False, "mode": "menu_dinamico", "reason": "Menu Dinâmico (URA) sem credencial configurada"}}}
+
+
 @app.get(P + "/calls")
 def calls(request: Request, conversation_id: int | None = None, authorization: str | None = Header(None)):
     principal(authorization, request)

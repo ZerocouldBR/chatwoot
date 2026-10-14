@@ -1,7 +1,8 @@
 /**
  * Cliente do sd-ops (A2), REST /sd-ops/api/v1 (WEBHOOK_CONTRACTS.md §8.4–8.7, CTI_AUTH.md).
- * As respostas são normalizadas de forma tolerante (envelope `data` opcional), porque a OpenAPI do
- * sd-ops ainda pode mudar. Capacidade não informada = função DESABILITADA (nunca simulada).
+ * As respostas são normalizadas de forma tolerante (envelope `data` opcional). As capacidades do CTI vêm
+ * SÓ de GET /capabilities (dial, webphone, callbacks, recordings, ura): nada de sondagem ou heurística.
+ * Capacidade não informada = função DESABILITADA (nunca simulada).
  */
 import { ApiError, http, qs, type Query } from './http';
 
@@ -54,10 +55,17 @@ export interface Capability {
   mode?: string;
   reason?: string;
   url?: string;
+  branch?: string;
 }
-export type Capabilities = Record<string, Capability>;
+/** Nomes publicados pelo sd-ops em GET /capabilities. */
+export const CAPABILITY_NAMES = ['dial', 'webphone', 'callbacks', 'recordings', 'ura'] as const;
+export type CapabilityName = (typeof CAPABILITY_NAMES)[number];
+export type Capabilities = Partial<Record<CapabilityName | string, Capability>>;
 
-/** GET /capabilities (proposto ao A2). 404/ausente => null: a UI desabilita tudo e explica. */
+const opt = (v: unknown) => (v === null || v === undefined || v === '' ? undefined : String(v));
+
+/** GET /sd-ops/api/v1/capabilities: {capabilities: {dial|webphone|callbacks|recordings|ura: {enabled, mode, reason, url}}}.
+ *  É a ÚNICA fonte das capacidades do CTI. 404/405 (sd-ops antigo) => null: a UI desabilita tudo e explica. */
 export async function capabilities(): Promise<Capabilities | null> {
   try {
     const d = unwrap<Record<string, any>>(await http(`${SDOPS}/capabilities`));
@@ -65,7 +73,11 @@ export async function capabilities(): Promise<Capabilities | null> {
     const out: Capabilities = {};
     Object.entries(src).forEach(([k, v]) => {
       if (typeof v === 'boolean') out[k] = { enabled: v };
-      else if (v && typeof v === 'object') out[k] = { enabled: !!v.enabled, mode: v.mode, reason: v.reason, url: v.url };
+      else if (v && typeof v === 'object') {
+        const c: Capability = { enabled: !!v.enabled, mode: opt(v.mode), reason: opt(v.reason), url: opt(v.url) };
+        if (opt(v.branch)) c.branch = opt(v.branch);
+        out[k] = c;
+      }
     });
     return out;
   } catch (e) {
@@ -141,8 +153,9 @@ function normCall(c: any): CallRef {
   return { ...c, id: String(c.id), status: c.status || c.state, ura };
 }
 
-/** GET /context (sd-ops): open_tickets, recent_calls, active_call, callbacks_pending, dial{available,reason}. */
-export async function context(q: Query): Promise<Context & { dial?: Capability }> {
+/** GET /context (sd-ops): open_tickets, recent_calls, active_call, callbacks_pending. (O `dial` que ainda vem no
+ *  /context é ignorado pela UI: a capacidade vale só pelo GET /capabilities.) */
+export async function context(q: Query): Promise<Context> {
   const d = unwrap<Record<string, any>>(await http(`${SDOPS}/context${qs(q)}`)) || {};
   const contact = d.contact ? { ...d.contact, phone: d.contact.phone_number || d.phone_e164 } : d.phone_e164 ? { phone: d.phone_e164 } : undefined;
   return {
@@ -154,18 +167,7 @@ export async function context(q: Query): Promise<Context & { dial?: Capability }
     active_call: d.active_call ? normCall(d.active_call) : null,
     recurring_subjects: d.recurring_subjects || [],
     owner: d.owner || d.assignee,
-    dial: d.dial ? { enabled: !!d.dial.available, reason: d.dial.reason || undefined } : undefined,
   };
-}
-
-/** Sonda o endpoint de retornos: 200 = disponível para este usuário (o sd-ops reportou). */
-export async function callbacksAvailable(): Promise<Capability> {
-  try {
-    await http(`${SDOPS}/callbacks${qs({ status: 'pending' })}`);
-    return { enabled: true };
-  } catch (e) {
-    return { enabled: false, reason: e instanceof ApiError && e.status === 403 ? 'Sem permissão para retornos.' : 'Retornos indisponíveis no sd-ops.' };
-  }
 }
 
 export async function calls(q: Query): Promise<CallRef[]> {

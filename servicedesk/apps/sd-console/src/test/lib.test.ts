@@ -56,6 +56,28 @@ describe('http + sd-ops', () => {
     mockFetch({ 'GET /capabilities': { json: { dial: { enabled: false, reason: 'sem credenciais' }, webphone: true } } });
     expect(await sdops.capabilities()).toEqual({ dial: { enabled: false, reason: 'sem credenciais', mode: undefined, url: undefined }, webphone: { enabled: true } });
   });
+  it('capacidades no formato real do sd-ops (envelope capabilities, null vira ausente, ramal)', async () => {
+    mockFetch({
+      'GET /capabilities': {
+        json: {
+          tenant_id: 'dev55', env: 'dev',
+          capabilities: {
+            dial: { enabled: true, mode: 'mock', reason: 'MODO MOCK (DEV): nenhuma ligação real', branch: '5005' },
+            webphone: { enabled: false, mode: 'external', url: null, reason: 'webphone não configurado' },
+            callbacks: { enabled: true, reason: null },
+            recordings: { enabled: true, mode: 'local', reason: null },
+            ura: { enabled: false, mode: 'menu_dinamico', reason: 'sem credencial' },
+          },
+        },
+      },
+    });
+    const c = (await sdops.capabilities())!;
+    expect(Object.keys(c).sort()).toEqual([...sdops.CAPABILITY_NAMES].sort());
+    expect(c.dial).toEqual({ enabled: true, mode: 'mock', reason: 'MODO MOCK (DEV): nenhuma ligação real', url: undefined, branch: '5005' });
+    expect(c.webphone).toEqual({ enabled: false, mode: 'external', reason: 'webphone não configurado', url: undefined });
+    expect(c.callbacks).toEqual({ enabled: true, mode: undefined, reason: undefined, url: undefined });
+    expect(c.ura!.enabled).toBe(false);
+  });
 });
 
 describe('métricas do sd-ops (formato real: groups + group_by)', () => {

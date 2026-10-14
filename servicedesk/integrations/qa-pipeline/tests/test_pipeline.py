@@ -280,6 +280,10 @@ def test_results_delivered_to_sdops_rest(pipeline, audio, redis_client):
     assert route.calls[0].request.headers["authorization"] == "Bearer sdsvc_teste"
     assert route.calls[0].request.headers["idempotency-key"].startswith("transcription:qa.transcriptions:")
     assert count(Outbox, Outbox.sdops_status == "delivered") == 2
+    # o sd-ops repassa o qa.completed ao n8n (WF11) a partir deste corpo: evaluation_id, alerts e console_url
+    qa_body = next(json.loads(c.request.content) for c in route.calls if json.loads(c.request.content)["kind"] == "qa")
+    assert qa_body["external_id"] == "qa.qa_evaluations:%s" % qa_body["data"]["evaluation_id"]
+    assert "alerts" in qa_body["data"] and qa_body["data"]["console_url"].endswith("/%s" % qa_body["data"]["evaluation_id"])
     ev = one(QaEvaluation)
     assert ev.agent_ref == "ana@exemplo.test" and ev.team == "FILA_SUPORTE_1"  # enriquecido pelo sd-ops
 

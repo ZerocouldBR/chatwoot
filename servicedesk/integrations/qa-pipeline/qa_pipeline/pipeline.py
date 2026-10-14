@@ -605,7 +605,8 @@ def analysis_results_for(o: Outbox) -> List[dict]:
     if o.event_type == "qa.completed":
         out = [{**common, "kind": "qa", "status": "completed" if p.get("score") is not None else "partial",
                 "external_id": f"qa.qa_evaluations:{p['evaluation_id']}", "score": p.get("score"),
-                "data": {"rubric_version": p.get("rubric_version_id"), "prompt_version": p.get("prompt_version_id"),
+                "data": {"evaluation_id": p["evaluation_id"], "rubric_version": p.get("rubric_version_id"),
+                         "prompt_version": p.get("prompt_version_id"),
                          "model": p.get("llm_model"), "alerts": p.get("alerts"), "console_url": p.get("console_url"),
                          "recommendation_only": True, "run": p.get("run")}}]
         if p.get("summary_id"):

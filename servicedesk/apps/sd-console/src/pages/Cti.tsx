@@ -42,7 +42,7 @@ export function CtiInner({ ctx, embedded }: { ctx: AppContext | null; embedded: 
 
   const [caps, setCaps] = useState<sdops.Capabilities | null | undefined>(undefined);
   const [health, setHealth] = useState<sdops.Health | null>(null);
-  const [data, setData] = useState<(sdops.Context & { dial?: sdops.Capability }) | null>(null);
+  const [data, setData] = useState<sdops.Context | null>(null);
   const [calls, setCalls] = useState<sdops.CallRef[]>([]);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -68,17 +68,16 @@ export function CtiInner({ ctx, embedded }: { ctx: AppContext | null; embedded: 
   useEffect(() => {
     sdops.health().then(setHealth).catch(() => setHealth(null));
   }, []);
-  // Capacidades: /capabilities (se existir) + o que o sd-ops reporta no /context (dial) + sondagem de
-  // /callbacks. O que ninguém reportar fica desabilitado com explicação.
+  // Capacidades: só o GET /capabilities do sd-ops (por usuário: ramal, papel, credenciais da 55PBX). Sem
+  // sondagem nem heurística; o que não vier fica desabilitado com explicação. Recarrega com o contexto.
   useEffect(() => {
     let alive = true;
-    Promise.all([sdops.capabilities().catch(() => null), sdops.callbacksAvailable()]).then(([c, cb]) => {
-      if (!alive) return;
-      const merged: sdops.Capabilities = { ...(c || {}) };
-      if (!merged.callbacks) merged.callbacks = cb;
-      if (data?.dial && !merged.dial) merged.dial = data.dial;
-      setCaps(c || data?.dial ? merged : null);
-    });
+    sdops
+      .capabilities()
+      .catch(() => null)
+      .then((c) => {
+        if (alive) setCaps(c);
+      });
     return () => {
       alive = false;
     };
@@ -104,7 +103,9 @@ export function CtiInner({ ctx, embedded }: { ctx: AppContext | null; embedded: 
 
   return (
     <div className="main compact">
-      {health?.mock ? <Notice kind="mock">sd-ops em MODO MOCK (DEV): dados fictícios, nenhuma ligação real.</Notice> : null}
+      {health?.mock || caps?.dial?.mode === 'mock' ? (
+        <Notice kind="mock">sd-ops em MODO MOCK (DEV): dados fictícios, nenhuma ligação real.</Notice>
+      ) : null}
       {caps === null ? (
         <Notice kind="warn">O sd-ops não informou as capacidades disponíveis. Discar, webphone e retorno ficam desabilitados.</Notice>
       ) : null}
@@ -112,7 +113,7 @@ export function CtiInner({ ctx, embedded }: { ctx: AppContext | null; embedded: 
       <CtiHeader contactName={contact?.name} phone={phone} data={data} caps={caps} conversationId={conversationId} onChanged={load} />
       <div className="grid cols-2">
         <ContextCard data={data} loading={loading} />
-        <RegisterCard data={data} caps={caps} conversationId={conversationId} onSaved={load} />
+        <RegisterCard data={data} conversationId={conversationId} onSaved={load} />
       </div>
       <PostCall calls={calls} agentEmail={me.email} />
     </div>
@@ -297,11 +298,11 @@ function Fragment2({ k, v }: { k: string; v: string }) {
 
 const DISPOSITIONS = ['resolvido_na_ligacao', 'encaminhado', 'aguardando_cliente', 'retorno_agendado', 'sem_contato', 'improcedente'];
 
-function RegisterCard({ data, caps, conversationId, onSaved }: { data: sdops.Context | null; caps: sdops.Capabilities | null | undefined; conversationId?: number; onSaved: () => void }) {
+function RegisterCard({ data, conversationId, onSaved }: { data: sdops.Context | null; conversationId?: number; onSaved: () => void }) {
   const ticket = data?.tickets?.[0];
-  // Sem capacidade explícita, o ticket aberto devolvido pelo /context do sd-ops indica que o módulo de tickets
-  // está ativo; a autorização continua no servidor (tickets:write / papel agente).
-  const cap = caps?.tickets_write ?? caps?.tickets ?? (ticket ? { enabled: true } : undefined);
+  // Registro = nota/disposição no ticket aberto (POST /tickets/{id}/notes). Não é capacidade do provedor:
+  // depende só de haver ticket; a autorização continua no servidor (tickets:write / papel agente).
+  const cap: sdops.Capability = ticket ? { enabled: true } : { enabled: false, reason: 'Nenhum ticket aberto para este contato.' };
   const [f, setF] = useState({ category: '', reason: '', description: '', actions: '', result: '', disposition: '', pending: '', schedule_at: '', internal_note: '', close: false });
   const [msg, setMsg] = useState<{ ok: boolean; text: string } | null>(null);
   const [busy, setBusy] = useState(false);

@@ -95,7 +95,29 @@ const CTX = {
   recent_calls: [],
   active_call: { id: 'c1', state: 'active', branch: '5005', queue: 'FILA_SUPORTE_1', answered_at: new Date().toISOString(), recordings: [] },
   callbacks_pending: [],
-  dial: { available: false, reason: 'discagem desligada (PBX_DIAL_MODE=disabled)' },
+  dial: { available: true, reason: null }, // ignorado pela UI: a capacidade vale só pelo GET /capabilities
+};
+
+// Formato REAL do GET /sd-ops/api/v1/capabilities (sd_ops/api.py, integração final)
+const CAPS_OFF = {
+  tenant_id: 'dev55', env: 'prod', integration_enabled: true,
+  capabilities: {
+    dial: { enabled: false, mode: 'disabled', reason: 'click-to-call desativado (PBX_DIAL_MODE=disabled)' },
+    webphone: { enabled: false, mode: 'external', url: null, reason: 'webphone da 55PBX não configurado no sd-ops (PBX_WEBPHONE_URL)' },
+    callbacks: { enabled: false, reason: 'sem permissão para retornos' },
+    recordings: { enabled: true, mode: 'local', reason: null },
+    ura: { enabled: false, mode: 'menu_dinamico', reason: 'Menu Dinâmico (URA) sem credencial configurada para este tenant' },
+  },
+};
+const CAPS_MOCK = {
+  ...CAPS_OFF,
+  env: 'dev',
+  capabilities: {
+    ...CAPS_OFF.capabilities,
+    dial: { enabled: true, mode: 'mock', reason: 'MODO MOCK (DEV): nenhuma ligação real', branch: '5005' },
+    webphone: { enabled: true, mode: 'external', url: 'https://fone.55pbx.test', reason: null },
+    callbacks: { enabled: true, reason: null },
+  },
 };
 
 describe('CTI', () => {
@@ -114,14 +136,21 @@ describe('CTI', () => {
   });
 
   it('sd-ops reporta discagem indisponível: botões desabilitados com o motivo real', async () => {
-    mockFetch({ 'GET /auth/me': { json: ME }, 'GET /context': { json: CTX }, 'GET /calls': { json: { items: [] } }, 'GET /health': { json: { status: 'ok' } } });
+    const calls = mockFetch({
+      'GET /auth/me': { json: ME }, 'GET /context': { json: CTX }, 'GET /calls': { json: { items: [] } },
+      'GET /health': { json: { status: 'ok' } }, 'GET /capabilities': { json: CAPS_OFF },
+    });
     render(withSession(<CtiInner ctx={{ conversation: { id: 101, account_id: 1 }, contact: { id: 55, name: 'Roberto Fictício', phone_number: '+5511900000001' } }} embedded />));
     expect(await screen.findByText('DEV-2026-000123', { selector: 'dd' })).toBeInTheDocument();
+    expect(await screen.findByText('click-to-call desativado (PBX_DIAL_MODE=disabled)')).toBeInTheDocument();
+    // o /context ainda diz dial.available=true: a UI NÃO usa (só o /capabilities vale)
     expect(screen.getByRole('button', { name: 'Discar' })).toBeDisabled();
-    expect(await screen.findByText('discagem desligada (PBX_DIAL_MODE=disabled)')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Abrir webphone' })).toBeDisabled();
-    expect(screen.getByText(/não informou a capacidade "webphone"/)).toBeInTheDocument();
+    expect(screen.getByText('webphone da 55PBX não configurado no sd-ops (PBX_WEBPHONE_URL)')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Registrar retorno' })).toBeDisabled();
+    expect(screen.getByText('sem permissão para retornos')).toBeInTheDocument();
+    // sem sondagem de /callbacks
+    expect(calls.some((c) => c.method === 'GET' && c.url.split('?')[0].endsWith('/callbacks'))).toBe(false);
     expect(screen.getByText('FILA_SUPORTE_1')).toBeInTheDocument();
     expect(screen.getByText('SLA em risco')).toBeInTheDocument();
   });
@@ -130,10 +159,10 @@ describe('CTI', () => {
     let n = 0;
     mockFetch({
       'GET /auth/me': { json: ME },
-      'GET /context': { json: { ...CTX, dial: { available: true, reason: null } } },
+      'GET /context': { json: CTX },
       'GET /calls': { json: { items: [] } },
-      'GET /callbacks': { json: { items: [] } },
-      'GET /health': { json: { status: 'ok', mock: true } },
+      'GET /health': { json: { status: 'ok' } },
+      'GET /capabilities': { json: CAPS_MOCK },
       'POST /dial': () =>
         ++n === 1
           ? { json: { status: 'mock', simulated: true, message: 'MODO MOCK (DEV): nenhuma ligação foi feita' } }
@@ -148,6 +177,17 @@ describe('CTI', () => {
     expect(screen.getByText(/sd-ops em MODO MOCK/)).toBeInTheDocument();
     await user.click(screen.getByRole('button', { name: 'Discar' }));
     expect(await screen.findByText('Discagem não realizada: E-mail inválido.')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Abrir webphone' })).toBeEnabled();
+    expect(screen.getByRole('button', { name: 'Registrar retorno' })).toBeEnabled();
+  });
+
+  it('sd-ops sem GET /capabilities (404): tudo desabilitado e explicado, mesmo com dial no /context', async () => {
+    mockFetch({ 'GET /auth/me': { json: ME }, 'GET /context': { json: CTX }, 'GET /calls': { json: { items: [] } }, 'GET /health': { json: { status: 'ok' } } });
+    render(withSession(<CtiInner ctx={{ conversation: { id: 101, account_id: 1 }, contact: { id: 55, phone_number: '+5511900000001' } }} embedded />));
+    expect(await screen.findByText(/O sd-ops não informou as capacidades disponíveis/)).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Discar' })).toBeDisabled();
+    expect(screen.getByRole('button', { name: 'Abrir webphone' })).toBeDisabled();
+    expect(screen.getByRole('button', { name: 'Registrar retorno' })).toBeDisabled();
   });
 });
 
