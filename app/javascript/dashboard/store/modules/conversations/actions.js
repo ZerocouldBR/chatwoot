@@ -626,6 +626,11 @@ const actions = {
     commit(types.SET_CONVERSATION_FILTERS, data);
   },
 
+  // ServiceDesk: ordenação da view do Zendesk aberta (busca e ordem da store)
+  setConversationFiltersSort({ commit }, sortBy) {
+    commit(types.SET_CONVERSATION_FILTERS_SORT, sortBy || null);
+  },
+
   // Replaces the list with page 1 of the snake_case filters; sortBy overrides the activity order.
   applyConversationFilters: (
     { commit, dispatch },

@@ -1,0 +1,41 @@
+{
+  "SD_VIEW_TABLE": {
+    "COLUMNS": {
+      "NUMBER": "ID",
+      "SLA": "SLA",
+      "SUBJECT": "Assunto",
+      "REQUESTER": "Solicitante",
+      "ORGANIZATION": "Organização",
+      "STATUS": "Status",
+      "PRIORITY": "Prioridade",
+      "GROUP": "Grupo",
+      "ASSIGNEE": "Atribuído",
+      "UPDATED": "Atualizado",
+      "CHANNEL": "Canal",
+      "CREATED": "Solicitado",
+      "SOLVED": "Resolvido",
+      "REQUESTER_UPDATED": "Solicitante atualizado",
+      "ASSIGNEE_UPDATED": "Atribuído atualizado",
+      "SATISFACTION": "Satisfação",
+      "TYPE": "Tipo"
+    },
+    "PRIORITY": {
+      "LOW": "Baixa",
+      "MEDIUM": "Normal",
+      "HIGH": "Alta",
+      "URGENT": "Urgente"
+    },
+    "SATISFACTION": {
+      "OFFERED": "Oferecida",
+      "GOOD": "Boa",
+      "BAD": "Ruim"
+    },
+    "VALUES": {
+      "YES": "Sim",
+      "NO": "Não"
+    }
+  },
+  "SD_RESOLVE": {
+    "MISSING_FIELDS": "Preencha os campos obrigatórios antes de resolver o ticket: {fields}"
+  }
+}

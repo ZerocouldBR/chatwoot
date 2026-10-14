@@ -1,0 +1,41 @@
+{
+  "SD_VIEW_TABLE": {
+    "COLUMNS": {
+      "NUMBER": "ID",
+      "SLA": "SLA",
+      "SUBJECT": "Subject",
+      "REQUESTER": "Requester",
+      "ORGANIZATION": "Organization",
+      "STATUS": "Status",
+      "PRIORITY": "Priority",
+      "GROUP": "Group",
+      "ASSIGNEE": "Assignee",
+      "UPDATED": "Updated",
+      "CHANNEL": "Channel",
+      "CREATED": "Requested",
+      "SOLVED": "Solved",
+      "REQUESTER_UPDATED": "Requester updated",
+      "ASSIGNEE_UPDATED": "Assignee updated",
+      "SATISFACTION": "Satisfaction",
+      "TYPE": "Type"
+    },
+    "PRIORITY": {
+      "LOW": "Low",
+      "MEDIUM": "Normal",
+      "HIGH": "High",
+      "URGENT": "Urgent"
+    },
+    "SATISFACTION": {
+      "OFFERED": "Offered",
+      "GOOD": "Good",
+      "BAD": "Bad"
+    },
+    "VALUES": {
+      "YES": "Yes",
+      "NO": "No"
+    }
+  },
+  "SD_RESOLVE": {
+    "MISSING_FIELDS": "Fill in the required fields before solving the ticket: {fields}"
+  }
+}
