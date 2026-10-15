@@ -2,7 +2,7 @@
 import { computed } from 'vue';
 import { HeatmapChart } from '@chatwoot/viz';
 
-import format from 'date-fns/format';
+import { formatDate } from 'shared/helpers/timeHelper';
 import getDay from 'date-fns/getDay';
 
 import { groupHeatmapByDay } from 'helpers/ReportsDataHelper';
@@ -37,18 +37,14 @@ const props = defineProps({
 });
 const { t } = useI18n();
 
-function formatDate(dateString) {
-  return format(new Date(dateString), 'MMM d, yyyy');
-}
-
 const DAYS_OF_WEEK = [
-  t('DAYS_OF_WEEK.SUNDAY'),
-  t('DAYS_OF_WEEK.MONDAY'),
-  t('DAYS_OF_WEEK.TUESDAY'),
-  t('DAYS_OF_WEEK.WEDNESDAY'),
-  t('DAYS_OF_WEEK.THURSDAY'),
-  t('DAYS_OF_WEEK.FRIDAY'),
-  t('DAYS_OF_WEEK.SATURDAY'),
+  'SUNDAY',
+  'MONDAY',
+  'TUESDAY',
+  'WEDNESDAY',
+  'THURSDAY',
+  'FRIDAY',
+  'SATURDAY',
 ];
 
 const columns = Array.from({ length: 24 }, (_, hour) => ({
@@ -87,8 +83,9 @@ const chartData = computed(() => {
 
     return {
       id: dateKey,
-      label: DAYS_OF_WEEK[getDay(date)],
-      description: formatDate(dateKey),
+      // Translated here, not at setup, so labels follow the account language once it loads.
+      label: t(`DAYS_OF_WEEK.${DAYS_OF_WEEK[getDay(date)]}`),
+      description: formatDate(date, 'MMM d, yyyy'),
       data: columns.map(({ id }) => valuesByHour.get(id) ?? null),
     };
   });

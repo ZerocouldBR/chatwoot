@@ -292,8 +292,8 @@
       "WHATSAPP_TEMPLATES": "Whatsapp Templates"
     },
     "REPLYBOX": {
-      "REPLY": "Reply",
-      "PRIVATE_NOTE": "Private Note",
+      "REPLY": "Public reply",
+      "PRIVATE_NOTE": "Internal note",
       "SEND": "Send",
       "CREATE": "Add Note",
       "INSERT_READ_MORE": "Read more",
@@ -737,7 +737,7 @@
       "NO_UPDATES": "No recent updates",
       "COMMENTED": "{author} commented on {subject}",
       "CHANGED": "{author} updated {subject}",
-      "SOMEONE": "Someone"
+      "SOMEONE": "System"
     }
   },
   "TICKET_MERGE": {

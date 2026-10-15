@@ -32,8 +32,8 @@
       "PLACEHOLDER": "Digite qualquer texto para pesquisar mensagens",
       "NO_MATCHING_RESULTS": "Nenhum resultado encontrado."
     },
-    "UNREAD_MESSAGES": "Mensagens não lidas",
-    "UNREAD_MESSAGE": "Mensagem não lida",
+    "UNREAD_MESSAGES": "mensagens não lidas",
+    "UNREAD_MESSAGE": "mensagem não lida",
     "CLICK_HERE": "Clique aqui",
     "LOADING_INBOXES": "Carregando canais",
     "LOADING_CONVERSATIONS": "Carregando tickets",
@@ -277,8 +277,8 @@
       "WHATSAPP_TEMPLATES": "Modelos do Whatsapp"
     },
     "REPLYBOX": {
-      "REPLY": "Responder",
-      "PRIVATE_NOTE": "Mensagem Privada",
+      "REPLY": "Resposta pública",
+      "PRIVATE_NOTE": "Nota interna",
       "SEND": "Enviar",
       "CREATE": "Enviar",
       "INSERT_READ_MORE": "Saiba mais",
@@ -600,16 +600,16 @@
     }
   },
   "CONVERSATION_SIDEBAR": {
-    "ASSIGNEE_LABEL": "Agente atribuído",
+    "ASSIGNEE_LABEL": "Atribuído",
     "SELF_ASSIGN": "Atribuir a mim",
-    "TEAM_LABEL": "Grupo atribuído",
+    "TEAM_LABEL": "Grupo",
     "SELECT": {
       "PLACEHOLDER": "Nenhuma"
     },
     "ACCORDION": {
       "CONTACT_DETAILS": "Detalhes do contato",
       "CONVERSATION_ACTIONS": "Ações do ticket",
-      "CONVERSATION_LABELS": "Tags do ticket",
+      "CONVERSATION_LABELS": "Tags",
       "CONVERSATION_INFO": "Informação do ticket",
       "CONTACT_NOTES": "Notas do contato",
       "CONTACT_ATTRIBUTES": "Atributos do contato",
@@ -684,7 +684,7 @@
   },
   "CONVERSATION_PARTICIPANTS": {
     "SIDEBAR_MENU_TITLE": "Seguindo",
-    "SIDEBAR_TITLE": "Seguidores do ticket",
+    "SIDEBAR_TITLE": "Seguidores",
     "NO_RECORDS_FOUND": "Nenhum resultado encontrado",
     "ADD_PARTICIPANTS": "Selecionar seguidores",
     "REMANING_PARTICIPANTS_TEXT": "+{count} seguidores",
@@ -748,7 +748,7 @@
       "NO_UPDATES": "Nenhuma atualização recente",
       "COMMENTED": "{author} comentou em {subject}",
       "CHANGED": "{author} atualizou {subject}",
-      "SOMEONE": "Alguém"
+      "SOMEONE": "Sistema"
     }
   },
   "TICKET_MERGE": {

@@ -258,10 +258,10 @@ onMounted(async () => {
           v-for="update in stats.updates"
           :key="update.id"
           type="button"
-          class="flex flex-col gap-0.5 text-start"
+          class="flex flex-col gap-0.5 px-2 py-1.5 -mx-2 rounded-lg text-start hover:bg-n-alpha-1"
           @click="openTicket(update.ticket_id)"
         >
-          <span class="text-sm underline text-n-slate-12">
+          <span class="text-sm text-n-slate-12">
             {{
               $t(
                 update.event_type === 'comment'

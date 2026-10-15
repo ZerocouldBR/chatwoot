@@ -46,7 +46,6 @@ import webhooks from './webhooks.json';
 import whatsappTemplates from './whatsappTemplates.json';
 import whatsappTemplateMgmt from './whatsappTemplateMgmt.json';
 import yearInReview from './yearInReview.json';
-import sdTicketTable from './sdTicketTable.json';
 import servicedeskTicketPanel from './servicedeskTicketPanel.json';
 
 export default {
@@ -98,6 +97,5 @@ export default {
   ...whatsappTemplates,
   ...whatsappTemplateMgmt,
   ...yearInReview,
-  ...sdTicketTable,
   ...servicedeskTicketPanel,
 };

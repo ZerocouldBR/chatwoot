@@ -1,4 +1,5 @@
 <script>
+import { setDateLocale } from 'shared/helpers/timeHelper';
 import { mapGetters } from 'vuex';
 import LoadingState from './components/widgets/LoadingState.vue';
 import NetworkNotification from './components/NetworkNotification.vue';
@@ -104,6 +105,7 @@ export default {
     setLocale(locale) {
       if (locale) {
         this.$root.$i18n.locale = locale;
+        setDateLocale(locale);
       }
     },
     async initializeAccount() {

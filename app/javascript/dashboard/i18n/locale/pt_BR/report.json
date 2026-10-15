@@ -137,7 +137,7 @@
       "NEXT_BUCKET": "Próxima barra",
       "UNKNOWN_CONTACT": "Contato desconhecido",
       "UNKNOWN_INBOX": "Canal desconhecido",
-      "UNASSIGNED_AGENT": "Não atribuídas",
+      "UNASSIGNED_AGENT": "Não atribuídos",
       "NO_MESSAGE_CONTENT": "Sem conteúdo da mensagem",
       "MESSAGE_CREATED_AT": "Mensagem criada em {time}",
       "EVENT_OCCURRED_AT": "Evento ocorrido em {time}",
@@ -550,12 +550,12 @@
     "LIVE": "Em tempo real",
     "HEATMAP_ARIA_LABEL": "{metric} por dia e hora",
     "ACCOUNT_CONVERSATIONS": {
-      "HEADER": "Tickets Abertos",
+      "HEADER": "Tickets abertos",
       "LOADING_MESSAGE": "Carregando métricas de ticket...",
-      "OPEN": "Abertas",
+      "OPEN": "Abertos",
       "UNATTENDED": "Aguardando resposta",
-      "UNASSIGNED": "Não atribuídas",
-      "PENDING": "Pendentes"
+      "UNASSIGNED": "Não atribuídos",
+      "PENDING": "Com o bot"
     },
     "CONVERSATION_HEATMAP": {
       "HEADER": "Tráfego de ticket",
@@ -577,7 +577,7 @@
       "NO_AGENTS": "Não há tickets por agentes",
       "TABLE_HEADER": {
         "AGENT": "Agente",
-        "OPEN": "Abertas",
+        "OPEN": "Abertos",
         "UNATTENDED": "Aguardando resposta",
         "STATUS": "Status"
       }
@@ -603,7 +603,7 @@
   },
   "DAYS_OF_WEEK": {
     "SUNDAY": "Domingo",
-    "MONDAY": "Segunda-Feira",
+    "MONDAY": "Segunda-feira",
     "TUESDAY": "Terça-feira",
     "WEDNESDAY": "Quarta-feira",
     "THURSDAY": "Quinta-feira",

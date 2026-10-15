@@ -8,6 +8,35 @@ import {
   formatDistanceToNow,
   differenceInDays,
 } from 'date-fns';
+import { de, es, fr, pt, ptBR } from 'date-fns/locale';
+
+const DATE_LOCALES = { de, es, fr, pt, pt_BR: ptBR };
+// English-ordered patterns callers pass, rewritten day-first (24h) for other locales.
+const DAY_FIRST_PATTERNS = [
+  ['h:mm a', 'HH:mm'],
+  ['MMM d, yyyy', 'd MMM yyyy'],
+  ['LLL d y', 'd LLL y'],
+  ['LLL d', 'd LLL'],
+  ['MMM d', 'd MMM'],
+];
+
+let dateLocale;
+
+// Called when the UI language changes so dates and relative times follow it.
+export const setDateLocale = code => {
+  dateLocale = DATE_LOCALES[code] || DATE_LOCALES[code?.split('_')[0]];
+};
+
+const localize = pattern =>
+  dateLocale
+    ? DAY_FIRST_PATTERNS.reduce(
+        (result, [english, dayFirst]) => result.replace(english, dayFirst),
+        pattern
+      )
+    : pattern;
+
+const formatLocal = (date, pattern) =>
+  format(date, localize(pattern), { locale: dateLocale });
 
 /**
  * Formats a Unix timestamp into a human-readable time format.
@@ -17,7 +46,7 @@ import {
  */
 export const messageStamp = (time, dateFormat = 'h:mm a') => {
   const unixTime = fromUnixTime(time);
-  return format(unixTime, dateFormat);
+  return formatLocal(unixTime, dateFormat);
 };
 
 /**
@@ -29,9 +58,9 @@ export const messageStamp = (time, dateFormat = 'h:mm a') => {
 export const messageTimestamp = (time, dateFormat = 'MMM d, yyyy') => {
   const messageTime = fromUnixTime(time);
   const now = new Date();
-  const messageDate = format(messageTime, dateFormat);
+  const messageDate = formatLocal(messageTime, dateFormat);
   if (!isSameYear(messageTime, now)) {
-    return format(messageTime, 'LLL d y, h:mm a');
+    return formatLocal(messageTime, 'LLL d y, h:mm a');
   }
   return messageDate;
 };
@@ -46,10 +75,10 @@ export const messageTimestamp = (time, dateFormat = 'MMM d, yyyy') => {
  */
 export const relativeDayTimestamp = (time, yesterdayLabel) => {
   const date = fromUnixTime(time);
-  if (isToday(date)) return format(date, 'h:mm a');
+  if (isToday(date)) return formatLocal(date, 'h:mm a');
   if (isYesterday(date)) return yesterdayLabel;
-  if (isThisYear(date)) return format(date, 'MMM d');
-  return format(date, 'MMM d, yyyy');
+  if (isThisYear(date)) return formatLocal(date, 'MMM d');
+  return formatLocal(date, 'MMM d, yyyy');
 };
 
 /**
@@ -59,7 +88,10 @@ export const relativeDayTimestamp = (time, yesterdayLabel) => {
  */
 export const dynamicTime = time => {
   const unixTime = fromUnixTime(time);
-  return formatDistanceToNow(unixTime, { addSuffix: true });
+  return formatDistanceToNow(unixTime, {
+    addSuffix: true,
+    locale: dateLocale,
+  });
 };
 
 /**
@@ -70,7 +102,7 @@ export const dynamicTime = time => {
  */
 export const dateFormat = (time, df = 'MMM d, yyyy') => {
   const unixTime = fromUnixTime(time);
-  return format(unixTime, df);
+  return formatLocal(unixTime, df);
 };
 
 /**
@@ -157,3 +189,12 @@ export const hasOneDayPassed = timestamp => {
   if (!timestamp) return true; // Defensive check
   return getDayDifferenceFromNow(new Date(), timestamp) >= 1;
 };
+
+/**
+ * Formats a Date (or date string) in the current UI language.
+ * @param {Date|string} date - Date to format.
+ * @param {string} pattern - date-fns pattern, written in English order.
+ * @returns {string} Formatted date string.
+ */
+export const formatDate = (date, pattern) =>
+  formatLocal(new Date(date), pattern);

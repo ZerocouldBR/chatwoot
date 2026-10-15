@@ -223,7 +223,7 @@
     },
     "ATTRIBUTES": {
       "MESSAGE_TYPE": "Tipo da Mensagem",
-      "PRIVATE_NOTE": "Mensagem Privada",
+      "PRIVATE_NOTE": "Nota interna",
       "MESSAGE_CONTAINS": "Conteúdo da mensagem",
       "EMAIL": "E-mail",
       "INBOX": "Canal",

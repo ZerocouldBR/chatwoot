@@ -722,7 +722,7 @@
       "OPEN": "Open",
       "UNATTENDED": "Awaiting reply",
       "UNASSIGNED": "Unassigned",
-      "PENDING": "Pending"
+      "PENDING": "With the bot"
     },
     "CONVERSATION_HEATMAP": {
       "HEADER": "Ticket Traffic",
