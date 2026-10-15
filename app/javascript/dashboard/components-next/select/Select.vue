@@ -264,9 +264,8 @@ const optionIndex = option => visibleOptions.value.indexOf(option);
       />
     </button>
 
-    <TeleportWithDirection to="body">
+    <TeleportWithDirection v-if="isOpen" to="body">
       <div
-        v-if="isOpen"
         ref="panel"
         role="listbox"
         :aria-label="ariaLabel || placeholder || undefined"

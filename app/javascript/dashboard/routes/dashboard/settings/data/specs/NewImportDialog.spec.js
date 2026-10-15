@@ -2,6 +2,7 @@ import { flushPromises, mount } from '@vue/test-utils';
 import { nextTick } from 'vue';
 import DataImportsAPI from 'dashboard/api/dataImports';
 import NewImportDialog from '../NewImportDialog.vue';
+import Select from 'dashboard/components-next/select/Select.vue';
 
 vi.mock('dashboard/api/dataImports', () => ({
   default: {
@@ -68,7 +69,9 @@ describe('NewImportDialog', () => {
 
   it('validates and creates a Freshdesk import with its domain', async () => {
     const wrapper = mountDialog();
-    await wrapper.find('select').setValue('freshdesk');
+    await wrapper
+      .getComponent(Select)
+      .vm.$emit('update:modelValue', 'freshdesk');
     await nextTick();
 
     const domainInput = wrapper.find(

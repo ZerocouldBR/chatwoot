@@ -32,7 +32,7 @@ const mountDurationInput = ({ initialValue = null } = {}) => {
     `,
   });
 
-  return mount(TestHost, { global: { stubs: { Select: true } } });
+  return mount(TestHost);
 };
 
 describe('DurationInput', () => {

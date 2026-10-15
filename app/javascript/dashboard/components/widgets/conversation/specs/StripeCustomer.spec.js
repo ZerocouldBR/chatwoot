@@ -1,6 +1,7 @@
 import { mount, flushPromises } from '@vue/test-utils';
 import StripeCustomer from '../StripeCustomer.vue';
 import StripeAPI from 'dashboard/api/integrations/stripe';
+import Select from 'dashboard/components-next/select/Select.vue';
 
 vi.mock('dashboard/components-next/TeleportWithDirection.vue', () => ({
   default: {
@@ -165,7 +166,9 @@ describe('StripeCustomer', () => {
     wrapper = mount(StripeCustomer, { props: { conversationId: 1 } });
     await flushPromises();
     StripeAPI.customer.mockResolvedValueOnce({ data });
-    await wrapper.get('select').setValue('cus_alfred');
+    await wrapper
+      .getComponent(Select)
+      .vm.$emit('update:modelValue', 'cus_alfred');
     await flushPromises();
     expect(StripeAPI.customer).toHaveBeenLastCalledWith(
       1,
@@ -216,7 +219,9 @@ describe('StripeCustomer', () => {
     });
     await flushPromises();
     StripeAPI.customer.mockResolvedValueOnce({ data });
-    await wrapper.get('select').setValue('cus_alfred');
+    await wrapper
+      .getComponent(Select)
+      .vm.$emit('update:modelValue', 'cus_alfred');
     await flushPromises();
     StripeAPI.customer.mockResolvedValueOnce({
       data: { customers: [], missing_email: true },
