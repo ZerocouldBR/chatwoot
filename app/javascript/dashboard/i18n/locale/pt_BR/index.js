@@ -35,6 +35,7 @@ import report from './report.json';
 import resetPassword from './resetPassword.json';
 import sdRoles from './sdRoles.json';
 import sdTelephony from './sdTelephony.json';
+import sdOutboundGuard from './sdOutboundGuard.json';
 import search from './search.json';
 import setNewPassword from './setNewPassword.json';
 import sessionLimit from './sessionLimit.json';
@@ -87,6 +88,7 @@ export default {
   ...resetPassword,
   ...sdRoles,
   ...sdTelephony,
+  ...sdOutboundGuard,
   ...search,
   ...setNewPassword,
   ...sessionLimit,
