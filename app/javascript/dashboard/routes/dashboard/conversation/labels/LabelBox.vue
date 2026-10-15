@@ -11,8 +11,10 @@ import Icon from 'dashboard/components-next/icon/Icon.vue';
 import SuggestionChip from 'dashboard/components-next/captain/classifier/SuggestionChip.vue';
 import SuggestionSkeleton from 'dashboard/components-next/captain/classifier/SuggestionSkeleton.vue';
 
-defineProps({
+const props = defineProps({
   suggestedLabels: { type: Array, default: () => [] },
+  // ServiceDesk M13: papel sem ticket.edit_tags vê as tags, sem adicionar nem remover
+  readonly: { type: Boolean, default: false },
   isSuggestionActive: { type: Boolean, default: false },
   isSuggesting: { type: Boolean, default: false },
 });
@@ -37,6 +39,7 @@ const conversationUiFlags = useMapGetter('conversationLabels/getUIFlags');
 const showSearchDropdownLabel = ref(false);
 
 const toggleLabels = () => {
+  if (props.readonly) return;
   showSearchDropdownLabel.value = !showSearchDropdownLabel.value;
 };
 
@@ -73,7 +76,14 @@ useKeyboardEvents({
         class="label-wrap flex flex-wrap"
         @keyup.esc="closeDropdownLabel"
       >
-        <AddLabel @add="toggleLabels" />
+        <AddLabel v-if="!readonly" @add="toggleLabels" />
+        <span
+          v-else-if="!activeLabels.length"
+          class="text-sm text-n-slate-10"
+          data-testid="labels-readonly-empty"
+        >
+          {{ $t('CONVERSATION.TICKET_FIELDS.EMPTY') }}
+        </span>
         <TransitionGroup
           enter-active-class="animate-pop-in"
           leave-active-class="transition duration-150 ease-in absolute"
@@ -85,7 +95,7 @@ useKeyboardEvents({
             :key="label.id"
             :title="label.title"
             :description="label.description"
-            show-close
+            :show-close="!readonly"
             :color="label.color"
             variant="smooth"
             class="max-w-[calc(100%-0.5rem)]"

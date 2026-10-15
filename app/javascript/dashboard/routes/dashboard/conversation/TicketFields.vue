@@ -5,6 +5,7 @@ import { useAlert } from 'dashboard/composables';
 import ConversationApi from 'dashboard/api/inbox/conversation';
 import ContactDetailsItem from './ContactDetailsItem.vue';
 import MultiselectDropdown from 'shared/components/ui/MultiselectDropdown.vue';
+import { useSdRolePermissions } from 'dashboard/servicedesk/roles/useSdRolePermissions';
 
 // Ticket type, plus the fields that only exist for some types: due date (tasks), problem (incidents)
 // and linked incidents (problems).
@@ -18,6 +19,16 @@ const props = defineProps({
 const TICKET_TYPES = ['question', 'incident', 'problem', 'task'];
 
 const { t } = useI18n();
+// ServiceDesk M13: sem ticket.edit (Agente light, Colaborador) os campos ficam só para leitura
+const { canEditTicket } = useSdRolePermissions();
+const isReadonly = computed(() => !canEditTicket.value);
+const dueDateLabel = computed(() =>
+  props.conversation.due_at
+    ? new Date(props.conversation.due_at * 1000).toLocaleDateString(undefined, {
+        timeZone: 'UTC',
+      })
+    : t('CONVERSATION.TICKET_FIELDS.EMPTY')
+);
 
 const typeOptions = computed(() =>
   TICKET_TYPES.map(type => ({
@@ -100,6 +111,8 @@ const onDueDateChange = event => {
       data-testid="ticket-type"
       :options="typeOptions"
       :selected-item="selectedType"
+      :readonly="isReadonly"
+      :readonly-tooltip="$t('CONVERSATION.TICKET_FIELDS.READONLY')"
       :multiselector-placeholder="
         $t('CONVERSATION.TICKET_FIELDS.TYPE_PLACEHOLDER')
       "
@@ -111,7 +124,15 @@ const onDueDateChange = event => {
         compact
         :title="$t('CONVERSATION.TICKET_FIELDS.DUE_DATE')"
       />
+      <p
+        v-if="isReadonly"
+        data-testid="ticket-due-date"
+        class="mb-2 text-sm text-n-slate-12"
+      >
+        {{ dueDateLabel }}
+      </p>
       <input
+        v-else
         data-testid="ticket-due-date"
         type="date"
         :value="dueDate"
@@ -124,7 +145,20 @@ const onDueDateChange = event => {
         compact
         :title="$t('CONVERSATION.TICKET_FIELDS.PROBLEM')"
       />
+      <p v-if="isReadonly" data-testid="ticket-problem" class="mb-2 text-sm">
+        <router-link
+          v-if="conversation.problem_id"
+          :to="ticketPath(conversation.problem_id)"
+          class="text-n-blue-11 hover:underline"
+        >
+          #{{ conversation.problem_id }}
+        </router-link>
+        <span v-else class="text-n-slate-10">{{
+          $t('CONVERSATION.TICKET_FIELDS.EMPTY')
+        }}</span>
+      </p>
       <input
+        v-else
         v-model="problemId"
         data-testid="ticket-problem"
         type="number"
