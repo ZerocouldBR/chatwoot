@@ -84,6 +84,11 @@ class Macros::ExecutionService < ActionService
   end
 
   def send_webhook_event(webhook_url)
+    if Servicedesk::OutboundGuard.blocked?(@conversation.account)
+      Servicedesk::OutboundGuard.log('macro webhook', @conversation.account)
+      return Servicedesk::OutboundGuard.record(@conversation, 'macro_webhook', { 'macro_id' => @macro&.id })
+    end
+
     payload = @conversation.webhook_data.merge(event: 'macro.executed')
     WebhookJob.perform_later(webhook_url.first, payload)
   end
