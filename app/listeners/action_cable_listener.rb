@@ -198,7 +198,7 @@ class ActionCableListener < BaseListener
                            user.pubsub_token
                          end
 
-    tokens = user_tokens(account, conversation) + [conversation.contact_inbox.pubsub_token].reject { Servicedesk::OutboundGuard.blocked?(account) }
+    tokens = user_tokens(account, conversation) + [conversation.contact_inbox.pubsub_token]
     current_user_token.present? ? tokens - [current_user_token] : tokens
   end
 
@@ -219,8 +219,6 @@ class ActionCableListener < BaseListener
   end
 
   def contact_inbox_tokens(contact_inbox)
-    return [] if Servicedesk::OutboundGuard.blocked?(contact_inbox.inbox&.account)
-
     contact = contact_inbox.contact
 
     contact_inbox.hmac_verified? ? contact.contact_inboxes.where(hmac_verified: true).filter_map(&:pubsub_token) : [contact_inbox.pubsub_token]
@@ -239,3 +237,4 @@ class ActionCableListener < BaseListener
 end
 
 ActionCableListener.prepend_mod_with('ActionCableListener')
+ActionCableListener.prepend(Servicedesk::ActionCableListenerOutboundGuard)
