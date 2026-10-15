@@ -25,9 +25,14 @@ const routeKey = computed(() =>
     <div class="flex items-start w-full max-w-5xl mx-auto">
       <router-view v-slot="{ Component }">
         <keep-alive v-if="keepAlive">
-          <component :is="Component" :key="routeKey" />
+          <component :is="Component" :key="routeKey" class="animate-page-in" />
         </keep-alive>
-        <component :is="Component" v-else :key="routeKey" />
+        <component
+          :is="Component"
+          v-else
+          :key="routeKey"
+          class="animate-page-in"
+        />
       </router-view>
     </div>
   </div>

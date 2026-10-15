@@ -22,10 +22,6 @@ const props = defineProps({
     type: Boolean,
     default: true,
   },
-  multiselectorTitle: {
-    type: String,
-    default: '',
-  },
   multiselectorPlaceholder: {
     type: String,
     default: 'None',
@@ -84,9 +80,7 @@ const selectedThumbnail = computed(
         slate
         outline
         trailing-icon
-        :icon="
-          showSearchDropdown ? 'i-lucide-chevron-up' : 'i-lucide-chevron-down'
-        "
+        icon="i-lucide-chevrons-up-down"
         class="w-full !px-2"
         @click="
           () => toggleDropdown() // ensure that the event is not passed to the button
@@ -143,16 +137,8 @@ const selectedThumbnail = computed(
           'block visible': showSearchDropdown,
           'hidden invisible': !showSearchDropdown,
         }"
-        class="box-border top-[2.625rem] w-full border rounded-lg bg-n-alpha-3 backdrop-blur-[100px] absolute shadow-lg border-n-strong dark:border-n-strong p-2 z-[9999]"
+        class="box-border top-[2.75rem] w-full rounded-xl bg-n-alpha-3 backdrop-blur-[100px] absolute shadow-lg outline outline-1 outline-n-container p-1 z-[9999] animate-menu-in origin-top"
       >
-        <div class="flex items-center justify-between mb-1">
-          <h4
-            class="m-0 overflow-hidden text-sm text-n-slate-11 whitespace-nowrap text-ellipsis"
-          >
-            {{ multiselectorTitle }}
-          </h4>
-          <Button ghost slate xs icon="i-lucide-x" @click="onCloseDropdown" />
-        </div>
         <MultiselectDropdownItems
           v-if="showSearchDropdown"
           :options="options"

@@ -334,7 +334,6 @@ const rejectSuggestedLabel = ({ title }) => {
       <MultiselectDropdown
         :options="agentsList"
         :selected-item="assignedAgent"
-        :multiselector-title="$t('AGENT_MGMT.MULTI_SELECTOR.TITLE.AGENT')"
         :multiselector-placeholder="$t('AGENT_MGMT.MULTI_SELECTOR.PLACEHOLDER')"
         :no-search-result="
           $t('AGENT_MGMT.MULTI_SELECTOR.SEARCH.NO_RESULTS.AGENT')
@@ -354,7 +353,6 @@ const rejectSuggestedLabel = ({ title }) => {
         :options="teamsList"
         :selected-item="assignedTeam"
         show-emoji-icon
-        :multiselector-title="$t('AGENT_MGMT.MULTI_SELECTOR.TITLE.TEAM')"
         :multiselector-placeholder="$t('AGENT_MGMT.MULTI_SELECTOR.PLACEHOLDER')"
         :no-search-result="
           $t('AGENT_MGMT.MULTI_SELECTOR.SEARCH.NO_RESULTS.TEAM')
@@ -433,7 +431,6 @@ const rejectSuggestedLabel = ({ title }) => {
           v-else
           :options="priorityOptions"
           :selected-item="assignedPriority"
-          :multiselector-title="$t('CONVERSATION.PRIORITY.TITLE')"
           :multiselector-placeholder="
             $t('CONVERSATION.PRIORITY.CHANGE_PRIORITY.SELECT_PLACEHOLDER')
           "

@@ -100,7 +100,6 @@ const onDueDateChange = event => {
       data-testid="ticket-type"
       :options="typeOptions"
       :selected-item="selectedType"
-      :multiselector-title="$t('CONVERSATION.TICKET_FIELDS.TYPE')"
       :multiselector-placeholder="
         $t('CONVERSATION.TICKET_FIELDS.TYPE_PLACEHOLDER')
       "
