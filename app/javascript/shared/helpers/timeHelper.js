@@ -111,7 +111,28 @@ export const dateFormat = (time, df = 'MMM d, yyyy') => {
  * @param {boolean} [withAgo=false] - Whether to append 'ago' to the result.
  * @returns {string} Shortened time description.
  */
+// ServiceDesk: dynamicTime segue o idioma do painel; em pt-BR o date-fns devolve "há 4 dias", "cerca de 2 horas"...
+// e o formato curto vira "4d", "2h", "5m", "1mês", "1a" (com withAgo: "há 4d").
+const PT_SHORT_UNITS = [
+  [/minutos?/, 'm'],
+  [/horas?/, 'h'],
+  [/dias?/, 'd'],
+  [/m[eê]s(es)?/, 'mês'],
+  [/anos?/, 'a'],
+];
+const shortTimestampPt = (time, withAgo) => {
+  if (/menos de um minuto/.test(time)) return 'agora';
+  const [count] = time.match(/\d+/) || ['1'];
+  const unit = PT_SHORT_UNITS.find(([pattern]) => pattern.test(time));
+  if (!unit) return time;
+  const short = `${count}${unit[1]}`;
+  return withAgo ? `há ${short}` : short;
+};
+
 export const shortTimestamp = (time, withAgo = false) => {
+  if (/^(há|em) |menos de um minuto/.test(time)) {
+    return shortTimestampPt(time, withAgo);
+  }
   // This function takes a time string and converts it to a short time string
   // with the following format: 1m, 1h, 1d, 1mo, 1y
   // The function also takes an optional boolean parameter withAgo

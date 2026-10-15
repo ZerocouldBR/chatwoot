@@ -69,7 +69,8 @@
           "UPDATE_ERROR": "Não foi possível atualizar o atributo da empresa.",
           "DELETE_SUCCESS": "Atributo da empresa removido.",
           "DELETE_ERROR": "Não foi possível remover o atributo da empresa."
-        }
+        },
+        "TITLE": "Atributos personalizados"
       },
       "CONTACTS": {
         "LOADING": "Carregando contatos...",
@@ -116,11 +117,14 @@
         "LAST_ACTIVE": "Última atividade {date}",
         "DESCRIPTION_PLACEHOLDER": "Adicionar uma breve descrição para esta empresa",
         "ACTIONS": {
-          "SAVE": "Atualizar empresa"
+          "SAVE": "Atualizar empresa",
+          "REFRESH": "Atualizar o perfil"
         },
         "MESSAGES": {
           "UPDATE_SUCCESS": "Empresa atualizada.",
-          "UPDATE_ERROR": "Não foi possível atualizar a empresa."
+          "UPDATE_ERROR": "Não foi possível atualizar a empresa.",
+          "REFRESH_SUCCESS": "Perfil da empresa atualizado.",
+          "REFRESH_ERROR": "Não foi possível atualizar o perfil da empresa."
         },
         "FIELDS": {
           "NAME": "Nome",
@@ -139,10 +143,93 @@
           "SUCCESS": "Empresa excluída.",
           "ERROR": "Não foi possível excluir a empresa."
         }
+      },
+      "HEADER": {
+        "EDIT": "Editar",
+        "MORE": "Mostrar mais",
+        "LESS": "Mostrar menos",
+        "OPEN_COUNT": "{count} aberto | {count} abertos",
+        "REFRESH_WITH_TIME": "Atualizar o perfil (atualizado {time})"
+      },
+      "FACTS": {
+        "INDUSTRY": "Setor",
+        "SIZE": "Funcionários",
+        "LOCATION": "Sede",
+        "ADDED": "Adicionada",
+        "UNKNOWN": "Não informado",
+        "YES": "Sim",
+        "NO": "Não"
+      },
+      "PEOPLE": {
+        "ADD": "Adicionar",
+        "SEARCH": "Buscar pessoas",
+        "EMPTY": "Ninguém desta empresa ainda.",
+        "NO_MATCHES": "Nenhuma pessoa encontrada.",
+        "DIALOG_TITLE": "Adicionar pessoas a {name}"
+      },
+      "TABS": {
+        "CONVERSATIONS": "Tickets",
+        "NOTES": "Notas",
+        "PEOPLE": "Pessoas"
+      },
+      "ACTIVITY": {
+        "TODAY": "Hoje",
+        "YESTERDAY": "Ontem",
+        "SYSTEM_AUTHOR": "Sistema",
+        "EMPTY_CONVERSATIONS": "Nenhum ticket ainda. Eles aparecem aqui quando as pessoas desta empresa entrarem em contato.",
+        "EMPTY_NOTES": "Nenhuma nota ainda. As notas das pessoas desta empresa aparecem aqui.",
+        "LOAD_MORE": "Carregar mais",
+        "SEARCH_NOTES": "Buscar notas",
+        "NO_MATCHING_NOTES": "Nenhuma nota encontrada.",
+        "NO_MATCHING_CONVERSATIONS": "Nenhum ticket com estes filtros."
+      },
+      "EDIT": {
+        "TITLE": "Editar empresa",
+        "SAVE": "Salvar alterações",
+        "DESCRIPTION": "Descrição",
+        "DETAILS": "Detalhes",
+        "CITY": "Cidade",
+        "COUNTRY": "País",
+        "PHONE": "Telefone",
+        "SOCIAL": {
+          "TITLE": "Redes sociais",
+          "LINKEDIN": "LinkedIn",
+          "X": "X",
+          "FACEBOOK": "Facebook",
+          "INSTAGRAM": "Instagram",
+          "GITHUB": "GitHub",
+          "YOUTUBE": "YouTube"
+        },
+        "PLACEHOLDERS": {
+          "DOMAIN": "empresa.com.br",
+          "INDUSTRY": "Software",
+          "EMPLOYEES": "51 a 200",
+          "USERNAME": "usuario"
+        }
+      },
+      "CONVERSATION_FILTERS": {
+        "BUTTON": "Filtrar",
+        "BUTTON_WITH_COUNT": "Filtrar ({count})",
+        "ANY": "Qualquer"
+      },
+      "ENRICHMENT_UPGRADE": {
+        "TITLE": "Enriquecimento de perfis de empresa",
+        "DESCRIPTION": "Preenche a descrição, o setor, o porte, a localização e as redes sociais da empresa a partir do domínio.",
+        "UPGRADE": "Ver planos"
       }
     },
     "EMPTY_STATE": {
       "TITLE": "Nenhuma empresa encontrada"
+    },
+    "CARD": {
+      "EMPLOYEES": "{count} funcionários"
+    },
+    "PAYWALL": {
+      "TITLE": "Empresas indisponível",
+      "AVAILABLE_ON": "Empresas não está disponível neste plano.",
+      "UPGRADE_PROMPT": "Agrupe os contatos por empresa, veja todos os tickets de uma conta e mantenha os dados da empresa num só lugar.",
+      "UPGRADE_NOW": "Ver planos",
+      "CANCEL_ANYTIME": "Você pode mudar ou cancelar o plano quando quiser"
     }
   },
   "COMPANIES_LAYOUT": {
