@@ -24,6 +24,9 @@ class Webhooks::Trigger
   end
 
   def execute
+    # ServiceDesk: última barreira da trava "envio externo bloqueado" (job já enfileirado antes de a trava ligar).
+    return Servicedesk::OutboundGuard.log("webhook #{@webhook_type}", account_id_from_payload) if outbound_blocked?
+
     perform_request
   rescue StandardError => e
     raise RetryableError.new(status: http_status(e), message: e.message) if retryable_agent_bot_error?(e)
@@ -37,6 +40,14 @@ class Webhooks::Trigger
   end
 
   private
+
+  def outbound_blocked?
+    Servicedesk::OutboundGuard.globally_blocked? || Servicedesk::OutboundGuard.blocked?(account_id_from_payload)
+  end
+
+  def account_id_from_payload
+    Servicedesk::OutboundGuard.account_id_from_payload(@payload)
+  end
 
   def perform_request
     body = @payload.to_json

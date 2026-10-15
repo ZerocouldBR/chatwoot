@@ -154,6 +154,9 @@ class Notification < ApplicationRecord
   end
 
   def process_notification_delivery
+    # ServiceDesk: conta isolada, sem push nem e-mail; a notificação no app continua.
+    return Servicedesk::OutboundGuard.log("notification #{notification_type}", account) if Servicedesk::OutboundGuard.blocked?(account)
+
     Notification::PushNotificationJob.perform_later(self) if user_subscribed_to_notification?('push')
 
     # Should we do something about the case where user subscribed to both push and email ?

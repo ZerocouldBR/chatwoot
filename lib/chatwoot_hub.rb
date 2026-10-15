@@ -82,7 +82,17 @@ class ChatwootHub
     model.last&.id || 0
   end
 
+  # ServiceDesk: com SD_OUTBOUND_BLOCKED a instalação não fala com o hub (telemetria, registro, push, eventos).
+  def self.outbound_blocked?
+    return false unless Servicedesk::OutboundGuard.globally_blocked?
+
+    Servicedesk::OutboundGuard.log('chatwoot hub')
+    true
+  end
+
   def self.sync_with_hub
+    return {} if outbound_blocked?
+
     begin
       info = instance_config
       info = info.merge(instance_metrics) unless ENV['DISABLE_TELEMETRY']
@@ -97,6 +107,8 @@ class ChatwootHub
   end
 
   def self.register_instance(company_name, owner_name, owner_email)
+    return if outbound_blocked?
+
     info = { company_name: company_name, owner_name: owner_name, owner_email: owner_email, subscribed_to_mailers: true }
     RestClient.post(registration_url, info.merge(instance_config).to_json, { content_type: :json, accept: :json })
   rescue *ExceptionList::REST_CLIENT_EXCEPTIONS => e
@@ -114,12 +126,14 @@ class ChatwootHub
   end
 
   def self.send_push_with_response(fcm_options)
+    return if outbound_blocked?
+
     info = { fcm_options: fcm_options }
     RestClient.post(push_notification_url, info.merge(instance_config).to_json, { content_type: :json, accept: :json })
   end
 
   def self.emit_event(event_name, event_data)
-    return if ENV['DISABLE_TELEMETRY']
+    return if ENV['DISABLE_TELEMETRY'] || outbound_blocked?
 
     info = { event_name: event_name, event_data: event_data }
     RestClient.post(events_url, info.merge(instance_config).to_json, { content_type: :json, accept: :json })

@@ -198,7 +198,8 @@ class ActionCableListener < BaseListener
                            user.pubsub_token
                          end
 
-    tokens = user_tokens(account, conversation) + [conversation.contact_inbox.pubsub_token]
+    tokens = user_tokens(account, conversation)
+    tokens += [conversation.contact_inbox.pubsub_token] unless Servicedesk::OutboundGuard.blocked?(account)
     current_user_token.present? ? tokens - [current_user_token] : tokens
   end
 
@@ -219,6 +220,9 @@ class ActionCableListener < BaseListener
   end
 
   def contact_inbox_tokens(contact_inbox)
+    # ServiceDesk: conta isolada, nada chega ao cliente (widget, API do cliente) em tempo real.
+    return [] if Servicedesk::OutboundGuard.blocked?(contact_inbox.inbox&.account)
+
     contact = contact_inbox.contact
 
     contact_inbox.hmac_verified? ? contact.contact_inboxes.where(hmac_verified: true).filter_map(&:pubsub_token) : [contact_inbox.pubsub_token]

@@ -3,6 +3,7 @@ require 'rails_helper'
 # Trava "envio externo bloqueado" no motor de regras: gatilhos, gatilhos com atraso e automações.
 RSpec.describe 'Ticket rules with the outbound guard' do # rubocop:disable RSpec/DescribeClass
   let(:account) { create(:account) }
+  let(:outbound_job_names) { %w[ActionMailer::MailDeliveryJob WebhookJob AgentBots::WebhookJob SendReplyJob HookJob] }
   let(:team) { create(:team, account: account) }
   let(:agent) { create(:user, account: account, role: :agent) }
   let(:conversation) { create(:conversation, account: account, priority: nil, team: team, assignee: agent) }
@@ -21,14 +22,12 @@ RSpec.describe 'Ticket rules with the outbound guard' do # rubocop:disable RSpec
                        conditions: { all: [{ field: 'ticket', operator: 'is', value: 'created' }], any: [] }, actions: notify_actions)
   end
 
-  OUTBOUND_JOBS = %w[ActionMailer::MailDeliveryJob WebhookJob AgentBots::WebhookJob SendReplyJob HookJob].freeze
-
   def run_triggers
     Tickets::Rules::TriggerRunner.new(conversation).perform
   end
 
   def outbound_jobs
-    ActiveJob::Base.queue_adapter.enqueued_jobs.count { |job| OUTBOUND_JOBS.include?(job[:job].to_s) }
+    ActiveJob::Base.queue_adapter.enqueued_jobs.count { |job| outbound_job_names.include?(job[:job].to_s) }
   end
 
   context 'when the account is isolated' do

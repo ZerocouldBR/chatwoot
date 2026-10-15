@@ -62,6 +62,10 @@ class AgentBotListener < BaseListener
 
   private
 
+  def outbound_blocked?(payload)
+    Servicedesk::OutboundGuard.blocked?(Servicedesk::OutboundGuard.account_id_from_payload(payload))
+  end
+
   def agent_bots_for(inbox, conversation = nil)
     bots = [active_inbox_agent_bot(inbox)]
     bots << conversation.ai_assignee if conversation&.assignee_type == 'AgentBot'
@@ -83,6 +87,7 @@ class AgentBotListener < BaseListener
 
   def process_webhook_bot_event(agent_bot, payload)
     return if agent_bot.outgoing_url.blank?
+    return Servicedesk::OutboundGuard.log("agent bot #{payload[:event]}", payload.dig(:account, :id)) if outbound_blocked?(payload)
 
     AgentBots::WebhookJob.perform_later(agent_bot.outgoing_url, payload, :agent_bot_webhook,
                                         secret: agent_bot.secret, delivery_id: SecureRandom.uuid)

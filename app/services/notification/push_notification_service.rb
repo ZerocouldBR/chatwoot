@@ -4,6 +4,7 @@ class Notification::PushNotificationService
   pattr_initialize [:notification!]
 
   def perform
+    return Servicedesk::OutboundGuard.log('push', notification.account) if Servicedesk::OutboundGuard.blocked?(notification.account)
     return unless user_subscribed_to_notification?
 
     notification_subscriptions.each do |subscription|
