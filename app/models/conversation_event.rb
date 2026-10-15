@@ -21,7 +21,8 @@
 #
 # Append-only audit trail of a ticket: what changed, who changed it and through which path.
 class ConversationEvent < ApplicationRecord
-  EVENT_TYPES = %w[create change comment redaction].freeze
+  # outbound_blocked: envio externo bloqueado pela trava da conta (Servicedesk::OutboundGuard).
+  EVENT_TYPES = %w[create change comment redaction outbound_blocked].freeze
   VIAS = %w[agent customer rule bot system].freeze
 
   belongs_to :account
