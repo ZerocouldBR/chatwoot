@@ -13,6 +13,7 @@ class HookJob < MutexApplicationJob
 
   def perform(hook, event_name, event_data = {})
     return if hook.disabled?
+    return Servicedesk::OutboundGuard.log("hook #{hook.app_id}", hook.account_id) if Servicedesk::OutboundGuard.blocked?(hook.account)
 
     processor = INTEGRATION_PROCESSORS[hook.app_id]
     send(processor, hook, event_name, event_data) if processor

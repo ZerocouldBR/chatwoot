@@ -13,6 +13,8 @@ class Notification::PushTestService
   end
 
   def perform
+    return [] if Servicedesk::OutboundGuard.blocked?(Current.account)
+
     selected_subscriptions.map { |subscription| test_send(subscription) }
   end
 

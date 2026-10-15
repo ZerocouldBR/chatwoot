@@ -1,0 +1,12 @@
+en:
+  servicedesk:
+    outbound_guard:
+      not_sent: 'Not sent: isolated account (outbound delivery blocked)'
+      rule_email_not_sent: 'Rule "%{rule}": e-mail to the %{recipients} not sent (isolated account)'
+      rule_webhook_not_sent: 'Rule "%{rule}": webhook not called (isolated account)'
+      recipients:
+        email_requester: requester
+        email_requester_and_ccs: requester and CCs
+        email_assignee: assignee
+        email_group: group
+        email_user: agent

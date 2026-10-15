@@ -87,6 +87,8 @@ class PortalCustomers::MagicLinkService
   end
 
   def deliver(contact, url, locale)
+    return Servicedesk::OutboundGuard.log('portal magic link', portal.account) if Servicedesk::OutboundGuard.blocked?(portal.account)
+
     unless self.class.email_delivery_enabled?
       Rails.logger.info("[portal-cliente] link de acesso gerado para o contato #{contact.id} (envio de e-mail dormente)")
       return

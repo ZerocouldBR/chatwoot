@@ -142,6 +142,13 @@ RSpec.describe 'Portal do cliente: artigos restritos', type: :request do
   describe '"Exigir login" (require_sign_in)' do
     before { portal.update!(config: portal.config.merge('customer_portal' => { 'enabled' => true, 'require_sign_in' => true })) }
 
+    it 'leva ao login do locale padrão quando a URL não tem locale (/hc/<slug>/requests), sem 500' do
+      get "/hc/#{portal.slug}/requests", headers: { 'Accept' => 'text/html' }
+
+      expect(response).to have_http_status(:found)
+      expect(response.location).to include("/hc/#{portal.slug}/pt_BR/login")
+    end
+
     it 'manda o anônimo para o login em todas as páginas e nega o JSON' do
       get "/hc/#{portal.slug}/pt_BR"
       expect(response).to redirect_to(%r{/hc/central-b2b/pt_BR/login})

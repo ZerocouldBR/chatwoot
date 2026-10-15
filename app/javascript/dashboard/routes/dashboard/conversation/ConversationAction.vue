@@ -1,5 +1,6 @@
 <script setup>
 import { useTicketPanelFields } from 'dashboard/composables/useTicketPanelFields';
+import { useSdRolePermissions } from 'dashboard/servicedesk/roles/useSdRolePermissions';
 import { computed, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useTimeoutFn } from '@vueuse/core';
@@ -30,6 +31,9 @@ defineProps({
 });
 
 const { fieldClass } = useTicketPanelFields();
+// ServiceDesk M13: Agente light e Colaborador veem os campos, mas não mudam (o backend responde 403)
+const { canEditTicket, canEditTags } = useSdRolePermissions();
+const isReadonly = computed(() => !canEditTicket.value);
 
 const EMPTY_NOTE_DURATION = 2500;
 
@@ -180,6 +184,7 @@ const assignedPriority = computed({
 });
 
 const showSelfAssign = computed(() => {
+  if (isReadonly.value) return false;
   if (!assignedAgent.value) return true;
   return (
     assignedAgent.value.id !== currentUser.value.id ||
@@ -334,6 +339,8 @@ const rejectSuggestedLabel = ({ title }) => {
       <MultiselectDropdown
         :options="agentsList"
         :selected-item="assignedAgent"
+        :readonly="isReadonly"
+        :readonly-tooltip="$t('CONVERSATION.TICKET_FIELDS.READONLY')"
         :multiselector-placeholder="$t('AGENT_MGMT.MULTI_SELECTOR.PLACEHOLDER')"
         :no-search-result="
           $t('AGENT_MGMT.MULTI_SELECTOR.SEARCH.NO_RESULTS.AGENT')
@@ -352,6 +359,8 @@ const rejectSuggestedLabel = ({ title }) => {
       <MultiselectDropdown
         :options="teamsList"
         :selected-item="assignedTeam"
+        :readonly="isReadonly"
+        :readonly-tooltip="$t('CONVERSATION.TICKET_FIELDS.READONLY')"
         show-emoji-icon
         :multiselector-placeholder="$t('AGENT_MGMT.MULTI_SELECTOR.PLACEHOLDER')"
         :no-search-result="
@@ -367,7 +376,7 @@ const rejectSuggestedLabel = ({ title }) => {
       <ContactDetailsItem compact :title="$t('CONVERSATION.PRIORITY.TITLE')">
         <template #button>
           <SuggestButton
-            v-if="isSuggestionsEnabled"
+            v-if="isSuggestionsEnabled && !isReadonly"
             :is-active="isPrioritySuggestionActive"
             :is-loading="isSuggestingPriority"
             @click="suggestPriority"
@@ -431,6 +440,8 @@ const rejectSuggestedLabel = ({ title }) => {
           v-else
           :options="priorityOptions"
           :selected-item="assignedPriority"
+          :readonly="isReadonly"
+          :readonly-tooltip="$t('CONVERSATION.TICKET_FIELDS.READONLY')"
           :multiselector-placeholder="
             $t('CONVERSATION.PRIORITY.CHANGE_PRIORITY.SELECT_PLACEHOLDER')
           "
@@ -462,7 +473,7 @@ const rejectSuggestedLabel = ({ title }) => {
       >
         <template #button>
           <SuggestButton
-            v-if="isSuggestionsEnabled"
+            v-if="isSuggestionsEnabled && canEditTags"
             :is-active="isLabelSuggestionActive"
             :is-loading="isSuggestingLabels"
             @click="suggestLabels"
@@ -471,6 +482,7 @@ const rejectSuggestedLabel = ({ title }) => {
       </ContactDetailsItem>
       <ConversationLabels
         :conversation-id="conversationId"
+        :readonly="!canEditTags"
         :suggested-labels="suggestedLabels"
         :is-suggestion-active="isLabelSuggestionActive"
         :is-suggesting="isSuggestingLabels"

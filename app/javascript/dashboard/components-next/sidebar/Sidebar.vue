@@ -1020,7 +1020,7 @@ const menuItems = computed(() => {
         >
           <span class="flex-shrink-0 i-lucide-search size-4 text-n-slate-10" />
           <span class="flex-grow min-w-0 truncate text-start text-n-slate-10">
-            {{ t('COMBOBOX.SEARCH_PLACEHOLDER') }}
+            {{ t('SIDEBAR.SEARCH_SHORT') }}
           </span>
           <span
             class="hidden tracking-wide pointer-events-none select-none text-n-slate-10"

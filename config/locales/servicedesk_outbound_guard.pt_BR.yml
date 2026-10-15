@@ -1,0 +1,12 @@
+pt_BR:
+  servicedesk:
+    outbound_guard:
+      not_sent: 'Não enviada: conta isolada (envio externo bloqueado)'
+      rule_email_not_sent: 'Regra "%{rule}": e-mail para %{recipients} não enviado (conta isolada)'
+      rule_webhook_not_sent: 'Regra "%{rule}": webhook não chamado (conta isolada)'
+      recipients:
+        email_requester: o solicitante
+        email_requester_and_ccs: o solicitante e os CCs
+        email_assignee: o responsável
+        email_group: o grupo
+        email_user: o agente

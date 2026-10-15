@@ -109,6 +109,7 @@ class WebhookListener < BaseListener
 
   def deliver_account_webhooks(payload, account)
     return unless account.api_and_webhooks_enabled?
+    return Servicedesk::OutboundGuard.log("webhook #{payload[:event]}", account) if Servicedesk::OutboundGuard.blocked?(account)
 
     account.webhooks.account_type.each do |webhook|
       next unless webhook.subscriptions.include?(payload[:event])
@@ -122,6 +123,7 @@ class WebhookListener < BaseListener
   def deliver_api_inbox_webhooks(payload, inbox)
     return unless inbox.channel_type == 'Channel::Api'
     return if inbox.channel.webhook_url.blank?
+    return Servicedesk::OutboundGuard.log("api inbox webhook #{payload[:event]}", inbox.account) if Servicedesk::OutboundGuard.blocked?(inbox.account)
 
     WebhookJob.perform_later(inbox.channel.webhook_url, payload, :api_inbox_webhook,
                              secret: inbox.channel.secret, delivery_id: SecureRandom.uuid)

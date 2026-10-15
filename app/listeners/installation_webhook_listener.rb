@@ -19,6 +19,8 @@ class InstallationWebhookListener < BaseListener
 
   def deliver_webhook_payloads(payload)
     # Deliver the installation event
+    return Servicedesk::OutboundGuard.log('installation webhook') if Servicedesk::OutboundGuard.globally_blocked?
+
     webhook_url = InstallationConfig.find_by(name: 'INSTALLATION_EVENTS_WEBHOOK_URL')&.value
     WebhookJob.perform_later(webhook_url, payload) if webhook_url
   end

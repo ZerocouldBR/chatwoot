@@ -2,6 +2,8 @@ json.settings resource.settings
 # ServiceDesk: valor efetivo (conta ou padrão da instalação) do formulário obrigatório ao resolver (M1)
 json.servicedesk do
   json.require_form_on_resolve resource.servicedesk_require_form_on_resolve?
+  # Trava "envio externo bloqueado" efetiva (ENV SD_OUTBOUND_BLOCKED ou settings.outbound_blocked)
+  json.outbound_blocked resource.servicedesk_outbound_blocked?
 end
 json.reporting_timezone ActiveSupport::TimeZone[resource.reporting_timezone].tzinfo.name if resource.reporting_timezone.present?
 json.created_at resource.created_at

@@ -272,13 +272,18 @@
       "MESSAGE_CLOUD": "Você não faz parte de nenhuma conta no momento. Se acreditar que isso é um engano, entre em contato com nossa equipe de suporte.",
       "MESSAGE_SELF_HOSTED": "Você não faz parte de nenhuma conta no momento. Entre em contato com o seu administrador.",
       "LOGOUT": "Encerrar sessão"
+    },
+    "IMPERSONATION": {
+      "MESSAGE": "Você está acessando como {name} ({email}). Tudo o que fizer vai aparecer como feito por este usuário.",
+      "STOP": "Sair do acesso como este usuário"
     }
   },
   "COMPONENTS": {
     "CODE": {
       "BUTTON_TEXT": "Copiar",
       "CODEPEN": "Abrir em CodePen",
-      "COPY_SUCCESSFUL": "Código copiado para área de transferência com sucesso"
+      "COPY_SUCCESSFUL": "Código copiado para área de transferência com sucesso",
+      "COPY_ERROR": "Não foi possível copiar. Tente novamente."
     },
     "SHOW_MORE_BLOCK": {
       "SHOW_MORE": "Mostrar Mais",
@@ -423,7 +428,8 @@
     "COLLAPSE": "Recolher menu",
     "EXPAND": "Expandir menu",
     "AUTOMATION": "Automação",
-    "SD_TELEPHONY": "Telefonia"
+    "SD_TELEPHONY": "Telefonia",
+    "SEARCH_SHORT": "Buscar"
   },
   "DATA_IMPORTS": {
     "HEADER": "Dados",
@@ -722,7 +728,8 @@
         "TITLE": "Informações do Provedor de Serviço",
         "TOOLTIP": "Copie esses valores e configure-os no seu Provedor de Identidade para estabelecer a conexão SAML"
       }
-    }
+    },
+    "NO_SETTINGS_AVAILABLE": "Não há configurações de segurança disponíveis nesta instalação. Configure as chaves de criptografia do MFA para exigir a autenticação em dois fatores."
   },
   "CONVERSATION_WORKFLOW": {
     "INDEX": {

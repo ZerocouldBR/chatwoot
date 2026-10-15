@@ -11,7 +11,8 @@ class Tickets::Rules::ActionApplier
   def perform
     Current.executed_by = @rule
     @rule.actions.each_with_object([]) do |action, deferred|
-      next deferred << action if DEFERRED.include?(action['field'])
+      # The rule goes along so a blocked notification (isolated account) can say which rule it came from.
+      next deferred << action.merge('rule_id' => @rule.id, 'rule_title' => @rule.title) if DEFERRED.include?(action['field'])
 
       apply(action['field'], action['value'])
     end

@@ -1,0 +1,5 @@
+{
+  "SD_OUTBOUND_GUARD": {
+    "BANNER": "Conta isolada: nada é enviado (nenhum e-mail, mensagem, webhook ou push sai desta conta)"
+  }
+}

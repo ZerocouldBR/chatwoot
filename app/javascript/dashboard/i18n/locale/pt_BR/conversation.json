@@ -82,7 +82,7 @@
     "NO_RESPONSE": "Sem resposta",
     "RESPONSE": "Resposta",
     "RATING_TITLE": "Classificação",
-    "FEEDBACK_TITLE": "Feedback",
+    "FEEDBACK_TITLE": "Avaliação",
     "REPLY_MESSAGE_NOT_FOUND": "Mensagem não disponível",
     "CAPTAIN_GENERATION": {
       "TITLE": "Como esta resposta foi gerada?",
@@ -448,7 +448,11 @@
       "CC_EMPTY": "Ninguém em cópia",
       "PROBLEM": "Problema",
       "PROBLEM_PLACEHOLDER": "Número do ticket de problema",
-      "INCIDENTS": "Incidentes ({count})"
+      "INCIDENTS": "Incidentes ({count})",
+      "READONLY": "Seu papel pode ver este campo, mas não alterar",
+      "YES": "Sim",
+      "NO": "Não",
+      "EMPTY": "—"
     },
     "TICKET_EVENTS": {
       "TITLE": "Eventos do ticket",

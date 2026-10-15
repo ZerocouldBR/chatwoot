@@ -76,8 +76,19 @@ module PortalCustomerSession
     @portal_visible_segment_ids ||= PortalUserSegment.visible_ids_for(@portal, portal_contact)
   end
 
+  # Só um locale de verdade vai para as rotas do portal (constraint de locale): em /hc/<slug>/requests, sem locale,
+  # o "requests" cai no :locale da home e quebrava a geração da URL de login (500).
+  PORTAL_LOCALE_FORMAT = /\A[a-z]{2,3}(?:[_-][A-Za-z]{2,4})?\z/
+
   def portal_customer_locale
-    @locale.presence || params[:locale].presence || @portal&.default_locale
+    [@locale, params[:locale]].map(&:to_s).find { |locale| portal_customer_locale?(locale) } || @portal&.default_locale
+  end
+
+  def portal_customer_locale?(locale)
+    return false unless locale.match?(PORTAL_LOCALE_FORMAT)
+
+    allowed = @portal&.allowed_locale_codes
+    allowed.blank? || allowed.include?(locale)
   end
 
   # "Exigir login" (Zendesk Guide): sem sessão, toda a Central redireciona para o login.

@@ -4,6 +4,8 @@ class ApplicationMailer < ActionMailer::Base
   default from: ENV.fetch('MAILER_SENDER_EMAIL', 'Helpdesk <accounts@helpdesk.local>')
   before_action { ensure_current_account(params.try(:[], :account)) }
   around_action :switch_locale
+  # ServiceDesk: a conta do e-mail para a trava "envio externo bloqueado" (o interceptor lê e retira o cabeçalho).
+  after_action :tag_outbound_guard_account
   layout 'mailer/base'
   # Fetch template from Database if available
   # Order: Account Specific > Installation Specific > Fallback to file
@@ -67,6 +69,13 @@ class ApplicationMailer < ActionMailer::Base
     return unless account
 
     I18n.available_locales.map(&:to_s).include?(account.locale) ? account.locale : nil
+  end
+
+  def tag_outbound_guard_account
+    return unless @_mail_was_called
+
+    account = Current.account || @account || @conversation&.account
+    headers[Servicedesk::OutboundGuard::ACCOUNT_HEADER] = account.id.to_s if account.is_a?(Account)
   end
 
   def ensure_current_account(account)

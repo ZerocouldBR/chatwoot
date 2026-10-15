@@ -237,3 +237,4 @@ class ActionCableListener < BaseListener
 end
 
 ActionCableListener.prepend_mod_with('ActionCableListener')
+ActionCableListener.prepend(Servicedesk::ActionCableListenerOutboundGuard)

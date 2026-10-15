@@ -8,12 +8,34 @@ class Tickets::Rules::Notifier
   end
 
   def perform
+    return block_all if Servicedesk::OutboundGuard.blocked?(@account)
+
     @actions.each do |action|
       action['field'] == 'notify_webhook' ? notify_webhook(action['value']) : email(action['field'], action['value'])
     end
   end
 
   private
+
+  # ServiceDesk: isolated account. Nothing is e-mailed nor posted; the ticket gets an activity line and an audit event.
+  def block_all
+    @actions.each do |action|
+      field = action['field']
+      Servicedesk::OutboundGuard.log("rule #{field}", @account)
+      Servicedesk::OutboundGuard.record(@conversation, field, action.slice('rule_id', 'rule_title'))
+      @conversation.messages.create!(account_id: @account.id, inbox_id: @conversation.inbox_id, message_type: :activity,
+                                     content: blocked_activity(field, action['rule_title']))
+    end
+  end
+
+  def blocked_activity(field, rule_title)
+    I18n.with_locale(Servicedesk::OutboundGuard.locale_for(@account)) do
+      next I18n.t('servicedesk.outbound_guard.rule_webhook_not_sent', rule: rule_title) if field == 'notify_webhook'
+
+      I18n.t('servicedesk.outbound_guard.rule_email_not_sent', rule: rule_title,
+                                                               recipients: I18n.t("servicedesk.outbound_guard.recipients.#{field}"))
+    end
+  end
 
   def email(field, value)
     subject = Tickets::Rules::Placeholders.render(value['subject'], @conversation)
