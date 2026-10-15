@@ -847,7 +847,11 @@
         "SLUG_WARNING": "The current URL will stop working, and existing links to it will break.",
         "SLUG_UPDATE": "Update",
         "SLUG_UPDATED": "Slug updated. The article is now available at the new URL.",
-        "SLUG_OPEN": "Open URL"
+        "SLUG_OPEN": "Open URL",
+        "VISIBILITY": "Visible to",
+        "VISIBILITY_PUBLIC": "Everyone (public)",
+        "VISIBILITY_STAFF": "staff only",
+        "VISIBILITY_HINT": "A restricted article only shows on the portal to signed-in customers in the segment."
       },
       "API": {
         "ERROR": "Error while saving article"

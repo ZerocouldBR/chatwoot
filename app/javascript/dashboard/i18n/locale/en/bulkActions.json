@@ -47,7 +47,7 @@
       "EXECUTE_CONFIRMATION_LABEL": "Are you sure you want to run {macroName} on {n} ticket? | Are you sure you want to run {macroName} on {n} tickets?",
       "QUEUED": "Macro queued for {count} ticket. | Macro queued for {count} tickets.",
       "QUEUED_WITH_MISSING_ATTRIBUTES": "Macro queued for {count} ticket. It currently lacks required attributes and may remain open. | Macro queued for {count} tickets. At least one currently lacks required attributes and may remain open.",
-      "QUEUED_WITHOUT_REPLY": "Macro queued for {count} conversation. Its reply was not applied: run the macro inside the conversation to review and send it. | Macro queued for {count} conversations. Its reply was not applied: run the macro inside each conversation to review and send it."
+      "QUEUED_WITHOUT_REPLY": "Macro queued for {count} ticket. Its reply was not applied: run the macro inside the ticket to review and send it. | Macro queued for {count} tickets. Its reply was not applied: run the macro inside each ticket to review and send it."
     }
   }
 }

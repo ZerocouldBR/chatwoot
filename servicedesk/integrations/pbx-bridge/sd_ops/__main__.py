@@ -12,6 +12,8 @@
                                 NOME igual a um perfil (n8n, qa-pipeline) usa os escopos dele
   export-openapi [ARQ]          grava o OpenAPI (padrão: openapi.json ao lado do pacote)
   new-settings-key              gera uma chave Fernet para SDOPS_SETTINGS_KEY (cofre da tela Telefonia 55PBX)
+  storage-fix-perms             aplica SDOPS_STORAGE_FILE_MODE/DIR_MODE (e SDOPS_STORAGE_GID) às gravações já salvas
+                                no volume local (migração para o grupo comum com o qa-pipeline)
 """
 from __future__ import annotations
 
@@ -53,6 +55,7 @@ def main(argv=None) -> int:
     nt.add_argument("--scopes", default="", help="escopos extras separados por vírgula")
     nt.add_argument("--tenants", default="", help="tenants separados por vírgula (padrão: SDOPS_DEFAULT_TENANT; * = todos)")
     sub.add_parser("new-settings-key")
+    sub.add_parser("storage-fix-perms")
     ex = sub.add_parser("export-openapi")
     ex.add_argument("file", nargs="?")
     a = ap.parse_args(argv)
@@ -67,6 +70,13 @@ def main(argv=None) -> int:
         print(new_key())
         print("Guarde no sd-ops.env como SDOPS_SETTINGS_KEY (trocar a chave exige a anterior: "
               "SDOPS_SETTINGS_KEY=nova,antiga até regravar os segredos pela tela).", file=sys.stderr)
+        return 0
+    if a.cmd == "storage-fix-perms":
+        from .storage import LocalStorage
+        st = LocalStorage(s.storage_dir)
+        out = st.fix_permissions()
+        out.update(root=st.root, file_mode=oct(st.file_mode), dir_mode=oct(st.dir_mode), gid=os.getgid() if st.gid is None else st.gid)
+        print(json.dumps(out))
         return 0
     if a.cmd == "new-service-token":
         from .auth import SERVICE_PROFILES, new_service_token, service_token_entry

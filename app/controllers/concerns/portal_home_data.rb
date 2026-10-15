@@ -11,7 +11,7 @@ module PortalHomeData
 
     @visible_categories = @portal.categories
                                  .where(locale: @locale)
-                                 .joins(:articles).where(articles: { status: :published })
+                                 .joins(:articles).merge(Article.published.visible_to_segments(portal_visible_segment_ids))
                                  .order(position: :asc)
                                  .group('categories.id')
     @popular_topics = @recommended_categories.presence || @visible_categories.first(3)
@@ -25,7 +25,7 @@ module PortalHomeData
   end
 
   def base_articles
-    @base_articles ||= @portal.articles.published.where(locale: @locale).includes(:author, :category)
+    @base_articles ||= @portal.articles.published.visible_to_segments(portal_visible_segment_ids).where(locale: @locale).includes(:author, :category)
   end
 
   # Admin-recommended categories for the locale, in the chosen order. Unlike the
@@ -57,6 +57,7 @@ module PortalHomeData
 
     @portal.articles
            .published
+           .visible_to_segments(portal_visible_segment_ids)
            .where(locale: @locale, category_id: category_ids)
            .includes(:author)
            .group_by(&:category_id)

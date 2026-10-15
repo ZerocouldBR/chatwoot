@@ -29,6 +29,11 @@ class PortalsAPI extends ApiClient {
   sslStatus(portalSlug) {
     return axios.get(`${this.url}/${portalSlug}/ssl_status`);
   }
+
+  // ServiceDesk B2B: segmentos de usuário (artigos restritos) do portal
+  getUserSegments(portalSlug) {
+    return axios.get(`${this.url}/${portalSlug}/user_segments`);
+  }
 }
 
 export default PortalsAPI;

@@ -22,6 +22,8 @@ module EnsureCurrentAccountHelper
 
   def account_accessible_for_user?(account)
     @current_account_user = account.account_users.find_by(user_id: current_user.id)
+    # ServiceDesk M13: agente suspenso (suspended_at) não acessa a conta, como a suspensão do Zendesk
+    @current_account_user = nil if @current_account_user&.suspended?
     Current.account_user = @current_account_user
     render_unauthorized(I18n.t('errors.account.not_authorized')) unless @current_account_user
   end

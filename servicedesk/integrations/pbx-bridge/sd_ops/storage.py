@@ -15,17 +15,53 @@ class StorageError(Exception):
 class LocalStorage:
     backend = "local"
 
-    def __init__(self, root: str, file_mode: Optional[int] = None, dir_mode: Optional[int] = None):
-        # Padrão 0600/0700 (só o sd-ops). Para o qa-pipeline (outro uid) ler pelo mesmo volume: grupo comum +
-        # SDOPS_STORAGE_FILE_MODE=0640 e SDOPS_STORAGE_DIR_MODE=0750 (ver INTEGRACAO-55PBX.md, painel admin).
+    def __init__(self, root: str, file_mode: Optional[int] = None, dir_mode: Optional[int] = None,
+                 gid: Optional[int] = None):
+        # Padrão 0600/0700 (só o sd-ops). Para o qa-pipeline (outro uid) ler pelo mesmo volume: grupo comum
+        # (gid 10010 "sdrec": grupo principal do sd-ops e suplementar do qa nas imagens) + SDOPS_STORAGE_FILE_MODE=0640
+        # e SDOPS_STORAGE_DIR_MODE=0750 nas stacks (INTEGRACAO-55PBX.md §17). SDOPS_STORAGE_GID força o grupo dos
+        # arquivos quando o processo roda com outro grupo principal (ex.: `user:` na stack).
         self.file_mode = file_mode if file_mode is not None else int(os.environ.get("SDOPS_STORAGE_FILE_MODE") or "0600", 8)
         self.dir_mode = dir_mode if dir_mode is not None else int(os.environ.get("SDOPS_STORAGE_DIR_MODE") or "0700", 8)
+        env_gid = os.environ.get("SDOPS_STORAGE_GID")
+        self.gid = gid if gid is not None else (int(env_gid) if env_gid else None)
         self.root = os.path.abspath(root)
         os.makedirs(self.root, mode=self.dir_mode, exist_ok=True)
+        self._own(self.root, self.dir_mode)
+
+    def _own(self, path: str, mode: int) -> None:
+        """Modo exato (sem depender do umask) e, se configurado, o grupo comum. Falha de permissão não derruba a
+        gravação: o arquivo continua legível pelo sd-ops (e o health/teste de conexão acusa o storage)."""
         try:
-            os.chmod(self.root, self.dir_mode)
+            if self.gid is not None and os.stat(path).st_gid != self.gid:
+                os.chown(path, -1, self.gid)
+            os.chmod(path, mode)
         except OSError:
             pass
+
+    def _makedirs(self, path: str) -> None:
+        missing = []
+        while path != self.root and not os.path.isdir(path):
+            missing.append(path)
+            path = os.path.dirname(path)
+        for d in reversed(missing):
+            os.makedirs(d, mode=self.dir_mode, exist_ok=True)
+            self._own(d, self.dir_mode)
+
+    def fix_permissions(self) -> dict:
+        """Aplica os modos (e o grupo) atuais a todo o storage: migração de gravações antigas (0600/0700) para o
+        modo compartilhado. Só mexe no que é do próprio processo (dono). Idempotente."""
+        out = {"dirs": 0, "files": 0, "skipped": 0}
+        uid = os.getuid()
+        for base, dirs, files in os.walk(self.root):
+            for name, mode, kind in [(base, self.dir_mode, "dirs")] + [(os.path.join(base, f), self.file_mode, "files")
+                                                                         for f in files]:
+                if os.lstat(name).st_uid != uid or os.path.islink(name):
+                    out["skipped"] += 1
+                    continue
+                self._own(name, mode)
+                out[kind] += 1
+        return out
 
     def _path(self, key: str) -> str:
         p = os.path.abspath(os.path.join(self.root, key))
@@ -35,12 +71,12 @@ class LocalStorage:
 
     def put(self, key: str, data: bytes, mime: str) -> None:
         p = self._path(key)
-        os.makedirs(os.path.dirname(p), mode=self.dir_mode, exist_ok=True)
+        self._makedirs(os.path.dirname(p))
         fd, tmp = tempfile.mkstemp(dir=os.path.dirname(p), prefix=".up-")
         try:
             with os.fdopen(fd, "wb") as f:
                 f.write(data)
-            os.chmod(tmp, self.file_mode)
+            self._own(tmp, self.file_mode)
             os.replace(tmp, p)
         except BaseException:
             if os.path.exists(tmp):

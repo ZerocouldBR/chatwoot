@@ -1,6 +1,6 @@
 {
   "LOGIN": {
-    "TITLE": "Entrar no ServiceDesk",
+    "TITLE": "Entrar no Chatwoot",
     "EMAIL": {
       "LABEL": "E-mail",
       "PLACEHOLDER": "nome{'@'}empresa.com.br",

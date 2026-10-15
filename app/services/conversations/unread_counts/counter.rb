@@ -14,7 +14,7 @@ class Conversations::UnreadCounts::Counter
   end
 
   def perform
-    return with_filtered_counts(empty_counts, build: false) if permission_mode == :none
+    return with_filtered_counts(empty_counts, build: false) if permission_mode == :none || sd_partial_ticket_access?
 
     ensure_base_cache!
     ensure_assignment_cache! if assignment_mode?
@@ -165,6 +165,12 @@ class Conversations::UnreadCounts::Counter
       else
         :none
       end
+  end
+
+  # ServiceDesk M13: os contadores em cache são por inbox/time; para quem vê só parte dos tickets (ticket.access
+  # diferente de all, ex.: só os próprios grupos) eles mostrariam tickets de outros grupos, então ficam vazios.
+  def sd_partial_ticket_access?
+    account_user&.agent? && account_user.sd_access.restricted_ticket_access?
   end
 
   def custom_role_agent?

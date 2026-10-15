@@ -28,6 +28,8 @@ import WhatsappTemplates from './WhatsappTemplates/Modal.vue';
 import ContentTemplates from './ContentTemplates/ContentTemplatesModal.vue';
 import { MESSAGE_MAX_LENGTH } from 'shared/helpers/MessageTypeHelper';
 import { isComposing } from 'shared/helpers/KeyboardHelpers';
+import { getUserPermissions } from 'dashboard/helper/permissionsHelper';
+import { canReplyPublicly } from 'dashboard/servicedesk/roles/permissions';
 import inboxMixin, { INBOX_FEATURES } from 'shared/mixins/inboxMixin';
 import { trimContent, debounce, getRecipients } from '@chatwoot/utils';
 import wootConstants from 'dashboard/constants/globals';
@@ -55,6 +57,7 @@ import {
 } from 'dashboard/servicedesk/macroEditorFill';
 import { useCopilotReply } from 'dashboard/composables/useCopilotReply';
 import { useMacroExecution } from 'dashboard/composables/useMacroExecution';
+import { useConversationRequiredAttributes } from 'dashboard/composables/useConversationRequiredAttributes';
 import ConversationResolveAttributesModal from 'dashboard/components-next/ConversationWorkflow/ConversationResolveAttributesModal.vue';
 import { useKbd } from 'dashboard/composables/utils/useKbd';
 import { isFileTypeAllowedForChannel } from 'shared/helpers/FileHelper';
@@ -101,6 +104,7 @@ export default {
     const messageEditor = useTemplateRef('messageEditor');
     const copilot = useCopilotReply();
     const macroExecution = useMacroExecution();
+    const { checkMissingAttributes } = useConversationRequiredAttributes();
     const shortcutKey = useKbd(['$mod', '+', 'enter']);
 
     // Options API state and methods live on the instance proxy
@@ -157,6 +161,7 @@ export default {
     });
 
     return {
+      checkMissingAttributes,
       uiSettings,
       isEditorHotKeyEnabled,
       fetchSignatureFlagFromUISettings,
@@ -252,8 +257,15 @@ export default {
         this.isAPIInbox
       );
     },
+    // ServiceDesk M13: papel sem resposta pública (Agente light, Colaborador) só grava nota interna
+    isSdNoteOnly() {
+      return !canReplyPublicly(
+        getUserPermissions(this.currentUser, this.accountId)
+      );
+    },
     canSendPublicReply() {
       return (
+        !this.isSdNoteOnly &&
         this.isWithinMessagingWindow &&
         !this.isAIOwnedPendingConversation &&
         !this.isInstagramReplyRestricted
@@ -268,7 +280,7 @@ export default {
       );
     },
     isOnPrivateNote() {
-      if (this.isInstagramReplyRestricted) {
+      if (this.isInstagramReplyRestricted || this.isSdNoteOnly) {
         return true;
       }
 
@@ -553,7 +565,7 @@ export default {
         this.copilot.reset();
       }
 
-      if (this.isInstagramReplyRestricted) {
+      if (this.isInstagramReplyRestricted || this.isSdNoteOnly) {
         this.replyType = REPLY_EDITOR_MODES.NOTE;
         return;
       }
@@ -606,7 +618,7 @@ export default {
   },
 
   mounted() {
-    if (this.isInstagramReplyRestricted) {
+    if (this.isInstagramReplyRestricted || this.isSdNoteOnly) {
       this.replyType = REPLY_EDITOR_MODES.NOTE;
     }
 
@@ -1016,6 +1028,20 @@ export default {
       this.submitStatus = null;
     },
     onSendReplyAs(status) {
+      // ServiceDesk (M1): "Enviar como Resolvido" exige os campos obrigatórios
+      if (status === wootConstants.STATUS_TYPE.RESOLVED) {
+        const { hasMissing, missing } = this.checkMissingAttributes(
+          this.currentChat?.custom_attributes || {}
+        );
+        if (hasMissing) {
+          useAlert(
+            this.$t('SD_RESOLVE.MISSING_FIELDS', {
+              fields: missing.map(attribute => attribute.label).join(', '),
+            })
+          );
+          return;
+        }
+      }
       this.submitStatus = status;
       this.onSendReply();
     },

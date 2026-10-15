@@ -66,6 +66,8 @@ const findCustomRole = agent =>
   customRoles.value.find(role => role.id === agent.custom_role_id);
 
 const getAgentRoleName = agent => {
+  // ServiceDesk M13: papel SD (Agente light, Colaborador...) quando houver
+  if (agent.sd_role_name) return agent.sd_role_name;
   if (!agent.custom_role_id) {
     return t(`AGENT_MGMT.AGENT_TYPES.${agent.role.toUpperCase()}`);
   }
@@ -298,6 +300,7 @@ const confirmDeletion = () => {
         :email="currentAgent.email"
         :availability="currentAgent.availability_status"
         :custom-role-id="currentAgent.custom_role_id"
+        :sd-role-id="currentAgent.sd_role_id"
         @close="hideEditPopup"
       />
     </woot-modal>

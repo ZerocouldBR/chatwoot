@@ -262,6 +262,10 @@ onMounted(() => {
           class="right-0 z-[100] mt-2 xl:left-0 top-full"
           @save-article="updateMeta"
           @save-slug="slug => emit('saveArticle', { slug })"
+          @save-segment="
+            segmentId =>
+              emit('saveArticle', { portal_user_segment_id: segmentId })
+          "
           @preview-article="emit('previewArticle')"
           @close="openProperties = false"
         />

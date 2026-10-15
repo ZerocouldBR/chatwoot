@@ -1,12 +1,12 @@
 <script setup>
 import NotificationsBell from './NotificationsBell.vue';
-import { useAdmin } from 'dashboard/composables/useAdmin';
 import { h, ref, computed, onMounted, watch } from 'vue';
 import { provideSidebarContext, useSidebarResize } from './provider';
 import { useAccount } from 'dashboard/composables/useAccount';
 import { useConfig } from 'dashboard/composables/useConfig';
 import { useKbd } from 'dashboard/composables/utils/useKbd';
 import { useMapGetter } from 'dashboard/composables/store';
+import { useSdRolePermissions } from 'dashboard/servicedesk/roles/useSdRolePermissions';
 import { useStore } from 'vuex';
 import { useI18n } from 'vue-i18n';
 import { useSidebarKeyboardShortcuts } from './useSidebarKeyboardShortcuts';
@@ -53,7 +53,8 @@ const isCallsAvailable = computed(
 );
 const searchShortcut = useKbd([`$mod`, 'k']);
 const { t } = useI18n();
-const { isAdmin } = useAdmin();
+const { canManageSuspendedTickets, canViewDeletedTickets } =
+  useSdRolePermissions();
 
 const isRTL = useMapGetter('accounts/isRTL');
 
@@ -287,13 +288,22 @@ const buildSortConfig = section => ({
   onSortChange: sortBy => updateSortPreference(section, sortBy),
 });
 
-const sortedFolders = computed(() =>
-  sortSidebarItems(conversationCustomViews.value, {
-    sortBy: getSortForSection(SIDEBAR_SORT_SECTIONS.FOLDERS),
-    labelKey: view => view.name,
-    unreadCountKey: view => getFolderUnreadCount.value(view.id),
-  })
-);
+// ServiceDesk: as views compartilhadas do Zendesk ficam na ordem do Zendesk
+// (posição, já ordenadas pela API servicedesk/views); os filtros pessoais
+// seguem a ordenação escolhida no menu.
+const sortedFolders = computed(() => {
+  const views = conversationCustomViews.value || [];
+  const shared = views.filter(view => view.shared);
+  const personal = sortSidebarItems(
+    views.filter(view => !view.shared),
+    {
+      sortBy: getSortForSection(SIDEBAR_SORT_SECTIONS.FOLDERS),
+      labelKey: view => view.name,
+      unreadCountKey: view => getFolderUnreadCount.value(view.id),
+    }
+  );
+  return [...shared, ...personal];
+});
 
 const sortedTeams = computed(() =>
   sortSidebarItems(teams.value, {
@@ -396,7 +406,8 @@ const menuItems = computed(() => {
             : 0,
           to: accountScopedRoute('conversation_unattended'),
         },
-        ...(isAdmin.value
+        // ServiceDesk M13: suspensos e lixeira conforme o papel (suspended_tickets.manage, ticket.view_deleted)
+        ...(canManageSuspendedTickets.value
           ? [
               {
                 name: 'Suspended Tickets',
@@ -405,6 +416,10 @@ const menuItems = computed(() => {
                 activeOn: ['suspended_tickets'],
                 to: accountScopedRoute('suspended_tickets'),
               },
+            ]
+          : []),
+        ...(canViewDeletedTickets.value
+          ? [
               {
                 name: 'Deleted Tickets',
                 label: t('SIDEBAR.DELETED_TICKETS'),
@@ -773,6 +788,13 @@ const menuItems = computed(() => {
           to: accountScopedRoute('agent_list'),
         },
         {
+          // ServiceDesk M13: papéis (Admin Center > Pessoas > Papéis no Zendesk)
+          name: 'Settings Papeis',
+          label: t('SD_ROLES.MENU'),
+          icon: 'i-lucide-shield-check',
+          to: accountScopedRoute('sd_roles_list'),
+        },
+        {
           name: 'Settings Teams',
           label: t('SIDEBAR.TEAMS'),
           icon: 'i-lucide-users',
@@ -807,12 +829,6 @@ const menuItems = computed(() => {
               },
             ]
           : []),
-        {
-          name: 'Settings Custom Roles',
-          label: t('SIDEBAR.CUSTOM_ROLES'),
-          icon: 'i-lucide-shield-plus',
-          to: accountScopedRoute('custom_roles_list'),
-        },
         {
           name: 'Settings Inboxes',
           label: t('SIDEBAR.INBOXES'),

@@ -34,9 +34,10 @@ RSpec.describe 'Trash and spam API', type: :request do
     expect(Conversation.trashed.find_by(id: conversation.id)).to be_present
   end
 
+  # ServiceDesk M13: o agente sem papel com ticket.view_deleted recebe o 403 da matriz de papéis
   it 'keeps the trash to administrators' do
     get "#{base}/deleted_tickets", headers: agent.create_new_auth_token
 
-    expect(response).to have_http_status(:unauthorized)
+    expect(response).to have_http_status(:forbidden)
   end
 end

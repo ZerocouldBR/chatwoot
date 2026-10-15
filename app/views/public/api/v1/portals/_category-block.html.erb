@@ -28,12 +28,12 @@
          </div>
       </div>
       <div class="flex flex-col gap-2 flex-grow <%= category.description.blank? && '-mt-4' %>">
-         <% if category.articles.published.size==0 %>
+         <% if category.articles.published.visible_to_segments(portal_visible_segment_ids).size==0 %>
          <div class="flex items-center justify-center h-full mb-4 bg-slate-50 dark:bg-slate-800 rounded-xl">
             <p class="text-sm text-slate-500"><%= I18n.t('public_portal.common.no_articles') %></p>
          </div>
          <% else %>
-         <% category.articles.published.order(position: :asc).take(5).each do |article| %>
+         <% category.articles.published.visible_to_segments(portal_visible_segment_ids).order(position: :asc).take(5).each do |article| %>
          <a class="leading-7 text-slate-700 dark:text-slate-100" href="<%= generate_article_link(portal.slug, article.slug, @theme_from_params, false) %>">
             <div id="category-item" class="flex justify-between hover:cursor-pointer items-start py-1 rounded-lg gap-6 px-2">
                <%= article.title %>
@@ -49,7 +49,7 @@
          <div class="flex flex-row items-center gap-1">
            <%= render "public/api/v1/portals/authors", category: category, show_expanded: false %>
            <span class="text-slate-600 dark:text-slate-400">•</span>
-           <span class="text-sm font-medium text-slate-600 dark:text-slate-400"><%= render 'public/api/v1/portals/article_count', article_count: category.articles.published.order(position: :asc).size %></span>
+           <span class="text-sm font-medium text-slate-600 dark:text-slate-400"><%= render 'public/api/v1/portals/article_count', article_count: category.articles.published.visible_to_segments(portal_visible_segment_ids).order(position: :asc).size %></span>
          </div>
          <div>
             <a href="<%= generate_category_link(category_link_params) %>" class="flex flex-row items-center text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-100">

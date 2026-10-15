@@ -16,16 +16,16 @@
     </a>
     </h3>
     <span class="text-slate-500">
-      <%= render 'public/api/v1/portals/article_count', article_count: category.articles.published.order(position: :asc).size %>
+      <%= render 'public/api/v1/portals/article_count', article_count: category.articles.published.visible_to_segments(portal_visible_segment_ids).order(position: :asc).size %>
     </span>
   </div>
   <div class="flex-grow w-full py-4 mt-2">
-    <% if category.articles.published.size == 0 %>
+    <% if category.articles.published.visible_to_segments(portal_visible_segment_ids).size == 0 %>
       <div class="flex items-center justify-center h-full mb-4 bg-slate-50 dark:bg-slate-800 rounded-xl">
         <p class="text-sm text-slate-500"><%= I18n.t('public_portal.common.no_articles') %></p>
       </div>
     <% else %>
-      <% category.articles.published.order(position: :asc).take(5).each do |article| %>
+      <% category.articles.published.visible_to_segments(portal_visible_segment_ids).order(position: :asc).take(5).each do |article| %>
         <div class="flex content-center justify-between h-8 my-1">
           <a
             class="leading-8 text-slate-800 dark:text-slate-50 hover:underline"

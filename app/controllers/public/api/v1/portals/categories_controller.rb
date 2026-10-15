@@ -4,6 +4,7 @@ class Public::Api::V1::Portals::CategoriesController < Public::Api::V1::Portals:
   before_action :set_portal_layout
   before_action :set_view_variant
   before_action :ensure_portal_feature_enabled
+  before_action :enforce_portal_sign_in
   before_action :set_category, only: [:show]
   before_action :load_category_articles, only: [:show], if: -> { @portal_layout == 'documentation' }
   layout 'portal'
@@ -29,7 +30,7 @@ class Public::Api::V1::Portals::CategoriesController < Public::Api::V1::Portals:
   end
 
   def load_category_articles
-    @articles = @category.articles.published.order(:position).includes(:author)
+    @articles = @category.articles.published.visible_to_segments(portal_visible_segment_ids).order(:position).includes(:author)
     @category_authors = @articles.filter_map(&:author).uniq
   end
 end

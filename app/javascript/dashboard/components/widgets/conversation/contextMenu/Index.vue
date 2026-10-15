@@ -1,6 +1,5 @@
 <script>
 import { mapGetters } from 'vuex';
-import { useAdmin } from 'dashboard/composables/useAdmin';
 import { useAlert } from 'dashboard/composables';
 import { copyTextToClipboard } from 'shared/helpers/clipboard';
 import {
@@ -8,6 +7,8 @@ import {
   getAgentsByUpdatedPresence,
 } from 'dashboard/helper/agentHelper.js';
 import { picoSearch } from '@chatwoot/pico-search';
+import { getUserPermissions } from 'dashboard/helper/permissionsHelper';
+import { deniedConversationMenuKeys } from 'dashboard/servicedesk/roles/permissions';
 import MenuItem from './menuItem.vue';
 import MenuItemWithSubmenu from './menuItemWithSubmenu.vue';
 import wootConstants from 'dashboard/constants/globals';
@@ -82,12 +83,6 @@ export default {
     'deleteConversation',
     'close',
   ],
-  setup() {
-    const { isAdmin } = useAdmin();
-    return {
-      isAdmin,
-    };
-  },
   data() {
     return {
       MENU,
@@ -231,8 +226,13 @@ export default {
   },
   methods: {
     isAllowed(keys) {
-      if (!this.allowedOptions.length) return true;
-      return keys.some(key => this.allowedOptions.includes(key));
+      // ServiceDesk M13: some o que o papel não pode fazer (editar, etiquetar, excluir)
+      const denied = deniedConversationMenuKeys(
+        getUserPermissions(this.currentUser, this.currentAccountId)
+      );
+      const roleKeys = keys.filter(key => !denied.includes(key));
+      if (!this.allowedOptions.length) return roleKeys.length > 0;
+      return roleKeys.some(key => this.allowedOptions.includes(key));
     },
     toggleStatus(status) {
       this.$emit('updateConversation', status);
@@ -421,7 +421,7 @@ export default {
         @click.stop="copyConversationLink"
       />
     </template>
-    <template v-if="isAdmin && isAllowed([MENU.DELETE])">
+    <template v-if="isAllowed([MENU.DELETE])">
       <hr class="m-1 rounded border-b border-n-weak dark:border-n-weak" />
       <MenuItem
         :option="deleteOption"

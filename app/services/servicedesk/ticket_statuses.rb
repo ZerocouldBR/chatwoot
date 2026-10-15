@@ -2,8 +2,10 @@
 # Fonte de verdade: config/servicedesk/ticket_statuses.yml (documentado no próprio arquivo).
 class Servicedesk::TicketStatuses
   CONFIG_PATH = Rails.root.join('config/servicedesk/ticket_statuses.yml')
-  # `pending` fica de fora de propósito: é a fila do bot/IA (decisão 1).
-  NATIVE_STATUSES = %w[open waiting_on_customer on_hold resolved].freeze
+  # Enum de status do ticket da v3 (modelo do Victor). `pending` fica de fora de propósito: é a fila do bot/IA.
+  NATIVE_STATUSES = %w[new_ticket open waiting_on_customer on_hold resolved closed].freeze
+  # Como no Zendesk, macros e automações não levam o ticket para Novo nem para Fechado.
+  NOT_SETTABLE_BY_ACTIONS = %w[new_ticket closed].freeze
 
   class << self
     def attribute_key

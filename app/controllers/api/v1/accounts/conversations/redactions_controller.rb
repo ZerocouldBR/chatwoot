@@ -1,7 +1,7 @@
 # Permanently redacts text and/or attachments of a comment: POST /conversations/:id/messages/:message_id/redaction
 class Api::V1::Accounts::Conversations::RedactionsController < Api::V1::Accounts::Conversations::BaseController
   def create
-    authorize @conversation, :destroy?
+    authorize @conversation, :redact_message? # ServiceDesk M13: ticket.redact do papel
     message = @conversation.messages.find(params[:message_id])
     text = params[:text].to_s
     return render_could_not_create_error(I18n.t('errors.tickets.redaction.text_not_found')) if text.present? && message.content.to_s.exclude?(text)

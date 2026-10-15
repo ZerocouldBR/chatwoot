@@ -2,8 +2,8 @@ require 'rails_helper'
 
 RSpec.describe Servicedesk::TicketStatuses do
   describe '.native_status_for' do
-    it 'derives the ticket status from the category' do
-      expect(described_class.native_status_for('Novo')).to eq('open')
+    it 'derives the canonical native status from the category' do
+      expect(described_class.native_status_for('Novo')).to eq('new_ticket')
       expect(described_class.native_status_for('Em andamento')).to eq('open')
       expect(described_class.native_status_for('Pendente')).to eq('waiting_on_customer')
       expect(described_class.native_status_for('Desenvolvimento')).to eq('on_hold')
@@ -13,7 +13,8 @@ RSpec.describe Servicedesk::TicketStatuses do
     it 'never maps a status to the native pending (reserved to the bot queue)' do
       natives = described_class.labels.map { |label| described_class.native_status_for(label) }
 
-      expect(natives.uniq).to match_array(%w[open waiting_on_customer on_hold resolved])
+      expect(natives.uniq).to match_array(%w[new_ticket open waiting_on_customer on_hold resolved])
+      expect(natives).to all(satisfy { |native| Conversation.statuses.key?(native) })
     end
 
     it 'returns nil for an unknown label' do

@@ -1,5 +1,8 @@
-const DEFAULT_BRAND_NAME = 'Helpdesk';
-const BRAND_PATTERN = /chatwoot/gi;
+// ServiceDesk: nome padrão do fork (INSTALLATION_NAME da instalação tem prioridade).
+const DEFAULT_BRAND_NAME = 'ServiceDesk';
+// Só a palavra isolada: não reescreve domínios (chatwoot.com, app.chatwoot.com),
+// caminhos (chatwoot/chatwoot), e-mails nem placeholders ({latestChatwootVersion}).
+const BRAND_PATTERN = /(?<![\w./@-])chatwoot(?![\w/-]|\.\w)/gi;
 
 export const getBrandName = () =>
   window.globalConfig?.INSTALLATION_NAME || DEFAULT_BRAND_NAME;

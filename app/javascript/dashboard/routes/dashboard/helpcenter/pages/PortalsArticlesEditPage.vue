@@ -35,13 +35,16 @@ const articleLink = computed(() => {
   const { slug: categorySlug, locale: categoryLocale } = article.value.category;
   const { slug: articleSlugValue } = article.value;
   const portalCustomDomain = portal.value?.custom_domain;
-  return buildPortalArticleURL(
+  const url = buildPortalArticleURL(
     portalSlug,
     categorySlug,
     categoryLocale,
     articleSlugValue,
     portalCustomDomain
   );
+  // ServiceDesk B2B: rascunho e artigo restrito só abrem no portal com o token de pré-visualização
+  const token = article.value.sdPreviewToken;
+  return token ? `${url}?preview_token=${encodeURIComponent(token)}` : url;
 });
 
 // On a published article, title/content edits stage into draft_* columns (kept

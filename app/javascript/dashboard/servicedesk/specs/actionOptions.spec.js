@@ -27,9 +27,8 @@ const vip = {
 
 describe('ServiceDesk actionOptions', () => {
   describe('getTicketStatusOptions', () => {
-    it('uses the zd_status list of the account', () => {
+    it('uses the zd_status list of the account, without New or Closed (v3)', () => {
       expect(getTicketStatusOptions([tabulacao, zdStatus])).toEqual([
-        { id: 'Novo', name: 'Novo' },
         { id: 'Desenvolvimento', name: 'Desenvolvimento' },
       ]);
     });
@@ -39,7 +38,8 @@ describe('ServiceDesk actionOptions', () => {
 
       expect(labels).toContain('Desenvolvimento Concluído');
       expect(labels).not.toContain('Escalonado');
-      expect(labels).toHaveLength(11);
+      expect(labels).not.toContain('Novo');
+      expect(labels).toHaveLength(10);
     });
   });
 

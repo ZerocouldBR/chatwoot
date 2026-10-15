@@ -17,6 +17,11 @@ RSpec.describe BrandNameTranslation do
 
   it 'falls back to a neutral name when none is configured' do
     allow(GlobalConfig).to receive(:get_value).with('INSTALLATION_NAME').and_return(nil)
-    expect(I18n.t('brand_spec.greeting')).to eq('Welcome to Helpdesk')
+    expect(I18n.t('brand_spec.greeting')).to eq('Welcome to ServiceDesk')
+  end
+
+  it 'keeps domains and interpolation keys intact' do
+    I18n.backend.store_translations(:en, brand_spec: { terms: 'Chatwoot terms: https://www.chatwoot.com/terms (%{chatwoot_url})' }) # rubocop:disable Style/FormatStringToken
+    expect(I18n.t('brand_spec.terms', chatwoot_url: 'x')).to eq('Acme Desk terms: https://www.chatwoot.com/terms (x)')
   end
 end

@@ -1,7 +1,7 @@
 <script setup>
 import { computed, onUnmounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
-import { useAdmin } from 'dashboard/composables/useAdmin';
+import { useSdRolePermissions } from 'dashboard/servicedesk/roles/useSdRolePermissions';
 import TicketsAPI from 'dashboard/api/tickets';
 import { UNSOLVED_STATUSES } from 'dashboard/constants/ticketStatuses';
 import MergeTicketDialog from './MergeTicketDialog.vue';
@@ -32,7 +32,9 @@ const [showActionsDropdown, toggleDropdown] = useToggle(false);
 
 const currentChat = computed(() => store.getters.getSelectedChat);
 const router = useRouter();
-const { isAdmin } = useAdmin();
+// ServiceDesk M13: mesclar (ticket.merge), spam (ticket.delete) e status (ticket.edit) conforme o papel
+const { canEditTicket, canMergeTicket, canDeleteTicket } =
+  useSdRolePermissions();
 const mergeDialog = ref(null);
 const spamDialog = ref(null);
 
@@ -62,7 +64,10 @@ const actionMenuItems = computed(() => {
     value: 'send_transcript',
   });
 
-  if (UNSOLVED_STATUSES.includes(currentChat.value.status)) {
+  if (
+    canMergeTicket.value &&
+    UNSOLVED_STATUSES.includes(currentChat.value.status)
+  ) {
     items.push({
       icon: 'i-lucide-merge',
       label: t('TICKET_MERGE.ACTION'),
@@ -71,7 +76,7 @@ const actionMenuItems = computed(() => {
     });
   }
 
-  if (isAdmin.value) {
+  if (canDeleteTicket.value) {
     items.push({
       icon: 'i-lucide-shield-ban',
       label: t('TICKET_SPAM.ACTION'),
@@ -135,6 +140,7 @@ onUnmounted(() => {
 <template>
   <div class="relative flex items-center gap-2 actions--container">
     <ResolveAction
+      v-if="canEditTicket"
       :conversation-id="currentChat.id"
       :status="currentChat.status"
     />

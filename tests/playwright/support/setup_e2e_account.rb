@@ -33,7 +33,8 @@ if ENV['MAIL_SUPPORT_ADDRESS'].present?
     imap_enabled: true, imap_address: ENV.fetch('MAIL_SUPPORT_IMAP_HOST'), imap_port: ENV.fetch('MAIL_SUPPORT_IMAP_PORT'),
     imap_login: ENV.fetch('MAIL_SUPPORT_USER'), imap_password: ENV.fetch('MAIL_SUPPORT_PASSWORD'), imap_enable_ssl: true,
     smtp_enabled: true, smtp_address: ENV.fetch('MAIL_SUPPORT_SMTP_HOST'), smtp_port: ENV.fetch('MAIL_SUPPORT_SMTP_PORT'),
-    smtp_login: ENV.fetch('MAIL_SUPPORT_USER'), smtp_password: ENV.fetch('MAIL_SUPPORT_PASSWORD'), smtp_enable_ssl_tls: true, smtp_enable_starttls_auto: false,
+    smtp_login: ENV.fetch('MAIL_SUPPORT_USER'), smtp_password: ENV.fetch('MAIL_SUPPORT_PASSWORD'),
+    smtp_enable_ssl_tls: true, smtp_enable_starttls_auto: false,
     smtp_domain: ENV.fetch('MAIL_SUPPORT_ADDRESS').split('@').last, smtp_authentication: 'login'
   )
   email_inbox = channel.inbox || account.inboxes.create!(name: 'E2E E-mail', channel: channel)

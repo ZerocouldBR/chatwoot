@@ -6,7 +6,8 @@
 #   :servicedesk-main    só quando o build é da branch servicedesk/main
 #
 # Remove enterprise/ como o upstream faz para as imagens -ce (publish_foss_docker.yml):
-# rm -rf enterprise spec/enterprise e ENV CW_EDITION="ce" no Dockerfile.
+# rm -rf enterprise spec/enterprise e ENV CW_EDITION="ce" no Dockerfile. Desde a v3 (base do Victor,
+# feat/tickets-f0-cleanup) o repositório já não tem enterprise/: o rm -rf vira no-op e fica como garantia.
 # A verificação (docker/servicedesk/verify-ce-image.sh) falha o job se /app/enterprise
 # existir na imagem ou se ChatwootApp.enterprise? for verdadeiro. Nesse caso nada é publicado.
 # Detalhes em docs/CI-IMAGEM.md (repositório de documentação do projeto).
@@ -55,6 +56,7 @@ jobs:
 
       - name: Strip enterprise code (edição CE)
         run: |
+          # no-op desde a v3 (enterprise/ já não existe no repositório); continua como garantia
           rm -rf enterprise spec/enterprise
           echo -en '\nENV CW_EDITION="ce"' >> docker/Dockerfile
           test ! -e enterprise

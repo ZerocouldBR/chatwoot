@@ -1,4 +1,7 @@
 Rails.application.routes.draw do
+  # ServiceDesk (M7): compatibilidade com a API do Zendesk (config/routes/zendesk_compat.rb)
+  draw :zendesk_compat
+
   # AUTH STARTS
   mount_devise_token_auth_for 'User', at: 'auth', controllers: {
     confirmations: 'devise_overrides/confirmations',
@@ -180,6 +183,9 @@ Rails.application.routes.draw do
           resources :macros, only: [:index, :create, :show, :update, :destroy] do
             post :execute, on: :member
           end
+          resources :sd_roles, only: [:index, :create, :show, :update, :destroy] do # ServiceDesk M13: papéis (CE)
+            get :me, on: :collection
+          end
           resources :campaigns, only: [:index, :create, :show, :update, :destroy] do
             if ChatwootApp.enterprise?
               get 'analytics/metrics', to: 'campaigns/analytics#metrics'
@@ -332,6 +338,12 @@ Rails.application.routes.draw do
 
           resources :custom_attribute_definitions, only: [:index, :show, :create, :update, :destroy]
           resources :custom_filters, only: [:index, :show, :create, :update, :destroy]
+          # ServiceDesk: views compartilhadas do Zendesk (visibilidade por grupo) com contadores
+          namespace :servicedesk do
+            resources :views, only: [:index] do
+              get :counts, on: :collection
+            end
+          end
           resource :branded_email_layout, only: [:show, :update]
           resources :inboxes, only: [:index, :show, :create, :update, :destroy] do
             get :assignable_agents, on: :member
@@ -502,6 +514,8 @@ Rails.application.routes.draw do
             resources :articles do
               post :reorder, on: :collection
             end
+            # ServiceDesk B2B: segmentos de usuário (artigos restritos)
+            resources :user_segments, only: [:index], controller: 'portal_user_segments'
           end
 
           resources :upload, only: [:create]
@@ -702,6 +716,22 @@ Rails.application.routes.draw do
   get 'hc/:slug/articles/:article_slug.md', to: 'public/api/v1/portals/articles#show_markdown', as: :public_portal_article_markdown,
                                             defaults: { format: :md }
   get 'hc/:slug/articles/:article_slug', to: 'public/api/v1/portals/articles#show', as: :public_portal_article
+
+  # ServiceDesk B2B: portal do cliente (login do contato e "Minhas solicitações"), ver docs/PORTAL-CLIENTE.md
+  scope 'hc/:slug/:locale', module: 'public/api/v1/portals', as: :portal_customer,
+                            constraints: { locale: /[a-z]{2,3}(?:[_-][A-Za-z]{2,4})?/ } do
+    get 'login', to: 'customer_sessions#new', as: :login
+    post 'login', to: 'customer_sessions#create'
+    get 'login/verify', to: 'customer_sessions#verify', as: :login_verify
+    post 'login/verify', to: 'customer_sessions#confirm'
+    get 'sso/jwt', to: 'customer_sessions#jwt', as: :sso_jwt
+    delete 'logout', to: 'customer_sessions#destroy', as: :logout
+    get 'requests', to: 'customer_requests#index', as: :requests
+    get 'requests/new', to: 'customer_requests#new', as: :new_request
+    post 'requests', to: 'customer_requests#create'
+    get 'requests/:display_id', to: 'customer_requests#show', as: :request, constraints: { display_id: /\d+/ }
+    post 'requests/:display_id/comments', to: 'customer_requests#reply', as: :request_comments, constraints: { display_id: /\d+/ }
+  end
 
   # ----------------------------------------------------------------------
   # Used in mailer templates

@@ -23,6 +23,10 @@ module Servicedesk::ConversationActions
 
     label = result.value['label']
     native = Servicedesk::TicketStatuses.native_status_for(label)
+    if Servicedesk::TicketStatuses::NOT_SETTABLE_BY_ACTIONS.include?(native)
+      return log_skipped_servicedesk_action('set_ticket_status', "status #{native} não pode ser aplicado por ação")
+    end
+
     @conversation.with_lock do
       attributes = (@conversation.custom_attributes || {}).merge(Servicedesk::TicketStatuses.attribute_key => label)
       @conversation.update!(custom_attributes: attributes, status: native)
@@ -34,9 +38,10 @@ module Servicedesk::ConversationActions
     result = servicedesk_action_params.subject(Array(params).first)
     return log_skipped_servicedesk_action('change_subject', result.error) unless result.ok?
 
+    # v3: assunto do ticket na coluna nativa `subject` (até 150) e assunto do próximo e-mail em mail_subject.
     @conversation.with_lock do
       attributes = (@conversation.additional_attributes || {}).merge('mail_subject' => result.value)
-      @conversation.update!(additional_attributes: attributes)
+      @conversation.update!(additional_attributes: attributes, subject: result.value.truncate(150))
     end
   end
 

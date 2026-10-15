@@ -70,6 +70,8 @@ json.cc_emails conversation.conversation_ccs.map(&:email)
 json.sla_policy_id conversation.sla_policy_id
 json.next_sla_breach_at conversation.next_sla_breach_at&.to_i
 json.sla_breached conversation.sla_breached
+# ServiceDesk: relógios do ticket (só nas listas, que os carregam de uma vez; ver Servicedesk::TicketClocks)
+json.sd_clock conversation.sd_clock if conversation.sd_clock
 json.created_at conversation.created_at.to_i
 json.updated_at conversation.updated_at.to_f
 json.timestamp conversation.last_activity_at.to_i

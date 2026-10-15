@@ -6,6 +6,7 @@ import { useChatListKeyboardEvents } from 'dashboard/composables/chatlist/useCha
 import ConversationItem from './ConversationItem.vue';
 import Spinner from 'dashboard/components-next/spinner/Spinner.vue';
 import IntersectionObserver from 'dashboard/components/IntersectionObserver.vue';
+import SdViewTable from 'dashboard/servicedesk/views/SdViewTable.vue';
 
 import wootConstants from 'dashboard/constants/globals';
 
@@ -19,9 +20,12 @@ const props = defineProps({
   conversationType: { type: String, default: '' },
   showAssignee: { type: Boolean, default: false },
   isOnExpandedLayout: { type: Boolean, default: false },
+  // ServiceDesk: colunas e ordenação da view do Zendesk (viewColumns.js)
+  viewColumns: { type: Array, default: () => [] },
+  viewSort: { type: Object, default: null },
 });
 
-const emit = defineEmits(['loadMore']);
+const emit = defineEmits(['loadMore', 'viewSort']);
 
 const conversationListRef = ref(null);
 const virtualListRef = ref(null);
@@ -35,6 +39,10 @@ const breakpoints = useBreakpoints({
 const isLgScreen = breakpoints.greaterOrEqual('lg');
 const showExpandedCards = computed(
   () => props.isOnExpandedLayout && isLgScreen.value
+);
+// A view com colunas vira tabela só com a lista em largura total
+const showViewTable = computed(
+  () => showExpandedCards.value && props.viewColumns.length > 0
 );
 
 useChatListKeyboardEvents(conversationListRef);
@@ -63,7 +71,16 @@ defineExpose({ conversationListRef });
     class="flex-1 min-h-0 overflow-y-auto conversations-list"
     :class="{ '!overflow-hidden': isContextMenuOpen }"
   >
+    <SdViewTable
+      v-if="showViewTable"
+      :conversations="conversationList"
+      :columns="viewColumns"
+      :active-sort="viewSort"
+      :folders-id="foldersId"
+      @sort="emit('viewSort', $event)"
+    />
     <Virtualizer
+      v-else
       ref="virtualListRef"
       v-slot="{ item }"
       :data="conversationList"

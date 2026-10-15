@@ -3,11 +3,11 @@
   current_category_slug = article&.category&.slug || category&.slug
   current_article_slug = article&.slug
   sidebar_categories = portal.categories.where(locale: locale).order(position: :asc)
-  sidebar_articles_by_category = portal.articles.published
+  sidebar_articles_by_category = portal.articles.published.visible_to_segments(portal_visible_segment_ids)
                                        .where(category_id: sidebar_categories.map(&:id))
                                        .order(:position)
                                        .group_by(&:category_id)
-  uncategorized_articles = portal.articles.published.where(category_id: nil, locale: locale).order(:position)
+  uncategorized_articles = portal.articles.published.visible_to_segments(portal_visible_segment_ids).where(category_id: nil, locale: locale).order(:position)
 %>
 <input type="checkbox" id="sidebar-drawer-checkbox" class="peer/sb hidden">
 <label for="sidebar-drawer-checkbox" class="md:hidden fixed inset-0 bg-black/40 backdrop-blur-sm z-40 hidden peer-checked/sb:block cursor-pointer" aria-hidden="true"></label>

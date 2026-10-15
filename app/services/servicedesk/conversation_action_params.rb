@@ -4,7 +4,7 @@
 #                                         Valor vazio limpa o atributo. `zd_status` não é aceito: use set_ticket_status.
 #   set_ticket_status     [rótulo]        grava o rótulo em zd_status e aplica o status nativo da categoria
 #                                         (config/servicedesk/ticket_statuses.yml).
-#   change_subject        [assunto]       grava additional_attributes.mail_subject (assunto do próximo e-mail).
+#   change_subject        [assunto]       grava o assunto do ticket (coluna subject) e o do próximo e-mail (mail_subject).
 #
 # Os parâmetros ficam como array de escalares para caberem no `action_params: []` dos controllers e no
 # gerador de payload do frontend (actionQueryGenerator).

@@ -1,5 +1,6 @@
 class Public::Api::V1::Portals::BaseController < PublicController
   include SwitchLocale
+  include PortalCustomerSession
 
   before_action :show_plain_layout
   before_action :set_color_scheme
@@ -26,6 +27,9 @@ class Public::Api::V1::Portals::BaseController < PublicController
   def set_view_variant
     request.variant = if @is_plain_layout_enabled
                         :plain
+                      elsif @portal&.customer_portal_enabled?
+                        # ServiceDesk B2B: tema da Central do Zendesk da B2B (Copenhagen), templates *.html+servicedesk.erb
+                        :servicedesk
                       elsif @portal_layout == 'documentation'
                         :documentation
                       end

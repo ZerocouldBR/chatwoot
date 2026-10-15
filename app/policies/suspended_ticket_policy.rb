@@ -1,13 +1,20 @@
+# ServiceDesk M13: tickets suspensos com o administrador ou o papel com suspended_tickets.manage (Zendesk).
 class SuspendedTicketPolicy < ApplicationPolicy
   def index?
-    @account_user.administrator?
+    manage?
   end
 
   def recover?
-    @account_user.administrator?
+    manage?
   end
 
   def destroy?
-    @account_user.administrator?
+    manage?
+  end
+
+  private
+
+  def manage?
+    @account_user.administrator? || Servicedesk::Roles::Access.for(@account_user).can?('suspended_tickets.manage')
   end
 end

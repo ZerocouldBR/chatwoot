@@ -11,7 +11,8 @@ class Api::V1::Accounts::AssignableAgentsController < Api::V1::Accounts::BaseCon
     end
     agent_ids = agent_ids.inject(:&)
     agents = Current.account.users.where(id: agent_ids)
-    @assignable_agents = (agents + Current.account.administrators).uniq
+    # ServiceDesk M13: agente light, colaborador e suspensos não podem ser responsáveis
+    @assignable_agents = Servicedesk::Roles::Assignable.filter(Current.account, (agents + Current.account.administrators).uniq)
     @agent_bots = @include_ai_assignees ? AgentBot.accessible_to(Current.account) : []
   end
 

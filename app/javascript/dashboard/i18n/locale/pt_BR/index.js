@@ -33,6 +33,7 @@ import mfa from './mfa.json';
 import onboarding from './onboarding.json';
 import report from './report.json';
 import resetPassword from './resetPassword.json';
+import sdRoles from './sdRoles.json';
 import sdTelephony from './sdTelephony.json';
 import search from './search.json';
 import setNewPassword from './setNewPassword.json';
@@ -46,7 +47,7 @@ import webhooks from './webhooks.json';
 import whatsappTemplates from './whatsappTemplates.json';
 import whatsappTemplateMgmt from './whatsappTemplateMgmt.json';
 import yearInReview from './yearInReview.json';
-import servicedeskTicketPanel from './servicedeskTicketPanel.json';
+import sdViewTable from './sdViewTable.json';
 
 export default {
   ...advancedFilters,
@@ -84,6 +85,7 @@ export default {
   ...onboarding,
   ...report,
   ...resetPassword,
+  ...sdRoles,
   ...sdTelephony,
   ...search,
   ...setNewPassword,
@@ -97,5 +99,5 @@ export default {
   ...whatsappTemplates,
   ...whatsappTemplateMgmt,
   ...yearInReview,
-  ...servicedeskTicketPanel,
+  ...sdViewTable,
 };

@@ -14,6 +14,8 @@ import { mapGetters } from 'vuex';
 import NextButton from 'dashboard/components-next/button/Button.vue';
 import SubmitAsMenu from 'dashboard/components-next/Conversation/SubmitAsMenu.vue';
 import ApplyMacroMenu from 'dashboard/components-next/Conversation/ApplyMacroMenu.vue';
+import { getUserPermissions } from 'dashboard/helper/permissionsHelper';
+import { canEditTicket } from 'dashboard/servicedesk/roles/permissions';
 
 export default {
   name: 'ReplyBottomPanel',
@@ -173,6 +175,15 @@ export default {
     };
   },
   computed: {
+    // ServiceDesk M13: sem ticket.edit (Agente light, Colaborador) não há "Enviar como <status>"
+    sdCanEditTicket() {
+      return canEditTicket(
+        getUserPermissions(
+          this.$store.getters.getCurrentUser,
+          this.$store.getters.getCurrentAccountId
+        )
+      );
+    },
     ...mapGetters({
       accountId: 'getCurrentAccountId',
       isFeatureEnabledonAccount: 'accounts/isFeatureEnabledonAccount',
@@ -408,7 +419,7 @@ export default {
         @click="onSend"
       />
       <SubmitAsMenu
-        v-if="!isNote && !newConversationModalActive"
+        v-if="!isNote && !newConversationModalActive && sdCanEditTicket"
         :disabled="isSendDisabled"
         @submit="onSendAs"
       />

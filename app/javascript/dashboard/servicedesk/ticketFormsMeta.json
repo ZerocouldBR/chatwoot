@@ -338,7 +338,7 @@
     "Novo": {
       "id": 20487430798747,
       "category": "new",
-      "native": "open",
+      "native": "new_ticket",
       "active": true
     },
     "Aberto": {
@@ -438,10 +438,17 @@
       "active": false
     }
   },
+  "category_default": {
+    "new": "Novo",
+    "open": "Aberto",
+    "pending": "Pendente",
+    "hold": "Desenvolvimento",
+    "solved": "Resolvido"
+  },
   "native_status_default": {
     "open": "Aberto",
     "waiting_on_customer": "Pendente",
-    "on_hold": "Em espera",
+    "on_hold": "Desenvolvimento",
     "resolved": "Resolvido"
   }
 }
