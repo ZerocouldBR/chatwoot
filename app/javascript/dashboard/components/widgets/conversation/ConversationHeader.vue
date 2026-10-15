@@ -19,6 +19,7 @@ import { copyTextToClipboard } from 'shared/helpers/clipboard';
 import { dynamicTime } from 'shared/helpers/timeHelper';
 import ConversationApi from 'dashboard/api/inbox/conversation';
 import { STATUS_BADGE_CLASSES } from 'dashboard/constants/ticketStatuses';
+import { useSdRolePermissions } from 'dashboard/servicedesk/roles/useSdRolePermissions';
 
 const props = defineProps({
   chat: {
@@ -118,11 +119,14 @@ const channelLabel = computed(() => {
 const createdAt = computed(() => dynamicTime(props.chat.created_at));
 
 // Zendesk edits the subject right in the ticket header.
+// ServiceDesk M13: só quem tem ticket.edit (Agente light e Colaborador veem o assunto sem editar).
+const { canEditTicket } = useSdRolePermissions();
 const SUBJECT_MAX_LENGTH = 150;
 const isEditingSubject = ref(false);
 const subjectDraft = ref('');
 const subjectInput = ref(null);
 const editSubject = async () => {
+  if (!canEditTicket.value) return;
   subjectDraft.value = props.chat.subject || '';
   isEditingSubject.value = true;
   await nextTick();
@@ -216,9 +220,11 @@ const copyConversationId = async () => {
         />
         <h1
           v-else
-          v-tooltip="$t('CONVERSATION.EDIT_SUBJECT')"
+          v-tooltip="canEditTicket ? $t('CONVERSATION.EDIT_SUBJECT') : ''"
           data-testid="ticket-header-subject"
-          class="text-lg font-semibold leading-snug truncate cursor-text text-n-slate-12 hover:bg-n-alpha-1 rounded px-1 -mx-1"
+          :data-readonly="!canEditTicket || undefined"
+          class="text-lg font-semibold leading-snug truncate text-n-slate-12 rounded px-1 -mx-1"
+          :class="canEditTicket ? 'cursor-text hover:bg-n-alpha-1' : ''"
           @click="editSubject"
         >
           {{ mailSubject || $t('CONVERSATION.NO_SUBJECT') }}

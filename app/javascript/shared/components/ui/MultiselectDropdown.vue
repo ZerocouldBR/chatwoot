@@ -38,6 +38,15 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  // ServiceDesk M13: mostra o valor sem abrir a lista (papel sem permissão de editar)
+  readonly: {
+    type: Boolean,
+    default: false,
+  },
+  readonlyTooltip: {
+    type: String,
+    default: '',
+  },
 });
 
 const emit = defineEmits(['select']);
@@ -77,13 +86,16 @@ const selectedThumbnail = computed(
   <OnClickOutside @trigger="onCloseDropdown">
     <div class="relative w-full mb-2" @keyup.esc="onCloseDropdown">
       <Button
+        v-tooltip.top="readonly ? readonlyTooltip : ''"
         slate
         outline
         trailing-icon
-        icon="i-lucide-chevrons-up-down"
+        :icon="readonly ? 'i-lucide-lock' : 'i-lucide-chevrons-up-down'"
         class="w-full !px-2"
+        :class="{ '!cursor-default': readonly }"
+        :data-readonly="readonly || undefined"
         @click="
-          () => toggleDropdown() // ensure that the event is not passed to the button
+          () => !readonly && toggleDropdown() // ensure that the event is not passed to the button
         "
       >
         <div class="flex items-center justify-between w-full min-w-0">

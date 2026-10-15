@@ -15,6 +15,11 @@ const props = defineProps({
     type: Array,
     default: () => [],
   },
+  // ServiceDesk M13: sem ticket.edit os CCs aparecem sem remover nem adicionar (o backend responde 403)
+  readonly: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 const { t } = useI18n();
@@ -69,6 +74,7 @@ const removeLast = () => {
       <span class="i-lucide-circle-user-round size-4 text-n-slate-10" />
       {{ email }}
       <button
+        v-if="!readonly"
         type="button"
         class="flex items-center text-n-slate-10 hover:text-n-slate-12"
         :aria-label="$t('CONVERSATION.TICKET_FIELDS.CC_REMOVE', { email })"
@@ -77,7 +83,11 @@ const removeLast = () => {
         <span class="i-lucide-x size-3" />
       </button>
     </span>
+    <span v-if="readonly && !ccs.length" class="text-sm text-n-slate-10">{{
+      $t('CONVERSATION.TICKET_FIELDS.EMPTY')
+    }}</span>
     <input
+      v-if="!readonly"
       v-model="draft"
       data-testid="ticket-cc-input"
       type="email"

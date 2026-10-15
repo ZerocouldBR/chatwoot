@@ -8,6 +8,7 @@ import {
 } from './helpers/emailHeadHelper';
 import ButtonV4 from 'dashboard/components-next/button/Button.vue';
 import TicketCcChips from 'dashboard/components-next/Conversation/TicketCcChips.vue';
+import { useSdRolePermissions } from 'dashboard/servicedesk/roles/useSdRolePermissions';
 
 const ccEmails = defineModel('ccEmails', { type: String, default: '' });
 const bccEmails = defineModel('bccEmails', { type: String, default: '' });
@@ -15,6 +16,8 @@ const toEmails = defineModel('toEmails', { type: String, default: '' });
 const subject = defineModel('subject', { type: String, default: '' });
 
 const currentChat = useMapGetter('getSelectedChat');
+// ServiceDesk M13: os CCs do ticket só mudam com ticket.edit
+const { canEditTicket } = useSdRolePermissions();
 const defaultSubject = computed(() => getDefaultSubject(currentChat.value));
 if (!subject.value) subject.value = defaultSubject.value;
 
@@ -118,6 +121,7 @@ const onBlur = () => {
       <TicketCcChips
         :conversation-id="currentChat.id"
         :emails="currentChat.cc_emails || []"
+        :readonly="!canEditTicket"
       />
       <ButtonV4
         v-if="!isBccVisible"

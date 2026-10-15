@@ -457,7 +457,11 @@
       "CC_EMPTY": "No one copied",
       "PROBLEM": "Problem",
       "PROBLEM_PLACEHOLDER": "Problem ticket number",
-      "INCIDENTS": "Incidents ({count})"
+      "INCIDENTS": "Incidents ({count})",
+      "READONLY": "Your role can view this field but not change it",
+      "YES": "Yes",
+      "NO": "No",
+      "EMPTY": "—"
     },
     "TICKET_EVENTS": {
       "TITLE": "Ticket events",
