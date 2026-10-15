@@ -39,6 +39,8 @@ class Account < ApplicationRecord
     check_for_column: false
   }.freeze
   SUSPENSION_CATEGORIES = %w[spam non_payment other].freeze
+  # Same default as the dashboard's TICKET_PANEL_FIELDS: every built-in field in the ticket's left column.
+  DEFAULT_TICKET_PANEL_FIELDS = %w[assignee team followers ticket_type priority labels].freeze
 
   attr_accessor :suspension_category, :suspension_reason
 

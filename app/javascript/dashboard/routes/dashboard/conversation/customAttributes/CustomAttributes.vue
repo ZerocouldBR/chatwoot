@@ -31,6 +31,11 @@ const props = defineProps({
     type: Array,
     default: () => [],
   },
+  // Only the static elements: the ticket's left column already shows its custom fields.
+  staticOnly: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 const store = useStore();
@@ -98,7 +103,7 @@ const combinedElements = computed(() => {
   const savedOrder = uiSettings.value[orderKey.value] ?? [];
   const allElements = [
     ...props.staticElements,
-    ...filteredCustomAttributes.value,
+    ...(props.staticOnly ? [] : filteredCustomAttributes.value),
   ];
 
   // If no saved order exists, return in default order

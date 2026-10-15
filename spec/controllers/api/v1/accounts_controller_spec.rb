@@ -468,6 +468,10 @@ RSpec.describe 'Accounts API', type: :request do
                                               as: :json
       expect(account.reload.settings['ticket_panel_fields']).to eq(%w[priority assignee])
 
+      patch "/api/v1/accounts/#{account.id}", params: { ticket_panel_fields: %w[attr:tabulacao team] }, headers: admin.create_new_auth_token,
+                                              as: :json
+      expect(account.reload.settings['ticket_panel_fields']).to eq(%w[attr:tabulacao team])
+
       patch "/api/v1/accounts/#{account.id}", params: { ticket_panel_fields: %w[shoe_size] }, headers: admin.create_new_auth_token, as: :json
       expect(response).to have_http_status(:unprocessable_entity)
     end

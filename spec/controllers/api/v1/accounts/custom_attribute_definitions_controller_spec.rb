@@ -91,6 +91,15 @@ RSpec.describe 'Custom Attribute Definitions API', type: :request do
         expect(json_response['attribute_key']).to eq 'developer_id'
       end
 
+      it 'shows a new ticket field in the ticket panel, after the chosen fields' do
+        account.update!(settings: { 'ticket_panel_fields' => %w[team assignee] })
+        payload[:custom_attribute_definition][:attribute_model] = 'conversation_attribute'
+
+        post "/api/v1/accounts/#{account.id}/custom_attribute_definitions", headers: admin.create_new_auth_token, params: payload
+
+        expect(account.reload.settings['ticket_panel_fields']).to eq(%w[team assignee attr:developer_id])
+      end
+
       context 'when it is an agent' do
         it 'returns forbidden and does not create the custom attribute' do
           expect do

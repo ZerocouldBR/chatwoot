@@ -1,32 +1,55 @@
 <script setup>
-import { ref, watch } from 'vue';
+import { computed, onMounted, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useAccount } from 'dashboard/composables/useAccount';
 import { useAlert } from 'dashboard/composables';
+import { useMapGetter, useStore } from 'dashboard/composables/store';
 import NextButton from 'dashboard/components-next/button/Button.vue';
-import { TICKET_PANEL_FIELDS } from 'dashboard/constants/ticketPanelFields';
+import {
+  TICKET_PANEL_FIELDS,
+  customFieldId,
+} from 'dashboard/constants/ticketPanelFields';
 
 // Which fields agents see in a ticket's left column, and in which order (like a Zendesk ticket form).
 const { t } = useI18n();
+const store = useStore();
 const { currentAccount, updateAccount } = useAccount();
+const attributesByModel = useMapGetter('attributes/getAttributesByModel');
 // Every field with its visibility, in display order: chosen fields first, the rest after.
 const rows = ref([]);
 const isSubmitting = ref(false);
 
+// Built-in fields plus the account's custom ticket fields ("attr:<key>"), with their labels.
+const allFields = computed(() => [
+  ...TICKET_PANEL_FIELDS.map(field => ({
+    field,
+    label: t(`GENERAL_SETTINGS.FORM.TICKET_FIELDS.FIELDS.${field}`),
+  })),
+  ...attributesByModel.value('conversation_attribute').map(attribute => ({
+    field: customFieldId(attribute.attribute_key),
+    label: attribute.attribute_display_name,
+  })),
+]);
+
 watch(
-  currentAccount,
-  account => {
+  [currentAccount, allFields],
+  ([account, fields]) => {
     const chosen =
       account?.settings?.ticket_panel_fields || TICKET_PANEL_FIELDS;
+    const byField = Object.fromEntries(fields.map(item => [item.field, item]));
     rows.value = [
-      ...chosen.map(field => ({ field, visible: true })),
-      ...TICKET_PANEL_FIELDS.filter(field => !chosen.includes(field)).map(
-        field => ({ field, visible: false })
-      ),
+      ...chosen
+        .filter(field => byField[field])
+        .map(field => ({ ...byField[field], visible: true })),
+      ...fields
+        .filter(item => !chosen.includes(item.field))
+        .map(item => ({ ...item, visible: false })),
     ];
   },
   { immediate: true, deep: true }
 );
+
+onMounted(() => store.dispatch('attributes/get'));
 
 const move = (index, offset) => {
   const target = index + offset;
@@ -81,7 +104,7 @@ const save = async () => {
             type="checkbox"
             :data-testid="`ticket-field-${row.field}`"
           />
-          {{ t(`GENERAL_SETTINGS.FORM.TICKET_FIELDS.FIELDS.${row.field}`) }}
+          {{ row.label }}
         </label>
         <NextButton
           type="button"

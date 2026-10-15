@@ -12,6 +12,7 @@ class Api::V1::Accounts::CustomAttributeDefinitionsController < Api::V1::Account
     @custom_attribute_definition = Current.account.custom_attribute_definitions.create!(
       permitted_payload
     )
+    show_in_ticket_panel if @custom_attribute_definition.conversation_attribute?
   end
 
   def update
@@ -24,6 +25,13 @@ class Api::V1::Accounts::CustomAttributeDefinitionsController < Api::V1::Account
   end
 
   private
+
+  # A ticket field created by an admin shows up in the ticket's left column right away (Settings > Ticket fields hides it).
+  def show_in_ticket_panel
+    fields = Current.account.settings['ticket_panel_fields'] || Account::DEFAULT_TICKET_PANEL_FIELDS
+    Current.account.settings['ticket_panel_fields'] = fields | ["attr:#{@custom_attribute_definition.attribute_key}"]
+    Current.account.save!
+  end
 
   def fetch_custom_attributes_definitions
     @custom_attribute_definitions = Current.account.custom_attribute_definitions.with_attribute_model(permitted_params[:attribute_model])

@@ -105,6 +105,7 @@ const staticElements = computed(() =>
       attribute-class="conversation--attribute"
       attribute-from="conversation_panel"
       attribute-type="conversation_attribute"
+      static-only
     >
       <template #staticItem="{ element }">
         <ContactDetailsItem

@@ -18,7 +18,8 @@ export function useTicketPanelFields() {
 
   const fieldClass = field => {
     const index = fields.value.indexOf(field);
-    return index === -1 ? 'hidden' : ORDER_CLASSES[index];
+    if (index === -1) return 'hidden';
+    return ORDER_CLASSES[index] || 'order-last';
   };
 
   return { fields, fieldClass };

@@ -14,7 +14,11 @@ module AccountSettingsSchema
         # Fields agents see in a ticket's left column, in order (the requester is always shown).
         'ticket_panel_fields': {
           'type': %w[array null],
-          'items': { 'type': 'string', 'enum': %w[assignee team followers ticket_type priority labels] },
+          # Built-in fields or a custom ticket field as "attr:<attribute_key>".
+          'items': {
+            'type': 'string',
+            'anyOf': [{ 'enum': %w[assignee team followers ticket_type priority labels] }, { 'pattern': '^attr:.+$' }]
+          },
           'uniqueItems': true
         },
         'auto_resolve_message': { 'type': %w[string null] },

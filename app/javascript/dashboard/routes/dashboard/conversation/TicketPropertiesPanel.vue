@@ -1,10 +1,11 @@
 <script setup>
-import { computed } from 'vue';
-import { useMapGetter } from 'dashboard/composables/store';
+import { computed, onMounted } from 'vue';
+import { useMapGetter, useStore } from 'dashboard/composables/store';
 import Avatar from 'next/avatar/Avatar.vue';
 import ContactDetailsItem from './ContactDetailsItem.vue';
 import ConversationAction from './ConversationAction.vue';
 import ConversationParticipant from './ConversationParticipant.vue';
+import TicketCustomFields from './TicketCustomFields.vue';
 import { useTicketPanelFields } from 'dashboard/composables/useTicketPanelFields';
 
 // Zendesk-style left column of a ticket: the requester, then the fields the account chose to show, in its order.
@@ -15,6 +16,7 @@ const props = defineProps({
   },
 });
 
+const store = useStore();
 const { fieldClass } = useTicketPanelFields();
 const getContact = useMapGetter('contacts/getContact');
 const requester = computed(() =>
@@ -24,6 +26,12 @@ const requesterPath = computed(
   () =>
     `/app/accounts/${props.conversation.account_id}/contacts/${requester.value.id}`
 );
+
+// Fresh field settings and custom field definitions, in case an admin changed them since this tab loaded.
+onMounted(() => {
+  store.dispatch('accounts/get', { silent: true });
+  store.dispatch('attributes/get');
+});
 </script>
 
 <template>
@@ -63,5 +71,6 @@ const requesterPath = computed(
         :inbox-id="conversation.inbox_id"
       />
     </div>
+    <TicketCustomFields :conversation="conversation" />
   </aside>
 </template>
