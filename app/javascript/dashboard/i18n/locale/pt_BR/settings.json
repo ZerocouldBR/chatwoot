@@ -62,7 +62,7 @@
       },
       "MESSAGE_SIGNATURE_SECTION": {
         "TITLE": "Assinatura de mensagens pessoais",
-        "NOTE": "Crie uma assinatura de mensagem única para aparecer no final de cada mensagem que você enviar de qualquer caixa de entrada. Você também pode incluir uma imagem anexada, suportada em live-chat, e-mail e caixas de entrada de API.",
+        "NOTE": "Crie uma assinatura de mensagem única para aparecer no final de cada mensagem que você enviar de qualquer canal. Você também pode incluir uma imagem anexada, suportada em live-chat, e-mail e canais de API.",
         "BTN_TEXT": "Salvar assinatura da mensagem",
         "API_ERROR": "Não foi possível salvar a assinatura! Tente novamente",
         "API_SUCCESS": "Assinatura salva com sucesso",
@@ -258,7 +258,7 @@
   "APP_GLOBAL": {
     "TRIAL_MESSAGE": "dias de teste restantes.",
     "TRAIL_BUTTON": "Comprar agora",
-    "DELETED_USER": "Deletar Usuário",
+    "DELETED_USER": "Excluir Usuário",
     "EMAIL_VERIFICATION_PENDING": "Parece que você ainda não verificou seu endereço de e-mail. Por favor, verifique sua caixa de entrada pelo e-mail de verificação.",
     "RESEND_VERIFICATION_MAIL": "Reenviar e-mail de verificação",
     "EMAIL_VERIFICATION_SENT": "O e-mail de verificação foi enviado. Por favor, verifique sua caixa de entrada.",
@@ -304,16 +304,16 @@
   "CONFIRM_EMAIL": "Verificando...",
   "SETTINGS": {
     "INBOXES": {
-      "NEW_INBOX": "Adicionar Caixa de Entrada"
+      "NEW_INBOX": "Adicionar canal"
     }
   },
   "SIDEBAR": {
     "NO_ITEMS": "Nenhum item",
     "CURRENTLY_VIEWING_ACCOUNT": "Visualização atual:",
     "SWITCH": "Trocar",
-    "INBOX_VIEW": "Caixa de entrada",
+    "INBOX_VIEW": "Canal",
     "CONVERSATIONS": "Visualizações",
-    "INBOX": "Caixa de Entrada",
+    "INBOX": "Canal",
     "ALL_CONVERSATIONS": "Todos os tickets",
     "MENTIONED_CONVERSATIONS": "Menções",
     "PARTICIPATING_CONVERSATIONS": "Seguindo",
@@ -333,33 +333,33 @@
     "CAPTAIN_TOOLS": "Ferramentas",
     "CAPTAIN_SCENARIOS": "Cenários",
     "CAPTAIN_PLAYGROUND": "Playground",
-    "CAPTAIN_INBOXES": "Caixas de Entrada",
+    "CAPTAIN_INBOXES": "Canais",
     "CAPTAIN_SETTINGS": "Configurações",
     "HOME": "Principal",
     "AGENTS": "Agentes",
-    "AGENT_BOTS": "Robôs",
+    "AGENT_BOTS": "Bots",
     "AUDIT_LOGS": "Auditoria",
-    "INBOXES": "Caixas de Entrada",
-    "WHATSAPP_TEMPLATES": "Modelos",
+    "INBOXES": "Canais",
+    "WHATSAPP_TEMPLATES": "Modelos WhatsApp",
     "NOTIFICATIONS": "Notificações",
-    "CANNED_RESPONSES": "Respostas Prontas",
+    "CANNED_RESPONSES": "Respostas prontas",
     "INTEGRATIONS": "Integrações",
     "DATA": "Dados",
     "PROFILE_SETTINGS": "Configurações do Perfil",
     "ACCOUNT_SETTINGS": "Conta",
     "APPLICATIONS": "Aplicações",
     "LABELS": "Tags",
-    "CUSTOM_ATTRIBUTES": "Atributos Personalizados",
+    "CUSTOM_ATTRIBUTES": "Campos",
     "MACROS": "Macros",
     "TEAMS": "Grupos",
     "BILLING": "Cobrança",
     "CUSTOM_VIEWS_FOLDER": "Pastas",
     "CUSTOM_VIEWS_SEGMENTS": "Segmentos",
-    "ALL_CONTACTS": "Todos os Contatos",
+    "ALL_CONTACTS": "Todos os contatos",
     "TAGGED_WITH": "Marcado com",
     "NEW_LABEL": "Nova tag",
     "NEW_TEAM": "Novo grupo",
-    "NEW_INBOX": "Nova caixa de entrada",
+    "NEW_INBOX": "Novo canal",
     "REPORTS_CONVERSATION": "Tickets",
     "CSAT": "CSAT",
     "LIVE_CHAT": "Chat ao vivo",
@@ -369,21 +369,21 @@
     "ONGOING": "Em andamento",
     "ONE_OFF": "Única",
     "REPORTS_SLA": "SLA",
-    "REPORTS_BOT": "Robôs",
+    "REPORTS_BOT": "Bots",
     "REPORTS_AGENT": "Agentes",
     "REPORTS_LABEL": "Tags",
-    "REPORTS_INBOX": "Caixa de Entrada",
+    "REPORTS_INBOX": "Canal",
     "REPORTS_TEAM": "Grupo",
-    "AGENT_ASSIGNMENT": "Atribuição de Agentes",
+    "AGENT_ASSIGNMENT": "Atribuição automática",
     "SET_AVAILABILITY_TITLE": "Defina como",
     "SET_YOUR_AVAILABILITY": "Disponibilidade",
     "SLA": "SLA",
     "CUSTOM_ROLES": "Funções Personalizadas",
     "BETA": "Beta",
     "REPORTS_OVERVIEW": "Visão geral",
-    "REAUTHORIZE": "A conexão com a sua caixa de entrada expirou. Por favor, reconecte para continuar recebendo e enviando mensagens",
+    "REAUTHORIZE": "A conexão com a seu canal expirou. Por favor, reconecte para continuar recebendo e enviando mensagens",
     "HELP_CENTER": {
-      "TITLE": "Central de Ajuda",
+      "TITLE": "Central de ajuda",
       "ARTICLES": "Artigos",
       "CATEGORIES": "Categorias",
       "LOCALES": "Localidades",
@@ -413,7 +413,7 @@
     "DOCS": "Ler documentos",
     "SECURITY": "Segurança",
     "CAPTAIN_AI": "Capitão",
-    "CONVERSATION_WORKFLOW": "Fluxo de Conversa",
+    "CONVERSATION_WORKFLOW": "Tickets",
     "TICKET_HOME": "Página inicial",
     "BUSINESS_HOURS": "Horário comercial",
     "TICKET_TRIGGERS": "Gatilhos",
@@ -423,7 +423,7 @@
     "COLLAPSE": "Recolher menu",
     "EXPAND": "Expandir menu",
     "AUTOMATION": "Automação",
-    "SD_TELEPHONY": "Telefonia 55PBX"
+    "SD_TELEPHONY": "Telefonia"
   },
   "DATA_IMPORTS": {
     "HEADER": "Dados",
@@ -727,8 +727,8 @@
   "CONVERSATION_WORKFLOW": {
     "INDEX": {
       "HEADER": {
-        "TITLE": "Fluxos de Conversa",
-        "DESCRIPTION": "Configure regras e campos obrigatórios para a resolução de tickets."
+        "TITLE": "Tickets",
+        "DESCRIPTION": "Campos do painel do ticket, fechamento automático e o que é obrigatório para resolver."
       }
     },
     "REQUIRED_ATTRIBUTES": {
@@ -745,7 +745,7 @@
       },
       "MODAL": {
         "TITLE": "Resolver ticket",
-        "DESCRIPTION": "Por favor, preencha os seguintes atributos personalizados antes de resolver este ticket",
+        "DESCRIPTION": "Por favor, preencha os seguintes campos personalizados antes de resolver este ticket",
         "ACTIONS": {
           "RESOLVE": "Resolver ticket",
           "CANCEL": "Cancelar"
@@ -817,11 +817,11 @@
     "INDEX": {
       "HEADER": {
         "TITLE": "Atribuição de agentes",
-        "DESCRIPTION": "Defina políticas para gerenciar a carga de trabalho de forma eficaz e encaminhar tickets com base nas necessidades das caixas de entrada e dos agentes. Saiba mais aqui"
+        "DESCRIPTION": "Defina políticas para gerenciar a carga de trabalho de forma eficaz e encaminhar tickets com base nas necessidades dos canais e dos agentes. Saiba mais aqui"
       },
       "ASSIGNMENT_POLICY": {
         "TITLE": "Política de atribuição",
-        "DESCRIPTION": "Gerencie como os tickets são atribuídos nas caixas de entrada.",
+        "DESCRIPTION": "Gerencie como os tickets são atribuídos nos canais.",
         "FEATURES": [
           "Atribuir tickets de forma uniforme ou com base na capacidade disponível",
           "Adicione regras de distribuição justa para evitar sobrecarregar qualquer agente",
@@ -849,7 +849,7 @@
           "PRIORITY": "Prioridade",
           "ACTIVE": "Ativo",
           "INACTIVE": "Inativa",
-          "POPOVER": "Caixas de entrada adicionadas",
+          "POPOVER": "Canais adicionados",
           "EDIT": "Alterar"
         },
         "NO_RECORDS_FOUND": "Nenhuma política de atribuição encontrada"
@@ -862,7 +862,7 @@
         "API": {
           "SUCCESS_MESSAGE": "Política de atribuição criada com sucesso",
           "ERROR_MESSAGE": "Falha ao criar a política de atribuição",
-          "INBOX_LINKED": "A caixa de entrada foi vinculada à política"
+          "INBOX_LINKED": "o canal foi vinculado à política"
         }
       },
       "EDIT": {
@@ -871,15 +871,15 @@
         },
         "EDIT_BUTTON": "Atualizar política",
         "CONFIRM_ADD_INBOX_DIALOG": {
-          "TITLE": "Adicionar caixa de entrada",
-          "DESCRIPTION": "A caixa de entrada {inboxName} já está vinculada a outra política. Tem certeza de que deseja vinculá-la a esta política? Ela será desvinculada da outra.",
+          "TITLE": "Adicionar canal",
+          "DESCRIPTION": "o canal {inboxName} já está vinculada a outra política. Tem certeza de que deseja vinculá-la a esta política? Ela será desvinculada da outra.",
           "CONFIRM_BUTTON_LABEL": "Continuar",
           "CANCEL_BUTTON_LABEL": "Cancelar"
         },
         "INBOX_LINK_PROMPT": {
-          "TITLE": "Vincular caixa de entrada à política",
-          "DESCRIPTION": "Deseja vincular esta caixa de entrada à política de atribuição?",
-          "LINK_BUTTON": "Vincular caixa de entrada",
+          "TITLE": "Vincular canal à política",
+          "DESCRIPTION": "Deseja vincular este canal à política de atribuição?",
+          "LINK_BUTTON": "Vincular canal",
           "CANCEL_BUTTON": "Pular"
         },
         "API": {
@@ -888,12 +888,12 @@
         },
         "INBOX_API": {
           "ADD": {
-            "SUCCESS_MESSAGE": "Caixa de entrada adicionada à política com sucesso",
-            "ERROR_MESSAGE": "Falha ao adicionar a caixa de entrada à política"
+            "SUCCESS_MESSAGE": "Canal adicionado à política com sucesso",
+            "ERROR_MESSAGE": "Falha ao adicionar o canal à política"
           },
           "REMOVE": {
-            "SUCCESS_MESSAGE": "Caixa de entrada removida da política com sucesso",
-            "ERROR_MESSAGE": "Caixa de entrada removida da política com sucesso"
+            "SUCCESS_MESSAGE": "Canal removido da política com sucesso",
+            "ERROR_MESSAGE": "Canal removido da política com sucesso"
           }
         }
       },
@@ -947,17 +947,17 @@
           "DESCRIPTION": "Ignore tickets não atribuídos mais antigas do que este período. O padrão é 7 dias; deixe em branco para desativar."
         },
         "INBOXES": {
-          "LABEL": "Caixas de entrada adicionadas",
-          "DESCRIPTION": "Adicionar caixas de entrada às quais esta política será aplicada.",
-          "ADD_BUTTON": "Adicionar caixa de entrada",
+          "LABEL": "Canais adicionados",
+          "DESCRIPTION": "Adicionar canais às quais esta política será aplicada.",
+          "ADD_BUTTON": "Adicionar canal",
           "DROPDOWN": {
-            "SEARCH_PLACEHOLDER": "Pesquisar e selecionar caixas de entrada para adicionar",
+            "SEARCH_PLACEHOLDER": "Pesquisar e selecionar canais para adicionar",
             "ADD_BUTTON": "Adicionar"
           },
-          "EMPTY_STATE": "Nenhuma caixa de entrada adicionada a esta política. Adicione uma caixa de entrada para começar",
+          "EMPTY_STATE": "Nenhum canal adicionado a esta política. Adicione um canal para começar",
           "API": {
-            "SUCCESS_MESSAGE": "Caixa de entrada adicionada à política com sucesso",
-            "ERROR_MESSAGE": "Falha ao adicionar a caixa de entrada à política"
+            "SUCCESS_MESSAGE": "Canal adicionado à política com sucesso",
+            "ERROR_MESSAGE": "Falha ao adicionar o canal à política"
           }
         }
       },
@@ -1015,16 +1015,16 @@
         },
         "INBOX_LIMIT_API": {
           "ADD": {
-            "SUCCESS_MESSAGE": "Limite de caixa de entrada adicionado com sucesso",
-            "ERROR_MESSAGE": "Falha ao adicionar limite de caixa de entrada"
+            "SUCCESS_MESSAGE": "Limite de canal adicionado com sucesso",
+            "ERROR_MESSAGE": "Falha ao adicionar limite de canal"
           },
           "UPDATE": {
-            "SUCCESS_MESSAGE": "Limite de caixa de entrada atualizado com sucesso",
-            "ERROR_MESSAGE": "Falha ao atualizar limite da caixa de entrada"
+            "SUCCESS_MESSAGE": "Limite de canal atualizado com sucesso",
+            "ERROR_MESSAGE": "Falha ao atualizar limite do canal"
           },
           "DELETE": {
-            "SUCCESS_MESSAGE": "Limite da caixa de entrada excluído com sucesso",
-            "ERROR_MESSAGE": "Falha ao excluir o limite da caixa de entrada"
+            "SUCCESS_MESSAGE": "Limite do canal excluído com sucesso",
+            "ERROR_MESSAGE": "Falha ao excluir o limite do canal"
           }
         }
       },
@@ -1038,14 +1038,14 @@
           "PLACEHOLDER": "Insira a descrição"
         },
         "INBOX_CAPACITY_LIMIT": {
-          "LABEL": "Limites de capacidade da caixa de entrada",
-          "ADD_BUTTON": "Adicionar caixa de entrada",
+          "LABEL": "Limites de capacidade do canal",
+          "ADD_BUTTON": "Adicionar canal",
           "FIELD": {
-            "SELECT_INBOX": "Selecionar caixa de entrada",
+            "SELECT_INBOX": "Selecionar canal",
             "MAX_CONVERSATIONS": "Máximo de tickets",
             "SET_LIMIT": "Definir limite"
           },
-          "EMPTY_STATE": "Nenhum limite de caixa de entrada definido"
+          "EMPTY_STATE": "Nenhum limite de canal definido"
         },
         "EXCLUSION_RULES": {
           "LABEL": "Regras de exclusão",
@@ -1220,7 +1220,7 @@
       "ticket_type": "Tipo",
       "team_id": "Grupo",
       "assignee_id": "Atribuído",
-      "inbox_id": "Caixa de entrada",
+      "inbox_id": "Canal",
       "channel": "Canal",
       "labels": "Tags",
       "subject": "Assunto",

@@ -24,7 +24,7 @@
     },
     "ADD": {
       "TITLE": "Adicionar agente a seu grupo",
-      "DESC": "Você pode adicionar pessoas que poderão acompanhar o suporte de suas caixas de entrada.",
+      "DESC": "Você pode adicionar pessoas que poderão acompanhar o suporte de seus canais.",
       "CANCEL_BUTTON_TEXT": "Cancelar",
       "FORM": {
         "NAME": {

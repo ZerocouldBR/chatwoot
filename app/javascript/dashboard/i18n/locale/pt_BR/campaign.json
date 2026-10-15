@@ -10,7 +10,7 @@
         },
         "CAMPAIGN_DETAILS": {
           "SENT_BY": "Enviado por",
-          "BOT": "Robôs",
+          "BOT": "Bots",
           "FROM": "De",
           "URL": "URL:"
         }
@@ -35,9 +35,9 @@
             "ERROR": "A mensagem é obrigatória"
           },
           "INBOX": {
-            "LABEL": "Selecionar caixa de entrada",
-            "PLACEHOLDER": "Selecionar caixa de entrada",
-            "ERROR": "Caixa de entrada obrigatória"
+            "LABEL": "Selecionar canal",
+            "PLACEHOLDER": "Selecionar canal",
+            "ERROR": "Canal obrigatório"
           },
           "SENT_BY": {
             "LABEL": "Enviado por",
@@ -113,9 +113,9 @@
             "ERROR": "A mensagem é obrigatória"
           },
           "INBOX": {
-            "LABEL": "Selecionar caixa de entrada",
-            "PLACEHOLDER": "Selecionar caixa de entrada",
-            "ERROR": "Caixa de entrada obrigatória"
+            "LABEL": "Selecionar canal",
+            "PLACEHOLDER": "Selecionar canal",
+            "ERROR": "Canal obrigatório"
           },
           "AUDIENCE": {
             "LABEL": "Público",
@@ -168,9 +168,9 @@
             "ERROR": "Título é obrigatório"
           },
           "INBOX": {
-            "LABEL": "Selecione uma caixa de entrada",
-            "PLACEHOLDER": "Selecione uma caixa de entrada",
-            "ERROR": "Caixa de entrada obrigatória"
+            "LABEL": "Selecione um canal",
+            "PLACEHOLDER": "Selecione um canal",
+            "ERROR": "Canal obrigatório"
           },
           "TEMPLATE": {
             "LABEL": "Modelo do WhatsApp",

@@ -53,7 +53,7 @@
     "ATTRIBUTES": {
       "STATUS": "Status",
       "ASSIGNEE_NAME": "Agente atribuído",
-      "INBOX_NAME": "Caixa de Entrada",
+      "INBOX_NAME": "Canal",
       "TEAM_NAME": "Nome do Grupo",
       "CONTACT": "Contato",
       "CONVERSATION_IDENTIFIER": "Identificador do ticket",

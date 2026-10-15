@@ -766,12 +766,6 @@ const menuItems = computed(() => {
           icon: 'i-lucide-building',
           to: accountScopedRoute('general_settings_index'),
         },
-        // {
-        //   name: 'Settings Captain',
-        //   label: t('SIDEBAR.CAPTAIN_AI'),
-        //   icon: 'i-woot-captain',
-        //   to: accountScopedRoute('captain_settings_index'),
-        // },
         {
           name: 'Settings Agents',
           label: t('SIDEBAR.AGENTS'),
@@ -814,6 +808,12 @@ const menuItems = computed(() => {
             ]
           : []),
         {
+          name: 'Settings Custom Roles',
+          label: t('SIDEBAR.CUSTOM_ROLES'),
+          icon: 'i-lucide-shield-plus',
+          to: accountScopedRoute('custom_roles_list'),
+        },
+        {
           name: 'Settings Inboxes',
           label: t('SIDEBAR.INBOXES'),
           icon: 'i-lucide-mailbox',
@@ -828,22 +828,22 @@ const menuItems = computed(() => {
           to: accountScopedRoute('settings_inbox_list'),
         },
         {
-          name: 'Settings Templates',
-          label: t('SIDEBAR.WHATSAPP_TEMPLATES'),
-          icon: 'i-lucide-layout-template',
-          to: accountScopedRoute('settings_templates'),
-        },
-        {
-          name: 'Settings Labels',
-          label: t('SIDEBAR.LABELS'),
-          icon: 'i-lucide-tags',
-          to: accountScopedRoute('labels_list'),
+          name: 'Conversation Workflow',
+          label: t('SIDEBAR.CONVERSATION_WORKFLOW'),
+          icon: 'i-lucide-sliders-horizontal',
+          to: accountScopedRoute('conversation_workflow_index'),
         },
         {
           name: 'Settings Custom Attributes',
           label: t('SIDEBAR.CUSTOM_ATTRIBUTES'),
           icon: 'i-lucide-text-cursor-input',
           to: accountScopedRoute('attributes_list'),
+        },
+        {
+          name: 'Settings Labels',
+          label: t('SIDEBAR.LABELS'),
+          icon: 'i-lucide-tags',
+          to: accountScopedRoute('labels_list'),
         },
         {
           name: 'Settings Ticket Triggers',
@@ -858,10 +858,16 @@ const menuItems = computed(() => {
           to: accountScopedRoute('ticket_automations_index'),
         },
         {
-          name: 'Settings Agent Bots',
-          label: t('SIDEBAR.AGENT_BOTS'),
-          icon: 'i-lucide-bot',
-          to: accountScopedRoute('agent_bots'),
+          name: 'Settings Sla',
+          label: t('SIDEBAR.SLA'),
+          icon: 'i-lucide-gauge',
+          to: accountScopedRoute('sla_list'),
+        },
+        {
+          name: 'Business Hours',
+          label: t('SIDEBAR.BUSINESS_HOURS'),
+          icon: 'i-lucide-calendar-clock',
+          to: accountScopedRoute('business_hours_index'),
         },
         {
           name: 'Settings Macros',
@@ -876,10 +882,29 @@ const menuItems = computed(() => {
           to: accountScopedRoute('canned_list'),
         },
         {
+          name: 'Settings Templates',
+          label: t('SIDEBAR.WHATSAPP_TEMPLATES'),
+          icon: 'i-lucide-layout-template',
+          to: accountScopedRoute('settings_templates'),
+        },
+        {
+          name: 'Settings Agent Bots',
+          label: t('SIDEBAR.AGENT_BOTS'),
+          icon: 'i-lucide-bot',
+          to: accountScopedRoute('agent_bots'),
+        },
+        {
           name: 'Settings Integrations',
           label: t('SIDEBAR.INTEGRATIONS'),
           icon: 'i-lucide-blocks',
           to: accountScopedRoute('settings_applications'),
+        },
+        {
+          // ServiceDesk: credenciais e configuração da 55PBX (só administrador, pela permissão da rota)
+          name: 'Settings Telephony 55PBX',
+          label: t('SIDEBAR.SD_TELEPHONY'),
+          icon: 'i-lucide-phone-call',
+          to: accountScopedRoute('sd_telephony_settings_index'),
         },
         ...(hasDataImport.value
           ? [
@@ -892,47 +917,16 @@ const menuItems = computed(() => {
             ]
           : []),
         {
-          name: 'Settings Audit Logs',
-          label: t('SIDEBAR.AUDIT_LOGS'),
-          icon: 'i-lucide-scroll-text',
-          to: accountScopedRoute('auditlogs_list'),
-        },
-        {
-          name: 'Settings Custom Roles',
-          label: t('SIDEBAR.CUSTOM_ROLES'),
-          icon: 'i-lucide-shield-plus',
-          to: accountScopedRoute('custom_roles_list'),
-        },
-        {
-          name: 'Settings Sla',
-          label: t('SIDEBAR.SLA'),
-          icon: 'i-lucide-gauge',
-          to: accountScopedRoute('sla_list'),
-        },
-        {
-          name: 'Business Hours',
-          label: t('SIDEBAR.BUSINESS_HOURS'),
-          icon: 'i-lucide-calendar-clock',
-          to: accountScopedRoute('business_hours_index'),
-        },
-        {
-          name: 'Conversation Workflow',
-          label: t('SIDEBAR.CONVERSATION_WORKFLOW'),
-          icon: 'i-lucide-sliders-horizontal',
-          to: accountScopedRoute('conversation_workflow_index'),
-        },
-        {
-          // ServiceDesk: credenciais e configuração da 55PBX (só administrador, pela permissão da rota)
-          name: 'Settings Telephony 55PBX',
-          label: t('SIDEBAR.SD_TELEPHONY'),
-          icon: 'i-lucide-phone-call',
-          to: accountScopedRoute('sd_telephony_settings_index'),
-        },
-        {
           name: 'Settings Security',
           label: t('SIDEBAR.SECURITY'),
           icon: 'i-lucide-shield',
           to: accountScopedRoute('security_settings_index'),
+        },
+        {
+          name: 'Settings Audit Logs',
+          label: t('SIDEBAR.AUDIT_LOGS'),
+          icon: 'i-lucide-scroll-text',
+          to: accountScopedRoute('auditlogs_list'),
         },
         {
           name: 'Settings Billing',

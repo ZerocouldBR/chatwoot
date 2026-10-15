@@ -136,7 +136,7 @@
       "PREVIOUS_BUCKET": "Barra anterior",
       "NEXT_BUCKET": "Próxima barra",
       "UNKNOWN_CONTACT": "Contato desconhecido",
-      "UNKNOWN_INBOX": "Caixa de entrada desconhecida",
+      "UNKNOWN_INBOX": "Canal desconhecido",
       "UNASSIGNED_AGENT": "Não atribuídas",
       "NO_MESSAGE_CONTENT": "Sem conteúdo da mensagem",
       "MESSAGE_CREATED_AT": "Mensagem criada em {time}",
@@ -296,17 +296,17 @@
     }
   },
   "INBOX_REPORTS": {
-    "HEADER": "Visualizar Caixa de Entrada",
-    "DESCRIPTION": "Veja rapidamente o desempenho da caixa de entrada com métricas-chave como tickets, tempos de resposta, tempos de resolução, e casos resolvidos — tudo em um só lugar. Clique na caixa de entrada para mais detalhes",
+    "HEADER": "Visualizar Canal",
+    "DESCRIPTION": "Veja rapidamente o desempenho do canal com métricas-chave como tickets, tempos de resposta, tempos de resolução, e casos resolvidos — tudo em um só lugar. Clique no canal para mais detalhes",
     "LOADING_CHART": "Carregando dados do gráfico...",
     "NO_ENOUGH_DATA": "Não existem dados suficientes para gerar o relatório. Tente novamente mais tarde.",
     "DOWNLOAD_INBOX_REPORTS": "Baixar relatórios de entrada",
-    "FILTER_DROPDOWN_LABEL": "Selecionar caixa de entrada",
-    "ALL_INBOXES": "Todas as caixas de entrada",
-    "SEARCH_INBOX": "Pesquisar caixa de entrada",
+    "FILTER_DROPDOWN_LABEL": "Selecionar canal",
+    "ALL_INBOXES": "Todos os canais",
+    "SEARCH_INBOX": "Pesquisar canal",
     "FILTERS": {
       "INPUT_PLACEHOLDER": {
-        "INBOXES": "Pesquisar caixas de entrada"
+        "INBOXES": "Pesquisar canais"
       }
     },
     "METRICS": {
@@ -458,7 +458,7 @@
       "NO_FILTER": "Não há filtros disponíveis",
       "INPUT_PLACEHOLDER": {
         "AGENTS": "Pesquisar agentes",
-        "INBOXES": "Pesquisar caixas de entrada",
+        "INBOXES": "Pesquisar canais",
         "TEAMS": "Pesquisar grupos",
         "RATINGS": "Pesquisar avaliações"
       },
@@ -466,7 +466,7 @@
         "LABEL": "Agente"
       },
       "INBOXES": {
-        "LABEL": "Caixa de Entrada"
+        "LABEL": "Canal"
       },
       "TEAMS": {
         "LABEL": "Grupo"
@@ -626,12 +626,12 @@
       "INPUT_PLACEHOLDER": {
         "SLA": "Nome do SLA",
         "AGENTS": "Nome do Agente",
-        "INBOXES": "Nome da Caixa de Entrada",
+        "INBOXES": "Nome do canal",
         "LABELS": "Nome da tag",
         "TEAMS": "Nome do Grupo"
       },
       "SLA": "Política SLA",
-      "INBOXES": "Caixa de Entrada",
+      "INBOXES": "Canal",
       "AGENTS": "Agente",
       "LABELS": "Nome do campo",
       "TEAMS": "Grupo"
@@ -661,7 +661,7 @@
     }
   },
   "SUMMARY_REPORTS": {
-    "INBOX": "Caixa de Entrada",
+    "INBOX": "Canal",
     "AGENT": "Agente",
     "TEAM": "Grupo",
     "LABEL": "Nome do campo",

@@ -25,7 +25,7 @@
     "WHATSAPP_CALL_PERMISSION_PENDING": "Uma solicitação de permissão de chamada já foi enviada recentemente. Tente novamente após o contato aceitar.",
     "CLICK_TO_EDIT": "Click to edit",
     "VOICE_INBOX_PICKER": {
-      "TITLE": "Escolha uma caixa de entrada de voz"
+      "TITLE": "Escolha um canal de voz"
     },
     "CONVERSATIONS": {
       "NO_RECORDS_FOUND": "Não há tickets anteriores associados a este contato.",
@@ -57,7 +57,7 @@
     "SEND_TRANSCRIPT": "Enviar Transcrição",
     "EDIT_LABEL": "Alterar",
     "SIDEBAR_SECTIONS": {
-      "CUSTOM_ATTRIBUTES": "Atributos Personalizados",
+      "CUSTOM_ATTRIBUTES": "Campos personalizados",
       "CONTACT_LABELS": "Tags de contato",
       "PREVIOUS_CONVERSATIONS": "Tickets anteriores",
       "NO_RECORDS_FOUND": "Nenhum atributo encontrado"
@@ -163,15 +163,15 @@
     "BUTTON_LABEL": "Iniciar ticket",
     "TITLE": "Novo ticket",
     "DESC": "Iniciar um novo ticket enviando uma nova mensagem.",
-    "NO_INBOX": "Não foi possível encontrar uma caixa de entrada para iniciar um novo ticket com este contato.",
+    "NO_INBOX": "Não foi possível encontrar um canal para iniciar um novo ticket com este contato.",
     "FORM": {
       "TO": {
         "LABEL": "Para"
       },
       "INBOX": {
-        "LABEL": "Caixa de Entrada",
-        "PLACEHOLDER": "Escolher a caixa de entrada de origem",
-        "ERROR": "Selecione uma caixa de entrada"
+        "LABEL": "Canal",
+        "PLACEHOLDER": "Escolher o canal de origem",
+        "ERROR": "Selecione um canal"
       },
       "SUBJECT": {
         "LABEL": "Assunto",
@@ -202,7 +202,7 @@
     }
   },
   "CUSTOM_ATTRIBUTES": {
-    "BUTTON": "Criar atributo personalizado",
+    "BUTTON": "Criar campo personalizado",
     "COPY_SUCCESSFUL": "Copiado para área de transferência com sucesso",
     "SHOW_MORE": "Mostrar todos os atributos",
     "SHOW_LESS": "Mostrar menos atributos",
@@ -212,16 +212,16 @@
       "EDIT": "Alterar atributo"
     },
     "ADD": {
-      "TITLE": "Criar atributo personalizado",
+      "TITLE": "Criar campo personalizado",
       "DESC": "Adicionar informações personalizadas a este contato."
     },
     "FORM": {
       "CREATE": "Adicionar atributo",
       "CANCEL": "Cancelar",
       "NAME": {
-        "LABEL": "Nome do Atributo Personalizado",
+        "LABEL": "Nome do Campo personalizado",
         "PLACEHOLDER": "Por exemplo: ID shopify",
-        "ERROR": "Nome de atributo personalizado inválido"
+        "ERROR": "Nome de campo personalizado inválido"
       },
       "VALUE": {
         "LABEL": "Valor do atributo",
@@ -524,7 +524,7 @@
       "ATTRIBUTES": {
         "SEARCH_PLACEHOLDER": "Pesquisar atributos",
         "UNUSED_ATTRIBUTES": "{count} atributos utilizados | {count} atributos não utilizados",
-        "EMPTY_STATE": "Não há atributos personalizados de contatos disponíveis nesta conta. Você pode criar um atributo personalizado nas configurações.",
+        "EMPTY_STATE": "Não há campos personalizados de contatos disponíveis nesta conta. Você pode criar um campo personalizado nas configurações.",
         "YES": "Sim",
         "NO": "Não",
         "TRIGGER": {
@@ -624,7 +624,7 @@
       "GO_TO_CONVERSATION": "Visualizar",
       "SUCCESS_MESSAGE": "Mensagem enviada com sucesso!",
       "ERROR_MESSAGE": "Ocorreu um erro ao criar o ticket. Tente novamente mais tarde.",
-      "NO_INBOX_ALERT": "Não há caixas de entrada disponíveis para iniciar um ticket com este contato.",
+      "NO_INBOX_ALERT": "Não há canais disponíveis para iniciar um ticket com este contato.",
       "CONTACT_SELECTOR": {
         "LABEL": "Para:",
         "TAG_INPUT_PLACEHOLDER": "Digite pelo menos 2 caracteres para pesquisar por nome, e-mail ou número de telefone",
@@ -632,7 +632,7 @@
       },
       "INBOX_SELECTOR": {
         "LABEL": "Via:",
-        "BUTTON": "Mostrar Caixas de Entrada"
+        "BUTTON": "Mostrar Canais"
       },
       "EMAIL_OPTIONS": {
         "SUBJECT_LABEL": "Assunto:",

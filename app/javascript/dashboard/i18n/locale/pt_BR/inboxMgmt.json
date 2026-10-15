@@ -1,30 +1,30 @@
 {
   "INBOX_MGMT": {
-    "HEADER": "Caixas de Entrada",
-    "DESCRIPTION": "Um canal é o modo de comunicação que seu cliente escolhe para interagir com você. Uma caixa de entrada é onde você gerencia interações para um canal específico. Pode incluir comunicações de várias fontes, como e-mail, chat ao vivo e mídia social.",
-    "LEARN_MORE": "Saiba mais sobre as caixas de entrada",
-    "COUNT": "{n} caixa de entrada | {n} caixas de entrada",
-    "SEARCH_PLACEHOLDER": "Pesquisar por nome da caixa de entrada, canal ou identificador...",
-    "NO_RESULTS": "Nenhuma caixa de entrada encontrada correspondente à sua busca",
-    "RECONNECTION_REQUIRED": "Sua caixa de entrada está desconectada. Você não receberá novas mensagens até reautorizar.",
+    "HEADER": "Canais",
+    "DESCRIPTION": "Por onde os clientes falam com você: e-mail, chat do site, WhatsApp, API e outros. Cada canal tem seus próprios agentes e configurações.",
+    "LEARN_MORE": "Saiba mais sobre aos canais",
+    "COUNT": "{n} canal | {n} canais",
+    "SEARCH_PLACEHOLDER": "Pesquisar por nome do canal, canal ou identificador...",
+    "NO_RESULTS": "Nenhum canal encontrado correspondente à sua busca",
+    "RECONNECTION_REQUIRED": "Seu canal está desconectado. Você não receberá novas mensagens até reautorizar.",
     "CLICK_TO_RECONNECT": "Clique aqui para reconectar.",
     "WHATSAPP_REGISTRATION_INCOMPLETE": "Seu registro no WhatsApp Business não foi concluído. Verifique o status do seu nome de exibição no Meta Business Manager antes de reconectar.",
     "COMPLETE_REGISTRATION": "Concluir registro",
     "LIST": {
-      "404": "Não há caixas de entrada anexadas a esta conta."
+      "404": "Não há canais anexados a esta conta."
     },
     "CREATE_FLOW": {
       "CHANNEL": {
-        "TITLE": "Escolha o Canal",
+        "TITLE": "Escolha o canal",
         "BODY": "Escolha o provedor que você deseja integrar com o Chatwoot."
       },
       "INBOX": {
-        "TITLE": "Criar Caixa de Entrada",
-        "BODY": "Autenticar sua conta e criar uma caixa de entrada."
+        "TITLE": "Criar Canal",
+        "BODY": "Autenticar sua conta e criar um canal."
       },
       "AGENT": {
         "TITLE": "Adicionar Agentes",
-        "BODY": "Adicionar agentes à caixa de entrada criada."
+        "BODY": "Adicionar agentes ao canal criado."
       },
       "FINISH": {
         "TITLE": "Então!",
@@ -33,8 +33,8 @@
     },
     "ADD": {
       "CHANNEL_NAME": {
-        "LABEL": "Nome da Caixa de Entrada",
-        "PLACEHOLDER": "Digite o nome da caixa de entrada (ex: Acme Inc)",
+        "LABEL": "Nome do canal",
+        "PLACEHOLDER": "Digite o nome do canal (ex: Acme Inc)",
         "ERROR": "Por favor, insira um nome completo válido"
       },
       "WEBSITE_NAME": {
@@ -45,12 +45,12 @@
         "HELP": "Obs: ao fazer login, apenas temos acesso às mensagens da sua página. Suas mensagens privadas nunca podem ser acessadas pelo Chatwoot.",
         "CHOOSE_PAGE": "Escolher Página",
         "CHOOSE_PLACEHOLDER": "Selecione uma página da lista",
-        "INBOX_NAME": "Nome da Caixa de Entrada",
-        "ADD_NAME": "Adicione um nome para sua caixa de entrada",
-        "PICK_NAME": "Escolha um nome para sua caixa de entrada",
+        "INBOX_NAME": "Nome do canal",
+        "ADD_NAME": "Adicione um nome para seu canal",
+        "PICK_NAME": "Escolha um nome para seu canal",
         "PICK_A_VALUE": "Escolha um valor",
-        "CREATE_INBOX": "Criar Caixa de Entrada",
-        "RESTRICTED_WARNING": "A criação de caixas de entrada do Facebook está temporariamente indisponível devido a um problema na API da Meta, e não por uma falha no Chatwoot. Estamos trabalhando em conjunto com a Meta para resolver a situação o mais rápido possível.",
+        "CREATE_INBOX": "Criar Canal",
+        "RESTRICTED_WARNING": "A criação de canais do Facebook está temporariamente indisponível devido a um problema na API da Meta, e não por uma falha no Chatwoot. Estamos trabalhando em conjunto com a Meta para resolver a situação o mais rápido possível.",
         "STATUS_LINK": "Ver atualizações de status"
       },
       "INSTAGRAM": {
@@ -59,9 +59,9 @@
         "HELP": "Para adicionar seu perfil do Instagram como um canal, você precisa autenticar seu perfil do Instagram clicando em 'Continuar com o Instagram' ",
         "ERROR_MESSAGE": "Houve um erro ao conectar ao Instagram, por favor, tente novamente",
         "ERROR_AUTH": "Houve um erro ao conectar ao Instagram, por favor, tente novamente",
-        "NEW_INBOX_SUGGESTION": "Esta conta do Instagram estava conectada a uma caixa de entrada diferente e agora foi migrada para aqui. Todas as novas mensagens aparecerão aqui. A caixa de entrada antiga não poderá mais enviar ou receber mensagens para esta conta.",
-        "DUPLICATE_INBOX_BANNER": "Esta conta do Instagram foi migrada para a nova caixa de entrada de canal do Instagram. Você não poderá mais enviar/receber mensagens do Instagram desta caixa de entrada.",
-        "RESTRICTED_WARNING": "A criação de caixas de entrada do Instagram está temporariamente indisponível devido a um problema na API da Meta, e não por uma falha no Chatwoot. Estamos trabalhando em conjunto com a Meta para resolver a situação o mais rápido possível.",
+        "NEW_INBOX_SUGGESTION": "Esta conta do Instagram estava conectada a um canal diferente e agora foi migrada para aqui. Todas as novas mensagens aparecerão aqui. o canal antigo não poderá mais enviar ou receber mensagens para esta conta.",
+        "DUPLICATE_INBOX_BANNER": "Esta conta do Instagram foi migrada para a novo canal de canal do Instagram. Você não poderá mais enviar/receber mensagens do Instagram deste canal.",
+        "RESTRICTED_WARNING": "A criação de canais do Instagram está temporariamente indisponível devido a um problema na API da Meta, e não por uma falha no Chatwoot. Estamos trabalhando em conjunto com a Meta para resolver a situação o mais rápido possível.",
         "SETTINGS_RESTRICTED_WARNING": "As mensagens do Instagram estão sendo afetadas por um problema na API da Meta, e não por uma falha no Chatwoot. Algumas mensagens ou ações podem sofrer atrasos ou ficar temporariamente indisponíveis. Estamos trabalhando em conjunto com a Meta para resolver a situação o mais rápido possível.",
         "STATUS_LINK": "Ver atualizações de status"
       },
@@ -85,7 +85,7 @@
         "DESC": "Crie um canal para seu site e comece a oferecer suporte a seus clientes através do nosso widget do site.",
         "LOADING_MESSAGE": "Criando canal de suporte ao site",
         "CHANNEL_AVATAR": {
-          "LABEL": "Imagem do Canal"
+          "LABEL": "Imagem do canal"
         },
         "CHANNEL_WEBHOOK_URL": {
           "LABEL": "URL do webhook",
@@ -133,7 +133,7 @@
           "LABEL": "Cor do Widget",
           "PLACEHOLDER": "Atualize a cor do widget"
         },
-        "SUBMIT_BUTTON": "Criar caixa de entrada",
+        "SUBMIT_BUTTON": "Criar canal",
         "API": {
           "ERROR_MESSAGE": "Não conseguimos criar um canal de site, por favor, tente novamente"
         }
@@ -173,8 +173,8 @@
           "ERROR": "Este campo é obrigatório"
         },
         "CHANNEL_NAME": {
-          "LABEL": "Nome da Caixa de Entrada",
-          "PLACEHOLDER": "Por favor, digite um nome para caixa de entrada",
+          "LABEL": "Nome do canal",
+          "PLACEHOLDER": "Por favor, digite um nome para canal",
           "ERROR": "Este campo é obrigatório"
         },
         "PHONE_NUMBER": {
@@ -224,8 +224,8 @@
             "ERROR": "Este campo é obrigatório"
           },
           "INBOX_NAME": {
-            "LABEL": "Nome da Caixa de Entrada",
-            "PLACEHOLDER": "Por favor, digite um nome para caixa de entrada",
+            "LABEL": "Nome do canal",
+            "PLACEHOLDER": "Por favor, digite um nome para canal",
             "ERROR": "Este campo é obrigatório"
           },
           "PHONE_NUMBER": {
@@ -262,8 +262,8 @@
           "RESTRICTION_DESCRIPTION": "Escolha seu provedor do WhatsApp. Você pode conectar o WhatsApp Cloud manualmente usando suas credenciais da Cloud API ou conectar por meio da Twilio utilizando as credenciais da sua conta."
         },
         "INBOX_NAME": {
-          "LABEL": "Nome da Caixa de Entrada",
-          "PLACEHOLDER": "Por favor, digite um nome para caixa de entrada",
+          "LABEL": "Nome do canal",
+          "PLACEHOLDER": "Por favor, digite um nome para canal",
           "ERROR": "Este campo é obrigatório"
         },
         "PHONE_NUMBER": {
@@ -348,14 +348,14 @@
             "TOKEN_PLACEHOLDER": "Colar token de acesso"
           },
           "REVIEW": {
-            "TITLE": "Crie sua caixa de entrada do WhatsApp",
-            "DESCRIPTION": "Revise os detalhes do número e escolha um nome para a caixa de entrada.",
+            "TITLE": "Crie seu canal do WhatsApp",
+            "DESCRIPTION": "Revise os detalhes do número e escolha um nome para o canal.",
             "VERIFIED": "Seu número da Meta e o token de acesso são válidos.",
             "BUSINESS_NAME": "Nome da empresa",
             "PHONE_NUMBER": "Número de telefone",
             "PHONE_ID": "ID do Número de Telefone",
             "WABA_ID": "ID da conta do WhatsApp Business",
-            "INBOX_NAME": "Nome da Caixa de Entrada",
+            "INBOX_NAME": "Nome do canal",
             "INBOX_NAME_HELP": "Geramos este nome com base no nome verificado da sua empresa na Meta. Você pode alterá-lo."
           },
           "VERIFY": {
@@ -383,7 +383,7 @@
             "SHOW_TOKEN": "Mostrar token",
             "HIDE_TOKEN": "Ocultar token",
             "VERIFY_DETAILS": "Verificar detalhes",
-            "CONNECT": "Criar caixa de entrada",
+            "CONNECT": "Criar canal",
             "RETRY_WEBHOOK": "Tentar configurar o webhook novamente",
             "CONTINUE": "Continuar para adicionar agentes"
           },
@@ -432,7 +432,7 @@
           },
           "RESTRICTED_WARNING": "O cadastro integrado do WhatsApp está temporariamente indisponível devido a um problema na API da Meta, e não por uma falha no Chatwoot. Você pode utilizar a configuração manual para números compatíveis com a Cloud API. Estamos trabalhando em conjunto com a Meta para resolver a situação o mais rápido possível.",
           "STATUS_LINK": "Ver atualizações de status",
-          "CALLING_ENABLE_FAILED": "Sua caixa de entrada do WhatsApp está pronta, mas as chamadas de voz não puderam ser ativadas — este número ainda não está cadastrado na API de Chamadas do WhatsApp Business. Entre em contato com a Meta ou com seu provedor de soluções WhatsApp Business para realizar o cadastro e, depois, ative as chamadas nas configurações de Chamadas da caixa de entrada."
+          "CALLING_ENABLE_FAILED": "Seu canal do WhatsApp está pronto, mas as chamadas de voz não puderam ser ativadas — este número ainda não está cadastrado na API de Chamadas do WhatsApp Business. Entre em contato com a Meta ou com seu provedor de soluções WhatsApp Business para realizar o cadastro e, depois, ative as chamadas nas configurações de Chamadas do canal."
         },
         "API": {
           "ERROR_MESSAGE": "Não foi possível salvar o canal do WhatsApp",
@@ -485,7 +485,7 @@
         "TITLE": "Canal da API",
         "DESC": "Integre com canal API e comece a ajudar seus clientes.",
         "CHANNEL_NAME": {
-          "LABEL": "Nome do Canal",
+          "LABEL": "Nome do canal",
           "PLACEHOLDER": "Por favor, insira um nome de canal",
           "ERROR": "Este campo é obrigatório"
         },
@@ -501,9 +501,9 @@
       },
       "EMAIL_CHANNEL": {
         "TITLE": "Canal de e-mail",
-        "DESC": "Integre sua caixa de entrada de e-mail.",
+        "DESC": "Integre seu canal de e-mail.",
         "CHANNEL_NAME": {
-          "LABEL": "Nome do Canal",
+          "LABEL": "Nome do canal",
           "PLACEHOLDER": "Por favor, insira um nome de canal",
           "ERROR": "Este campo é obrigatório"
         },
@@ -517,7 +517,7 @@
           "ERROR_MESSAGE": "Não foi possível salvar o canal de e-mail"
         },
         "FINISH_MESSAGE": "Comece a encaminhar seus e-mails para o seguinte endereço de e-mail.",
-        "FINISH_MESSAGE_NO_FORWARDING": "Sua caixa de entrada de e-mail foi criada com sucesso! É necessário configurar as credenciais de SMTP e IMAP para enviar e receber e-mails. Sem essas configurações, nenhum e-mail será processado.",
+        "FINISH_MESSAGE_NO_FORWARDING": "Seu canal de e-mail foi criada com sucesso! É necessário configurar as credenciais de SMTP e IMAP para enviar e receber e-mails. Sem essas configurações, nenhum e-mail será processado.",
         "FORWARDING_ADDRESS_LABEL": "Encaminhar e-mails para este endereço:",
         "CONFIGURE_SMTP_IMAP_LINK": "Clique aqui",
         "CONFIGURE_SMTP_IMAP_TEXT": " para configurar IMAP e SMTP"
@@ -526,7 +526,7 @@
         "TITLE": "Canal LINE",
         "DESC": "Integre com o canal LINE e comece a apoiar seus clientes.",
         "CHANNEL_NAME": {
-          "LABEL": "Nome do Canal",
+          "LABEL": "Nome do canal",
           "PLACEHOLDER": "Por favor, insira um nome de canal",
           "ERROR": "Este campo é obrigatório"
         },
@@ -623,17 +623,17 @@
       },
       "AGENTS": {
         "TITLE": "Agentes",
-        "DESC": "Aqui você pode adicionar agentes para gerenciar sua caixa de entrada recém-criada. Somente esses agentes selecionados terão acesso à sua caixa de entrada. Os agentes que não fazem parte desta caixa de entrada não poderão ver ou responder a mensagens nessa caixa de entrada quando fizerem login. <br> <b> PS: </b> Como administrador, se você precisar acessar todas as caixas de entrada, adicione-se como agente a todas as caixas de entrada criadas.",
-        "VALIDATION_ERROR": "Adicione pelo menos um agente à sua nova caixa de entrada",
-        "PICK_AGENTS": "Escolha agentes para a caixa de entrada"
+        "DESC": "Aqui você pode adicionar agentes para gerenciar seu canal recém-criada. Somente esses agentes selecionados terão acesso ao seu canal. Os agentes que não fazem parte deste canal não poderão ver ou responder a mensagens nesse canal quando fizerem login. <br> <b> PS: </b> Como administrador, se você precisar acessar todos os canais, adicione-se como agente a todos os canais criados.",
+        "VALIDATION_ERROR": "Adicione pelo menos um agente à seu novo canal",
+        "PICK_AGENTS": "Escolha agentes para o canal"
       },
       "DETAILS": {
-        "TITLE": "Detalhes da Caixa de Entrada",
-        "DESC": "No menu abaixo, selecione a Página do Facebook que você deseja se conectar ao Chatwoot. Você também pode dar um nome personalizado para sua caixa de entrada para uma melhor identificação."
+        "TITLE": "Detalhes do canal",
+        "DESC": "No menu abaixo, selecione a Página do Facebook que você deseja se conectar ao Chatwoot. Você também pode dar um nome personalizado para seu canal para uma melhor identificação."
       },
       "FINISH": {
         "TITLE": "Tudo funcionando. Deu certo!",
-        "DESC": "Você concluiu a integração da sua página do Facebook com o Chatwoot. Na próxima vez que um cliente enviar uma mensagem para sua página, o ticket aparecerá automaticamente na sua caixa de entrada. <br> Também estamos fornecendo um script de widget que você pode adicionar facilmente ao seu site. Assim que estiver disponível no seu site, os clientes poderão enviar mensagens diretamente do seu site, sem a ajuda de nenhuma ferramenta externa, e o ticket aparecerá aqui, no Chatwoot. Legal, hein? Com certeza estamos tentamos ser :)"
+        "DESC": "Você concluiu a integração da sua página do Facebook com o Chatwoot. Na próxima vez que um cliente enviar uma mensagem para sua página, o ticket aparecerá automaticamente no seu canal. <br> Também estamos fornecendo um script de widget que você pode adicionar facilmente ao seu site. Assim que estiver disponível no seu site, os clientes poderão enviar mensagens diretamente do seu site, sem a ajuda de nenhuma ferramenta externa, e o ticket aparecerá aqui, no Chatwoot. Legal, hein? Com certeza estamos tentamos ser :)"
       },
       "EMAIL_PROVIDER": {
         "TITLE": "Selecione seu provedor de e-mail",
@@ -641,14 +641,14 @@
       },
       "MICROSOFT": {
         "TITLE": "Microsoft Email",
-        "DESCRIPTION": "Clique no botão Entrar com a Microsoft para começar. Você será redirecionado para o login do e-mail. Após aceitar as permissões solicitadas, você será redirecionado de volta para a etapa de criação da caixa de entrada.",
+        "DESCRIPTION": "Clique no botão Entrar com a Microsoft para começar. Você será redirecionado para o login do e-mail. Após aceitar as permissões solicitadas, você será redirecionado de volta para a etapa de criação do canal.",
         "EMAIL_PLACEHOLDER": "Digite o endereço de e-mail",
         "SIGN_IN": "Entre com uma conta Microsoft",
         "ERROR_MESSAGE": "Ocorreu um erro ao conectar com a Microsoft, por favor, tente novamente"
       },
       "GOOGLE": {
         "TITLE": "E-mail do Google",
-        "DESCRIPTION": "Clique no botão Entrar com o Google para começar. Você será redirecionado para o login do e-mail. Depois que você aceitar as permissões solicitadas, você será redirecionado de volta para a etapa de criação da caixa de entrada.",
+        "DESCRIPTION": "Clique no botão Entrar com o Google para começar. Você será redirecionado para o login do e-mail. Depois que você aceitar as permissões solicitadas, você será redirecionado de volta para a etapa de criação do canal.",
         "SIGN_IN": "Entrar com o Google",
         "EMAIL_PLACEHOLDER": "Digite o endereço de e-mail",
         "ERROR_MESSAGE": "Houve um erro ao conectar com o Google, por favor, tente novamente"
@@ -660,32 +660,32 @@
       "ERROR_FB_AUTH": "Algo deu errado, por favor, atualize a página...",
       "ERROR_FB_UNAUTHORIZED": "Você não está autorizado a realizar esta ação. ",
       "ERROR_FB_UNAUTHORIZED_HELP": "A tradução é:\n\nPor favor, certifique-se de que você tem acesso à página do Facebook com controle total. Você pode ler mais sobre as funções do Facebook <a href=\" https://www.facebook.com/help/187316341316631\">aqui</a>.",
-      "ERROR_CHANNEL_CREATION": "Não foi possível criar a caixa de entrada. Por favor, tente novamente.",
-      "CREATING_CHANNEL": "Criando sua caixa de entrada...",
-      "TITLE": "Configurar detalhes da Caixa de Entrada",
+      "ERROR_CHANNEL_CREATION": "Não foi possível criar o canal. Por favor, tente novamente.",
+      "CREATING_CHANNEL": "Criando seu canal...",
+      "TITLE": "Configurar detalhes do canal",
       "DESC": ""
     },
     "AGENTS": {
       "BUTTON_TEXT": "Adicionar agentes",
-      "ADD_AGENTS": "Adicionando agentes à sua caixa de entrada..."
+      "ADD_AGENTS": "Adicionando agentes ao seu canal..."
     },
     "FINISH": {
-      "TITLE": "Sua caixa de entrada está pronta!",
+      "TITLE": "Seu canal está pronto!",
       "MESSAGE": "Agora você ja pode oferecer uma excelente experiência no atendimento de seus clientes através do seu novo Canal",
       "BUTTON_TEXT": "Leva-me lá",
       "MORE_SETTINGS": "Mais configurações",
-      "WEBSITE_SUCCESS": "Você concluiu a criação de um canal de site. Copie o código mostrado abaixo e cole-o no seu site. Na próxima vez que um cliente usar o bate-papo ao vivo, o ticket aparecerá automaticamente na sua caixa de entrada.",
-      "WHATSAPP_QR_INSTRUCTION": "Escaneie o código QR acima para testar rapidamente sua caixa de entrada do WhatsApp",
-      "MESSENGER_QR_INSTRUCTION": "Escaneie o código QR acima para testar rapidamente sua caixa de entrada do Facebook Messenger",
-      "TELEGRAM_QR_INSTRUCTION": "Escaneie o código QR acima para testar rapidamente sua caixa de entrada do Telegram"
+      "WEBSITE_SUCCESS": "Você concluiu a criação de um canal de site. Copie o código mostrado abaixo e cole-o no seu site. Na próxima vez que um cliente usar o bate-papo ao vivo, o ticket aparecerá automaticamente no seu canal.",
+      "WHATSAPP_QR_INSTRUCTION": "Escaneie o código QR acima para testar rapidamente seu canal do WhatsApp",
+      "MESSENGER_QR_INSTRUCTION": "Escaneie o código QR acima para testar rapidamente seu canal do Facebook Messenger",
+      "TELEGRAM_QR_INSTRUCTION": "Escaneie o código QR acima para testar rapidamente seu canal do Telegram"
     },
     "REAUTH": "Reautorizar",
     "VIEW": "Visualizar",
     "EDIT": {
       "API": {
-        "SUCCESS_MESSAGE": "Configurações de caixa de entrada atualizadas com sucesso",
+        "SUCCESS_MESSAGE": "Configurações de canal atualizadas com sucesso",
         "AUTO_ASSIGNMENT_SUCCESS_MESSAGE": "Agente atualizado com sucesso",
-        "ERROR_MESSAGE": "Não foi possível atualizar as configurações da caixa de entrada. Por favor, tente novamente mais tarde."
+        "ERROR_MESSAGE": "Não foi possível atualizar as configurações do canal. Por favor, tente novamente mais tarde."
       },
       "EMAIL_COLLECT_BOX": {
         "ENABLED": "Ativado",
@@ -744,9 +744,9 @@
       },
       "API": {
         "SUCCESS_MESSAGE": "Agente excluído com sucesso",
-        "ERROR_MESSAGE": "Não foi possível excluir a caixa de entrada. Tente novamente mais tarde.",
-        "AVATAR_SUCCESS_MESSAGE": "Perfil da caixa de entrada excluído com sucesso",
-        "AVATAR_ERROR_MESSAGE": "Não foi possível excluir o perfil da caixa de entrada. Por favor, tente novamente mais tarde."
+        "ERROR_MESSAGE": "Não foi possível excluir o canal. Tente novamente mais tarde.",
+        "AVATAR_SUCCESS_MESSAGE": "Perfil do canal excluído com sucesso",
+        "AVATAR_ERROR_MESSAGE": "Não foi possível excluir o perfil do canal. Por favor, tente novamente mais tarde."
       }
     },
     "TABS": {
@@ -766,7 +766,7 @@
     "VOICE_CONFIGURATION": {
       "ENABLE_VOICE": {
         "LABEL": "Habilitar Chamada de Voz",
-        "DESCRIPTION": "Habilite chamadas de voz nesta caixa de entrada. Agentes poderão fazer e receber chamadas telefônicas."
+        "DESCRIPTION": "Habilite chamadas de voz neste canal. Agentes poderão fazer e receber chamadas telefônicas."
       },
       "CREDENTIALS": {
         "DESCRIPTION": "Chamada de voz requer credenciais de chave da API Twilio. Elas são usadas para gerar tokens para conexões de voz do agente."
@@ -787,7 +787,7 @@
     "WHATSAPP_CALLING": {
       "ENABLE": {
         "LABEL": "Ativar chamadas do WhatsApp",
-        "DESCRIPTION": "Permita que os atendentes recebam e realizem chamadas do WhatsApp Cloud nesta caixa de entrada. Os clientes poderão ligar diretamente para este número comercial pelo WhatsApp."
+        "DESCRIPTION": "Permita que os atendentes recebam e realizem chamadas do WhatsApp Cloud neste canal. Os clientes poderão ligar diretamente para este número comercial pelo WhatsApp."
       },
       "ENABLE_FAILED": "As chamadas de voz não puderam ser ativadas para este número — ele ainda não está cadastrado na API de Chamadas do WhatsApp Business. Entre em contato com a Meta ou com seu provedor de soluções WhatsApp Business para realizar o cadastro e tente novamente depois.",
       "PHONE_NUMBER": {
@@ -804,7 +804,7 @@
         "PLACEHOLDER": "Gostaríamos de ligar para você em relação ao seu ticket."
       }
     },
-    "CHANNEL_PREFERENCES": "Preferências do Canal",
+    "CHANNEL_PREFERENCES": "Preferências do canal",
     "WIDGET_FEATURES": "Recursos do widget",
     "ACCOUNT_HEALTH": {
       "TITLE": "Gerencie sua conta do WhatsApp",
@@ -814,9 +814,9 @@
       "ERRORS": {
         "AUTHORIZATION": {
           "EMBEDDED_TITLE": "A conexão com o WhatsApp precisa ser atualizada",
-          "EMBEDDED_DESCRIPTION": "A Meta não conseguiu validar a conexão desta caixa de entrada. Acesse Configurações para reconfigurá-la usando o Cadastro Incorporado.",
+          "EMBEDDED_DESCRIPTION": "A Meta não conseguiu validar a conexão deste canal. Acesse Configurações para reconfigurá-la usando o Cadastro Incorporado.",
           "MANUAL_TITLE": "O token de acesso do WhatsApp precisa de atenção",
-          "MANUAL_DESCRIPTION": "A Meta não conseguiu validar o token de acesso desta caixa de entrada. Acesse Configurações para verificá-lo ou substituí-lo."
+          "MANUAL_DESCRIPTION": "A Meta não conseguiu validar o token de acesso deste canal. Acesse Configurações para verificá-lo ou substituí-lo."
         },
         "GENERIC_TITLE": "Os dados da saúde do WhatsApp não estão disponíveis",
         "GENERIC_DESCRIPTION": "A Meta não conseguiu retornar os detalhes atuais de integridade. Revise o erro abaixo e tente novamente mais tarde.",
@@ -979,7 +979,7 @@
       "DISPLAY_FILE_PICKER": "Exibir seletor de arquivos no widget",
       "DISPLAY_EMOJI_PICKER": "Exibir seletor de emoji no widget",
       "ALLOW_END_CONVERSATION": "Permitir que usuários terminem o ticket a partir do widget",
-      "USE_INBOX_AVATAR_FOR_BOT": "Use o nome da caixa de entrada e avatar do bot"
+      "USE_INBOX_AVATAR_FOR_BOT": "Use o nome do canal e avatar do bot"
     },
     "SETTINGS_POPUP": {
       "MESSENGER_HEADING": "Código Menssageiro <scripit>",
@@ -1002,7 +1002,7 @@
         "REQUIRE_DESCRIPTION": "Quando ativado, os usuários devem fornecer um token de identidade válido para iniciar tickets. Solicitações sem tokens válidos serão rejeitadas."
       },
       "INBOX_AGENTS": "Agentes",
-      "INBOX_AGENTS_SUB_TEXT": "Adicionar ou remover agentes dessa caixa de entrada",
+      "INBOX_AGENTS_SUB_TEXT": "Adicionar ou remover agentes desse canal",
       "AGENT_ASSIGNMENT": "Atribuição de ticket",
       "AGENT_ASSIGNMENT_SUB_TEXT": "Atualizar configurações de atribuição de ticket",
       "UPDATE": "Atualizar",
@@ -1016,19 +1016,19 @@
       "ENABLE_CONTINUITY_VIA_EMAIL_DISABLED_TEXT": "Este recurso está disponível em um plano pago. Atualize para ativar a continuidade do ticket via e-mail.",
       "LOCK_TO_SINGLE_CONVERSATION": "Roteamento de Ticket",
       "LOCK_TO_SINGLE_CONVERSATION_SUB_TEXT": "Configurar a criação de tickets para contatos existentes",
-      "INBOX_UPDATE_TITLE": "Configurações da Caixa de Entrada",
-      "INBOX_UPDATE_SUB_TEXT": "Atualize suas configurações de caixa de entrada",
-      "AUTO_ASSIGNMENT_SUB_TEXT": "Ativar ou desativar a atribuição automática de novos tickets aos agentes adicionados a essa caixa de entrada.",
+      "INBOX_UPDATE_TITLE": "Configurações do canal",
+      "INBOX_UPDATE_SUB_TEXT": "Atualize suas configurações de canal",
+      "AUTO_ASSIGNMENT_SUB_TEXT": "Ativar ou desativar a atribuição automática de novos tickets aos agentes adicionados a esse canal.",
       "HMAC_VERIFICATION": "Validação de Identidade do Usuário",
       "HMAC_DESCRIPTION": "Para validar a identidade do usuário, você pode passar um `identifier_hash` para cada usuário. Você pode gerar um hash HMAC sha256 usando o `identifier` com a chave mostrada aqui.",
       "HMAC_LINK_TO_DOCS": "Você pode ler mais aqui.",
       "HMAC_MANDATORY_VERIFICATION": "Forçar validação de identidade do usuário",
       "HMAC_MANDATORY_DESCRIPTION": "Se ativado, as solicitações sem o 'identifier_hash' serão rejeitadas.",
-      "INBOX_IDENTIFIER": "Identificador da caixa de entrada",
+      "INBOX_IDENTIFIER": "Identificador do canal",
       "INBOX_IDENTIFIER_SUB_TEXT": "Use o token 'inbox_identifier' mostrado aqui para autenticar os seus clientes API.",
       "FORWARD_EMAIL_TITLE": "Encaminhar para o E-mail",
       "FORWARD_EMAIL_SUB_TEXT": "Comece a encaminhar seus e-mails para o seguinte endereço de e-mail.",
-      "FORWARD_EMAIL_NOT_CONFIGURED": "O encaminhamento de e-mails para sua caixa de entrada está desativado nesta instalação. Para utilizar esse recurso, ele deve ser habilitado pelo administrador. Entre em contato com um para prosseguir.",
+      "FORWARD_EMAIL_NOT_CONFIGURED": "O encaminhamento de e-mails para seu canal está desativado nesta instalação. Para utilizar esse recurso, ele deve ser habilitado pelo administrador. Entre em contato com um para prosseguir.",
       "ALLOW_MESSAGES_AFTER_RESOLVED": "Permitir mensagens após a resolução do ticket",
       "ALLOW_MESSAGES_AFTER_RESOLVED_SUB_TEXT": "Permite que os usuários finais enviem mensagens mesmo depois que o ticket for resolvido.",
       "WHATSAPP_SECTION_SUBHEADER": "Esta chave de API é usada para a integração com as APIs do WhatsApp.",
@@ -1048,21 +1048,21 @@
       "WHATSAPP_BUSINESS_MANAGEMENT_TOKEN_UPDATE_ERROR": "Não foi possível atualizar o token de gerenciamento de negócios. Verifique se ele possui a permissão WhatsApp Business Management e acesso à conta do WhatsApp Business e tente novamente.",
       "WHATSAPP_BUSINESS_MANAGEMENT_TOKEN_GUIDE_LINK": "Saiba como gerar um token de gerenciamento do WhatsApp Business",
       "WHATSAPP_EMBEDDED_SIGNUP_TITLE": "Inscrição incorporada do WhatsApp",
-      "WHATSAPP_EMBEDDED_SIGNUP_SUBHEADER": "Esta caixa de entrada está conectada através da inscrição incorporada do WhatsApp.",
-      "WHATSAPP_EMBEDDED_SIGNUP_DESCRIPTION": "Você pode reconfigurar esta caixa de entrada para atualizar suas configurações do WhatsApp Business.",
+      "WHATSAPP_EMBEDDED_SIGNUP_SUBHEADER": "Este canal está conectado através da inscrição incorporada do WhatsApp.",
+      "WHATSAPP_EMBEDDED_SIGNUP_DESCRIPTION": "Você pode reconfigurar este canal para atualizar suas configurações do WhatsApp Business.",
       "WHATSAPP_RECONFIGURE_BUTTON": "Reconfigurar",
       "WHATSAPP_MANUAL_TRANSFER_TITLE": "Alternar para Configuração Manual",
-      "WHATSAPP_MANUAL_TRANSFER_SUBHEADER": "Esta caixa de entrada foi conectada por meio do cadastro incorporado do WhatsApp, que não é mais compatível. Informe as credenciais da API do WhatsApp Cloud da sua própria aplicação da Meta para migrar esta caixa de entrada para uma configuração manual. Antes de realizar a migração, configure o webhook na sua aplicação da Meta utilizando o token de verificação acima.",
+      "WHATSAPP_MANUAL_TRANSFER_SUBHEADER": "Este canal foi conectado por meio do cadastro incorporado do WhatsApp, que não é mais compatível. Informe as credenciais da API do WhatsApp Cloud da sua própria aplicação da Meta para migrar este canal para uma configuração manual. Antes de realizar a migração, configure o webhook na sua aplicação da Meta utilizando o token de verificação acima.",
       "WHATSAPP_MANUAL_TRANSFER_PHONE_NUMBER_ID_LABEL": "ID do Número de Telefone",
       "WHATSAPP_MANUAL_TRANSFER_BUSINESS_ACCOUNT_ID_LABEL": "ID da conta do WhatsApp Business",
       "WHATSAPP_MANUAL_TRANSFER_API_KEY_LABEL": "Chave API",
       "WHATSAPP_MANUAL_TRANSFER_API_KEY_PLACEHOLDER": "Informe um token de acesso permanente da sua aplicação da Meta",
       "WHATSAPP_MANUAL_TRANSFER_BUTTON": "Alternar para Configuração Manual",
-      "WHATSAPP_MANUAL_TRANSFER_SUCCESS": "Caixa de entrada migrada para configuração manual com sucesso.",
+      "WHATSAPP_MANUAL_TRANSFER_SUCCESS": "Canal migrado para configuração manual com sucesso.",
       "WHATSAPP_MANUAL_TRANSFER_ERROR": "Não foi possível migrar para a configuração manual. Verifique as credenciais e tente novamente.",
       "WHATSAPP_CONNECT_TITLE": "Conectar ao WhatsApp Business",
       "WHATSAPP_CONNECT_SUBHEADER": "Atualize para o cadastro integrado do WhatsApp para um gerenciamento mais fácil.",
-      "WHATSAPP_CONNECT_DESCRIPTION": "Conecte esta caixa de entrada ao WhatsApp Business para ter recursos aprimorados e um gerenciamento mais fácil.",
+      "WHATSAPP_CONNECT_DESCRIPTION": "Conecte este canal ao WhatsApp Business para ter recursos aprimorados e um gerenciamento mais fácil.",
       "WHATSAPP_CONNECT_BUTTON": "Conectar",
       "WHATSAPP_CONNECT_SUCCESS": "Conectado com sucesso ao WhatsApp Business!",
       "WHATSAPP_CONNECT_ERROR": "Não foi possível reconfigurar o WhatsApp Business. Tente novamente.",
@@ -1080,19 +1080,19 @@
       "WHATSAPP_MANUAL_MIGRATION": {
         "BANNER": {
           "TITLE": "Configuração manual recomendada",
-          "DESCRIPTION": "Esta caixa de entrada está conectada por meio da aplicação compartilhada da Meta utilizada no cadastro incorporado, que foi afetada por restrições recentes da Meta. Para evitar problemas semelhantes no futuro, recomendamos reconectá-la utilizando sua própria aplicação da Meta.",
+          "DESCRIPTION": "Este canal está conectado por meio da aplicação compartilhada da Meta utilizada no cadastro incorporado, que foi afetada por restrições recentes da Meta. Para evitar problemas semelhantes no futuro, recomendamos reconectá-lo utilizando sua própria aplicação da Meta.",
           "START": "Iniciar migração manual",
           "GUIDE": "Ver guia"
         },
         "DIALOG": {
           "EYEBROW": "Migração manual do WhatsApp",
-          "TITLE": "Reconectar caixa de entrada do WhatsApp",
+          "TITLE": "Reconectar canal do WhatsApp",
           "CLOSE": "Fechar",
           "ACTION_REQUIRED_TITLE": "Reconectar com sua própria aplicação da Meta",
-          "ACTION_REQUIRED_DESCRIPTION": "As caixas de entrada conectadas por meio da sua própria aplicação da Meta não são afetadas pelas restrições da aplicação compartilhada utilizada no cadastro incorporado. Este fluxo guiado atualiza a conexão com a API do WhatsApp sem criar uma nova caixa de entrada.",
+          "ACTION_REQUIRED_DESCRIPTION": "Aos canais conectados por meio da sua própria aplicação da Meta não são afetadas pelas restrições da aplicação compartilhada utilizada no cadastro incorporado. Este fluxo guiado atualiza a conexão com a API do WhatsApp sem criar um novo canal.",
           "GUIDE_LINK": "Abrir o guia de configuração manual",
           "PRESERVED_TITLE": "Preservado",
-          "PRESERVED_DESCRIPTION": "Tickets, contatos, colaboradores, roteamento, horário de atendimento e configurações da caixa de entrada.",
+          "PRESERVED_DESCRIPTION": "Tickets, contatos, colaboradores, roteamento, horário de atendimento e configurações do canal.",
           "UPDATED_TITLE": "Atualizado",
           "UPDATED_DESCRIPTION": "ID da WABA, ID do número de telefone, token de acesso e configuração do webhook.",
           "WABA_ID": "ID da WABA",
@@ -1100,7 +1100,7 @@
           "WABA_HELP": "A conta do WhatsApp Business que possui este número de telefone.",
           "PHONE_NUMBER_ID": "ID do Número de Telefone",
           "PHONE_NUMBER_PLACEHOLDER": "Informe o ID do número de telefone",
-          "PHONE_NUMBER_HELP": "ID exclusivo da Meta para o número do WhatsApp conectado a esta caixa de entrada.",
+          "PHONE_NUMBER_HELP": "ID exclusivo da Meta para o número do WhatsApp conectado a este canal.",
           "DISPLAY_PHONE_NUMBER": "Número de telefone exibido",
           "DISPLAY_PHONE_NUMBER_PLACEHOLDER": "Informe o número de telefone de exibição",
           "DISPLAY_PHONE_NUMBER_HELP": "O número do WhatsApp exibido aos clientes. Ele não pode ser alterado durante a migração.",
@@ -1112,7 +1112,7 @@
           "MESSAGING_PERMISSION": "whatsapp_business_messaging.",
           "MANAGEMENT_PERMISSION": "whatsapp_business_management",
           "REVIEW_TITLE": "Revisar antes de reconectar",
-          "INBOX": "Caixa de Entrada",
+          "INBOX": "Canal",
           "PHONE_NUMBER": "Número de telefone",
           "NOT_ENTERED": "Não inserido",
           "VERIFY_NOTICE": "O Chatwoot verificará estas credenciais com o Meta antes de aplicar quaisquer alterações. Se a verificação falhar, a configuração atual ficará intacta.",
@@ -1120,12 +1120,12 @@
           "CANCEL": "Cancelar",
           "CONTINUE": "Continuar",
           "REVIEW_MIGRATION": "Revisar a migração",
-          "RECONNECT": "Reconectar caixa de entrada do WhatsApp"
+          "RECONNECT": "Reconectar canal do WhatsApp"
         },
         "STEPS": {
           "BEFORE_YOU_START": {
             "TITLE": "Antes de começar",
-            "DESCRIPTION": "Isso reconecta os detalhes da API do WhatsApp para esta caixa de entrada. Tickets, colaboradores, roteadores, horários de funcionamento, CSAT e configurações do robô serão preservadas."
+            "DESCRIPTION": "Isso reconecta os detalhes da API do WhatsApp para este canal. Tickets, colaboradores, roteadores, horários de funcionamento, CSAT e configurações do bot serão preservadas."
           },
           "BUSINESS_DETAILS": {
             "TITLE": "Dados da empresa",
@@ -1137,13 +1137,13 @@
           },
           "REVIEW_MIGRATION": {
             "TITLE": "Revisar a migração",
-            "DESCRIPTION": "Confirme os detalhes da conexão antes de reconectar esta caixa de entrada. O Chatwoot verificará o token, WABA e o número de telefone com meta antes de aplicar as alterações."
+            "DESCRIPTION": "Confirme os detalhes da conexão antes de reconectar este canal. O Chatwoot verificará o token, WABA e o número de telefone com meta antes de aplicar as alterações."
           }
         }
       },
       "WHATSAPP_CALLING_ENABLED": {
         "LABEL": "Ativar chamadas de voz",
-        "DESCRIPTION": "Permita que os atendentes iniciem e recebam chamadas de voz do WhatsApp nesta caixa de entrada. Disponível apenas para canais do WhatsApp Cloud com cadastro incorporado e permissão de chamadas concedida pela Meta."
+        "DESCRIPTION": "Permita que os atendentes iniciem e recebam chamadas de voz do WhatsApp neste canal. Disponível apenas para canais do WhatsApp Cloud com cadastro incorporado e permissão de chamadas concedida pela Meta."
       },
       "UPDATE_PRE_CHAT_FORM_SETTINGS": "Atualizar configurações do Formulário Pre Chat"
     },
@@ -1153,12 +1153,12 @@
       "SELECT_PLACEHOLDER": "Selecionar Centro de Ajuda",
       "NONE": "Nenhuma",
       "REMOVE": "Remover Centro de Ajuda",
-      "SUB_TEXT": "Anexe um Centro de Ajuda com a caixa de entrada"
+      "SUB_TEXT": "Anexe um Centro de Ajuda com o canal"
     },
     "AUTO_ASSIGNMENT": {
       "MAX_ASSIGNMENT_LIMIT": "Limite de atribuição automática",
       "MAX_ASSIGNMENT_LIMIT_RANGE_ERROR": "Por favor, insira um valor maior que 0",
-      "MAX_ASSIGNMENT_LIMIT_SUB_TEXT": "Limitar o número máximo de tickets desta caixa de entrada que pode ser atribuído automaticamente a um agente"
+      "MAX_ASSIGNMENT_LIMIT_SUB_TEXT": "Limitar o número máximo de tickets deste canal que pode ser atribuído automaticamente a um agente"
     },
     "ASSIGNMENT": {
       "TITLE": "Atribuição de ticket",
@@ -1169,7 +1169,7 @@
       "DEFAULT_RULE_1": "Tickets criados mais antigas primeiro",
       "DEFAULT_RULE_2": "Distribuição em rodízio",
       "CUSTOMIZE_WITH_POLICY": "Personalizar com política de atribuição",
-      "USING_POLICY": "Utilizando política de atribuição personalizada para esta caixa de entrada",
+      "USING_POLICY": "Utilizando política de atribuição personalizada para este canal",
       "CUSTOMIZE_POLICY": "Personalizar com política de atribuição",
       "DELETE_POLICY": "Excluir política",
       "POLICY_LABEL": "Política de atribuição",
@@ -1190,7 +1190,7 @@
       "UPGRADE_PROMPT": "Políticas de atribuição personalizadas estão disponíveis no plano Business",
       "UPGRADE_TO_BUSINESS": "Atualizar para o Business",
       "DEFAULT_POLICY_LINKED": "Política padrão vinculada",
-      "DEFAULT_POLICY_DESCRIPTION": "Vincule uma política de atribuição personalizada para definir como os tickets serão atribuídos aos agentes nesta caixa de entrada.",
+      "DEFAULT_POLICY_DESCRIPTION": "Vincule uma política de atribuição personalizada para definir como os tickets serão atribuídos aos agentes neste canal.",
       "LINK_EXISTING_POLICY": "Vincular política existente",
       "CREATE_NEW_POLICY": "Criar nova política",
       "NO_POLICIES": "Nenhuma política de atribuição encontrada",
@@ -1201,7 +1201,7 @@
     },
     "ASSIGNMENT_POLICY": {
       "DELETE_CONFIRM_TITLE": "Excluir política de atribuição?",
-      "DELETE_CONFIRM_MESSAGE": "Tem certeza de que deseja remover esta política de atribuição desta caixa de entrada? A caixa de entrada voltará às regras de atribuição padrão.",
+      "DELETE_CONFIRM_MESSAGE": "Tem certeza de que deseja remover esta política de atribuição deste canal? o canal voltará às regras de atribuição padrão.",
       "CANCEL": "Cancelar",
       "CONFIRM_DELETE": "Excluir",
       "DELETE_SUCCESS": "Política de atribuição removida com sucesso",
@@ -1315,7 +1315,7 @@
       "WEEKLY_TITLE": "Definir horas semanais",
       "TIMEZONE_LABEL": "Selecionar fuso horário",
       "UPDATE": "Atualizar configurações do horário comercial",
-      "TOGGLE_AVAILABILITY": "Permitir a disponibilidade de negócios para essa caixa de entrada",
+      "TOGGLE_AVAILABILITY": "Permitir a disponibilidade de negócios para esse canal",
       "UNAVAILABLE_MESSAGE_LABEL": "Mensagem indisponível para visitantes",
       "TOGGLE_HELP": "Permitir a disponibilidade de negócios mostrará as horas disponíveis no widget de bate-papo ao vivo, mesmo que todos os agentes estejam offline. Os vistores disponíveis horários externos podem ser avisados com uma mensagem e um formulário de pré-bate-papo.",
       "DAY": {
@@ -1334,7 +1334,7 @@
       "SUBTITLE": "Defina seus dados IMAP",
       "NOTE_TEXT": "Para habilitar o SMTP, por favor configure o IMAP.",
       "UPDATE": "Atualizar configurações do IMAP",
-      "TOGGLE_AVAILABILITY": "Habilitar a configuração IMAP para esta caixa de entrada",
+      "TOGGLE_AVAILABILITY": "Habilitar a configuração IMAP para este canal",
       "TOGGLE_HELP": "Ativar o IMAP ajudará o usuário a receber e-mails",
       "EDIT": {
         "SUCCESS_MESSAGE": "Configurações IMAP atualizadas com sucesso",
@@ -1367,7 +1367,7 @@
       "TITLE": "SMTP",
       "SUBTITLE": "Defina seus detalhes do SMTP",
       "UPDATE": "Atualizar configurações de SMTP",
-      "TOGGLE_AVAILABILITY": "Ativar a configuração SMTP para esta caixa de entrada",
+      "TOGGLE_AVAILABILITY": "Ativar a configuração SMTP para este canal",
       "TOGGLE_HELP": "Habilitar o SMTP ajudará o usuário a enviar e-mail",
       "EDIT": {
         "SUCCESS_MESSAGE": "Configurações de SMTP atualizadas com sucesso",

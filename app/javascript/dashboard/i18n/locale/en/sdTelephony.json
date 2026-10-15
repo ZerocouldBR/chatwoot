@@ -1,6 +1,6 @@
 {
   "SD_TELEPHONY": {
-    "TITLE": "55PBX Telephony",
+    "TITLE": "Telephony",
     "DESCRIPTION": "Credentials and settings of the 55PBX phone system integration. Everything saved here takes effect immediately in sd-ops, with no file edits or service restarts. Secrets are stored encrypted and never sent back to the browser.",
     "LOADING": "Loading telephony settings",
     "SAVED": "55PBX settings saved",

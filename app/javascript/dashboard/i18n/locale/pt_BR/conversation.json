@@ -13,11 +13,11 @@
     "SWITCH_VIEW_LAYOUT": "Alternar o layout",
     "DASHBOARD_APP_TAB_MESSAGES": "Mensagens",
     "UNVERIFIED_SESSION": "A identidade deste usuário não foi verificada",
-    "NO_MESSAGE_1": "Oh oh! Parece que não há mensagens de clientes na sua caixa de entrada.",
+    "NO_MESSAGE_1": "Oh oh! Parece que não há mensagens de clientes no seu canal.",
     "NO_MESSAGE_2": " para enviar uma mensagem para sua página!",
-    "NO_INBOX_1": "Hola! Parece que você não adicionou nenhuma caixa de entrada ainda.",
+    "NO_INBOX_1": "Hola! Parece que você não adicionou nenhum canal ainda.",
     "NO_INBOX_2": " para começar",
-    "NO_INBOX_AGENT": "Uh Oh! Parece que você não faz parte de nenhuma caixa de entrada. Por favor, contate seu administrador",
+    "NO_INBOX_AGENT": "Uh Oh! Parece que você não faz parte de nenhum canal. Por favor, contate seu administrador",
     "SEARCH_MESSAGES": "Pesquisar por mensagens nos tickets",
     "VIEW_ORIGINAL": "Ver original",
     "VIEW_TRANSLATED": "Ver traduzido",
@@ -35,7 +35,7 @@
     "UNREAD_MESSAGES": "Mensagens não lidas",
     "UNREAD_MESSAGE": "Mensagem não lida",
     "CLICK_HERE": "Clique aqui",
-    "LOADING_INBOXES": "Carregando caixas de entrada",
+    "LOADING_INBOXES": "Carregando canais",
     "LOADING_CONVERSATIONS": "Carregando tickets",
     "CANNOT_REPLY": "Você não pode responder porque",
     "24_HOURS_WINDOW": "Restrições de janela de mensagem de 24 horas",
@@ -51,7 +51,7 @@
     "BOT_HANDOFF_ERROR": "Falha ao resolver tickets. Por favor, tente novamente.",
     "TWILIO_WHATSAPP_CAN_REPLY": "Você só pode responder o este ticket usando um modelo de mensagem devido a",
     "TWILIO_WHATSAPP_24_HOURS_WINDOW": "Restrições de janela de mensagem de 24 horas",
-    "OLD_INSTAGRAM_INBOX_REPLY_BANNER": "Esta conta do Instagram foi migrada para a nova caixa de entrada do canal do Instagram. Todas as novas mensagens serão mostradas lá. Você não poderá mais enviar mensagens deste ticket.",
+    "OLD_INSTAGRAM_INBOX_REPLY_BANNER": "Esta conta do Instagram foi migrada para a novo canal do canal do Instagram. Todas as novas mensagens serão mostradas lá. Você não poderá mais enviar mensagens deste ticket.",
     "INSTAGRAM_RESTRICTION_BANNER": "As mensagens do Instagram estão sendo afetadas por um problema na API da Meta, e não por uma falha no Chatwoot. Algumas mensagens ou ações podem sofrer atrasos ou ficar temporariamente indisponíveis. Estamos trabalhando em conjunto com a Meta para resolver a situação o mais rápido possível.",
     "INSTAGRAM_RESTRICTION_STATUS_LINK": "Ver atualizações de status",
     "REPLYING_TO": "Você está respondendo a:",
@@ -266,7 +266,7 @@
       "MESSAGE_SIGN_TOOLTIP": "Assinatura de mensagem",
       "ENABLE_SIGN_TOOLTIP": "Ativar assinatura",
       "DISABLE_SIGN_TOOLTIP": "Desativar assinatura",
-      "MSG_INPUT": "Shift + enter para nova linha. Digite '/' para selecionar uma Resposta Pronta.",
+      "MSG_INPUT": "Shift + enter para nova linha. Digite '/' para selecionar uma Resposta pronta.",
       "PRIVATE_MSG_INPUT": "A mensagem será visível apenas para agentes",
       "MESSAGING_RESTRICTED": "Você não pode responder este ticket",
       "MESSAGING_RESTRICTED_WHATSAPP": "Você só pode responder usando uma mensagem de modelo devido à restrição da janela de 24 horas",
@@ -350,7 +350,7 @@
     "FILE_TYPE_NOT_SUPPORTED": "O tipo de arquivo {fileName} não é suportado neste ticket",
     "MESSAGE_ERROR": "Não foi possível enviar esta mensagem, por favor, tente novamente mais tarde",
     "SENT_BY": "Enviado por:",
-    "BOT": "Robôs",
+    "BOT": "Bots",
     "NATIVE_APP": "Aplicativo nativo",
     "NATIVE_APP_ADVISORY": "Esta mensagem foi enviada a partir do aplicativo nativo. Responda pelo Chatwoot para manter a janela de mensagens ativa.",
     "SEND_FAILED": "Não foi possível enviar a mensagem! Tente novamente",
@@ -421,7 +421,7 @@
       "on_hold": "Em espera",
       "resolved": "Resolvido",
       "closed": "Fechado",
-      "pending": "Com o robô"
+      "pending": "Com o bot"
     },
     "TICKET_FIELDS": {
       "TITLE": "Ticket",
@@ -464,7 +464,7 @@
         "agent": "agente",
         "customer": "cliente",
         "rule": "regra",
-        "bot": "robô",
+        "bot": "bot",
         "system": "sistema"
       },
       "FIELDS": {
@@ -581,7 +581,7 @@
     "ALL_CONVERSATION": {
       "TITLE": "Todos os seus tickets em um só lugar",
       "DESCRIPTION": "Veja todos os tickets dos seus clientes em um único painel. Você pode filtrar os tickets pelo canal de entrada, tag e status.",
-      "NEW_LINK": "Clique aqui para criar uma caixa de entrada"
+      "NEW_LINK": "Clique aqui para criar um canal"
     },
     "TEAM_MEMBERS": {
       "TITLE": "Convidar membros de seu grupo",

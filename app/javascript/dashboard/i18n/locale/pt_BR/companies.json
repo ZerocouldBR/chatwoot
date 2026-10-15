@@ -61,7 +61,7 @@
       },
       "ATTRIBUTES": {
         "SEARCH_PLACEHOLDER": "Pesquisar atributos...",
-        "EMPTY_STATE": "Não há atributos personalizados da empresa configurados ainda.",
+        "EMPTY_STATE": "Não há campos personalizados da empresa configurados ainda.",
         "NO_ATTRIBUTES": "Nenhum atributo correspondente encontrado.",
         "UNUSED_ATTRIBUTES": "{count} atributo não utilizado | {count} atributos não utilizados",
         "MESSAGES": {

@@ -25,7 +25,7 @@
     "CLEAR_ALL": "Limpar tudo",
     "MOST_RECENT": "Mais recentes",
     "EMPTY_STATE_DEFAULT": "Procurar por ID de ticket, e-mail, número de telefone, mensagens para melhores resultados de busca.",
-    "BOT_LABEL": "Robôs",
+    "BOT_LABEL": "Bots",
     "READ_MORE": "Saiba mais",
     "READ_LESS": "Ler menos",
     "WROTE": "escreveu:",
@@ -56,13 +56,13 @@
     "FILTERS": {
       "FILTER_MESSAGE": "Filtrar mensagens por:",
       "FROM": "Remetente",
-      "IN": "Caixa de Entrada",
+      "IN": "Canal",
       "AGENTS": "Agentes",
       "CONTACTS": "Contatos",
-      "INBOXES": "Caixas de Entrada",
+      "INBOXES": "Canais",
       "NO_AGENTS": "Nenhum agente encontrado",
       "NO_CONTACTS": "Comece a pesquisar para ver os resultados",
-      "NO_INBOXES": "Nenhuma caixa de entrada encontrada"
+      "NO_INBOXES": "Nenhum canal encontrado"
     }
   }
 }

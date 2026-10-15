@@ -46,7 +46,7 @@
           "WHEN_LABEL": "Quando",
           "STATUS_LABEL": "O status é",
           "FOR_LABEL": "Aguardar por",
-          "INBOX_LABEL": "Caixa de Entrada",
+          "INBOX_LABEL": "Canal",
           "ERROR": "O período de espera deve ser entre 10 minutos e 30 dias",
           "OPTIONS": {
             "CONVERSATION_STATUS": "O ticket permanece em um status",
@@ -226,7 +226,7 @@
       "PRIVATE_NOTE": "Mensagem Privada",
       "MESSAGE_CONTAINS": "Conteúdo da mensagem",
       "EMAIL": "E-mail",
-      "INBOX": "Caixa de Entrada",
+      "INBOX": "Canal",
       "CONVERSATION_LANGUAGE": "Idioma do ticket",
       "PHONE_NUMBER": "Número de Telefone",
       "STATUS": "Status",

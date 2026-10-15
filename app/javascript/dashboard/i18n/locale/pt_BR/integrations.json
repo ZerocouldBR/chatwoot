@@ -65,7 +65,7 @@
             "CONTACT_UPDATED": "Contato atualizado",
             "CONVERSATION_TYPING_ON": "Status de Digitação ativado",
             "CONVERSATION_TYPING_OFF": "Status de Digitação desativado",
-            "INBOX_UPDATED": "Caixa de entrada atualizada"
+            "INBOX_UPDATED": "Canal atualizado"
           }
         },
         "NAME": {
@@ -422,8 +422,8 @@
         "LOADING": "Gerando resumo…"
       },
       "INBOX_BANNER": {
-        "TEXT": "Este assistente ainda não está conectado a nenhuma caixa de entrada, por isso ele não responderá o tickets.",
-        "ACTION": "Conectar caixa de entrada",
+        "TEXT": "Este assistente ainda não está conectado a nenhum canal, por isso ele não responderá o tickets.",
+        "ACTION": "Conectar canal",
         "DISMISS": "Recusar"
       },
       "COVERAGE_BANNER": {
@@ -659,7 +659,7 @@
       "ADD_NEW": "Criar um novo assistente",
       "DELETE": {
         "TITLE": "Tem certeza que deseja excluir o assistente?",
-        "DESCRIPTION": "Esta ação é permanente. Excluir este assistente irá removê-lo de todas as caixas de entrada conectadas e apagará permanentemente todo o conhecimento gerado.",
+        "DESCRIPTION": "Esta ação é permanente. Excluir este assistente irá removê-lo de todos os canais conectados e apagará permanentemente todo o conhecimento gerado.",
         "CONFIRM": "Sim, excluir",
         "SUCCESS_MESSAGE": "O assistente foi excluído com sucesso",
         "ERROR_MESSAGE": "Ocorreu um erro ao excluir o assistente, por favor tente novamente."
@@ -751,7 +751,7 @@
         "AUDIENCE": {
           "EVERYONE": {
             "LABEL": "Todos",
-            "DESC": "O Captain responde a todos os tickets nas caixas de entrada conectadas."
+            "DESC": "O Captain responde a todos os tickets nos canais conectados."
           },
           "SPECIFIC": {
             "LABEL": "Público específico",
@@ -782,13 +782,13 @@
           },
           "BUSINESS_HOURS": {
             "LABEL": "Durante o horário de atendimento",
-            "DESC": "O Captain responde apenas durante o horário de atendimento de cada caixa de entrada."
+            "DESC": "O Captain responde apenas durante o horário de atendimento de cada canal."
           },
           "OUTSIDE_BUSINESS_HOURS": {
             "LABEL": "Fora do horário de atendimento",
-            "DESC": "O Captain responde apenas quando cada caixa de entrada estiver fechada."
+            "DESC": "O Captain responde apenas quando cada canal estiver fechada."
           },
-          "HINT": "Caixas de entrada sem horário de atendimento configurado estão sempre cobertas."
+          "HINT": "Canais sem horário de atendimento configurado estão sempre cobertas."
         }
       },
       "EDIT": {
@@ -832,14 +832,14 @@
         },
         "DELETE": {
           "TITLE": "Excluir Assistente",
-          "DESCRIPTION": "Esta ação é permanente. Excluir este assistente irá removê-lo de todas as caixas de entrada conectadas e apagará permanentemente todo o conhecimento gerado.",
+          "DESCRIPTION": "Esta ação é permanente. Excluir este assistente irá removê-lo de todos os canais conectados e apagará permanentemente todo o conhecimento gerado.",
           "BUTTON_TEXT": "Excluir {assistantName}"
         }
       },
       "OPTIONS": {
         "EDIT_ASSISTANT": "Editar Assistente",
         "DELETE_ASSISTANT": "Excluir Assistente",
-        "VIEW_CONNECTED_INBOXES": "Ver caixas de entrada conectadas"
+        "VIEW_CONNECTED_INBOXES": "Ver canais conectados"
       },
       "EMPTY_STATE": {
         "TITLE": "Não há assistentes disponíveis",
@@ -1412,34 +1412,34 @@
       }
     },
     "INBOXES": {
-      "HEADER": "Caixas de entrada conectadas",
-      "ADD_NEW": "Conectar uma nova caixa de entrada",
+      "HEADER": "Canais conectados",
+      "ADD_NEW": "Conectar um novo canal",
       "OPTIONS": {
         "DISCONNECT": "Desconectar"
       },
       "DELETE": {
-        "TITLE": "Tem certeza que deseja desconectar a caixa de entrada?",
+        "TITLE": "Tem certeza que deseja desconectar o canal?",
         "DESCRIPTION": "",
         "CONFIRM": "Sim, excluir",
-        "SUCCESS_MESSAGE": "A caixa de entrada foi desconectada com sucesso.",
-        "ERROR_MESSAGE": "Ocorreu um erro ao desconectar a caixa de entrada, por favor, tente novamente."
+        "SUCCESS_MESSAGE": "o canal foi desconectado com sucesso.",
+        "ERROR_MESSAGE": "Ocorreu um erro ao desconectar o canal, por favor, tente novamente."
       },
-      "FORM_DESCRIPTION": "Escolha uma caixa de entrada para conectar com o assistente.",
+      "FORM_DESCRIPTION": "Escolha um canal para conectar com o assistente.",
       "CREATE": {
-        "TITLE": "Conecte uma caixa de entrada",
-        "SUCCESS_MESSAGE": "A caixa de entrada foi conectada com sucesso.",
-        "ERROR_MESSAGE": "Ocorreu um erro ao conectar à caixa de entrada. Por favor, tente novamente."
+        "TITLE": "Conecte um canal",
+        "SUCCESS_MESSAGE": "o canal foi conectado com sucesso.",
+        "ERROR_MESSAGE": "Ocorreu um erro ao conectar ao canal. Por favor, tente novamente."
       },
       "FORM": {
         "INBOX": {
-          "LABEL": "Caixa de Entrada",
-          "PLACEHOLDER": "Selecione a caixa de entrada para implantar o assistente.",
-          "ERROR": "É obrigatório selecionar uma caixa de entrada."
+          "LABEL": "Canal",
+          "PLACEHOLDER": "Selecione o canal para implantar o assistente.",
+          "ERROR": "É obrigatório selecionar um canal."
         }
       },
       "EMPTY_STATE": {
-        "TITLE": "Caixa de entrada não conectada",
-        "SUBTITLE": "Conectar uma caixa de entrada permite ao assistente lidar com perguntas iniciais de seus clientes antes de transferi-las para você."
+        "TITLE": "Canal não conectada",
+        "SUBTITLE": "Conectar um canal permite ao assistente lidar com perguntas iniciais de seus clientes antes de transferi-las para você."
       }
     }
   }

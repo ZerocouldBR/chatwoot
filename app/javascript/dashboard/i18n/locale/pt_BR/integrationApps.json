@@ -33,7 +33,7 @@
     },
     "LIST": {
       "FETCHING": "Buscando integrações",
-      "INBOX": "Caixa de Entrada",
+      "INBOX": "Canal",
       "ACTIONS": "Ações",
       "DELETE": {
         "BUTTON_TEXT": "Excluir"
@@ -42,8 +42,8 @@
     "ADD": {
       "FORM": {
         "INBOX": {
-          "LABEL": "Selecionar caixa de entrada",
-          "PLACEHOLDER": "Selecionar caixa de entrada"
+          "LABEL": "Selecionar canal",
+          "PLACEHOLDER": "Selecionar canal"
         },
         "SUBMIT": "Criar",
         "VALIDATING_OPENAI": "Validando com a OpenAI...",

@@ -71,3 +71,12 @@ dialog::backdrop {
     transition-duration: 0.01ms !important;
   }
 }
+
+// Native checkboxes, radios and ranges in the brand color.
+// scss-lint:disable QualifyingElement
+input[type='checkbox'],
+input[type='radio'],
+input[type='range'] {
+  accent-color: rgb(var(--blue-9));
+}
+// scss-lint:enable QualifyingElement

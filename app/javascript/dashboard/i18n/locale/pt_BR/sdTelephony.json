@@ -1,6 +1,6 @@
 {
   "SD_TELEPHONY": {
-    "TITLE": "Telefonia 55PBX",
+    "TITLE": "Telefonia",
     "DESCRIPTION": "Credenciais e configurações da integração com a central 55PBX. Tudo o que é salvo aqui vale na hora no sd-ops, sem editar arquivo nem reiniciar serviço. Segredos ficam cifrados e nunca voltam para o navegador.",
     "LOADING": "Carregando a configuração da telefonia",
     "SAVED": "Configuração da 55PBX salva",
@@ -57,7 +57,7 @@
       "BASIC": "Usuário e senha (Basic)"
     },
     "INFO": {
-      "TENANT": "Conta: {name} (ID {account}) · Caixa de entrada da 55PBX: {inbox} · Versão da configuração: {version}",
+      "TENANT": "Conta: {name} (ID {account}) · Canal da 55PBX: {inbox} · Versão da configuração: {version}",
       "UPDATED_BY": "última alteração por {email} em {at}",
       "VAULT_MISSING": "O sd-ops está sem a chave SDOPS_SETTINGS_KEY: campos comuns podem ser salvos, mas segredos (chaves e senhas) não.",
       "FORCE_DISABLED": "A integração está desligada pelo operador no servidor (SDOPS_FORCE_DISABLED). Nada desta tela é processado até isso ser removido."
@@ -153,7 +153,7 @@
       },
       "CHATWOOT_WEBHOOK_HMAC_SECRET": {
         "LABEL": "Segredo dos eventos do ServiceDesk",
-        "HELP": "Segredo da caixa de entrada da 55PBX, que assina os eventos usados no gatilho de atribuição."
+        "HELP": "Segredo do canal da 55PBX, que assina os eventos usados no gatilho de atribuição."
       },
       "DOWNLOAD_RECORDINGS": {
         "LABEL": "Baixar gravações",
