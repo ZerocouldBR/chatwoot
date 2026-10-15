@@ -427,7 +427,8 @@
     "SUSPENDED_TICKETS": "Suspended",
     "DELETED_TICKETS": "Deleted",
     "COLLAPSE": "Collapse sidebar",
-    "EXPAND": "Expand sidebar"
+    "EXPAND": "Expand sidebar",
+    "SEARCH_SHORT": "Search"
   },
   "DATA_IMPORTS": {
     "HEADER": "Data",

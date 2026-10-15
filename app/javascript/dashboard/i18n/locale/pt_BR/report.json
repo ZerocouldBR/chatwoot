@@ -142,7 +142,8 @@
       "MESSAGE_CREATED_AT": "Mensagem criada em {time}",
       "EVENT_OCCURRED_AT": "Evento ocorrido em {time}",
       "INCOMING_MESSAGE": "Mensagem recebida",
-      "OUTGOING_MESSAGE": "Mensagem enviada"
+      "OUTGOING_MESSAGE": "Mensagem enviada",
+      "VIEW_ALL": "Ver todos"
     },
     "PAGINATION": {
       "RESULTS": "Exibindo {start} — {end} de {total} resultados",

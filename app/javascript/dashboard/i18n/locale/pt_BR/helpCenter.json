@@ -814,7 +814,8 @@
         "VIEW_CHANGES": "Ver alterações não publicadas",
         "DRAFT": "Rascunho",
         "ARCHIVE": "Arquivar",
-        "BACK_TO_ARTICLES": "Voltar aos artigos"
+        "BACK_TO_ARTICLES": "Voltar aos artigos",
+        "CREATE_IN_PROGRESS": "O artigo ainda está sendo criado. Adicione os arquivos de novo em instantes."
       },
       "PENDING_CHANGES_POPOVER": {
         "TITLE": "Alterações não publicadas",
@@ -843,7 +844,14 @@
         "VISIBILITY": "Visível para",
         "VISIBILITY_PUBLIC": "Todos (público)",
         "VISIBILITY_STAFF": "só equipe",
-        "VISIBILITY_HINT": "Artigo restrito só aparece no portal para o cliente logado que pertence ao segmento."
+        "VISIBILITY_HINT": "Artigo restrito só aparece no portal para o cliente logado que pertence ao segmento.",
+        "SLUG": "Endereço (slug)",
+        "SLUG_PLACEHOLDER": "Adicione o endereço",
+        "SLUG_USE_TITLE": "Usar o título como endereço",
+        "SLUG_WARNING": "O endereço atual vai parar de funcionar e os links para ele vão quebrar.",
+        "SLUG_UPDATE": "Atualizar",
+        "SLUG_UPDATED": "Endereço atualizado. O artigo agora está no endereço novo.",
+        "SLUG_OPEN": "Abrir o endereço"
       },
       "API": {
         "ERROR": "Erro ao salvar artigo"

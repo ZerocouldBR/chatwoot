@@ -148,6 +148,14 @@
           "priority": "Prioridade",
           "labels": "Tags"
         }
+      },
+      "ENFORCE_MFA": {
+        "TITLE": "Exigir autenticação em dois fatores",
+        "NOTE": "Todos os membros desta conta precisarão configurar a autenticação em dois fatores. Quem ainda não tiver será convidado a configurar no próximo login com senha. Logins pelo Google ou por SAML ficam de fora. Os tokens de acesso à API de quem não configurou deixam de funcionar nesta conta até a configuração.",
+        "API": {
+          "SUCCESS": "Exigência de autenticação em dois fatores atualizada",
+          "ERROR": "Não foi possível atualizar a exigência de autenticação em dois fatores"
+        }
       }
     },
     "UPDATE_CHATWOOT": "Uma atualização {latestChatwootVersion} para o Chatwoot está disponível. Por favor, atualize sua instância.",
@@ -155,7 +163,8 @@
     "PAYMENT_PENDING": "Seu pagamento está pendente. Por favor, atualize suas informações de pagamento para continuar usando o Chatwoot",
     "UPGRADE": "Atualize para continuar usando o Chatwoot",
     "LIMITS_UPGRADE": "Sua conta excedeu os limites de uso. Por favor, faça um upgrade do seu plano para continuar usando o Chatwoot",
-    "OPEN_BILLING": "Abrir faturamento"
+    "OPEN_BILLING": "Abrir faturamento",
+    "PAYMENT_PENDING_AGENT": "O pagamento da conta está atrasado. Fale com o administrador."
   },
   "FORMS": {
     "MULTISELECT": {

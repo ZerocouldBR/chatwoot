@@ -70,6 +70,19 @@
         },
         "ACTIONS": {
           "LABEL": "Ações"
+        },
+        "MONITOR": {
+          "LABEL": "Monitor",
+          "PLACEHOLDER": "Selecione um monitor ativo",
+          "ERROR": "Selecione um monitor ativo",
+          "FETCH_FAILED": "Não foi possível carregar os monitores. Tente mais tarde.",
+          "API_UNAVAILABLE": "Este monitor não está mais disponível. Selecione um monitor ativo e tente de novo.",
+          "EMPTY": "Nenhum monitor ativo. Crie ou retome um monitor para usar este evento.",
+          "GO_TO_MONITORS": "Ir para os monitores",
+          "RETRY": "Tentar de novo",
+          "UNAVAILABLE": "Monitor indisponível",
+          "UNAVAILABLE_HELP": "Este monitor não está disponível para automações. Selecione um monitor ativo para ativar a regra.",
+          "HELP": "Roda uma vez, quando o monitor encontra um ticket pela primeira vez em atividade nova. Varreduras do histórico não disparam ações."
         }
       },
       "CONDITION_BUTTON_LABEL": "Adicionar condição",
@@ -93,7 +106,10 @@
         "DELAYED": "Executadas após um período de espera"
       },
       "DELAY_BADGE": "Executadas após {delay}",
-      "DELAY_DISABLED_BANNER": "A execução com atraso está desativada para esta conta, portanto as regras abaixo que executam após um período de espera estão pausadas até que ela seja ativada novamente."
+      "DELAY_DISABLED_BANNER": "A execução com atraso está desativada para esta conta, portanto as regras abaixo que executam após um período de espera estão pausadas até que ela seja ativada novamente.",
+      "MONITOR_PAUSED": "Monitor pausado",
+      "MONITOR_DELETED": "Monitor excluído",
+      "MONITOR_UNAVAILABLE": "Monitores indisponíveis"
     },
     "DELETE": {
       "TITLE": "Excluir regra de automação",
@@ -136,7 +152,10 @@
     "CONDITION": {
       "DELETE_MESSAGE": "Você precisa ter pelo menos uma condição para salvar",
       "CONTACT_CUSTOM_ATTR_LABEL": "Atributos personalizados do contato",
-      "CONVERSATION_CUSTOM_ATTR_LABEL": "Atributos personalizados do ticket"
+      "CONVERSATION_CUSTOM_ATTR_LABEL": "Atributos personalizados do ticket",
+      "PLACEHOLDERS": {
+        "CAPTAIN": "Descreva o que procurar, por exemplo: o cliente quer cancelar"
+      }
     },
     "ACTION": {
       "DELETE_MESSAGE": "Você precisa ter pelo menos uma ação para salvar",
@@ -184,12 +203,13 @@
       "CONVERSATION_UPDATED": "Ticket Atualizado",
       "MESSAGE_CREATED": "Mensagem Criada",
       "CONVERSATION_RESOLVED": "Ticket Resolvido",
-      "CONVERSATION_OPENED": "Ticket Aberto"
+      "CONVERSATION_OPENED": "Ticket Aberto",
+      "MONITOR_MATCHED": "Monitor encontrou um ticket"
     },
     "ACTIONS": {
       "ASSIGN_AGENT": "Atribuir ao Agente",
       "ASSIGN_TEAM": "Atribuir um Grupo",
-      "REMOVE_ASSIGNED_AGENT": "Remove Assigned Agent",
+      "REMOVE_ASSIGNED_AGENT": "Remover o responsável",
       "REMOVE_ASSIGNED_TEAM": "Remover Grupo Atribuído",
       "ADD_LABEL": "Adicionar uma Tag",
       "REMOVE_LABEL": "Remover uma Tag",
@@ -238,7 +258,8 @@
       "ASSIGNEE_NAME": "Agente atribuído",
       "TEAM_NAME": "Grupo",
       "PRIORITY": "Prioridade",
-      "LABELS": "Tags"
+      "LABELS": "Tags",
+      "CAPTAIN": "Captain"
     }
   }
 }

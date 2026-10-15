@@ -107,7 +107,7 @@
       "ASSIGN_AGENT": "Atribuir um Agente",
       "ADD_LABEL": "Adicionar uma Tag",
       "REMOVE_LABEL": "Remover uma Tag",
-      "REMOVE_ASSIGNED_AGENT": "Remove Assigned Agent",
+      "REMOVE_ASSIGNED_AGENT": "Remover o responsável",
       "REMOVE_ASSIGNED_TEAM": "Remover Grupo Atribuído",
       "SEND_EMAIL_TRANSCRIPT": "Enviar uma transcrição por e-mail",
       "MUTE_CONVERSATION": "Silenciar Ticket",
