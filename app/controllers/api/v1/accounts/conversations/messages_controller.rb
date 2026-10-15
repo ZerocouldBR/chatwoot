@@ -3,6 +3,7 @@ class Api::V1::Accounts::Conversations::MessagesController < Api::V1::Accounts::
   include Servicedesk::ConversationResolveGuard
 
   before_action :ensure_api_inbox, only: :update
+  before_action :ensure_outbound_allowed, only: :translate
   before_action -> { validate_agent_status(params[:ticket_status]) }, only: :create
   before_action :servicedesk_require_form_on_resolve, only: :create
 
@@ -45,8 +46,6 @@ class Api::V1::Accounts::Conversations::MessagesController < Api::V1::Accounts::
 
   def translate
     return head :ok if already_translated_content_available?
-    # ServiceDesk: conta isolada, o texto não vai para o tradutor externo.
-    return render_could_not_create_error(Servicedesk::OutboundGuard.not_sent_reason(Current.account)) if outbound_blocked?
 
     translated_content = Integrations::GoogleTranslate::ProcessorService.new(
       message: message,
@@ -70,6 +69,11 @@ class Api::V1::Accounts::Conversations::MessagesController < Api::V1::Accounts::
 
   def outbound_blocked?
     Servicedesk::OutboundGuard.blocked?(Current.account)
+  end
+
+  # ServiceDesk: conta isolada, o texto não vai para o tradutor externo.
+  def ensure_outbound_allowed
+    render_could_not_create_error(Servicedesk::OutboundGuard.not_sent_reason(Current.account)) if outbound_blocked?
   end
 
   # ServiceDesk (M1): "Enviar como Resolvido" manda o status em `ticket_status`, junto com a resposta.

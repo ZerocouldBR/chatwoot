@@ -3,9 +3,14 @@ class CsatSurveyService
 
   def perform
     return unless should_send_csat_survey?
-    # ServiceDesk: isolated account. The survey stays in the ticket, marked as not sent (no WhatsApp/Twilio template).
-    return ::MessageTemplates::Template::CsatSurvey.new(conversation: conversation).perform if outbound_blocked?
 
+    # ServiceDesk: isolated account. The survey stays in the ticket, marked as not sent (no WhatsApp/Twilio template).
+    outbound_blocked? ? ::MessageTemplates::Template::CsatSurvey.new(conversation: conversation).perform : deliver_survey
+  end
+
+  private
+
+  def deliver_survey
     if whatsapp_channel? && template_available_and_approved?
       send_whatsapp_template_survey
     elsif inbox.twilio_whatsapp? && twilio_template_available_and_approved?
@@ -16,8 +21,6 @@ class CsatSurveyService
       create_csat_not_sent_activity_message
     end
   end
-
-  private
 
   delegate :inbox, :contact, to: :conversation
 
