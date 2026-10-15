@@ -51,8 +51,9 @@ in_image ruby -e '
 echo ">> 4/6 assets do tema ServiceDesk no build do Vite"
 in_image sh -c 'test -f /app/public/vite/.vite/manifest.json || test -f /app/public/vite/manifest.json' \
   || fail "manifest do Vite ausente"
-in_image sh -c 'grep -lq "sd-status" /app/public/vite/assets/*.css' \
-  || fail "CSS do tema ServiceDesk (sd-status) ausente no build"
+# A cor Tide (94 234 212) só existe nos tokens do tema ServiceDesk (_next-colors.scss).
+in_image sh -c 'grep -lq "94 234 212" /app/public/vite/assets/*.css' \
+  || fail "CSS do tema ServiceDesk (cor Tide) ausente no build"
 
 echo ">> 5/6 Postgres e Redis temporários"
 PG_PASS=$(head -c 16 /dev/urandom | od -An -tx1 | tr -d ' \n')
