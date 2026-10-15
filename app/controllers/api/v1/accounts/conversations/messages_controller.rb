@@ -35,6 +35,8 @@ class Api::V1::Accounts::Conversations::MessagesController < Api::V1::Accounts::
 
   def retry
     return if message.blank?
+    # ServiceDesk: conta isolada, "tentar de novo" não envia (a mensagem continua marcada como não enviada).
+    return Servicedesk::OutboundGuard.block_message!(message) if outbound_blocked?
 
     ::SendReplyJob.perform_later(message.id) if claim_message_retry
   rescue StandardError => e
@@ -43,6 +45,8 @@ class Api::V1::Accounts::Conversations::MessagesController < Api::V1::Accounts::
 
   def translate
     return head :ok if already_translated_content_available?
+    # ServiceDesk: conta isolada, o texto não vai para o tradutor externo.
+    return render_could_not_create_error(Servicedesk::OutboundGuard.not_sent_reason(Current.account)) if outbound_blocked?
 
     translated_content = Integrations::GoogleTranslate::ProcessorService.new(
       message: message,
@@ -63,6 +67,10 @@ class Api::V1::Accounts::Conversations::MessagesController < Api::V1::Accounts::
   end
 
   private
+
+  def outbound_blocked?
+    Servicedesk::OutboundGuard.blocked?(Current.account)
+  end
 
   # ServiceDesk (M1): "Enviar como Resolvido" manda o status em `ticket_status`, junto com a resposta.
   def servicedesk_requested_status

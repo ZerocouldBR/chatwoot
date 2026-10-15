@@ -17,6 +17,9 @@ class SendReplyJob < ApplicationJob
 
   def perform(message_id)
     message = Message.find(message_id)
+    # ServiceDesk: conta isolada, nada sai pelo canal (a mensagem fica marcada como não enviada).
+    return Servicedesk::OutboundGuard.block_message!(message) if Servicedesk::OutboundGuard.blocked?(message.account)
+
     channel_name = message.conversation.inbox.channel.class.to_s
 
     return send_on_facebook_page(message) if channel_name == 'Channel::FacebookPage'

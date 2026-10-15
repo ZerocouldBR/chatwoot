@@ -9,7 +9,7 @@ describe Servicedesk::OutboundGuard do
 
       def hello(account)
         @account = account
-        mail(to: 'cliente@example.com', subject: 'Olá', body: 'corpo')
+        mail(to: 'cliente@example.com', subject: 'Olá', body: 'corpo') # rubocop:disable Rails/I18nLocaleTexts
       end
     end
   end

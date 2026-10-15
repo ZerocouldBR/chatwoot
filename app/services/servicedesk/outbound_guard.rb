@@ -69,6 +69,18 @@ module Servicedesk::OutboundGuard
     message.content_attributes.is_a?(Hash) && message.content_attributes[MESSAGE_FLAG] == true
   end
 
+  # Marca (sem callbacks) uma mensagem que iria para fora como não enviada e audita. Usado onde a mensagem já existe
+  # (SendReplyJob, "tentar de novo"); a mensagem nova já nasce marcada (Servicedesk::MessageOutboundGuard).
+  def block_message!(message)
+    log("message #{message.inbox&.channel_type}", message.account_id)
+    return unless outbound_message?(message)
+    return if blocked_message?(message) && message.failed?
+
+    attributes = (message.content_attributes || {}).merge(MESSAGE_FLAG => true, 'external_error' => not_sent_reason(message.account))
+    message.update_columns(status: Message.statuses[:failed], content_attributes: attributes) # rubocop:disable Rails/SkipsModelValidations
+    record(message.conversation, 'message', { 'message_id' => message.id, 'channel' => message.inbox&.channel_type })
+  end
+
   def not_sent_reason(account = nil)
     I18n.with_locale(locale_for(account)) { I18n.t('servicedesk.outbound_guard.not_sent') }
   end
