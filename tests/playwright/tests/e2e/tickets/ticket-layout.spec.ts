@@ -35,8 +35,9 @@ test('the ticket screen follows the Zendesk layout', async ({ page, baseURL }) =
   await page.getByRole('tab', { name: /Todos/ }).or(page.getByText(/^Todos\s*\d+$/)).first().click();
   await expect(page.getByTestId('ticket-list-subject').filter({ hasText: `Assunto do layout ${stamp}` })).toBeVisible();
   await expect(page.getByText('Página inicial', { exact: true })).toBeVisible();
+  // No channel/inbox group in the agent menu (Canais only exists as a settings and reports page).
   await expect(page.getByText('Caixa de Entrada', { exact: true })).toBeHidden();
-  await expect(page.getByText('Canais', { exact: true })).toBeHidden();
+  await expect(page.getByRole('navigation').getByRole('button', { name: 'Canais', exact: true })).toHaveCount(0);
   await page.getByTestId('notifications-bell').click();
   await expect(page.getByTestId('notifications-panel')).toContainText('Notificações');
   // The panel is wider than the sidebar: it must open outside it, without scrolling the menu sideways.
